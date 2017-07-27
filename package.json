@@ -1,0 +1,30 @@
+{
+  "name": "medibot",
+  "version": "1.0.0",
+  "description": "Build a bot in Node.js on Microsoft Bot Framework",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nirmalrayan/medibot.git"
+  },
+  "keywords": [
+    "bot",
+    "slack",
+    "microsoft",
+    "bot",
+    "framework"
+  ],
+  "author": "Nirmal Rayan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nirmalrayan/medibot/issues"
+  },
+  "homepage": "https://github.com/nirmalrayan/medibot#readme",
+  "dependencies": {
+    "botbuilder": "^3.9.0",
+    "restify": "^5.0.1"
+  }
+}
