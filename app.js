@@ -16,7 +16,6 @@ server.get('/', restify.plugins.serveStatic({
  directory: __dirname,
  default: '/index.html'
 }));
-  
 
 // Create chat bot
 var connector = new builder.ChatConnector
