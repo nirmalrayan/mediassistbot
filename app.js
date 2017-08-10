@@ -1,8 +1,8 @@
 // Add your requirements
 var restify = require('restify'); 
 var builder = require('botbuilder');
-var appId = process.env.MY_APP_ID;
-var appPassword = process.env.MY_APP_PASSWORD; 
+require('env2')('.env'); // loads all entries into process.env
+console.log(process.env.DB_HOST); // "127.0.0.1"
 
 // Setup Restify Server
 var server = restify.createServer();
@@ -13,7 +13,7 @@ server.listen(process.env.PORT || 3000, function()
 
 // Create chat bot
 var connector = new builder.ChatConnector
-({ appId: '021235f4-edd2-4ad6-8ac6-d38076e4cfa0', appPassword: 'aSt0XQJAbRAkfVEoWdMsfEG' }); 
+({ appId: process.env.MY_APP_ID, appPassword: process.env.MY_APP_PASSWORD }); 
 
 // This is a dinner reservation bot that uses a waterfall technique to prompt users for input.
 var bot = new builder.UniversalBot(connector,
