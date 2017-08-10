@@ -27,6 +27,7 @@
     "botbuilder": "^3.9.0",
     "botbuilder-location": "^2.0.0",
     "env2": "^2.2.0",
-    "restify": "^5.0.1"
+    "restify": "^5.0.1",
+    "serve-static-restify": "^1.0.0"
   }
 }
