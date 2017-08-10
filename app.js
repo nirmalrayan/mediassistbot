@@ -12,10 +12,10 @@ server.listen(process.env.PORT || process.env.PORT || 3000, function()
 });
 
 //Direct to index.html web page
-server.get('/', restify.plugins.serveStatic({
+/* server.get('/', restify.plugins.serveStatic({
  directory: __dirname,
  default: '/index.html'
-}));
+})); */
 
 // Create chat bot
 var connector = new builder.ChatConnector
