@@ -3,6 +3,7 @@ var restify = require('restify');
 var builder = require('botbuilder');
 require('env2')('.env'); // loads all entries into process.env
 //console.log(process.env.DB_HOST); // "127.0.0.1"
+var serveStatic = require('serve-static-restify');
 
 // Setup Restify Server
 var server = restify.createServer();
