@@ -17,8 +17,6 @@ server.listen(process.env.PORT || process.env.port || 3000, function()
  default: '/index.html'
 })); 
 
-console.log(process.env.MY_APP_ID);
-console.log(process.env.MY_APP_PASSWORD);
 
 // Create chat bot
 var connector = new builder.ChatConnector
@@ -28,12 +26,31 @@ var connector = new builder.ChatConnector
 var bot = new builder.UniversalBot(connector,
     function (session) {
 		if(session.userData.trackBenefName){
-			var msg = "Greetings " + session.userData.trackBenefName + "! I am MediBot and I'll be your personal healthcare assistant. Please say `Track Claim`, `Download E-Card` or `Search Network`.";
+			var msg = new builder.Message(session)
+			.text("Greetings " + session.userData.trackBenefName + "! I am MediBot and I'll be your personal healthcare assistant. How can I help you?")
+			.suggestedActions(
+				builder.SuggestedActions.create(
+						session, [
+							builder.CardAction.imBack(session, "Track Claim", "Track Claim"),
+							builder.CardAction.imBack(session, "Download E-Card", "Download E-Card"),
+							builder.CardAction.imBack(session, "Search Network Hospitals", "Search Network Hospitals")
+						]
+					));
 		}
 		else{
-			var msg = "Greetings! I am MediBot and I'll be your personal healthcare assistant. Please say `Track Claim`, `Download E-Card` or `Search Network`.";
+			var msg = new builder.Message(session)
+			.text("Greetings! I am MediBot and I'll be your personal healthcare assistant. How can I help you?")
+			.suggestedActions(
+				builder.SuggestedActions.create(
+						session, [
+							builder.CardAction.imBack(session, "Track Claim", "Track Claim"),
+							builder.CardAction.imBack(session, "Download E-Card", "Download E-Card"),
+							builder.CardAction.imBack(session, "Search Network Hospitals", "Search Network Hospitals")
+						]
+					));
 		}
 		session.send(msg);
+		
     });
 	
 // Add first run dialog
@@ -644,7 +661,7 @@ bot.dialog('downloadEcard',[
 	}
 ])
 .triggerAction({
-	matches: /^download ecard$/i,
+	matches: /^download e-card$/i,
 	confirmPrompt: "This will cancel your current request. Are you sure?"
 	
 });
@@ -972,11 +989,20 @@ bot.dialog('searchNetwork',[
 		session.beginDialog('askforLocation');
 	},
 	function(session, results) {
+		if (results.response){
+			var place = results.response;
+			session.send(place);
+		}
+		else {
+			session.send("Ok, I didn't understand the address");
+		}
+	},
+	function(session, results) {
 		session.endDialogWithResult(results);
 	}
 ])
 .triggerAction({
-	matches: /^search network$/i,
+	matches: /^search network hospitals$/i,
 	confirmPrompt: "This will cancel your current request. Are you sure?"
 	
 });
@@ -1005,16 +1031,41 @@ bot.dialog('getUserLocation', [
  */
  
 // Dialog to ask for Location
-bot.dialog('askforLocation',[
-	function (session){
-		var locationDialog = require('botbuilder-location');
-		bot.library(locationDialog.createLibrary("BING"));
-		builder.Prompts.text(session, "Please provide your claim number");		
-	},
-	function(session, results) {
-		session.endDialogWithResult(results);
-	}
+var locationDialog = require('botbuilder-location');
+
+bot.library(locationDialog.createLibrary(process.env.BING_MAPS_API_KEY));
+
+bot.dialog('askforLocation',  [
+    function (session) {
+        var options = {
+            prompt: "Where should I ship your order?",
+            useNativeControl: true,
+            reverseGeocode: true,
+			skipFavorites: false,
+			skipConfirmationAsk: true,
+            requiredFields:
+                locationDialog.LocationRequiredFields.streetAddress |
+                locationDialog.LocationRequiredFields.locality |
+                locationDialog.LocationRequiredFields.region |
+                locationDialog.LocationRequiredFields.postalCode |
+                locationDialog.LocationRequiredFields.country
+        };
+
+        locationDialog.getLocation(session, options);
+    },
+    function (session, results) {
+        if (results.response) {
+            var place = results.response;
+			var formattedAddress = 
+            session.send("Thanks, I will ship to " + getFormattedAddressFromPlace(place, ", "));
+        }
+    }
 ]);
+
+function getFormattedAddressFromPlace(place, separator) {
+    var addressParts = [place.streetAddress, place.locality, place.region, place.postalCode, place.country];
+    return addressParts.filter(i => i).join(separator);
+}
  
 
 server.post('/api/messages', connector.listen());
