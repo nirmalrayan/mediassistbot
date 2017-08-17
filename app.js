@@ -17,6 +17,9 @@ server.listen(process.env.PORT || process.env.port || 3000, function()
  default: '/index.html'
 })); 
 
+console.log(process.env.MY_APP_ID);
+console.log(process.env.MY_APP_PASSWORD);
+
 // Create chat bot
 var connector = new builder.ChatConnector
 ({ appId: process.env.MY_APP_ID, appPassword: process.env.MY_APP_PASSWORD }); 
@@ -1015,4 +1018,3 @@ bot.dialog('askforLocation',[
  
 
 server.post('/api/messages', connector.listen());
-console.log(server.url);
