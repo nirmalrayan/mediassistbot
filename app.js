@@ -5,7 +5,7 @@ require('env2')('.env'); // loads all entries into process.env
 //console.log(process.env.DB_HOST); // "127.0.0.1"
 
 // Setup Restify Server
-var server = restify.createServer();
+var server = restify.createServer({name: 'medibot', url: 'http://medibotmb.azurewebsites.net/'});
 server.listen(process.env.PORT || process.env.port || 3000 || 3978, function() 
 {
    console.log('%s listening to %s', server.name, server.url); 
