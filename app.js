@@ -1124,5 +1124,6 @@ function getFormattedAddressFromPlace(place, separator) {
 server.post('/api/messages', connector.listen());
 
 server.post('/location', function(req, res){
-	console.log("Got some lat: "+ req);		
+	console.log("Got some lat: " + req.lat + " and some long:" + req.lng);
+	console.log("Entire request: "+ req);
 });
