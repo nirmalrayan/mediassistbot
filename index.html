@@ -47,7 +47,7 @@
 //						document.querySelector("[TYPE='submit']").removeAttribute("disabled");
 						alert('Lat=' + latitude + '&Long=' + longitude);
 						var http = new XMLHttpRequest();
-						var url = "http://localhost:3000/location";
+						var url = "/location";
 						var params = {lat : p.coords.latitude, lng: p.coords.latitude};
 						http.open("POST", url, true);
 						
