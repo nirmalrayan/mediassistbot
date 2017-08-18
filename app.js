@@ -1123,7 +1123,8 @@ function getFormattedAddressFromPlace(place, separator) {
 
 server.post('/api/messages', connector.listen());
 
+server.use(restify.bodyParser());
 server.post('/location', function(req, res){
-	console.log("Got some lat: " + req.lat + " and some long:" + req.lng);
+	console.log("Got some lat: " + req.body.lat + " and some long:" + req.body.lng);
 	console.log("Entire request: "+ req);
 });
