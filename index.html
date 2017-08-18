@@ -47,8 +47,8 @@
 //						document.querySelector("[TYPE='submit']").removeAttribute("disabled");
 						alert('Lat=' + latitude + '&Long=' + longitude);
 						var http = new XMLHttpRequest();
-						var url = "/location";
-						var params = {latitude : p.coords.latitude , longitude : p.coords.longitude;
+						var url = "http://localhost:3000/location";
+						var params = {latitude =' + latitude + '&longitude=' + longitude;
 						http.open("POST", url, true);
 						
 						//Send the proper header information along with the request
