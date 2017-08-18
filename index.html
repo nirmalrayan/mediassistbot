@@ -49,6 +49,7 @@
 						var http = new XMLHttpRequest();
 						var url = "/location";
 						var params = {lat : p.coords.latitude, lng: p.coords.latitude};
+						console.log("PARAMS:" + params);
 						http.open("POST", url, true);
 						
 						//Send the proper header information along with the request
