@@ -1123,15 +1123,6 @@ function getFormattedAddressFromPlace(place, separator) {
 
 server.post('/api/messages', connector.listen());
 
-var http = require('http');
-
-var server2 = http.createServer(function (request, response) {
-  var queryData = url.parse(request.url, true).query;
-
-  if (queryData.latitude && queryData.longitude) {
-    console.log("We have received the coordinates from server:" + queryData.latitude + queryData.longitude);
-  } 
-  else {
-    response.end('Nothing happening!');
-  }
+server.post('/location', function(req, res){
+	console.log(req.latitude);		
 });
