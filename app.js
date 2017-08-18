@@ -1031,7 +1031,67 @@ bot.dialog('getUserLocation', [
  */
  
 // Dialog to ask for Location
-var locationDialog = require('botbuilder-location');
+
+bot.dialog('askforLocation',  [
+    function (session) {
+			var msg = new builder.Message(session)
+			.text("Please click the button below to share your location.")
+			.suggestedActions(
+				builder.SuggestedActions.create(
+						session, [
+							builder.CardAction.dialogAction(session, getLocation(), '', "Share Location")
+						]
+					));
+		session.send(msg);
+    },
+    function (session, results) {
+        if (results.response) {
+            var place = results.response;
+			var formattedAddress = 
+            session.send("Thanks, I will ship to " + place.Latitude + place.Longitude);
+        }
+    }
+]);
+
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+        session.send("Geolocation is not supported by this browser.");
+    }
+}
+
+function showPosition(position) {
+    session.send("Latitude: " + position.coords.latitude + 
+    "<br>Longitude: " + position.coords.longitude);
+}
+
+/* 
+var NodeGeocoder = require('node-geocoder');
+
+var ip = req.headers['x-forwarded-for'] || 
+     req.connection.remoteAddress || 
+     req.socket.remoteAddress ||
+     req.connection.socket.remoteAddress;
+
+var options = {
+	provider: 'google',
+	
+	//Optional depending on the providers
+	httpAdapter: 'https', // Default
+	apiKey: 'AIzaSyArWWucoO9U9qOy3PKWzII2bpC-r3hijWk', // for Mapquest, OpenCage, Google Premier 
+	formatter: null // 'gpx','string',...
+	
+};
+
+var geocoder = NodeGeocoder(options);
+ 
+// Using callback 
+geocoder.geocode('ibc knowledge park, bangalore', function(err, res) {
+  console.log(res);
+});
+ */
+/* var locationDialog = require('botbuilder-location');
 
 bot.library(locationDialog.createLibrary(process.env.BING_MAPS_API_KEY));
 
@@ -1040,15 +1100,8 @@ bot.dialog('askforLocation',  [
         var options = {
             prompt: "Where should I ship your order?",
             useNativeControl: true,
-            reverseGeocode: true,
-			skipFavorites: false,
-			skipConfirmationAsk: true,
-            requiredFields:
-                locationDialog.LocationRequiredFields.streetAddress |
-                locationDialog.LocationRequiredFields.locality |
-                locationDialog.LocationRequiredFields.region |
-                locationDialog.LocationRequiredFields.postalCode |
-                locationDialog.LocationRequiredFields.country
+			skipFavorites: true,
+			skipConfirmationAsk: true
         };
 
         locationDialog.getLocation(session, options);
@@ -1057,7 +1110,7 @@ bot.dialog('askforLocation',  [
         if (results.response) {
             var place = results.response;
 			var formattedAddress = 
-            session.send("Thanks, I will ship to " + getFormattedAddressFromPlace(place, ", "));
+            session.send("Thanks, I will ship to " + place.Latitude + place.Longitude);
         }
     }
 ]);
@@ -1066,6 +1119,6 @@ function getFormattedAddressFromPlace(place, separator) {
     var addressParts = [place.streetAddress, place.locality, place.region, place.postalCode, place.country];
     return addressParts.filter(i => i).join(separator);
 }
- 
+  */
 
 server.post('/api/messages', connector.listen());
