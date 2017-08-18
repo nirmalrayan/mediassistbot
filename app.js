@@ -1040,7 +1040,7 @@ bot.dialog('askforLocation',  [
 				builder.SuggestedActions.create(
 						session, [
 							builder.CardAction.dialogAction(session, getLocation(), '', "Share Location")
-						]
+						 ]
 					));
 		session.send(msg);
     },
@@ -1127,5 +1127,6 @@ server.post('/locations', function(request, response) {
 	var latitude, longitude;
 	latitude = request.body.latitude;
 	longitude = request.body.longitude;
-	return response.json({}, 200);
+	console.log("Received coordinates are: "+latitude+longitude);
+//	return response.json({}, 200);
 });
