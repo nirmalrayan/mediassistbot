@@ -29,7 +29,30 @@
 		}
 		
 	  </style>
-	  
+	  <script>
+		(function(){
+			'use strict';
+			var noGeolocation = function() {
+				alert("For some reason we are unable to find your location. Sorry.");
+			};
+			
+			if(!navigator.geolocation || !document.querySelector){
+				noGeolocation();
+			}
+			else{
+				navigator.geolocation.getCurrentPosition(
+					function(p){
+						document.querySelector("[name='latitude']").value = p.coords.latitude;
+						document.querySelector("[name='longitude']").value = p.coords.longitude;
+						document.querySelector("[TYPE='submit']").removeAttribute("disabled");
+					},
+					function(err) {
+						noGeolocation();
+					}
+				);
+			}
+		})();
+	  </script>
 
    </head>
    <body>
