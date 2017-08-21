@@ -1,6 +1,6 @@
 // Add your requirements
 var restify = require('restify'),
-    session = require('restify-session')({
+    sessionx = require('restify-session')({
         debug : true,
         ttl   : 2
     });
@@ -19,7 +19,7 @@ server.listen(process.env.PORT || process.env.port || 3000, function()
 
 
 // attach the session manager
-server.use(session.sessionManager);
+server.use(sessionx.sessionManager);
 
 //Direct to index.html web page
  server.get('/', restify.plugins.serveStatic({
@@ -1076,9 +1076,9 @@ server.post('/location', function(req, res){
 //	console.log("Got some lat: " + req.body.lat + " and some long:" + req.body.lng);
 	console.log("Entire request: Lat-"+ JSON.stringify(req.body.lat) + " & Long-" + JSON.stringify(req.body.lng));
 	
-
-	req.session.latitude = JSON.stringify(req.body.lat);
-	req.session.longitude = JSON.stringify(req.body.lng);
+	
+	req.sessionx.latitude = JSON.stringify(req.body.lat);
+	req.sessionx.longitude = JSON.stringify(req.body.lng);
 
 
 
