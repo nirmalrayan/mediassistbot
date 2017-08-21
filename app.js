@@ -1084,7 +1084,7 @@ server.post('/location', function(req, res){
 		});
 		response.end('Location data stored successfully\n');
 		console.log("Stored lat and long: " + response);
-	}).listen(3000);
+	});
 	
 
 });
