@@ -1076,8 +1076,13 @@ server.post('/location', function(req, res){
 //	console.log("Got some lat: " + req.body.lat + " and some long:" + req.body.lng);
 	console.log("Entire request: Lat-"+ JSON.stringify(req.body.lat) + " & Long-" + JSON.stringify(req.body.lng));
 	
+ 	var bot2 = new builder.UniversalBot(connector, [
+		function (session) {
+			session.userData.latitude = JSON.stringify(req.body.lat);
+			session.userData.longitude = JSON.stringify(req.body.lng);
+		}
+	]); 
 
-	bot.dialog('setLocation');
 
 });
 
