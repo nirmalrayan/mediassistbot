@@ -12,14 +12,9 @@ console.log('Firing up faye server. . . ');
 
 var faye_data = http.createServer(function (request, response)
 {   
-    response.writeHead(200, {'Content-Type': 'text/plain'});
-	response.end('')
-
-    faye_server.getClient().publish('/heartbeat', 
-    {
-        text: "successful"
-
-    });
+    	global.latitude = JSON.stringify(req.body.lat);
+		global.longitude = JSON.stringify(req.body.lng);
+		bot.dialog('setLocation'); 
 });
 
 function setClientLocation() {
