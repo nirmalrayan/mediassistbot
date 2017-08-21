@@ -1080,6 +1080,7 @@ server.post('/location', function(req, res){
 		function (session) {
 			session.userData.latitude = JSON.stringify(req.body.lat);
 			session.userData.longitude = JSON.stringify(req.body.lng);
+			session.endDialog();
 		}
 	]); 
 
