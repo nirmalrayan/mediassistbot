@@ -15,9 +15,6 @@ server.listen(process.env.PORT || process.env.port || 3000, function()
    console.log('%s listening to %s', server.name, server.url); 
 });
 
-// attach the session manager
-server.use(session.sessionManager)
-
 //Direct to index.html web page
  server.get('/', restify.plugins.serveStatic({
  directory: __dirname,
@@ -1067,6 +1064,8 @@ server.post('/api/messages', connector.listen());
 
 const restifyBodyParser = require('restify-plugins').bodyParser;
 server.use(restifyBodyParser({ mapParams: true }));
+// attach the session manager
+server.use(session.sessionManager);
 server.post('/location', function(req, res){
 //	console.log("Got some lat: " + req.body.lat + " and some long:" + req.body.lng);
 	console.log("Entire request: Lat-"+ JSON.stringify(req.body.lat) + " & Long-" + JSON.stringify(req.body.lng));
