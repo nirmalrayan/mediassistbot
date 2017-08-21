@@ -1065,6 +1065,19 @@ server.post('/api/messages', connector.listen());
 const restifyBodyParser = require('restify-plugins').bodyParser;
 server.use(restifyBodyParser({ mapParams: true }));
 const http = require('http');
+
+function parseCookies (request) {
+    var list = {},
+        rc = request.headers.cookie;
+
+    rc && rc.split(';').forEach(function( cookie ) {
+        var parts = cookie.split('=');
+        list[parts.shift().trim()] = decodeURI(parts.join('='));
+    });
+
+    return list;
+}
+
 server.post('/location', function(req, res){
 //	console.log("Got some lat: " + req.body.lat + " and some long:" + req.body.lng);
 	console.log("Entire request: Lat-"+ JSON.stringify(req.body.lat) + " & Long-" + JSON.stringify(req.body.lng));
