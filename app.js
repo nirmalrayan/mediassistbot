@@ -1112,7 +1112,7 @@ server.post('/location', function(req, res){
 	var l1 = res.setCookie('lat', JSON.stringify(req.body.lat)),
 	res.setCookie('lng', JSON.stringify(req.body.lng));
 	
-	console.log(JSON.stringify(l1));
+	console.log(l1);
 
 });
 
