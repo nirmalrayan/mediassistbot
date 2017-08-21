@@ -1077,19 +1077,15 @@ server.post('/location', function(req, res){
 	console.log("Entire request: Lat-"+ JSON.stringify(req.body.lat) + " & Long-" + JSON.stringify(req.body.lng));
 	
 
-	req.session2.latitude = JSON.stringify(req.body.lat);
-	req.session2.longitude = JSON.stringify(req.body.lng);
-
-	console.log("Session Lat: " + req.session2.latitude);
-//	bot.dialog('setLocation');
+	bot.dialog('setLocation');
 
 });
 
 // Dialog to set Location
 bot.dialog('setLocation',[
 	function (session){
-		session.userData.latitude = global.latitude;
-		session.userData.longitude = global.longitude;	
+		session.userData.latitude = JSON.stringify(req.body.lat);
+		session.userData.longitude = JSON.stringify(req.body.lng);
 		console.log("Passed location: "+session.userData.latitude);
 		session.send("Trying to find hospitals around: " + session.userData.latitude + " & " + session.userData.longitude);
 	},
