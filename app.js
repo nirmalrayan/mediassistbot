@@ -1086,6 +1086,11 @@ server.post('/location', function(req, res){
 	
 	var cookies = req.cookies;
 	
+	if(req.cookies['lat'] || req.cookies['lng']){
+		res.clearCookie('lat');
+		res.clearCookie('lng');
+	}
+	
 /* 	http.createServer(function (request, response){
 		
 		// To Read a Cookie
@@ -1107,7 +1112,7 @@ server.post('/location', function(req, res){
 	res.setCookie('lat', JSON.stringify(req.body.lat)),
 	res.setCookie('lng', JSON.stringify(req.body.lng));
 	
-	console.log(JSON.stringify(cookies));
+	res.send(JSON.stringify(cookies));
 
 });
 
