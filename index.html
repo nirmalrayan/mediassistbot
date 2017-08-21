@@ -48,7 +48,7 @@
 						alert('Lat=' + latitude + '&Long=' + longitude);
 						var http = new XMLHttpRequest();
 						var url = "/location";
-						var params = "lat=" + p.coords.latitude + "&lng=" + p.coords.latitude;
+						var params = "lat=" + p.coords.latitude + "&lng=" + p.coords.longitude;
 						var params2 = "test=test"
 						http.open("POST", url, true);
 						
