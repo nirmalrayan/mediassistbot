@@ -985,7 +985,8 @@ function createHeroCard(session) {
 // Dialog to Search Network Hospitals
 bot.dialog('searchNetwork',[
 	function (session){
-	//	builder.Prompts.text(session, "Please provide your claim number");		
+	//	builder.Prompts.text(session, "Please provide your claim number");	
+		console.log("Trying to access session lat: " + session.userData.latitude);
 		session.beginDialog('askforLocation');
 	},
 	function(session, results) {
@@ -1034,6 +1035,7 @@ bot.dialog('getUserLocation', [
 
 bot.dialog('askforLocation',  [
     function (session) {
+		session.send(session.userData.latitude);
 			if(!session.userData.latitude && !session.userData.longitude){
 				var msg = new builder.Message(session)
 				.text("Please click the button below to share your location.")
@@ -1048,9 +1050,9 @@ bot.dialog('askforLocation',  [
     },
     function (session, results) {
         if (results.response) {
-            var lat = session.userData.latitude;
-			var lng = session.userData.longitude;
-			var formattedAddress = 
+            var lat = global.latitude;
+			var lng = global.longitude;
+
             session.send("Fetching network hospitals around " + lat + lng);
         }
     }
