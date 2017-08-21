@@ -1,9 +1,5 @@
 // Add your requirements
-var restify = require('restify'),
-    session = require('restify-session')({
-        debug : true,
-        ttl   : 2
-    });
+var restify = require('restify');
 var builder = require('botbuilder');
 require('env2')('.env'); // loads all entries into process.env
 //console.log(process.env.DB_HOST); // "127.0.0.1"
@@ -1064,13 +1060,11 @@ server.post('/api/messages', connector.listen());
 
 const restifyBodyParser = require('restify-plugins').bodyParser;
 server.use(restifyBodyParser({ mapParams: true }));
-// attach the session manager
-server.use(session.sessionManager);
 server.post('/location', function(req, res){
 //	console.log("Got some lat: " + req.body.lat + " and some long:" + req.body.lng);
 	console.log("Entire request: Lat-"+ JSON.stringify(req.body.lat) + " & Long-" + JSON.stringify(req.body.lng));
-	req.session.latitude = JSON.stringify(req.body.lat);
-	req.session.longitude = JSON.stringify(req.body.lng);
+	global.latitude = JSON.stringify(req.body.lat);
+	global.longitude = JSON.stringify(req.body.lng);
 	bot.dialog('setLocation'); 
 
 });
@@ -1078,8 +1072,8 @@ server.post('/location', function(req, res){
 // Dialog to set Location
 bot.dialog('setLocation',[
 	function (session){
-		session.userData.latitude = req.session.latitude;
-		session.userData.longitude = req.session.longitude;	
+		session.userData.latitude = global.latitude;
+		session.userData.longitude = global.longitude;	
 		console.log("Passed location: "+session.userData.latitude);
 		session.send("Trying to find hospitals around: " + session.userData.latitude + " & " + session.userData.longitude);
 	},
