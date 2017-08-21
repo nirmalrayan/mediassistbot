@@ -77,7 +77,7 @@
 		
 		faye_client.connect();
 
-		var faye_message_subscription = faye_client.subscribe('/heartbeat', function(message)
+		var faye_message_subscription = faye_client.publish('/heartbeat', function(message)
 		{   
 			(function(){
 						'use strict';
