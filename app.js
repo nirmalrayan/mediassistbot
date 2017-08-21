@@ -21,6 +21,23 @@ var faye_data = http.createServer(function (request, response)
 
     });
 });
+
+function setClientLocation() {
+	
+	var faye_data = http.createServer(function (request, response)
+	{   
+		response.writeHead(200, {'Content-Type': 'text/plain'});
+		response.end('')
+
+		faye_server.getClient().publish('/heartbeat', 
+		{
+			text: "successful"
+
+		});
+	});
+	
+}
+
 faye_server.attach(faye_data);
 faye_data.listen(8089);
 
