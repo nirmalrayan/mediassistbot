@@ -1072,6 +1072,7 @@ bot.dialog('setLocation',[
 	function (session){
 		session.userData.latitude = JSON.stringify(req.body.lat);
 		session.userData.longitude = JSON.stringify(req.body.lng);	
+		console.log("Passed location: "+session.userData.latitude);
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
