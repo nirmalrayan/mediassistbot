@@ -1104,10 +1104,10 @@ server.post('/location', function(req, res){
 		response.end('Location data stored successfully\n');
 		console.log("Stored lat and long: " + response);
 	}); */
-	res.setCookie('lat', JSON.stringify(req.body.lat)),
-	res.setCookie('lng', JSON.stringify(req.body.lng));
+	res.setCookie('lat', req.body.lat),
+	res.setCookie('lng', req.body.lng);
 	
-	res.send(JSON.stringify(cookies));
+	console.log(JSON.stringify(cookies));
 
 });
 
