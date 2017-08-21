@@ -1072,7 +1072,7 @@ server.post('/location', function(req, res){
 	req.session.longitude = JSON.stringify(req.body.lng);
 
 	console.log("Session Lat: " + req.session.latitude);
-	bot.dialog('setLocation');
+//	bot.dialog('setLocation');
 
 });
 
