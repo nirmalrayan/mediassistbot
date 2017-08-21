@@ -1064,8 +1064,10 @@ server.post('/api/messages', connector.listen());
 
 const restifyBodyParser = require('restify-plugins').bodyParser;
 server.use(restifyBodyParser({ mapParams: true }));
-const http = require('http');
 
+var CookieParser = require('restify-cookies');
+
+/*const http = require('http');
 function parseCookies (request) {
     var list = {},
         rc = request.headers.cookie;
@@ -1076,16 +1078,20 @@ function parseCookies (request) {
     });
 
     return list;
-}
-
+} */
+server.use(CookieParser.parse);
 server.post('/location', function(req, res){
 //	console.log("Got some lat: " + req.body.lat + " and some long:" + req.body.lng);
 	console.log("Entire request: Lat-"+ JSON.stringify(req.body.lat) + " & Long-" + JSON.stringify(req.body.lng));
 	
-	var Location = http.createServer(function (request, response){
+	var cookies = req.cookies;
+	
+/* 	http.createServer(function (request, response){
 		
 		// To Read a Cookie
 		var cookies = parseCookies(request);
+		
+		console.log("Cookie data: " + cookies);
 		
 		var lat = JSON.stringify(req.body.lat);
 		var lng = JSON.stringify(req.body.lng);
@@ -1097,8 +1103,11 @@ server.post('/location', function(req, res){
 		});
 		response.end('Location data stored successfully\n');
 		console.log("Stored lat and long: " + response);
-	});
+	}); */
+	res.setCookie('lat', JSON.stringify(req.body.lat)),
+	res.setCookie('lng', JSON.stringify(req.body.lng));
 	
+	res.send(JSON.stringify(cookies));
 
 });
 
