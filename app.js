@@ -1,8 +1,31 @@
 // Add your requirements
+var http = require('http');
 var restify = require('restify');
 var builder = require('botbuilder');
 require('env2')('.env'); // loads all entries into process.env
 //console.log(process.env.DB_HOST); // "127.0.0.1"
+
+var faye = require('faye');
+var faye_server = new faye.NodeAdapter({mount: '/faye', timeout: 120});
+
+console.log('Firing up faye server. . . ');
+
+var faye_data = http.createServer(function (request, response)
+{   
+    response.writeHead(200, {'Content-Type': 'text/plain'});
+	response.end('')
+
+    faye_server.getClient().publish('/heartbeat', 
+    {
+        text: "successful"
+
+    });
+});
+faye_server.attach(faye_data);
+faye_data.listen(8089);
+
+//send message out every 1 second
+
 
 // Setup Restify Server
 var server = restify.createServer();
@@ -1040,7 +1063,7 @@ bot.dialog('askforLocation',  [
 				.suggestedActions(
 					builder.SuggestedActions.create(
 							session, [
-								builder.CardAction.dialogAction(session, getLocation(), '', "Share Location")
+								builder.CardAction.dialogAction(session, setClientLocation(), '', "Share Location")
 							 ]
 						));
 			session.send(msg);
