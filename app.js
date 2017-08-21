@@ -1059,7 +1059,7 @@ bot.dialog('askforLocation',  [
 ]);
 
 server.post('/api/messages', connector.listen());
-var session = require('client-sessions');
+var session2 = require('client-sessions');
 
 const restifyBodyParser = require('restify-plugins').bodyParser;
 server.use(restifyBodyParser({ mapParams: true }));
@@ -1068,10 +1068,10 @@ server.post('/location', function(req, res){
 	console.log("Entire request: Lat-"+ JSON.stringify(req.body.lat) + " & Long-" + JSON.stringify(req.body.lng));
 	
 
-	req.session.latitude = JSON.stringify(req.body.lat);
-	req.session.longitude = JSON.stringify(req.body.lng);
+	req.session2.latitude = JSON.stringify(req.body.lat);
+	req.session2.longitude = JSON.stringify(req.body.lng);
 
-	console.log("Session Lat: " + req.session.latitude);
+	console.log("Session Lat: " + req.session2.latitude);
 //	bot.dialog('setLocation');
 
 });
