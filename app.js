@@ -1131,6 +1131,6 @@ server.use(restify.bodyParser({ mapParams: false })); */
 
 server.post('/location', function(req, res){
 //	console.log("Got some lat: " + req.body.lat + " and some long:" + req.body.lng);
-	console.log("Entire request: "+ JSON.stringify(req));
+	console.log("Entire request: "+ req);
 	return next();
 });
