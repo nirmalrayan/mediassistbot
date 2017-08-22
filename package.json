@@ -26,14 +26,12 @@
   "dependencies": {
     "botbuilder": "^3.9.0",
     "env2": "^2.2.0",
-    "faye": "^1.2.4",
     "http": "0.0.0",
     "https": "^1.0.0",
     "object-sizeof": "^1.2.0",
     "restify": "^5.0.1",
     "restify-cookies": "^0.2.2",
     "restify-plugins": "^1.6.0",
-    "restify-session": "^1.1.1",
     "serve-static-restify": "^1.0.0"
   }
 }
