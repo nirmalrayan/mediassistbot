@@ -1044,7 +1044,7 @@ bot.dialog('askforLocation',  [
 		.suggestedActions(
 			builder.SuggestedActions.create(
 					session, [
-						builder.CardAction.dialogAction(session, setLocation, '', "Share Location")
+						builder.CardAction.dialogAction(session, setLocation(), '', "Share Location")
 					 ]
 				));
 		session.send(msg);
@@ -1085,9 +1085,11 @@ bot.dialog('setLocation',[
 	}
 ]);
 
-var io = require('socket.io')(server);
-var fs = require('fs');
+function setLocation(){
+	var io = require('socket.io')(server);
+	var fs = require('fs');
 
-io.sockets.on('connection', function (socket) {
-	socket.on('getUserLocation', setLocation);
-});
+	io.sockets.on('connection', function (socket) {
+		socket.on('getUserLocation', setLocation);
+	});
+}
