@@ -1071,16 +1071,9 @@ server.post('/location', function(req, res){
 	console.log("Entire request: Lat-"+ JSON.stringify(req.body.lat) + " & Long-" + JSON.stringify(req.body.lng));
 	console.log(req.body.lat);
 	console.log(req.body.lng);
-	var NodeSession = require('node-session');
- 
-	// init 
-	sessionx = new NodeSession({secret: 'Q3UBzdH9GEfiRCTKbi5MTPyChpzXLsTD'});
-	 
-	// start session for an http request - response 
-	// this will define a session property to the request object 
-	sessionx.startSession(req, res);
-	req.sessionx.put('lat',req.body.lat);
-	req.sessionx.put('lng',req.body.lng);
+
+	req.session('lat',req.body.lat);
+	req.session('lng',req.body.lng);
 	
 	var x = req.session.get('lat');
 	console.log("Value of x is :" + x);
