@@ -29,6 +29,51 @@
 		}
 		
 	  </style>
+	  <script src="/socket.io/socket.io.js"></script>
+	  <script>
+	    var socket = io.connect('http://localhost');//path to socket.io
+		socket.emit('getUserLocation', (function(){
+			'use strict';
+			var noGeolocation = function() {
+				alert("For some reason we are unable to find your location. Sorry.");
+			};
+			
+			if(!navigator.geolocation || !document.querySelector){
+				noGeolocation();
+			}
+			else{
+				navigator.geolocation.getCurrentPosition(
+					function(p){
+						var latitude = p.coords.latitude;
+						var longitude = p.coords.longitude;
+//						document.querySelector("[TYPE='submit']").removeAttribute("disabled");
+						alert('Clientside alert: Lat=' + latitude + '&Long=' + longitude);
+						var http = new XMLHttpRequest();
+						var url = "/location";
+						var params = "lat=" + p.coords.latitude + "&lng=" + p.coords.longitude;
+						http.open("POST", url, true);
+						
+						//Send the proper header information along with the request
+						http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+					//	http.setRequestHeader("Content-length", params.length);
+					//	http.setRequestHeader("Connection", "close");
+
+						http.onreadystatechange = function() {//Call a function when the state changes.
+							if(http.readyState == 4 && http.status == 200) {
+								alert(http.responseText);
+							}
+						}
+						http.send(params);
+						
+					},
+					function(err) {
+						noGeolocation();
+					}
+				);
+			}
+		})();
+		);
+	  </script>
 	  <script>
 		(function(){
 			'use strict';

@@ -988,8 +988,6 @@ function createHeroCard(session) {
 // Dialog to Search Network Hospitals
 bot.dialog('searchNetwork',[
 	function (session){
-	//	builder.Prompts.text(session, "Please provide your claim number");	
-		console.log("Trying to access session lat: " + session.userData.latitude);
 		session.beginDialog('askforLocation');
 	},
 	function(session, results) {
@@ -1035,17 +1033,18 @@ bot.dialog('getUserLocation', [
  */
  
 // Dialog to ask for Location
+var lat = 0;
+var lng = 0;
 
 bot.dialog('askforLocation',  [
     function (session) {
-		session.send(session.userData.latitude);
 
 		var msg = new builder.Message(session)
 		.text("Please click the button below to share your location.")
 		.suggestedActions(
 			builder.SuggestedActions.create(
 					session, [
-						builder.CardAction.dialogAction(session, getLocation(), '', "Share Location")
+						builder.CardAction.dialogAction(session, setLocation, '', "Share Location")
 					 ]
 				));
 		session.send(msg);
@@ -1053,8 +1052,6 @@ bot.dialog('askforLocation',  [
     },
     function (session, results) {
         if (results.response) {
-            var lat = global.latitude;
-			var lng = global.longitude;
 
             session.send("Fetching network hospitals around " + lat + lng);
         }
@@ -1071,14 +1068,14 @@ server.post('/location', function(req, res){
 	console.log("Entire request: Lat-"+ JSON.stringify(req.body.lat) + " & Long-" + JSON.stringify(req.body.lng));
 	console.log(req.body.lat);
 	console.log(req.body.lng);
-	session = req.session;
-	session.beginDialog('setLocation');
+	lat = req.body.lat;
+	lng = req.body.lng;
 });
 
 // Dialog to set Location
 bot.dialog('setLocation',[
 	function (session){
-		session.userData.latitude = JSON.stringify(req.body.lat);
+		session.userData.latitude = lat;
 		session.userData.longitude = JSON.stringify(req.body.lng);
 		console.log("Passed location: "+session.userData.latitude);
 		session.send("Trying to find hospitals around: " + session.userData.latitude + " & " + session.userData.longitude);
@@ -1087,3 +1084,10 @@ bot.dialog('setLocation',[
 		session.endDialogWithResult(results);
 	}
 ]);
+
+var io = require('socket.io')(server);
+var fs = require('fs');
+
+io.sockets.on('connection', function (socket) {
+	socket.on('getUserLocation', setLocation);
+});
