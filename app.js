@@ -1065,51 +1065,10 @@ server.post('/api/messages', connector.listen());
 const restifyBodyParser = require('restify-plugins').bodyParser;
 server.use(restifyBodyParser({ mapParams: true }));
 
-var CookieParser = require('restify-cookies');
-
-/*const http = require('http');
-function parseCookies (request) {
-    var list = {},
-        rc = request.headers.cookie;
-
-    rc && rc.split(';').forEach(function( cookie ) {
-        var parts = cookie.split('=');
-        list[parts.shift().trim()] = decodeURI(parts.join('='));
-    });
-
-    return list;
-} */
-server.use(CookieParser.parse);
 server.post('/location', function(req, res){
-//	console.log("Got some lat: " + req.body.lat + " and some long:" + req.body.lng);
 	console.log("Entire request: Lat-"+ JSON.stringify(req.body.lat) + " & Long-" + JSON.stringify(req.body.lng));
-	
-	var cookies = req.cookies;
-	
-	if(req.cookies['lat'] || req.cookies['lng']){
-		res.clearCookie('lat');
-		res.clearCookie('lng');
-	}
-	
-
-	
-	res.setCookie('lat', JSON.stringify(req.body.lat), {
-		path: '/',
-		domain: 'medibotmb.azurewebsites.net',
-		maxAge: 60,
-		secure: true,
-		httpOnly: true		
-	}),
-	res.setCookie('lng', JSON.stringify(req.body.lng), {
-		path: '/',
-		domain: 'medibotmb.azurewebsites.net',
-		maxAge: 60,
-		secure: true,
-		httpOnly: true	
-	});
-	
-	console.log(JSON.stringify(cookies));
-
+	console.log(req.body.lat);
+	console.log(req.body.lng);
 });
 
 // Dialog to set Location
