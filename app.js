@@ -1094,14 +1094,14 @@ server.post('/location', function(req, res){
 
 	
 	res.setCookie('lat', JSON.stringify(req.body.lat), {
-		path: '/location',
+		path: '/',
 		domain: 'medibotmb.azurewebsites.net',
 		maxAge: 60,
 		secure: true,
 		httpOnly: true		
 	}),
 	res.setCookie('lng', JSON.stringify(req.body.lng), {
-		path: '/location',
+		path: '/',
 		domain: 'medibotmb.azurewebsites.net',
 		maxAge: 60,
 		secure: true,
