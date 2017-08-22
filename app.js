@@ -1091,27 +1091,22 @@ server.post('/location', function(req, res){
 		res.clearCookie('lng');
 	}
 	
-/* 	http.createServer(function (request, response){
-		
-		// To Read a Cookie
-		var cookies = parseCookies(request);
-		
-		console.log("Cookie data: " + cookies);
-		
-		var lat = JSON.stringify(req.body.lat);
-		var lng = JSON.stringify(req.body.lng);
-		
-		// To Write a Cookie
-		response.writeHead(200, {
-			'Set-Cookie': 'lat='+lat+'&lng='+lng,
-			'Content-Type': 'text/plain'
-		});
-		response.end('Location data stored successfully\n');
-		console.log("Stored lat and long: " + response);
-	}); */
+
 	
-	res.setCookie('lat', JSON.stringify(req.body.lat)),
-	res.setCookie('lng', JSON.stringify(req.body.lng));
+	res.setCookie('lat', JSON.stringify(req.body.lat), {
+		path: '/location',
+		domain: 'medibotmb.azurewebsites.net',
+		maxAge: 60,
+		secure: true,
+		httpOnly: true		
+	}),
+	res.setCookie('lng', JSON.stringify(req.body.lng), {
+		path: '/location',
+		domain: 'medibotmb.azurewebsites.net',
+		maxAge: 60,
+		secure: true,
+		httpOnly: true	
+	});
 	
 	console.log(JSON.stringify(cookies));
 
