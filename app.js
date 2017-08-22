@@ -1072,8 +1072,8 @@ server.post('/location', function(req, res){
 	console.log(req.body.lat);
 	console.log(req.body.lng);
 	session = req.session;
-	session.userData.latitude = JSON.stringify(req.body.lat);
-	session.userData.longitude = JSON.stringify(req.body.lng);
+	session.latitude = JSON.stringify(req.body.lat);
+	session.longitude = JSON.stringify(req.body.lng);
 });
 
 // Dialog to set Location
