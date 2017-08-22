@@ -1,5 +1,9 @@
 // Add your requirements
-var restify = require('restify');
+var restify = require('restify'),
+    session = require('restify-session')({
+        debug : true,
+        ttl   : 2
+    });
 	
 var builder = require('botbuilder');
 require('env2')('.env'); // loads all entries into process.env
@@ -1065,10 +1069,14 @@ server.post('/api/messages', connector.listen());
 const restifyBodyParser = require('restify-plugins').bodyParser;
 server.use(restifyBodyParser({ mapParams: true }));
 
-server.post('/location', function(req, res){
+// attach the session manager
+server.use(session.sessionManager)
+server.post('/location', function(req, res, next){
 	console.log("Entire request: Lat-"+ JSON.stringify(req.body.lat) + " & Long-" + JSON.stringify(req.body.lng));
 	console.log(req.body.lat);
 	console.log(req.body.lng);
+	res.send({ success: true, session: {"lat" : req.body.lat,"lng" : req.body.lng}});
+	return next();
 });
 
 // Dialog to set Location
