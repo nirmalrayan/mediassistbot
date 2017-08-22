@@ -1,6 +1,11 @@
 // Add your requirements
 var http = require('http');
 var restify = require('restify');
+var azure = require('../../');
+var builder = require('botbuilder');
+require('env2')('.env'); // loads all entries into pro
+
+var tableName = 'BotStore';
 	
 var builder = require('botbuilder');
 require('env2')('.env'); // loads all entries into process.env
