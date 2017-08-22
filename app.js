@@ -1,4 +1,5 @@
 // Add your requirements
+var http = require('http');
 var restify = require('restify'),
     session = require('restify-session')({
         debug : true,
@@ -1042,17 +1043,17 @@ bot.dialog('getUserLocation', [
 bot.dialog('askforLocation',  [
     function (session) {
 		session.send(session.userData.latitude);
-			if(!session.userData.latitude && !session.userData.longitude){
-				var msg = new builder.Message(session)
-				.text("Please click the button below to share your location.")
-				.suggestedActions(
-					builder.SuggestedActions.create(
-							session, [
-								builder.CardAction.dialogAction(session, getLocation(), '', "Share Location")
-							 ]
-						));
-			session.send(msg);
-			}
+
+		var msg = new builder.Message(session)
+		.text("Please click the button below to share your location.")
+		.suggestedActions(
+			builder.SuggestedActions.create(
+					session, [
+						builder.CardAction.dialogAction(session, getLocation(), '', "Share Location")
+					 ]
+				));
+		session.send(msg);
+
     },
     function (session, results) {
         if (results.response) {
@@ -1069,20 +1070,25 @@ server.post('/api/messages', connector.listen());
 const restifyBodyParser = require('restify-plugins').bodyParser;
 server.use(restifyBodyParser({ mapParams: true }));
 
-// attach the session manager
-server.use(session.sessionManager)
-server.post('/location', function(req, res, next){
+
+server.post('/location', function(req, res){
 	console.log("Entire request: Lat-"+ JSON.stringify(req.body.lat) + " & Long-" + JSON.stringify(req.body.lng));
 	console.log(req.body.lat);
 	console.log(req.body.lng);
+	var NodeSession = require('node-session');
+ 
+	// init 
+	sessionx = new NodeSession({secret: 'Q3UBzdH9GEfiRCTKbi5MTPyChpzXLsTD'});
+	 
+	// start session for an http request - response 
+	// this will define a session property to the request object 
+	sessionx.startSession(req, res, callback);
+	req.sessionx.put('lat',req.body.lat);
+	req.sessionx.put('lng',req.body.lng);
 	
-	ssn = req.session;
-	ssn.lat = req.body.lat;
-	ssn.lng = req.body.lng;
-	res.send({ success: true, session: {"lat" : req.body.lat,"lng" : req.body.lng}});
-	res.end('done');
-	console.log(ssn.lat);
-	return next();
+	var x = req.session.get('lat');
+	console.log("Value of x is :" + x);
+	
 });
 
 // Dialog to set Location
