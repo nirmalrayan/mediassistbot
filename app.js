@@ -1075,7 +1075,13 @@ server.post('/location', function(req, res, next){
 	console.log("Entire request: Lat-"+ JSON.stringify(req.body.lat) + " & Long-" + JSON.stringify(req.body.lng));
 	console.log(req.body.lat);
 	console.log(req.body.lng);
+	
+	ssn = req.session;
+	ssn.lat = req.body.lat;
+	ssn.lng = req.body.lng;
 	res.send({ success: true, session: {"lat" : req.body.lat,"lng" : req.body.lng}});
+	res.end('done');
+	console.log(ssn.lat);
 	return next();
 });
 
