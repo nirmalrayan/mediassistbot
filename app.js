@@ -1071,13 +1071,9 @@ server.post('/location', function(req, res){
 	console.log("Entire request: Lat-"+ JSON.stringify(req.body.lat) + " & Long-" + JSON.stringify(req.body.lng));
 	console.log(req.body.lat);
 	console.log(req.body.lng);
-
-	req.session('lat',req.body.lat);
-	req.session('lng',req.body.lng);
-	
-	var x = req.session.get('lat');
-	console.log("Value of x is :" + x);
-	
+	session = req.session;
+	session.userData.latitude = JSON.stringify(req.body.lat);
+	session.userData.longitude = JSON.stringify(req.body.lng);
 });
 
 // Dialog to set Location
