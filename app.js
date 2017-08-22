@@ -1,10 +1,6 @@
 // Add your requirements
 var http = require('http');
-var restify = require('restify'),
-    session = require('restify-session')({
-        debug : true,
-        ttl   : 2
-    });
+var restify = require('restify');
 	
 var builder = require('botbuilder');
 require('env2')('.env'); // loads all entries into process.env
@@ -1082,7 +1078,7 @@ server.post('/location', function(req, res){
 	 
 	// start session for an http request - response 
 	// this will define a session property to the request object 
-	sessionx.startSession(req, res, callback);
+	sessionx.startSession(req, res);
 	req.sessionx.put('lat',req.body.lat);
 	req.sessionx.put('lng',req.body.lng);
 	
