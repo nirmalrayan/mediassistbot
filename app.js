@@ -8,12 +8,11 @@ require('env2')('.env'); // loads all entries into process.env
 // Setup Restify Server
 var server = restify.createServer();
 
-var app = server.listen(process.env.PORT || process.env.port || 3000, function() 
+var io = require("socket.io")(server);
+server.listen(process.env.PORT || process.env.port || 3000, function() 
 {
    console.log('%s listening to %s', server.name, server.url); 
 });
-
-var io = require("socket.io")(app);
 
 
 //Direct to index.html web page
@@ -1065,17 +1064,17 @@ server.post('/api/messages', connector.listen());
 const restifyBodyParser = require('restify-plugins').bodyParser;
 server.use(restifyBodyParser({ mapParams: true }));
 
-
-server.post('/location', function(req, res){
+//KEEP THIS ALIVE
+/* server.post('/location', function(req, res){
 	console.log("Entire request: Lat-"+ JSON.stringify(req.body.lat) + " & Long-" + JSON.stringify(req.body.lng));
 	console.log(req.body.lat);
 	console.log(req.body.lng);
 	lat = req.body.lat;
 	lng = req.body.lng;
-});
+}); */
 
 // Dialog to set Location
-bot.dialog('setLocation',[
+/* bot.dialog('setLocation',[
 	function (session){
 		session.userData.latitude = lat;
 		session.userData.longitude = JSON.stringify(req.body.lng);
@@ -1085,13 +1084,19 @@ bot.dialog('setLocation',[
 	function(session, results) {
 		session.endDialogWithResult(results);
 	}
-]);
+]); */
 
 function setLocation(){
 	console.log("inside set location");
-	console.log("Entering function to request client for user location");
+	
 	io.on('connection', function (socket) {
 		console.log("Requesting client for user location");
-		socket.emit('event', {send: 'crap'});
+		socket.emit('getUserLocation', {send: 'crap'});
+		socket.on('setUserLocation', function (data){
+			console.log("Got Lat and Long from Client: " + data);
+/* 			session.userData.latitude = data.lat;
+			session.userData.longitude = data.lng; */
+		});
 	});
+	
 }

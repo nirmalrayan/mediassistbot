@@ -31,49 +31,31 @@
 	  </style>
 	  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
 	  <script>
-	    var socket = io.connect('http://localhost:3000');//path to socket.io
-		socket.on('connect', (function(data){
-			console.log("We're in client side socket: "+data);
+	    var socket = io('http://localhost');//path to socket.io
+		socket.on('getUserLocation', (function(data){
+			alert("We're in client side socket: "+data);
 			'use strict';
 			var noGeolocation = function() {
-				alert("For some reason we are unable to find your location. Sorry.");
+				alert("Location has been disabled for this website. Please check your browser settings and retry.");
 			};
 			
 			if(!navigator.geolocation || !document.querySelector){
-				noGeolocation();
+				return noGeolocation();
+				
 			}
 			else{
 				navigator.geolocation.getCurrentPosition(
 					function(p){
-						var latitude = p.coords.latitude;
-						var longitude = p.coords.longitude;
-//						document.querySelector("[TYPE='submit']").removeAttribute("disabled");
-						alert('Clientside alert: Lat=' + latitude + '&Long=' + longitude);
-						var http = new XMLHttpRequest();
-						var url = "/location";
-						var params = "lat=" + p.coords.latitude + "&lng=" + p.coords.longitude;
-						http.open("POST", url, true);
-						
-						//Send the proper header information along with the request
-						http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-					//	http.setRequestHeader("Content-length", params.length);
-					//	http.setRequestHeader("Connection", "close");
-
-						http.onreadystatechange = function() {//Call a function when the state changes.
-							if(http.readyState == 4 && http.status == 200) {
-								alert(http.responseText);
-							}
-						}
-						http.send(params);
-						
+						return socket.emit('setUserLocation', {lat : p.coords.latitude, lng: p.coords.longitude});
 					},
 					function(err) {
-						noGeolocation();
+						return noGeolocation();
 					}
 				);
 			}
 		})();
 		);
+		
 	  </script>
 
    </head>
