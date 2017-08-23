@@ -1,21 +1,19 @@
 // Add your requirements
 var http = require('http');
 var restify = require('restify');
-	
 var builder = require('botbuilder');
 require('env2')('.env'); // loads all entries into process.env
 //console.log(process.env.DB_HOST); // "127.0.0.1"
 
-// Setup socket.io 
-var socketio = require('socket.io');
 // Setup Restify Server
 var server = restify.createServer();
 
-var io = socketio.listen(server.server);
-server.listen(process.env.PORT || process.env.port || 3000, function() 
+var app = server.listen(process.env.PORT || process.env.port || 3000, function() 
 {
    console.log('%s listening to %s', server.name, server.url); 
 });
+
+var io = require("socket.io")(app);
 
 
 //Direct to index.html web page
@@ -997,7 +995,7 @@ bot.dialog('searchNetwork',[
 	function(session, results) {
 		if (results.response){
 			var place = results.response;
-			session.send(place);
+			session.send("This is the place i got: "+place);
 		}
 		else {
 			session.send("Ok, I didn't understand the address");
@@ -1008,7 +1006,7 @@ bot.dialog('searchNetwork',[
 	}
 ])
 .triggerAction({
-	matches: /^search network hospitals$/i,
+	matches: /^search network hospitals$|^search network$/i,
 	confirmPrompt: "This will cancel your current request. Are you sure?"
 	
 });
@@ -1093,7 +1091,7 @@ function setLocation(){
 	console.log("inside set location");
 	console.log("Entering function to request client for user location");
 	io.on('connection', function (socket) {
-//		console.log("Requesting client for user location");
+		console.log("Requesting client for user location");
 		socket.emit('event', {send: 'crap'});
 	});
 }

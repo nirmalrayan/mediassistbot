@@ -31,8 +31,8 @@
 	  </style>
 	  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
 	  <script>
-	    var socket = io.connect();//path to socket.io
-		socket.on('event', function(data){
+	    var socket = io.connect('http://localhost:3000');//path to socket.io
+		socket.on('connect', (function(data){
 			console.log("We're in client side socket: "+data);
 			'use strict';
 			var noGeolocation = function() {
@@ -72,7 +72,7 @@
 					}
 				);
 			}
-		}
+		})();
 		);
 	  </script>
 
