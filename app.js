@@ -1094,6 +1094,6 @@ function setLocation(){
 	console.log("Entering function to request client for user location");
 	io.sockets.on('connection', function (socket) {
 		console.log("Requesting client for user location");
-		socket.emit('getUserLocation', {send: 'crap'});
+		socket.emit('event', {send: 'crap'});
 	});
 }
