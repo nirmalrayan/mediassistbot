@@ -1092,8 +1092,8 @@ bot.dialog('setLocation',[
 function setLocation(){
 	console.log("inside set location");
 	console.log("Entering function to request client for user location");
-	io.sockets.on('connection', function (socket) {
-		console.log("Requesting client for user location");
+	io.on('connection', function (socket) {
+//		console.log("Requesting client for user location");
 		socket.emit('event', {send: 'crap'});
 	});
 }
