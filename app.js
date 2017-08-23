@@ -6,10 +6,12 @@ var builder = require('botbuilder');
 require('env2')('.env'); // loads all entries into process.env
 //console.log(process.env.DB_HOST); // "127.0.0.1"
 
+// Setup socket.io 
+var socketio = require('socket.io');
 // Setup Restify Server
 var server = restify.createServer();
-var io = require('socket.io')(server.server);
-var fs = require('fs');
+
+var io = socketio.listen(server.server);
 server.listen(process.env.PORT || process.env.port || 3000, function() 
 {
    console.log('%s listening to %s', server.name, server.url); 
@@ -1090,7 +1092,7 @@ bot.dialog('setLocation',[
 function setLocation(){
 	console.log("inside set location");
 	console.log("Entering function to request client for user location");
-	io.on('connection', function (socket) {
+	io.sockets.on('connection', function (socket) {
 		console.log("Requesting client for user location");
 		socket.emit('getUserLocation', {send: 'crap'});
 	});
