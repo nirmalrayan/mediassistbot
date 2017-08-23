@@ -8,6 +8,8 @@ require('env2')('.env'); // loads all entries into process.env
 
 // Setup Restify Server
 var server = restify.createServer();
+var io = require('socket.io')(server.server);
+var fs = require('fs');
 server.listen(process.env.PORT || process.env.port || 3000, function() 
 {
    console.log('%s listening to %s', server.name, server.url); 
@@ -1086,10 +1088,10 @@ bot.dialog('setLocation',[
 ]);
 
 function setLocation(){
-	var io = require('socket.io')(server);
-	var fs = require('fs');
-
-	io.sockets.on('connection', function (socket) {
-		socket.on('getUserLocation', setLocation);
+	console.log("inside set location");
+	console.log("Entering function to request client for user location");
+	io.on('connection', function (socket) {
+		console.log("Requesting client for user location");
+		socket.emit('getUserLocation', {send: 'crap'});
 	});
 }
