@@ -7,13 +7,10 @@ require('env2')('.env'); // loads all entries into process.env
 
 // Setup Restify Server
 var server = restify.createServer();
-
-var io = require("socket.io")(server);
 server.listen(process.env.PORT || process.env.port || 3000, function() 
 {
    console.log('%s listening to %s', server.name, server.url); 
 });
-
 
 //Direct to index.html web page
  server.get('/', restify.plugins.serveStatic({
@@ -984,7 +981,7 @@ function createHeroCard(session) {
         .buttons([
             builder.CardAction.openUrl(session, session.userData.downloadURL, 'Download E-Card')
         ]);
-}
+};
 
 // Dialog to Search Network Hospitals
 bot.dialog('searchNetwork',[
@@ -1010,6 +1007,47 @@ bot.dialog('searchNetwork',[
 	
 });
 
+
+bot.dialog('askforLocation',  [
+    function (session) {
+		var locationDialog = require('botbuilder-location');
+		bot.library(locationDialog.createLibrary(process.env.BING_MAPS_API_KEY));
+		
+		var options = {
+			prompt: "Please share your location",
+			useNativeControl: true,
+			reverseGeocode: true,
+			skipFavorites: true,
+			skipConfirmationAsk: true,
+/* 			requiredFields:
+				locationDialog.LocationRequiredFields.streetAddress | 
+				locationDialog.LocationRequiredFields.locality | 
+				locationDialog.LocationRequiredFields.region | 
+				locationDialog.LocationRequiredFields.postalCode | 
+				locationDialog.LocationRequiredFields.country  */
+		};
+		locationDialog.getLocation(session, options);
+//		session.send(msg);
+
+    },
+    function (session, results) {
+        if (results.response) {
+			var place = results.response;
+			var formattedAddress = session.send("Thanks, searching for hospitals around " + getFormattedAddressFromPlace(place, ", "));
+        }
+		else{
+			session.send("I was not able to fetch your address.");
+		}
+    }
+]);
+
+function getFormattedAddressFromPlace(place, separator) {
+    var addressParts = [place.streetAddress, place.locality, place.region, place.postalCode, place.country];
+    return addressParts.filter(i => i).join(separator);
+}
+
+server.post('/api/messages', connector.listen());
+
 /* // Dialog to get User Location
 bot.dialog('getUserLocation', [
     function (session){
@@ -1032,34 +1070,11 @@ bot.dialog('getUserLocation', [
 	}
 ]);
  */
- 
+ /* 
 // Dialog to ask for Location
 var lat = 0;
 var lng = 0;
 
-bot.dialog('askforLocation',  [
-    function (session) {
-
-		var msg = new builder.Message(session)
-		.text("Please click the button below to share your location.")
-		.suggestedActions(
-			builder.SuggestedActions.create(
-					session, [
-						builder.CardAction.dialogAction(session, setLocation(), '', "Share Location")
-					 ]
-				));
-		session.send(msg);
-
-    },
-    function (session, results) {
-        if (results.response) {
-
-            session.send("Fetching network hospitals around " + lat + lng);
-        }
-    }
-]);
-
-server.post('/api/messages', connector.listen());
 
 const restifyBodyParser = require('restify-plugins').bodyParser;
 server.use(restifyBodyParser({ mapParams: true }));
@@ -1085,7 +1100,7 @@ server.use(restifyBodyParser({ mapParams: true }));
 		session.endDialogWithResult(results);
 	}
 ]); */
-
+/* 
 function setLocation(){
 	console.log("inside set location");
 	
@@ -1095,8 +1110,8 @@ function setLocation(){
 		socket.on('event2', function (data){
 			console.log("Got Lat and Long from Client: " + data);
 /* 			session.userData.latitude = data.lat;
-			session.userData.longitude = data.lng; */
+			session.userData.longitude = data.lng; 
 		});
 	});
 	
-}
+} */ 

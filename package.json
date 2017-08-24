@@ -25,13 +25,13 @@
   "homepage": "https://github.com/nirmalrayan/medibot#readme",
   "dependencies": {
     "botbuilder": "^3.9.0",
+    "botbuilder-location": "^2.0.0",
     "env2": "^2.2.0",
     "http": "0.0.0",
     "https": "^1.0.0",
     "object-sizeof": "^1.2.0",
     "restify": "^5.0.1",
     "restify-plugins": "^1.6.0",
-    "serve-static-restify": "^1.0.0",
-    "socket.io": "^2.0.3"
+    "serve-static-restify": "^1.0.0"
   }
 }
