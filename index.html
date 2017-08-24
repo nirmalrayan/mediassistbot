@@ -32,7 +32,7 @@
 	  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
 	  <script>
 	    var socket = io('http://localhost');//path to socket.io
-		socket.on('getUserLocation', (function(data){
+		socket.on('event1', function(data){
 			alert("We're in client side socket: "+data);
 			'use strict';
 			var noGeolocation = function() {
@@ -46,14 +46,14 @@
 			else{
 				navigator.geolocation.getCurrentPosition(
 					function(p){
-						return socket.emit('setUserLocation', {lat : p.coords.latitude, lng: p.coords.longitude});
+						return socket.emit('event2', {lat : p.coords.latitude, lng: p.coords.longitude});
 					},
 					function(err) {
 						return noGeolocation();
 					}
 				);
 			}
-		})();
+		}
 		);
 		
 	  </script>

@@ -1091,8 +1091,8 @@ function setLocation(){
 	
 	io.on('connection', function (socket) {
 		console.log("Requesting client for user location");
-		socket.emit('getUserLocation', {send: 'crap'});
-		socket.on('setUserLocation', function (data){
+		socket.emit('event1', {send: 'crap'});
+		socket.on('event2', function (data){
 			console.log("Got Lat and Long from Client: " + data);
 /* 			session.userData.latitude = data.lat;
 			session.userData.longitude = data.lng; */
