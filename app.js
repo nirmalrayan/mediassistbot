@@ -1033,6 +1033,7 @@ bot.dialog('askforLocation',  [
     function (session, results) {
         if (results.response) {
 			var place = results.response;
+			session.send("Looking for hospitals around " + place);
 			var formattedAddress = session.send("Thanks, searching for hospitals around " + getFormattedAddressFromPlace(place, ", "));
         }
 		else{
