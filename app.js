@@ -1042,7 +1042,7 @@ bot.dialog('askforLocation',  [
 ]);
 
 function getFormattedAddressFromPlace(place, separator) {
-    var addressParts = [place.streetAddress, place.locality, place.region, place.postalCode, place.country];
+    var addressParts = [place.streetAddress, place.locality, place.region, place.postalCode, place.country, place.latitude, place.longitude];
     return addressParts.filter(i => i).join(separator);
 }
 
