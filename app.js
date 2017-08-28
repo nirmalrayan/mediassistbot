@@ -1104,7 +1104,7 @@ bot.dialog('askforLocation',  [
 //								.images([builder.CardImage.create(session,"https://image.ibb.co/jYCPwk/check_1.png")])
 								.buttons([
 									builder.CardAction.call(session, data.hospitals[item].phone, "Call Hospital"),
-									builder.CardAction.openUrl(session, "https://network.medibuddy.in/", "View Hospital")
+									builder.CardAction.openUrl(session, "http://maps.google.com/maps?q="+data.hospitals[item].latitude+","+data.hospitals[item].longitude, "View Hospital")
 								])
 							);
 //							console.log(item + " item is " + JSON.stringify(myHosp));
