@@ -1018,7 +1018,7 @@ bot.dialog('askforLocation',  [
 			useNativeControl: true,
 			reverseGeocode: true,
 			skipFavorites: true,
-			skipConfirmationAsk: true,
+			skipConfirmationAsk: true
 /* 			requiredFields:
 				locationDialog.LocationRequiredFields.streetAddress | 
 				locationDialog.LocationRequiredFields.locality | 
@@ -1032,19 +1032,166 @@ bot.dialog('askforLocation',  [
     },
     function (session, results) {
         if (results.response) {
-			var place = results.response;
-			session.send("Looking for hospitals around " + place);
-			var formattedAddress = session.send("Thanks, searching for hospitals around " + getFormattedAddressFromPlace(place, ", "));
+			session.userData.place = results.response;
+			var place = session.userData.place;
+			session.userData.lat = JSON.stringify(place.geo.latitude);
+			session.userData.lng = JSON.stringify(place.geo.longitude);
+			session.send("Looking for hospitals around " + JSON.stringify(place));
+//			var formattedAddress = session.send("Thanks, searching for hospitals around " + getFormattedAddressFromPlace(place, ", "));
+			session.beginDialog('askforInsurer');	
         }
 		else{
-			session.send("I was not able to fetch your address.");
+			session.send("I was not able to fetch your address. Let's retry");
+			session.beginDialog('askforLocation');
 		}
-    }
+    },
+	function (session, results) {
+		if (results.response){
+			session.userData.insurer = results.response;
+			session.beginDialog('askforSpeciality');		
+		}
+	},
+	function (session, results) {
+		if (results.response){
+			session.userData.speciality = results.response;
+	
+			//Make POST request to MA Server
+			var request = require('request');
+			
+			// Set the headers
+			var headers = {
+				'User-Agent':       'Super Agent/0.0.1',
+				'Content-Type':     'application/x-www-form-urlencoded'
+			}
+
+			// Configure the request
+			var options = {
+				url: 'https://track.medibuddy.in/api/GetHospitalsByLocation/.json',
+				method: 'POST',
+				headers: headers,
+				form: {"insuranceCompany":session.userData.speciality,"latitude":session.userData.lat,"longitude":session.userData.lng,"distance":10,"hospSpeciality":session.userData.speciality,"maRating":""}
+			}
+
+			// Start the request
+			response = request(options, function (error, response, body) {
+				if (!error && response.statusCode == 200) {	
+					// Print out the response body
+					data = JSON.parse(body);
+					
+					if(JSON.stringify(data.isSuccess) === "true"){
+//						var cards = getCardsAttachments();
+						
+						var cards = [];
+						for (var item in data.hospitals){
+							console.log(item+ ": "+JSON.stringify(data.hospitals[item]));
+/* 							var nwHospName = data.hospitals[item].name;
+							var nwHospID = data.hospitals[item].id;
+							var nwHospPhone = data.hospitals[item].phone;
+							var nwHospEmail = data.hospitals[item].email;
+							var nwHospCity = data.hospitals[item].city;
+							var nwHospState = data.hospitals[item].state;
+							var nwHospPin = data.hospitals[item].pinCode;
+							var nwHospLat = data.hospitals[item].latitude;
+							var nwHospLong = data.hospitals[item].longitude;
+							var nwHospRating = data.hospitals[item].avgRating; */
+							var nwHospAddress = JSON.stringify(data.hospitals[item].address);
+							
+							cards.push(
+								new builder.HeroCard(session)
+								.title(data.hospitals[item].name)
+								.subtitle("Phone: " + data.hospitals[item].phone)
+								.text(nwHospAddress + ', ' + data.hospitals[item].city + ', ' + data.hospitals[item].state + ', ' + data.hospitals[item].pinCode)
+//								.images([builder.CardImage.create(session,"https://image.ibb.co/jYCPwk/check_1.png")])
+								.buttons([
+									builder.CardAction.call(session, data.hospitals[item].phone, "Call Hospital"),
+									builder.CardAction.openUrl(session, "https://network.medibuddy.in/", "View Hospital")
+								])
+							);
+//							console.log(item + " item is " + JSON.stringify(myHosp));
+						}
+//						console.log("Final Hosp OBJECT : " + JSON.stringify(myHosp));
+						var msg = new builder.Message(session);
+							msg.attachmentLayout(builder.AttachmentLayout.carousel)
+							.attachments(cards);
+						session.send(msg);
+					}					
+				}
+			});				
+		}
+	}
 ]);
 
 function getFormattedAddressFromPlace(place, separator) {
     var addressParts = [place.streetAddress, place.locality, place.region, place.postalCode, place.country, place.latitude, place.longitude];
     return addressParts.filter(i => i).join(separator);
+}
+
+// Dialog to ask for Insurer Name
+bot.dialog('askforInsurer',[
+	function (session){
+		builder.Prompts.text(session, "Please provide your `Insurer` name");		
+	},
+	function(session, results) {
+		session.endDialogWithResult(results);
+	}
+]);
+
+// Dialog to ask for Speciality
+bot.dialog('askforSpeciality',[
+	function (session){
+		builder.Prompts.text(session, "What is the medical `speciality` you're looking for. Eg: `Dermatology`, `Orthopedics`, `Kidney`, `Cardiac & Circulatory Disorder` etc.");		
+	},
+	function(session, results) {
+		session.endDialogWithResult(results);
+	}
+]);
+
+function getCardsAttachments(session) {
+    return [
+        new builder.HeroCard(session)
+            .title('Azure Storage')
+            .subtitle('Offload the heavy lifting of data center management')
+            .text('Store and help protect your data. Get durable, highly available data storage across the globe and pay only for what you use.')
+            .images([
+                builder.CardImage.create(session, 'https://docs.microsoft.com/en-us/azure/storage/media/storage-introduction/storage-concepts.png')
+            ])
+            .buttons([
+                builder.CardAction.openUrl(session, 'https://azure.microsoft.com/en-us/services/storage/', 'Learn More')
+            ]),
+
+        new builder.ThumbnailCard(session)
+            .title('DocumentDB')
+            .subtitle('Blazing fast, planet-scale NoSQL')
+            .text('NoSQL service for highly available, globally distributed apps—take full advantage of SQL and JavaScript over document and key-value data without the hassles of on-premises or virtual machine-based cloud database options.')
+            .images([
+                builder.CardImage.create(session, 'https://docs.microsoft.com/en-us/azure/documentdb/media/documentdb-introduction/json-database-resources1.png')
+            ])
+            .buttons([
+                builder.CardAction.openUrl(session, 'https://azure.microsoft.com/en-us/services/documentdb/', 'Learn More')
+            ]),
+
+        new builder.HeroCard(session)
+            .title('Azure Functions')
+            .subtitle('Process events with a serverless code architecture')
+            .text('An event-based serverless compute experience to accelerate your development. It can scale based on demand and you pay only for the resources you consume.')
+            .images([
+                builder.CardImage.create(session, 'https://azurecomcdn.azureedge.net/cvt-5daae9212bb433ad0510fbfbff44121ac7c759adc284d7a43d60dbbf2358a07a/images/page/services/functions/01-develop.png')
+            ])
+            .buttons([
+                builder.CardAction.openUrl(session, 'https://azure.microsoft.com/en-us/services/functions/', 'Learn More')
+            ]),
+
+        new builder.ThumbnailCard(session)
+            .title('Cognitive Services')
+            .subtitle('Build powerful intelligence into your applications to enable natural and contextual interactions')
+            .text('Enable natural and contextual interaction with tools that augment users\' experiences using the power of machine-based intelligence. Tap into an ever-growing collection of powerful artificial intelligence algorithms for vision, speech, language, and knowledge.')
+            .images([
+                builder.CardImage.create(session, 'https://azurecomcdn.azureedge.net/cvt-68b530dac63f0ccae8466a2610289af04bdc67ee0bfbc2d5e526b8efd10af05a/images/page/services/cognitive-services/cognitive-services.png')
+            ])
+            .buttons([
+                builder.CardAction.openUrl(session, 'https://azure.microsoft.com/en-us/services/cognitive-services/', 'Learn More')
+            ])
+    ];
 }
 
 server.post('/api/messages', connector.listen());
