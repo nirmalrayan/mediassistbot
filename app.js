@@ -1019,15 +1019,8 @@ bot.dialog('askforLocation',  [
 			reverseGeocode: true,
 			skipFavorites: true,
 			skipConfirmationAsk: true
-/* 			requiredFields:
-				locationDialog.LocationRequiredFields.streetAddress | 
-				locationDialog.LocationRequiredFields.locality | 
-				locationDialog.LocationRequiredFields.region | 
-				locationDialog.LocationRequiredFields.postalCode | 
-				locationDialog.LocationRequiredFields.country  */
 		};
 		locationDialog.getLocation(session, options);
-//		session.send(msg);
 
     },
     function (session, results) {
@@ -1037,7 +1030,6 @@ bot.dialog('askforLocation',  [
 			session.userData.lat = JSON.stringify(place.geo.latitude);
 			session.userData.lng = JSON.stringify(place.geo.longitude);
 			session.send("Looking for hospitals around " + JSON.stringify(place));
-//			var formattedAddress = session.send("Thanks, searching for hospitals around " + getFormattedAddressFromPlace(place, ", "));
 			session.beginDialog('askforInsurer');	
         }
 		else{
@@ -1078,22 +1070,9 @@ bot.dialog('askforLocation',  [
 					// Print out the response body
 					data = JSON.parse(body);
 					
-					if(JSON.stringify(data.isSuccess) === "true"){
-//						var cards = getCardsAttachments();
-						
+					if(JSON.stringify(data.isSuccess) === "true"){				
 						var cards = [];
 						for (var item in data.hospitals){
-							console.log(item+ ": "+JSON.stringify(data.hospitals[item]));
-/* 							var nwHospName = data.hospitals[item].name;
-							var nwHospID = data.hospitals[item].id;
-							var nwHospPhone = data.hospitals[item].phone;
-							var nwHospEmail = data.hospitals[item].email;
-							var nwHospCity = data.hospitals[item].city;
-							var nwHospState = data.hospitals[item].state;
-							var nwHospPin = data.hospitals[item].pinCode;
-							var nwHospLat = data.hospitals[item].latitude;
-							var nwHospLong = data.hospitals[item].longitude;
-							var nwHospRating = data.hospitals[item].avgRating; */
 							var nwHospAddress = JSON.stringify(data.hospitals[item].address);
 							
 							cards.push(
@@ -1101,21 +1080,25 @@ bot.dialog('askforLocation',  [
 								.title(data.hospitals[item].name)
 								.subtitle("Phone: " + data.hospitals[item].phone)
 								.text(nwHospAddress + ', ' + data.hospitals[item].city + ', ' + data.hospitals[item].state + ', ' + data.hospitals[item].pinCode)
-//								.images([builder.CardImage.create(session,"https://image.ibb.co/jYCPwk/check_1.png")])
 								.buttons([
 									builder.CardAction.call(session, data.hospitals[item].phone.split('/')[0], "Call Hospital"),
-									builder.CardAction.openUrl(session, "http://maps.google.com/maps?q="+data.hospitals[item].latitude+","+data.hospitals[item].longitude, "View Hospital")
+									builder.CardAction.openUrl(session, "http://maps.google.com/maps?q="+data.hospitals[item].latitude+","+data.hospitals[item].longitude, "View Hospital"),
+									builder.CardAction.openUrl(session, "https://m.medibuddy.in/PlannedHospitalization.aspx?hospid="+data.hospitals[item].id+"&hospname="+data.hospitals[item].name, "Submit eCashless")
 								])
 							);
-//							console.log(item + " item is " + JSON.stringify(myHosp));
+
 						}
-//						console.log("Final Hosp OBJECT : " + JSON.stringify(myHosp));
+
 						session.send("Trying to find hospitals near you. Please wait...");
 						session.sendTyping();
 						var msg = new builder.Message(session);
 							msg.attachmentLayout(builder.AttachmentLayout.carousel)
 							.attachments(cards);
-						session.send(msg);
+						session.send(msg);						
+						session.sendTyping();
+						setTimeout(function () {
+							session.beginDialog('askforMore');
+						}, 5000);		
 					}					
 				}
 			});				
@@ -1148,120 +1131,5 @@ bot.dialog('askforSpeciality',[
 	}
 ]);
 
-function getCardsAttachments(session) {
-    return [
-        new builder.HeroCard(session)
-            .title('Azure Storage')
-            .subtitle('Offload the heavy lifting of data center management')
-            .text('Store and help protect your data. Get durable, highly available data storage across the globe and pay only for what you use.')
-            .images([
-                builder.CardImage.create(session, 'https://docs.microsoft.com/en-us/azure/storage/media/storage-introduction/storage-concepts.png')
-            ])
-            .buttons([
-                builder.CardAction.openUrl(session, 'https://azure.microsoft.com/en-us/services/storage/', 'Learn More')
-            ]),
-
-        new builder.ThumbnailCard(session)
-            .title('DocumentDB')
-            .subtitle('Blazing fast, planet-scale NoSQL')
-            .text('NoSQL service for highly available, globally distributed apps—take full advantage of SQL and JavaScript over document and key-value data without the hassles of on-premises or virtual machine-based cloud database options.')
-            .images([
-                builder.CardImage.create(session, 'https://docs.microsoft.com/en-us/azure/documentdb/media/documentdb-introduction/json-database-resources1.png')
-            ])
-            .buttons([
-                builder.CardAction.openUrl(session, 'https://azure.microsoft.com/en-us/services/documentdb/', 'Learn More')
-            ]),
-
-        new builder.HeroCard(session)
-            .title('Azure Functions')
-            .subtitle('Process events with a serverless code architecture')
-            .text('An event-based serverless compute experience to accelerate your development. It can scale based on demand and you pay only for the resources you consume.')
-            .images([
-                builder.CardImage.create(session, 'https://azurecomcdn.azureedge.net/cvt-5daae9212bb433ad0510fbfbff44121ac7c759adc284d7a43d60dbbf2358a07a/images/page/services/functions/01-develop.png')
-            ])
-            .buttons([
-                builder.CardAction.openUrl(session, 'https://azure.microsoft.com/en-us/services/functions/', 'Learn More')
-            ]),
-
-        new builder.ThumbnailCard(session)
-            .title('Cognitive Services')
-            .subtitle('Build powerful intelligence into your applications to enable natural and contextual interactions')
-            .text('Enable natural and contextual interaction with tools that augment users\' experiences using the power of machine-based intelligence. Tap into an ever-growing collection of powerful artificial intelligence algorithms for vision, speech, language, and knowledge.')
-            .images([
-                builder.CardImage.create(session, 'https://azurecomcdn.azureedge.net/cvt-68b530dac63f0ccae8466a2610289af04bdc67ee0bfbc2d5e526b8efd10af05a/images/page/services/cognitive-services/cognitive-services.png')
-            ])
-            .buttons([
-                builder.CardAction.openUrl(session, 'https://azure.microsoft.com/en-us/services/cognitive-services/', 'Learn More')
-            ])
-    ];
-}
 
 server.post('/api/messages', connector.listen());
-
-/* // Dialog to get User Location
-bot.dialog('getUserLocation', [
-    function (session){
-        builder.Prompts.text(session, "Send me your current location.");
-    },
-    function (session) {
-        if(session.message.entities.length != 0){
-            session.userData.lat = session.message.entities[0].geo.latitude;
-            session.userData.lon = session.message.entities[0].geo.longitude;
-            session.endDialog();
-        }else{
-            session.endDialog("Sorry, I didn't get your location.");
-        }
-    },
-	function (session){
-    var data = { method: "sendMessage", parameters: { text: "<b>Save time by sending us your current location.</b>", parse_mode: "HTML", reply_markup: { keyboard: [ [ { text: "Share location", request_location: true } ] ] } } };
-    const message = new builder.Message(session);
-    message.setChannelData(data);
-    session.send(message);
-	}
-]);
- */
- /* 
-// Dialog to ask for Location
-var lat = 0;
-var lng = 0;
-
-
-const restifyBodyParser = require('restify-plugins').bodyParser;
-server.use(restifyBodyParser({ mapParams: true }));
-
-//KEEP THIS ALIVE
-/* server.post('/location', function(req, res){
-	console.log("Entire request: Lat-"+ JSON.stringify(req.body.lat) + " & Long-" + JSON.stringify(req.body.lng));
-	console.log(req.body.lat);
-	console.log(req.body.lng);
-	lat = req.body.lat;
-	lng = req.body.lng;
-}); */
-
-// Dialog to set Location
-/* bot.dialog('setLocation',[
-	function (session){
-		session.userData.latitude = lat;
-		session.userData.longitude = JSON.stringify(req.body.lng);
-		console.log("Passed location: "+session.userData.latitude);
-		session.send("Trying to find hospitals around: " + session.userData.latitude + " & " + session.userData.longitude);
-	},
-	function(session, results) {
-		session.endDialogWithResult(results);
-	}
-]); */
-/* 
-function setLocation(){
-	console.log("inside set location");
-	
-	io.on('connection', function (socket) {
-		console.log("Requesting client for user location");
-		socket.emit('event1', {send: 'crap'});
-		socket.on('event2', function (data){
-			console.log("Got Lat and Long from Client: " + data);
-/* 			session.userData.latitude = data.lat;
-			session.userData.longitude = data.lng; 
-		});
-	});
-	
-} */ 
