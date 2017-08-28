@@ -1088,28 +1088,30 @@ bot.dialog('askforLocation',  [
 							var nwHospID = data.hospitals[item].id;
 							var nwHospPhone = data.hospitals[item].phone;
 							var nwHospEmail = data.hospitals[item].email;
-							var nwHospAddress = JSON.stringify(data.hospitals[item].address);
 							var nwHospCity = data.hospitals[item].city;
 							var nwHospState = data.hospitals[item].state;
 							var nwHospPin = data.hospitals[item].pinCode;
 							var nwHospLat = data.hospitals[item].latitude;
 							var nwHospLong = data.hospitals[item].longitude;
 							var nwHospRating = data.hospitals[item].avgRating; */
+							var nwHospAddress = JSON.stringify(data.hospitals[item].address);
 							
 							cards.push(
 								new builder.HeroCard(session)
 								.title(data.hospitals[item].name)
 								.subtitle("Phone: " + data.hospitals[item].phone)
-								.text(data.hospitals[item].address + ', ' + data.hospitals[item].city + ', ' + data.hospitals[item].state + ', ' + data.hospitals[item].pinCode)
+								.text(nwHospAddress + ', ' + data.hospitals[item].city + ', ' + data.hospitals[item].state + ', ' + data.hospitals[item].pinCode)
 //								.images([builder.CardImage.create(session,"https://image.ibb.co/jYCPwk/check_1.png")])
 								.buttons([
-									builder.CardAction.call(session, data.hospitals[item].phone, "Call Hospital"),
+									builder.CardAction.call(session, data.hospitals[item].phone.split('/')[0], "Call Hospital"),
 									builder.CardAction.openUrl(session, "http://maps.google.com/maps?q="+data.hospitals[item].latitude+","+data.hospitals[item].longitude, "View Hospital")
 								])
 							);
 //							console.log(item + " item is " + JSON.stringify(myHosp));
 						}
 //						console.log("Final Hosp OBJECT : " + JSON.stringify(myHosp));
+						session.send("Trying to find hospitals near you. Please wait...");
+						session.sendTyping();
 						var msg = new builder.Message(session);
 							msg.attachmentLayout(builder.AttachmentLayout.carousel)
 							.attachments(cards);
