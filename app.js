@@ -2,6 +2,7 @@
 var http = require('http');
 var restify = require('restify');
 var builder = require('botbuilder');
+const {Wit, log} = require('node-wit');
 require('env2')('.env'); // loads all entries into process.env
 //console.log(process.env.DB_HOST); // "127.0.0.1"
 
@@ -988,15 +989,6 @@ bot.dialog('searchNetwork',[
 		session.beginDialog('askforLocation');
 	},
 	function(session, results) {
-		if (results.response){
-			var place = results.response;
-			session.send("This is the place i got: "+place);
-		}
-		else {
-			session.send("Ok, I didn't understand the address");
-		}
-	},
-	function(session, results) {
 		session.endDialogWithResult(results);
 	}
 ])
@@ -1014,10 +1006,10 @@ bot.dialog('askforLocation',  [
 		
 		var options = {
 			prompt: "Please share your location",
-			useNativeControl: true
-//			reverseGeocode: true,
-//			skipFavorites: true,
-//			skipConfirmationAsk: true
+			useNativeControl: true,
+			reverseGeocode: true,
+			skipFavorites: true,
+			skipConfirmationAsk: true
 		};
 		locationDialog.getLocation(session, options);
 
@@ -1039,12 +1031,34 @@ bot.dialog('askforLocation',  [
 	function (session, results) {
 		if (results.response){
 			session.userData.insurer = results.response;
+			const client = new Wit({accessToken: process.env.WIT_ACCESS_TOKEN});
+			client.message(session.userData.insurer, {})
+			.then((data) => {
+			  console.log('Yay, got Wit.ai response: ' + JSON.stringify(data['entities']));
+			  entities = data['entities'];
+			  for (var entity in entities){
+				session.userData.insurer = data['entities'][entity][0]['value'];
+			  }
+			  console.log('Final insurer after NLP with Wit : '+ session.userData.insurer);
+			  })
+			.catch(console.error);
 			session.beginDialog('askforSpeciality');		
 		}
 	},
 	function (session, results) {
 		if (results.response){
-			session.userData.speciality = results.response;
+			session.userData.speciality = results.response;	
+			const client = new Wit({accessToken: process.env.WIT_ACCESS_TOKEN});
+			client.message(session.userData.speciality, {})
+			.then((data) => {
+			  console.log('Yay, got Wit.ai response: ' + JSON.stringify(data['entities']));
+			  entities = data['entities'];
+			  for (var entity in entities){
+				session.userData.speciality = data['entities'][entity][0]['value'];
+			  }
+			  console.log('Final insurer after NLP with Wit : '+ session.userData.speciality);
+			  })
+			.catch(console.error);
 	
 			//Make POST request to MA Server
 			var request = require('request');
@@ -1130,5 +1144,118 @@ bot.dialog('askforSpeciality',[
 	}
 ]);
 
+// -----------------------------------------------------------------------------------------------------------------------------------------------------
+
+// REDIRECTS
+
+// Dialog to redirect to Call Center
+bot.dialog('askforCallCenter',[
+	function (session){
+		session.send("You can reach our call center at `1800 425 9449` or write to `gethelp@mahs.in` for claim related queries");
+	},
+	function(session, results) {
+		session.endDialogWithResult(results);
+	}
+])
+.triggerAction({
+	matches: [/customer/i, /support/i, /call center/i, /call centre/i, /customer service/i, /cc number/i, /cc/i, /helpline/i, /toll/i, /tech support/i],
+	// /^customer$|^support$|^call centre$|^customer service$|^ cc number$|^cc$|^helpline$|^toll free$|^call center$/i,
+	confirmPrompt: "This will cancel your current request. Are you sure?"
+	
+});
+
+// Dialog to redirect to HR
+bot.dialog('askforHR',[
+	function (session){
+		session.send("For recent updates on career opportunities, kindly check out the \"Careers\" tab on our Medi Assist facebook page or mail us at `harish.dasepalli@mahs.in`");
+	},
+	function(session, results) {
+		session.endDialogWithResult(results);
+	}
+])
+.triggerAction({
+	matches: [/HR/i, /join.*company/i, /hr department/i, /human resource/i, /hr dept/i, /career/i, /job/i, /join/i, /opportunity/i, /opportunities/i, /opening/i, /fresher/i],
+	// /^HR$|^human resource$|^hr dept$|^hr department$|^ join.*company$|^careers$|^career$|^job$|^join$|^job|^opportunit$|^opening$|^fresher$|^$|^$/i,
+	confirmPrompt: "This will cancel your current request. Are you sure?"
+	
+});
+
+// Dialog to redirect to Investigation
+bot.dialog('askforInvestigation',[
+	function (session){
+		session.send("Thank you for your valuable feedback. We will notify our investigation team.");
+	},
+	function(session, results) {
+		session.endDialogWithResult(results);
+	}
+])
+.triggerAction({
+	matches: [/investigation/i, /forge/i, /malpractice/i, /fishy/i, /suspicious/i, /fordge/i],
+	confirmPrompt: "This will cancel your current request. Are you sure?"
+	
+});
+
+// Dialog to redirect to Grievance
+bot.dialog('askforGrievance',[
+	function (session){
+		session.send("You can reach our call center at 1800 425 9449 or write to gethelp@mahs.in for claim related queries");
+	},
+	function(session, results) {
+		session.endDialogWithResult(results);
+	}
+])
+.triggerAction({
+	matches: [/grievance/i, /disappoint/i, /disappointed/i, /dissatisfied/i, /unhappy/i, /horrible/i, /worst/i, /bad/i, /poor/i, /not settled/i, /not paid/i, /not received/i, /very poor/i, /very bad/i, /terrible/i, /not received any amount/i, /not intimated the hospital/i, /not working/i, /support is slow/i, /I did not get/i, /bad service/i, /I did not receive/i, /bad service/i, /bad tpa/i, /bad/i, /worst/i, /complaint/i],
+	confirmPrompt: "This will cancel your current request. Are you sure?"
+	
+});
+
+// Dialog to redirect to Offshore
+bot.dialog('askforOffshore',[
+	function (session){
+		session.send("You can reach our call center at 1800 425 9449 or write to gethelp@mahs.in for claim related queries");
+	},
+	function(session, results) {
+		if (results.response){
+			var place = results.response;
+			session.send("This is the place i got: "+place);
+		}
+		else {
+			session.send("Ok, I didn't understand the address");
+		}
+	},
+	function(session, results) {
+		session.endDialogWithResult(results);
+	}
+])
+.triggerAction({
+	matches: [/offshore/i, /abroad/i, /overseas contact number/i, /USA/i, /Australia/i, /overseas/i],
+	confirmPrompt: "This will cancel your current request. Are you sure?"
+	
+});
+
+// Dialog to redirect to General Query
+bot.dialog('askforGeneralQuery',[
+	function (session){
+		session.send("You can reach our call center at 1800 425 9449 or write to gethelp@mahs.in for claim related queries");
+	},
+	function(session, results) {
+		if (results.response){
+			var place = results.response;
+			session.send("This is the place i got: "+place);
+		}
+		else {
+			session.send("Ok, I didn't understand the address");
+		}
+	},
+	function(session, results) {
+		session.endDialogWithResult(results);
+	}
+])
+.triggerAction({
+	matches: [/register/i, /application/i, /app/i, /medibuddy/i, /transaction/i, /query/i, /queries/i, /question/i, /doubt/i, /clarify/i, /clarity/i, /contact information/i, /registration/i, /can i submit/i, /for how many days/i, /how many/i, /help us urgently/i, /help us/i, /purchase/i, /buy/i, /how much/i, /log in/i, /please guide/i, /responding/i, /please help/i],
+	confirmPrompt: "This will cancel your current request. Are you sure?"
+	
+});
 
 server.post('/api/messages', connector.listen());

@@ -29,6 +29,7 @@
     "env2": "^2.2.0",
     "http": "0.0.0",
     "https": "^1.0.0",
+    "node-wit": "^4.3.0",
     "object-sizeof": "^1.2.0",
     "restify": "^5.0.1",
     "restify-plugins": "^1.6.0",
