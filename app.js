@@ -55,7 +55,7 @@ var bot = new builder.UniversalBot(connector,
     });
 	
 // Add first run dialog
-bot.dialog('firstRun', function (session) {    
+/* bot.dialog('firstRun', function (session) {    
     session.userData.firstRun = true;
     session.send("Greetings! I am MediBot and I'll be your personal healthcare assistant. Please say `Track Claim`, `Download E-Card` or `Search Network`.").endDialog();
 }).triggerAction({
@@ -68,7 +68,7 @@ bot.dialog('firstRun', function (session) {
             callback(null, 0.0);
         }
     }
-});
+}); */
 
 // Dialog to start tracking claims
 bot.dialog('trackClaim', [
@@ -136,6 +136,27 @@ bot.dialog('askforMore',[
 	}
 ]);
 
+// Dialog to ask for Track By
+var trackMenu = {
+		"Track with Claim ID":{
+			Description: "ClaimID"
+		},
+		"Track with Medi Assist ID":{
+			Description: "MAID"
+		},
+		"Track with Employee Details":{
+			Description: "EmpID"
+		}
+};
+
+bot.dialog('askforTrackBy',[
+	function (session){
+		builder.Prompts.choice(session, "There are three ways to track your claim:", trackMenu, builder.ListStyle.button);		
+	},
+	function(session, results) {
+		session.endDialogWithResult(results);
+	}
+]);
 
 // Dialog to Track with Claim Number
 bot.dialog('trackClaimwID', [
@@ -526,28 +547,6 @@ function createReceiptCard(session) {
                 .image('https://raw.githubusercontent.com/amido/azure-vector-icons/master/renders/microsoft-azure.png')
         ]);
 }
-
-// Dialog to ask for Track By
-var trackMenu = {
-		"Track with Claim ID":{
-			Description: "ClaimID"
-		},
-		"Track with Medi Assist ID":{
-			Description: "MAID"
-		},
-		"Track with Employee Details":{
-			Description: "EmpID"
-		}
-};
-
-bot.dialog('askforTrackBy',[
-	function (session){
-		builder.Prompts.choice(session, "There are three ways to track your claim:", trackMenu, builder.ListStyle.button);		
-	},
-	function(session, results) {
-		session.endDialogWithResult(results);
-	}
-]);
 
 // Dialog to ask for Claim Number
 bot.dialog('askforClaimNumber',[
@@ -1015,10 +1014,10 @@ bot.dialog('askforLocation',  [
 		
 		var options = {
 			prompt: "Please share your location",
-			useNativeControl: true,
-			reverseGeocode: true,
-			skipFavorites: true,
-			skipConfirmationAsk: true
+			useNativeControl: true
+//			reverseGeocode: true,
+//			skipFavorites: true,
+//			skipConfirmationAsk: true
 		};
 		locationDialog.getLocation(session, options);
 
@@ -1029,7 +1028,7 @@ bot.dialog('askforLocation',  [
 			var place = session.userData.place;
 			session.userData.lat = JSON.stringify(place.geo.latitude);
 			session.userData.lng = JSON.stringify(place.geo.longitude);
-			session.send("Looking for hospitals around " + JSON.stringify(place));
+//			session.send("Looking for hospitals around " + JSON.stringify(place));
 			session.beginDialog('askforInsurer');	
         }
 		else{
