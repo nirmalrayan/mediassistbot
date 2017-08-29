@@ -99,7 +99,8 @@ bot.dialog('trackClaim', [
 
 ])
 .triggerAction({
-	matches: /^track claim$/i,
+	matches: [/track claim/i, /track/i, /tracking/i, /claim tracking/i, /claim status/i, /pending claim/i, /claim details/i], 
+	// /^track claim$/i,
 	confirmPrompt: "This will cancel your current request. Are you sure?"
 	
 });
@@ -662,7 +663,8 @@ bot.dialog('downloadEcard',[
 	}
 ])
 .triggerAction({
-	matches: /^download e-card$/i,
+	matches: [/download e-card/i, /download ecard/i, /ecard/i, /tpa card/i, /insurance card/i, /card/i, /download card/i, /^download e-card$/i],
+	// /^download e-card$/i,
 	confirmPrompt: "This will cancel your current request. Are you sure?"
 	
 });
@@ -993,7 +995,8 @@ bot.dialog('searchNetwork',[
 	}
 ])
 .triggerAction({
-	matches: /^search network hospitals$|^search network$/i,
+	matches: [/search network hospitals/i, /search network/i, /search nearby hospitals/i, /search providers/i, /hospitals around/i],
+	// /^search network hospitals$|^search network$/i,
 	confirmPrompt: "This will cancel your current request. Are you sure?"
 	
 });
@@ -1034,12 +1037,10 @@ bot.dialog('askforLocation',  [
 			const client = new Wit({accessToken: process.env.WIT_ACCESS_TOKEN});
 			client.message(session.userData.insurer, {})
 			.then((data) => {
-			  console.log('Yay, got Wit.ai response: ' + JSON.stringify(data['entities']));
 			  entities = data['entities'];
 			  for (var entity in entities){
 				session.userData.insurer = data['entities'][entity][0]['value'];
 			  }
-			  console.log('Final insurer after NLP with Wit : '+ session.userData.insurer);
 			  })
 			.catch(console.error);
 			session.beginDialog('askforSpeciality');		
@@ -1051,12 +1052,10 @@ bot.dialog('askforLocation',  [
 			const client = new Wit({accessToken: process.env.WIT_ACCESS_TOKEN});
 			client.message(session.userData.speciality, {})
 			.then((data) => {
-			  console.log('Yay, got Wit.ai response: ' + JSON.stringify(data['entities']));
 			  entities = data['entities'];
 			  for (var entity in entities){
 				session.userData.speciality = data['entities'][entity][0]['value'];
 			  }
-			  console.log('Final insurer after NLP with Wit : '+ session.userData.speciality);
 			  })
 			.catch(console.error);
 	
@@ -1087,6 +1086,8 @@ bot.dialog('askforLocation',  [
 						var cards = [];
 						for (var item in data.hospitals){
 							var nwHospAddress = JSON.stringify(data.hospitals[item].address);
+							var nwHospPhNo = data.hospitals[item].phone.split('/')[0];
+							nwHospPhNo = nwHospPhNo.replace(/-/g,'');
 							
 							cards.push(
 								new builder.HeroCard(session)
@@ -1094,11 +1095,15 @@ bot.dialog('askforLocation',  [
 								.subtitle("Phone: " + data.hospitals[item].phone)
 								.text(nwHospAddress + ', ' + data.hospitals[item].city + ', ' + data.hospitals[item].state + ', ' + data.hospitals[item].pinCode)
 								.buttons([
-									builder.CardAction.call(session, data.hospitals[item].phone.split('/')[0], "Call Hospital"),
+									builder.CardAction.openUrl(session, "tel:"+nwHospPhNo, "Call Hospital"),
 									builder.CardAction.openUrl(session, "http://maps.google.com/maps?q="+data.hospitals[item].latitude+","+data.hospitals[item].longitude, "View Hospital"),
 									builder.CardAction.openUrl(session, "https://m.medibuddy.in/PlannedHospitalization.aspx?hospid="+data.hospitals[item].id+"&hospname="+data.hospitals[item].name, "Submit eCashless")
 								])
 							);
+							
+							if(item == 8){
+								break;
+							}
 
 						}
 
@@ -1183,7 +1188,7 @@ bot.dialog('askforHR',[
 // Dialog to redirect to Investigation
 bot.dialog('askforInvestigation',[
 	function (session){
-		session.send("Thank you for your valuable feedback. We will notify our investigation team.");
+		session.send("Thank you for your valuable feedback. We will notify our investigation team");
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
@@ -1198,7 +1203,7 @@ bot.dialog('askforInvestigation',[
 // Dialog to redirect to Grievance
 bot.dialog('askforGrievance',[
 	function (session){
-		session.send("You can reach our call center at 1800 425 9449 or write to gethelp@mahs.in for claim related queries");
+		session.send("We sincerely regret for the unpleasant experience! I request you to write to us on `gethelp@mahs.in` or call us on our toll free no `1800 425 9449`. Alternatively, you can also download MediBuddy and track your claim on real time basis");
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
@@ -1213,16 +1218,7 @@ bot.dialog('askforGrievance',[
 // Dialog to redirect to Offshore
 bot.dialog('askforOffshore',[
 	function (session){
-		session.send("You can reach our call center at 1800 425 9449 or write to gethelp@mahs.in for claim related queries");
-	},
-	function(session, results) {
-		if (results.response){
-			var place = results.response;
-			session.send("This is the place i got: "+place);
-		}
-		else {
-			session.send("Ok, I didn't understand the address");
-		}
+		session.send("For further assistance you can either write to `gethelp@mahs.in` or call on our \"Overseas\" contact number at `91-80-67617555`");
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
@@ -1237,16 +1233,7 @@ bot.dialog('askforOffshore',[
 // Dialog to redirect to General Query
 bot.dialog('askforGeneralQuery',[
 	function (session){
-		session.send("You can reach our call center at 1800 425 9449 or write to gethelp@mahs.in for claim related queries");
-	},
-	function(session, results) {
-		if (results.response){
-			var place = results.response;
-			session.send("This is the place i got: "+place);
-		}
-		else {
-			session.send("Ok, I didn't understand the address");
-		}
+		session.send("For all your claim/application (MediBuddy)/transaction related queries kindly write to `gethelp@mahs.in` or call us at `1800 425 9449`");
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
