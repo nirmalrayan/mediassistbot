@@ -30,7 +30,7 @@ var bot = new builder.UniversalBot(connector,
 		if(session.userData.trackBenefName){
 			var welcomeCard = new builder.HeroCard(session)
 			.title("Hi " + session.userData.trackBenefName + "! Nice to see you. I am MediBot. How can I help you?")
-			.subtitle("I will be your personal healthcare assistant. ℹ️ Type \"#\" at any time to see the menu.")
+			.subtitle("I will be your personal healthcare assistant. ℹ️ Type \"show menu\" at any time to see the menu.")
 			.images([
 				new builder.CardImage(session)
 					.url('https://image.ibb.co/k8FF6k/robot_4.png')
@@ -135,7 +135,7 @@ bot.dialog('showMenu',[
 	}
 ])
 .triggerAction({
-	matches: [/show menu/i, /Show Menu/i, /^\#$/i, /\#/i]
+	matches: /^show menu$/i
 });
 
 // Dialog to start tracking claims
