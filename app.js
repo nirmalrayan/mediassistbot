@@ -78,26 +78,64 @@ var bot = new builder.UniversalBot(connector,
 // Dialog to show menu
 bot.dialog('showMenu',[
 	function (session){	
+			var menucards = [];
+			
+			trackClaimCard = new builder.HeroCard(session)
+									.title("Track Claim")
+									.subtitle("Tracking your claim can help you understand where you are in the claims")
+									.text("https://track.medibuddy.in")
+									.images([
+										new builder.CardImage(session)
+											.url('https://preview.ibb.co/h3LbU5/1.png')
+											.alt('Track Claim')
+									])
+									.buttons([
+										builder.CardAction.imBack(session, "Track Claim", "Track Claim")
+										]);
+			
+			menucards.push(trackClaimCard);
+			
+			downloadCard = new builder.HeroCard(session)
+									.title("Download E-Card")
+									.subtitle("Getting your E-Card is much simpler and at your finger tips")
+									.text("https://ecard.medibuddy.in")
+									.images([
+										new builder.CardImage(session)
+											.url('https://preview.ibb.co/cmft95/12.png')
+											.alt('Download E-Card')
+									])
+									.buttons([
+										builder.CardAction.imBack(session, "Download E-Card", "Download E-Card")
+										]);
+			
+			menucards.push(downloadCard);
+			
+			searchNetworkCard = new builder.HeroCard(session)
+									.title("Search Network")
+									.subtitle("Search Medi Assist to find the nearest network hospitals")
+									.text("https://network.medibuddy.in")
+									.images([
+										new builder.CardImage(session)
+											.url('https://preview.ibb.co/hBHRwk/11.png')
+											.alt('Search Network')
+									])
+									.buttons([
+										builder.CardAction.imBack(session, "Search Network", "Search Network")
+										]);
+			
+			menucards.push(searchNetworkCard);
+			
 			var msg = new builder.Message(session)
 			.text("My abilities are still growing. I'm trained to help you with the following: ")
-			.suggestedActions(
-				builder.SuggestedActions.create(
-						session, [
-							builder.CardAction.imBack(session, "Track Claim", "Track Claim"),
-							builder.CardAction.imBack(session, "Download E-Card", "Download E-Card"),
-							builder.CardAction.imBack(session, "Search Network Hospitals", "Search Network Hospitals")
-						]
-					))
-			.addAttachment(menuitems);
-			session.send(msg);
+			.attachmentLayout(builder.AttachmentLayout.carousel)
+			.attachments(menucards);
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);	
 	}
 ])
 .triggerAction({
-	matches: [/show menu/i, /#/i],
-	confirmPrompt: "This will cancel your current request. Are you sure?"	
+	matches: [/show menu/i, /Show Menu/i, /^\#$/i, /\#/i]
 });
 
 // Dialog to start tracking claims
