@@ -1092,39 +1092,37 @@ bot.dialog('askforLocation',  [
 						
 						for (var item in data.hospitals){	
 
+		//					console.log(JSON.parse(session.userData.lat)+","+session.userData.lng+"|"+data.hospitals[item].latitude+","+data.hospitals[item].longitude);
 							// Get Distance between User and Hospital
 							var geolib = require("geolib");						
-							var dist = geolib.getDistance(
-									{latitude: Number(session.userData.lat), longitude: Number(session.userData.lng)},
-									{latitude: Number(data.hospitals[item].latitude), longitude: Number(data.hospitals[item].longitude)}
-									);
-							console.log(session.userData.lat+","+session.userData.lng+"|"+data.hospitals[item].latitude+","+data.hospitals[item].longitude);
-							console.log(dist);
-													
+							data.hospitals[item].dist = geolib.getDistance(
+									{latitude: JSON.parse(session.userData.lat), longitude: JSON.parse(session.userData.lng)},
+									{latitude: data.hospitals[item].latitude, longitude: data.hospitals[item].longitude}
+									);													
 						}
 						
-	//					var top10 = data.hospitals.dist.sort(function(a, b) { return a.Variable1 < b.Variable1 ? 1 : -1; })
-	//					.slice(0, 10);
-						
-	//					session.send('Closest 10 hospitals are '+ top10);
-						
+						data.hospitals.sort(function(a, b) { return a.dist - b.dist})
+						.slice(0, 10);
+												
 						for (var item in data.hospitals){
 							var nwHospAddress = JSON.stringify(data.hospitals[item].address);	
 							var nwHospPhNo = data.hospitals[item].phone.split('/')[0];								
 							nwHospPhNo = nwHospPhNo.replace(/-/g,'');
 							
-							cards.push(
-								new builder.HeroCard(session)
-								.title(data.hospitals[item].name + " (" + data.hospitals[item].dist + " meters)")
-								.subtitle("Phone: " + data.hospitals[item].phone)
-								.text(nwHospAddress + ', ' + data.hospitals[item].city + ', ' + data.hospitals[item].state + ', ' + data.hospitals[item].pinCode)
-								.buttons([
-									builder.CardAction.openUrl(session, "tel:"+nwHospPhNo, "Call Hospital"),
-									builder.CardAction.openUrl(session, "http://maps.google.com/maps?q="+data.hospitals[item].latitude+","+data.hospitals[item].longitude, "View Hospital"),
-									builder.CardAction.openUrl(session, "https://m.medibuddy.in/PlannedHospitalization.aspx?hospid="+data.hospitals[item].id+"&hospname="+data.hospitals[item].name, "Submit eCashless")
-								])
-							);
-
+							if(item < 10){
+								cards.push(
+									new builder.HeroCard(session)
+									.title(data.hospitals[item].name + " (" + data.hospitals[item].dist + " meters)")
+									.subtitle("Phone: " + data.hospitals[item].phone)
+									.text(nwHospAddress + ', ' + data.hospitals[item].city + ', ' + data.hospitals[item].state + ', ' + data.hospitals[item].pinCode)
+									.buttons([
+										builder.CardAction.openUrl(session, "tel:"+nwHospPhNo, "Call Hospital"),
+										builder.CardAction.openUrl(session, "http://maps.google.com/maps?q="+data.hospitals[item].latitude+","+data.hospitals[item].longitude, "View Hospital"),
+										builder.CardAction.openUrl(session, "https://m.medibuddy.in/PlannedHospitalization.aspx?hospid="+data.hospitals[item].id+"&hospname="+data.hospitals[item].name, "Submit eCashless")
+									])
+								);
+							}else{ break;}
+							
 						}
 
 						session.send("Trying to find hospitals near you. Please wait...");
