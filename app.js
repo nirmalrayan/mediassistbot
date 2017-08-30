@@ -79,7 +79,7 @@ var bot = new builder.UniversalBot(connector,
 bot.dialog('showMenu',[
 	function (session){	
 			var menucards = [];
-			
+			console.log("Inside show menu");
 			trackClaimCard = new builder.HeroCard(session)
 									.title("Track Claim")
 									.subtitle("Tracking your claim can help you understand where you are in the claims")
@@ -129,13 +129,15 @@ bot.dialog('showMenu',[
 			.text("My abilities are still growing. I'm trained to help you with the following: ")
 			.attachmentLayout(builder.AttachmentLayout.carousel)
 			.attachments(menucards);
+		console.log("Leaving show menu function");
+		session.send(msg);
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);	
 	}
 ])
 .triggerAction({
-	matches: /^show menu$/i
+	matches: [/^show menu$/i, /#/i]
 });
 
 // Dialog to start tracking claims
@@ -144,9 +146,14 @@ bot.dialog('trackClaim', [
 		session.send("Wecome to Claim Tracking System.");
 		session.beginDialog('askforTrackBy');
 	},
+	function (session, results){
+		console.log("Final response" + results.response);
+	}
+	/* ,
 	function (session, results) {
 		if (results.response) {
 			var item = trackMenu[results.response.entity];
+			console.log(results.response)
 			var msg = "You have chosen to track with: %(Description)s.";
 			session.dialogData.item = item;
 			session.send(msg, item);
@@ -161,8 +168,8 @@ bot.dialog('trackClaim', [
 			}
 			
 		}
-//		session.endDialog();
-	}
+//		session.endDialog(); 
+	} */ 
 
 ])
 .triggerAction({
@@ -220,7 +227,18 @@ var trackMenu = {
 
 bot.dialog('askforTrackBy',[
 	function (session){
-		builder.Prompts.choice(session, "There are three ways to track your claim:", trackMenu, builder.ListStyle.button);		
+		var msg = new builder.Message(session)
+			.text("There are three ways to track your claim. Please select one of the options below: ")
+			.suggestedActions(
+				builder.SuggestedActions.create(
+					session, [
+						builder.CardAction.imBack(session, "Track with Claim ID", "Track with Claim ID"),
+						builder.CardAction.imBack(session, "Track with Medi Assist ID", "Track with Medi Assist ID"),
+						builder.CardAction.imBack(session, "Track with Employee ID", "Track with Employee ID"),
+					])
+			);
+		session.send(msg);
+//		builder.Prompts.choice(session, "There are three ways to track your claim:", trackMenu, builder.ListStyle.button);		
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
@@ -340,7 +358,10 @@ bot.dialog('trackClaimwID', [
 					
 					session.endDialog();
 				}
-]);
+])
+.triggerAction({
+	matches: [/track with claim id/i, /Track with Claim ID/i, /^Track with Claim ID$/i]	
+});
 
 
 // Dialog to Track with Medi Assist ID
