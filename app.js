@@ -1,10 +1,13 @@
+//Author: Nirmal Rayan
+//Version: 1.0
+//Application: Medibot (Microsoft Bot Framework)
+
 // Add your requirements
 var http = require('http');
 var restify = require('restify');
 var builder = require('botbuilder');
 const {Wit, log} = require('node-wit');
 require('env2')('.env'); // loads all entries into process.env
-//console.log(process.env.DB_HOST); // "127.0.0.1"
 
 // Setup Restify Server
 var server = restify.createServer();
@@ -18,7 +21,6 @@ server.listen(process.env.PORT || process.env.port || 3000, function()
  directory: __dirname,
  default: '/index.html'
 })); 
-
 
 // Create chat bot
 var connector = new builder.ChatConnector
@@ -58,24 +60,8 @@ var bot = new builder.UniversalBot(connector,
 			.addAttachment(welcomeCard));
 		
     });
-	
-// Add first run dialog
-/* bot.dialog('firstRun', function (session) {    
-    session.userData.firstRun = true;
-    session.send("Greetings! I am MediBot and I'll be your personal healthcare assistant. Please say `Track Claim`, `Download E-Card` or `Search Network`.").endDialog();
-}).triggerAction({
-    onFindAction: function (context, callback) {
-        // Only trigger if we've never seen user before
-        if (!context.userData.firstRun) {
-            // Return a score of 1.1 to ensure the first run dialog wins
-            callback(null, 1.1);
-        } else {
-            callback(null, 0.0);
-        }
-    }
-}); */
 
-// Dialog to show menu
+// Dialog to show main menu
 bot.dialog('showMenu',[
 	function (session){	
 			var menucards = [];
@@ -145,32 +131,11 @@ bot.dialog('trackClaim', [
 	function (session){
 		session.send("Wecome to Claim Tracking System.");
 		session.beginDialog('askforTrackBy');
+		console.log("askforTrackBy completed");
 	},
-	function (session, results){
-		console.log("Final response" + results.response);
+	function(session, results) {
+		session.endDialogWithResult(results);	
 	}
-	/* ,
-	function (session, results) {
-		if (results.response) {
-			var item = trackMenu[results.response.entity];
-			console.log(results.response)
-			var msg = "You have chosen to track with: %(Description)s.";
-			session.dialogData.item = item;
-			session.send(msg, item);
-			if (results.response.entity == 'Track with Claim ID'){
-				session.beginDialog('trackClaimwID');
-			}
-			else if (results.response.entity == 'Track with Medi Assist ID'){
-				session.beginDialog('trackClaimwMAID');
-			}
-			else if (results.response.entity == 'Track with Employee Details'){
-				session.beginDialog('trackClaimwEmpID');
-			}
-			
-		}
-//		session.endDialog(); 
-	} */ 
-
 ])
 .triggerAction({
 	matches: [/track claim/i, /track/i, /tracking/i, /claim tracking/i, /claim status/i, /pending claim/i, /claim details/i], 
@@ -179,19 +144,7 @@ bot.dialog('trackClaim', [
 	
 });
 
-// Dialog to display main menu after other conversations.
-var mainMenu = {
-		"Track Claim":{
-			Description: "Track"
-		},
-		"Download E-Card":{
-			Description: "Download"
-		},
-		"Search Network Hospitals":{
-			Description: "Search"
-		}
-};
-
+// Dialog for displaying menu after completing requested tasks
 bot.dialog('askforMore',[
 	function (session){
 		builder.Prompts.choice(session, "How else can I help you?", mainMenu, builder.ListStyle.button);		
@@ -237,13 +190,40 @@ bot.dialog('askforTrackBy',[
 						builder.CardAction.imBack(session, "Track with Employee ID", "Track with Employee ID"),
 					])
 			);
-		session.send(msg);
-//		builder.Prompts.choice(session, "There are three ways to track your claim:", trackMenu, builder.ListStyle.button);		
+		session.send(msg);	
 	},
 	function(session, results) {
+		console.log("RESULTANT OBJECT: "+results);
 		session.endDialogWithResult(results);
 	}
 ]);
+
+//Custom redirect to Track with Claim ID
+bot.customAction({
+	matches: /^Track with Claim ID$/gi,
+	onSelectAction: (session, args, next) => {
+		session.beginDialog('trackClaimwID');
+		
+	}
+});
+
+//Custom redirect to Track with Medi Assist ID
+bot.customAction({
+	matches: /^Track with Medi Assist ID$/gi,
+	onSelectAction: (session, args, next) => {
+		session.beginDialog('trackClaimwMAID');
+		
+	}
+});
+
+//Custom redirect to Track with Employee ID
+bot.customAction({
+	matches: /^Track with Employee ID$/gi,
+	onSelectAction: (session, args, next) => {
+		session.beginDialog('trackClaimwEmpID');
+		
+	}
+});
 
 // Dialog to Track with Claim Number
 bot.dialog('trackClaimwID', [
@@ -260,7 +240,7 @@ bot.dialog('trackClaimwID', [
 					session.dialogData.hospitalizationDate = builder.EntityRecognizer.resolveTime([results.response]);
 
 					// Process request and display reservation details
-					session.send("Tracking claim with details: <br/>Claim Number: %s<br/>Date/Time: %s",
+					session.send("Tracking claim with details: <br/>Claim Number: %s<br/>Date/Time: %s. Please wait...",
 						session.dialogData.claimNumber, session.dialogData.hospitalizationDate);
 					
 					//Make POST request to MA Server
@@ -283,13 +263,9 @@ bot.dialog('trackClaimwID', [
 					// Start the request
 					response = request(options, function (error, response, body) {
 						if (!error && response.statusCode == 200) {	
-							// Print out the response body
 							data = JSON.parse(body);
-							console.log(data);
 							
 							if(JSON.stringify(data.isSuccess) === "true"){
-//								session.send(JSON.stringify(data.claimDetails));
-						    	console.log(JSON.stringify(data.isSuccess));
 
 								var claimdata = data.claimDetails;
 							
@@ -349,7 +325,6 @@ bot.dialog('trackClaimwID', [
 								}
 								else if (data.errorMessage == "Please enter valid date between hospitalization and discharge."){
 									session.send('The date you have entered is incorrect. Let\'s retry.');
-								//	session.cancelDialog('askforDOA','askforDOA', session.dialogData.claimNumber);	
 									session.beginDialog('trackClaimwID');
 								}
 							}  
@@ -358,11 +333,7 @@ bot.dialog('trackClaimwID', [
 					
 					session.endDialog();
 				}
-])
-.triggerAction({
-	matches: [/track with claim id/i, /Track with Claim ID/i, /^Track with Claim ID$/i]	
-});
-
+]);
 
 // Dialog to Track with Medi Assist ID
 bot.dialog('trackClaimwMAID', [
@@ -378,15 +349,11 @@ bot.dialog('trackClaimwMAID', [
 					session.dialogData.hospitalizationDate = builder.EntityRecognizer.resolveTime([results.response]);
 
 					// Process request and display reservation details
-					session.send("Tracking claim with details: <br/>Medi Assist ID: %s<br/>Date/Time: %s",
+					session.send("Tracking claim with details: <br/>Medi Assist ID: %s<br/>Date/Time: %s. Please wait...",
 						session.dialogData.MAID, session.dialogData.hospitalizationDate);
-				
-/* 					parameters = {"maid":session.dialogData.claimNumber,"date":session.dialogData.hospitalizationDate};
-					console.log(parameters); */
 					
 					//Make POST request to MA Server
 					var request = require('request');
-					
 					
 					// Set the headers
 					var headers = {
@@ -410,7 +377,6 @@ bot.dialog('trackClaimwMAID', [
 							console.log(data);
 							
 							if(JSON.stringify(data.isSuccess) === "true"){
-//								session.send(JSON.stringify(data.claimDetails));
 						    	console.log(JSON.stringify(data.isSuccess));
 
 								var claimdata = data.claimDetails;
@@ -500,12 +466,11 @@ bot.dialog('trackClaimwEmpID', [
 					session.dialogData.hospitalizationDate = builder.EntityRecognizer.resolveTime([results.response]);
 
 					// Process request and display reservation details
-					session.send("Tracking claim with details: <br/>Employee ID: %s<br/>Corporate: %s<br/>Date/Time: %s",
+					session.send("Tracking claim with details: <br/>Employee ID: %s<br/>Corporate: %s<br/>Date/Time: %s. Please wait...",
 						session.dialogData.EmpID, session.dialogData.Corporate, session.dialogData.hospitalizationDate);
 					
 					//Make POST request to MA Server
 					var request = require('request');
-					
 					
 					// Set the headers
 					var headers = {
@@ -529,7 +494,6 @@ bot.dialog('trackClaimwEmpID', [
 							console.log(data);
 							
 							if(JSON.stringify(data.isSuccess) === "true"){
-//								session.send(JSON.stringify(data.claimDetails));
 						    	console.log(JSON.stringify(data.isSuccess));
 
 								var claimdata = data.claimDetails;
@@ -628,8 +592,7 @@ function createReceiptCard(session) {
             builder.ReceiptItem.create(session, 'Rs. '+ session.userData.trackAmountPaidByCorporate, 'Amount Paid by Corporate'),
             builder.ReceiptItem.create(session, 'Rs. '+ session.userData.trackNonPayableAmount, 'Non Payable Amount'),
             builder.ReceiptItem.create(session, 'Rs. '+ session.userData.trackPolicyExcessAmount, 'Policy Excess Amount'),
-            builder.ReceiptItem.create(session, 'Rs. '+ session.userData.trackAdvancePaidByPatient, 'Advance Paid by Beneficiary'),
-//                .image(builder.CardImage.create(session, 'https://github.com/amido/azure-vector-icons/raw/master/renders/traffic-manager.png')),
+            builder.ReceiptItem.create(session, 'Rs. '+ session.userData.trackAdvancePaidByPatient, 'Advance Paid by Beneficiary')
         ])
         .total('Rs. ' + session.userData.trackClmApprovedAmt)
         .buttons([
@@ -1095,9 +1058,6 @@ bot.dialog('askforLocation',  [
 		var locationDialog = require('botbuilder-location');
 		bot.library(locationDialog.createLibrary(process.env.BING_MAPS_API_KEY));
 		
-		// Node.js Browser Location Wrapper
-		
-		
 		var options = {
 			prompt: 'Where should I search for hospitals? Type an address.',
 			useNativeControl: true,
@@ -1114,7 +1074,6 @@ bot.dialog('askforLocation',  [
 			var place = session.userData.place;
 			session.userData.lat = JSON.stringify(place.geo.latitude);
 			session.userData.lng = JSON.stringify(place.geo.longitude);
-//			session.send("Looking for hospitals around " + JSON.stringify(place));
 			session.beginDialog('askforInsurer');	
         }
 		else{
@@ -1179,8 +1138,6 @@ bot.dialog('askforLocation',  [
 						
 						
 						for (var item in data.hospitals){	
-
-		//					console.log(JSON.parse(session.userData.lat)+","+session.userData.lng+"|"+data.hospitals[item].latitude+","+data.hospitals[item].longitude);
 							// Get Distance between User and Hospital
 							var geolib = require("geolib");						
 							data.hospitals[item].dist = geolib.getDistance(
