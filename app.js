@@ -1093,18 +1093,20 @@ bot.dialog('askforLocation',  [
 						for (var item in data.hospitals){	
 
 							// Get Distance between User and Hospital
-							var geodist = require('geodist');							
-							var dist = geodist({lat: session.userData.lat, lon: session.userData.lng},{lat:data.hospitals[item].latitude, lon:data.hospitals[item].longitude}, {format: true, unit: 'meters'});
-							
-							data.hospitals[item].dist = dist;
+							var geolib = require("geolib");						
+							var dist = geolib.getDistance(
+									{latitude: Number(session.userData.lat), longitude: Number(session.userData.lng)},
+									{latitude: Number(data.hospitals[item].latitude), longitude: Number(data.hospitals[item].longitude)}
+									);
+							console.log(session.userData.lat+","+session.userData.lng+"|"+data.hospitals[item].latitude+","+data.hospitals[item].longitude);
 							console.log(dist);
 													
 						}
 						
-						var top10 = data.hospitals[item].dist.sort(function(a, b) { return a.Variable1 < b.Variable1 ? 1 : -1; })
-						.slice(0, 10);
+	//					var top10 = data.hospitals.dist.sort(function(a, b) { return a.Variable1 < b.Variable1 ? 1 : -1; })
+	//					.slice(0, 10);
 						
-						session.send('Closest 10 hospitals are '+ top10);
+	//					session.send('Closest 10 hospitals are '+ top10);
 						
 						for (var item in data.hospitals){
 							var nwHospAddress = JSON.stringify(data.hospitals[item].address);	
