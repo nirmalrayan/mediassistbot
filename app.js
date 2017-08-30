@@ -28,30 +28,33 @@ var connector = new builder.ChatConnector
 var bot = new builder.UniversalBot(connector,
     function (session) {
 		if(session.userData.trackBenefName){
-			var msg = new builder.Message(session)
-			.text("Greetings " + session.userData.trackBenefName + "! I am MediBot and I'll be your personal healthcare assistant. How can I help you?")
-			.suggestedActions(
-				builder.SuggestedActions.create(
-						session, [
-							builder.CardAction.imBack(session, "Track Claim", "Track Claim"),
-							builder.CardAction.imBack(session, "Download E-Card", "Download E-Card"),
-							builder.CardAction.imBack(session, "Search Network Hospitals", "Search Network Hospitals")
-						]
-					));
+			var welcomeCard = new builder.HeroCard(session)
+			.title("Hi " + session.userData.trackBenefName + "! Nice to see you. I am MediBot How can I help you?")
+			.subtitle("I will be your personal healthcare assistant. ℹ️ Type \"#\" at any time to see the menu.")
+			.images([
+				new builder.CardImage(session)
+					.url('https://image.ibb.co/k8FF6k/robot_4.png')
+					.alt('MediBot')
+			])
+			.buttons([
+				builder.CardAction.imBack(session, "Show Menu", "Show Menu")
+			]);
+
 		}
 		else{
-			var msg = new builder.Message(session)
-			.text("Greetings! I am MediBot and I'll be your personal healthcare assistant. How can I help you?")
-			.suggestedActions(
-				builder.SuggestedActions.create(
-						session, [
-							builder.CardAction.imBack(session, "Track Claim", "Track Claim"),
-							builder.CardAction.imBack(session, "Download E-Card", "Download E-Card"),
-							builder.CardAction.imBack(session, "Search Network Hospitals", "Search Network Hospitals")
-						]
-					));
+			var welcomeCard = new builder.HeroCard(session)
+			.title("Greetings! I am MediBot How can I help you?")
+			.subtitle("I will be your personal healthcare assistant. ℹ️ Type \"#\" at any time to see the menu.")
+			.images([
+				new builder.CardImage(session)
+					.url('https://image.ibb.co/k8FF6k/robot_4.png')
+					.alt('MediBot')
+			])
+			.buttons([
+				builder.CardAction.imBack(session, "Show Menu", "Show Menu")
+			]);
 		}
-		session.send(msg);
+		session.send(welcomeCard);
 		
     });
 	
@@ -70,6 +73,30 @@ var bot = new builder.UniversalBot(connector,
         }
     }
 }); */
+
+// Dialog to show menu
+bot.dialog('showMenu',[
+	function (session){	
+			var msg = new builder.Message(session)
+			.text("Greetings " + session.userData.trackBenefName + "! I am MediBot and I'll be your personal healthcare assistant. How can I help you?")
+			.suggestedActions(
+				builder.SuggestedActions.create(
+						session, [
+							builder.CardAction.imBack(session, "Track Claim", "Track Claim"),
+							builder.CardAction.imBack(session, "Download E-Card", "Download E-Card"),
+							builder.CardAction.imBack(session, "Search Network Hospitals", "Search Network Hospitals")
+						]
+					));
+			session.send(msg);
+	},
+	function(session, results) {
+		session.endDialogWithResult(results);	
+	}
+])
+.triggerAction({
+	matches: [/show menu/i, /#/i],
+	confirmPrompt: "This will cancel your current request. Are you sure?"	
+});
 
 // Dialog to start tracking claims
 bot.dialog('trackClaim', [
