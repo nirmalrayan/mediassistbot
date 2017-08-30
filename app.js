@@ -29,7 +29,7 @@ var bot = new builder.UniversalBot(connector,
     function (session) {
 		if(session.userData.trackBenefName){
 			var welcomeCard = new builder.HeroCard(session)
-			.title("Hi " + session.userData.trackBenefName + "! Nice to see you. I am MediBot How can I help you?")
+			.title("Hi " + session.userData.trackBenefName + "! Nice to see you. I am MediBot. How can I help you?")
 			.subtitle("I will be your personal healthcare assistant. ℹ️ Type \"#\" at any time to see the menu.")
 			.images([
 				new builder.CardImage(session)
@@ -43,7 +43,7 @@ var bot = new builder.UniversalBot(connector,
 		}
 		else{
 			var welcomeCard = new builder.HeroCard(session)
-			.title("Greetings! I am MediBot How can I help you?")
+			.title("Greetings! I am MediBot. How can I help you?")
 			.subtitle("I will be your personal healthcare assistant. ℹ️ Type \"#\" at any time to see the menu.")
 			.images([
 				new builder.CardImage(session)
@@ -54,7 +54,7 @@ var bot = new builder.UniversalBot(connector,
 				builder.CardAction.imBack(session, "Show Menu", "Show Menu")
 			]);
 		}
-		session.send(new Builder.Message(session)
+		session.send(new builder.Message(session)
 			.addAttachment(welcomeCard));
 		
     });
@@ -79,7 +79,7 @@ var bot = new builder.UniversalBot(connector,
 bot.dialog('showMenu',[
 	function (session){	
 			var msg = new builder.Message(session)
-			.text("Greetings " + session.userData.trackBenefName + "! I am MediBot and I'll be your personal healthcare assistant. How can I help you?")
+			.text("My abilities are still growing. I'm trained to help you with the following: ")
 			.suggestedActions(
 				builder.SuggestedActions.create(
 						session, [
@@ -87,7 +87,8 @@ bot.dialog('showMenu',[
 							builder.CardAction.imBack(session, "Download E-Card", "Download E-Card"),
 							builder.CardAction.imBack(session, "Search Network Hospitals", "Search Network Hospitals")
 						]
-					));
+					))
+			.addAttachment(menuitems);
 			session.send(msg);
 	},
 	function(session, results) {
