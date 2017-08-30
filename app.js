@@ -1007,8 +1007,11 @@ bot.dialog('askforLocation',  [
 		var locationDialog = require('botbuilder-location');
 		bot.library(locationDialog.createLibrary(process.env.BING_MAPS_API_KEY));
 		
+		// Node.js Browser Location Wrapper
+		
+		
 		var options = {
-			prompt: "Please share your location",
+			prompt: 'Where should I search for hospitals? Type an address.',
 			useNativeControl: true,
 			reverseGeocode: true,
 			skipFavorites: true,
@@ -1084,14 +1087,33 @@ bot.dialog('askforLocation',  [
 					
 					if(JSON.stringify(data.isSuccess) === "true"){				
 						var cards = [];
+						
+						
+						
+						for (var item in data.hospitals){	
+
+							// Get Distance between User and Hospital
+							var geodist = require('geodist');							
+							var dist = geodist({lat: session.userData.lat, lon: session.userData.lng},{lat:data.hospitals[item].latitude, lon:data.hospitals[item].longitude}, {format: true, unit: 'meters'});
+							
+							data.hospitals[item].dist = dist;
+							console.log(dist);
+													
+						}
+						
+						var top10 = data.hospitals[item].dist.sort(function(a, b) { return a.Variable1 < b.Variable1 ? 1 : -1; })
+						.slice(0, 10);
+						
+						session.send('Closest 10 hospitals are '+ top10);
+						
 						for (var item in data.hospitals){
-							var nwHospAddress = JSON.stringify(data.hospitals[item].address);
-							var nwHospPhNo = data.hospitals[item].phone.split('/')[0];
+							var nwHospAddress = JSON.stringify(data.hospitals[item].address);	
+							var nwHospPhNo = data.hospitals[item].phone.split('/')[0];								
 							nwHospPhNo = nwHospPhNo.replace(/-/g,'');
 							
 							cards.push(
 								new builder.HeroCard(session)
-								.title(data.hospitals[item].name)
+								.title(data.hospitals[item].name + " (" + data.hospitals[item].dist + " meters)")
 								.subtitle("Phone: " + data.hospitals[item].phone)
 								.text(nwHospAddress + ', ' + data.hospitals[item].city + ', ' + data.hospitals[item].state + ', ' + data.hospitals[item].pinCode)
 								.buttons([
@@ -1100,10 +1122,6 @@ bot.dialog('askforLocation',  [
 									builder.CardAction.openUrl(session, "https://m.medibuddy.in/PlannedHospitalization.aspx?hospid="+data.hospitals[item].id+"&hospname="+data.hospitals[item].name, "Submit eCashless")
 								])
 							);
-							
-							if(item == 8){
-								break;
-							}
 
 						}
 
