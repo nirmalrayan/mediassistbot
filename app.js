@@ -54,7 +54,8 @@ var bot = new builder.UniversalBot(connector,
 				builder.CardAction.imBack(session, "Show Menu", "Show Menu")
 			]);
 		}
-		session.send(welcomeCard);
+		session.send(new Builder.Message(session)
+			.addAttachment(welcomeCard));
 		
     });
 	
