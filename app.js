@@ -65,10 +65,10 @@ var bot = new builder.UniversalBot(connector,
 bot.dialog('showMenu',[
 	function (session){	
 			var menucards = [];
-			console.log("Inside show menu");
+			
 			trackClaimCard = new builder.HeroCard(session)
 									.title("Track Claim")
-									.subtitle("Tracking your claim can help you understand where you are in the claims")
+									.subtitle("Tracking your claim can help you understand where you are in the claims process.")
 									.text("https://track.medibuddy.in")
 									.images([
 										new builder.CardImage(session)
@@ -83,7 +83,7 @@ bot.dialog('showMenu',[
 			
 			downloadCard = new builder.HeroCard(session)
 									.title("Download E-Card")
-									.subtitle("Getting your E-Card is much simpler and at your finger tips")
+									.subtitle("Getting your E-Card is much simpler and at your finger tips.")
 									.text("https://ecard.medibuddy.in")
 									.images([
 										new builder.CardImage(session)
@@ -98,7 +98,7 @@ bot.dialog('showMenu',[
 			
 			searchNetworkCard = new builder.HeroCard(session)
 									.title("Search Network")
-									.subtitle("Search Medi Assist to find the nearest network hospitals")
+									.subtitle("Search Medi Assist to find the nearest network hospitals.")
 									.text("https://network.medibuddy.in")
 									.images([
 										new builder.CardImage(session)
@@ -131,7 +131,6 @@ bot.dialog('trackClaim', [
 	function (session){
 		session.send("Wecome to Claim Tracking System.");
 		session.beginDialog('askforTrackBy');
-		console.log("askforTrackBy completed");
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);	
@@ -139,7 +138,6 @@ bot.dialog('trackClaim', [
 ])
 .triggerAction({
 	matches: [/track claim/i, /track/i, /tracking/i, /claim tracking/i, /claim status/i, /pending claim/i, /claim details/i], 
-	// /^track claim$/i,
 	confirmPrompt: "This will cancel your current request. Are you sure?"
 	
 });
@@ -147,6 +145,10 @@ bot.dialog('trackClaim', [
 // Dialog for displaying menu after completing requested tasks
 bot.dialog('askforMore',[
 	function (session){
+		
+		session.send("How else can I help you?");
+		session.beginDialog('showMenu');
+		/*
 		builder.Prompts.choice(session, "How else can I help you?", mainMenu, builder.ListStyle.button);		
 	},
 	function (session, results) {
@@ -161,23 +163,11 @@ bot.dialog('askforMore',[
 		}
 	},
 	function(session, results) {
-		session.endDialogWithResult(results);	
+		session.endDialogWithResult(results);	*/
 	}
 ]);
 
 // Dialog to ask for Track By
-var trackMenu = {
-		"Track with Claim ID":{
-			Description: "ClaimID"
-		},
-		"Track with Medi Assist ID":{
-			Description: "MAID"
-		},
-		"Track with Employee Details":{
-			Description: "EmpID"
-		}
-};
-
 bot.dialog('askforTrackBy',[
 	function (session){
 		var msg = new builder.Message(session)
@@ -193,7 +183,6 @@ bot.dialog('askforTrackBy',[
 		session.send(msg);	
 	},
 	function(session, results) {
-		console.log("RESULTANT OBJECT: "+results);
 		session.endDialogWithResult(results);
 	}
 ]);
@@ -225,6 +214,23 @@ bot.customAction({
 	}
 });
 
+// Dialog to ask for Confirmation - Track with Claim Number
+bot.dialog('askforTrackClaimwIDConfirmation',[
+	function (session){
+		builder.Prompts.confirm(session, "Let's try again? (yes/no)")
+	},
+	function (session, results) {
+		if (results.response){
+			session.replaceDialog('trackClaimwID', {reprompt: true});
+		}
+		else {
+			session.endConversation();
+			session.beginDialog('askforMore');
+		}
+		
+	}
+]);
+
 // Dialog to Track with Claim Number
 bot.dialog('trackClaimwID', [
 				function (session){
@@ -233,14 +239,21 @@ bot.dialog('trackClaimwID', [
 					}
 				},	
 				function (session, results) {
-					session.dialogData.claimNumber = results.response;
-					session.beginDialog('askforDOA');
+					var clmNoChecker = /^\d{8}$/.test(results.response);
+					if(JSON.stringify(clmNoChecker) == "true"){
+						session.dialogData.claimNumber = results.response;
+						session.beginDialog('askforDOA');
+					}
+					else{
+						session.send("The claim number should only be numeric and eight digits long.");
+						session.beginDialog('askforTrackClaimwIDConfirmation');
+					}
 				},
 				function (session, results) {
 					session.dialogData.hospitalizationDate = builder.EntityRecognizer.resolveTime([results.response]);
 
 					// Process request and display reservation details
-					session.send("Tracking claim with details: <br/>Claim Number: %s<br/>Date/Time: %s. Please wait...",
+					session.send("Tracking claim with details: <br/>Claim Number: %s<br/>Date/Time: %s. <br/><br/>Please wait...",
 						session.dialogData.claimNumber, session.dialogData.hospitalizationDate);
 					
 					//Make POST request to MA Server
@@ -320,12 +333,12 @@ bot.dialog('trackClaimwID', [
   							}
 							else if(JSON.stringify(data.isSuccess) === "false"){
 								if(data.errorMessage == "Please enter valid claim ID."){
-									session.send('The claim ID you have entered is incorrect. Let\'s retry.');
-									session.beginDialog('trackClaimwID');
+									session.send('The claim ID you have entered is incorrect.');
+									session.beginDialog('askforTrackClaimwIDConfirmation');
 								}
 								else if (data.errorMessage == "Please enter valid date between hospitalization and discharge."){
-									session.send('The date you have entered is incorrect. Let\'s retry.');
-									session.beginDialog('trackClaimwID');
+									session.send('The date you have entered is incorrect.');
+									session.beginDialog('askforTrackClaimwIDConfirmation');
 								}
 							}  
 						}
@@ -333,6 +346,23 @@ bot.dialog('trackClaimwID', [
 					
 					session.endDialog();
 				}
+]);
+
+// Dialog to ask for Confirmation - Track with MAID
+bot.dialog('askforTrackClaimwMAIDConfirmation',[
+	function (session){
+		builder.Prompts.confirm(session, "Let's try again? (yes/no)")
+	},
+	function (session, results) {
+		if (results.response){
+			session.replaceDialog('trackClaimwMAID', {reprompt: true});
+		}
+		else {
+			session.endConversation();
+			session.beginDialog('askforMore');
+		}
+		
+	}
 ]);
 
 // Dialog to Track with Medi Assist ID
@@ -343,13 +373,22 @@ bot.dialog('trackClaimwMAID', [
 				},	
 				function (session, results) {
 					session.dialogData.MAID = results.response;
-					session.beginDialog('askforDOA');
+					
+					var clmMAIDChecker = /^\d{10}$/.test(results.response);
+					if(JSON.stringify(clmMAIDChecker) == "true"){
+						session.dialogData.MAID = results.response;
+						session.beginDialog('askforDOA');
+					}
+					else{
+						session.send("The claim number should only be numeric and ten digits long.");
+						session.beginDialog('askforTrackClaimwMAIDConfirmation');
+					}
 				},
 				function (session, results) {
 					session.dialogData.hospitalizationDate = builder.EntityRecognizer.resolveTime([results.response]);
 
 					// Process request and display reservation details
-					session.send("Tracking claim with details: <br/>Medi Assist ID: %s<br/>Date/Time: %s. Please wait...",
+					session.send("Tracking claim with details: <br/>Medi Assist ID: %s<br/>Date/Time: %s. <br/><br/>Please wait...",
 						session.dialogData.MAID, session.dialogData.hospitalizationDate);
 					
 					//Make POST request to MA Server
@@ -432,14 +471,14 @@ bot.dialog('trackClaimwMAID', [
 								}, 5000);		
   							}
 							else if(JSON.stringify(data.isSuccess) === "false"){
+								console.log("Error message is "+ data.errorMessage);
 								if(data.errorMessage == "Please enter valid Medi Assist ID."){
-									session.send('The Medi Assist ID you have entered is incorrect. Let\'s retry.');
-									session.beginDialog('trackClaimwMAID');
+									session.send('The Medi Assist ID you have entered is incorrect.');
+									session.beginDialog('askforTrackClaimwMAIDConfirmation');
 								}
 								else if (data.errorMessage == "Please enter valid date between hospitalization and discharge."){
-									session.send('The date you have entered is incorrect. Let\'s retry.');
-								//	session.cancelDialog('askforDOA','askforDOA', session.dialogData.claimNumber);	
-									session.beginDialog('trackClaimwMAID');
+									session.send('The date you have entered is incorrect.');
+									session.beginDialog('askforTrackClaimwMAIDConfirmation');
 								}
 							}  
 						}
@@ -447,6 +486,23 @@ bot.dialog('trackClaimwMAID', [
 					
 					session.endDialog();
 				}
+]);
+
+// Dialog to ask for Confirmation - Track with Employee Details
+bot.dialog('askforTrackClaimwEmpIDConfirmation',[
+	function (session){
+		builder.Prompts.confirm(session, "Let's try again? (yes/no)")
+	},
+	function (session, results) {
+		if (results.response){
+			session.replaceDialog('trackClaimwEmpID', {reprompt: true});
+		}
+		else {
+			session.endConversation();
+			session.beginDialog('askforMore');
+		}
+		
+	}
 ]);
 
 // Dialog to Track with Employee Details
@@ -466,7 +522,7 @@ bot.dialog('trackClaimwEmpID', [
 					session.dialogData.hospitalizationDate = builder.EntityRecognizer.resolveTime([results.response]);
 
 					// Process request and display reservation details
-					session.send("Tracking claim with details: <br/>Employee ID: %s<br/>Corporate: %s<br/>Date/Time: %s. Please wait...",
+					session.send("Tracking claim with details: <br/>Employee ID: %s<br/>Corporate: %s<br/>Date/Time: %s. <br/><br/>Please wait...",
 						session.dialogData.EmpID, session.dialogData.Corporate, session.dialogData.hospitalizationDate);
 					
 					//Make POST request to MA Server
@@ -494,7 +550,6 @@ bot.dialog('trackClaimwEmpID', [
 							console.log(data);
 							
 							if(JSON.stringify(data.isSuccess) === "true"){
-						    	console.log(JSON.stringify(data.isSuccess));
 
 								var claimdata = data.claimDetails;
 							
@@ -549,14 +604,13 @@ bot.dialog('trackClaimwEmpID', [
 								}, 5000);		
   							}
 							else if(JSON.stringify(data.isSuccess) === "false"){
-								if(data.errorMessage == "Please enter valid Medi Assist ID."){
-									session.send('The Medi Assist ID you have entered is incorrect. Let\'s retry.');
-									session.beginDialog('trackClaimwMAID');
+								if(data.errorMessage == "Please enter valid employee details."){
+									session.send('The employee details you have entered is incorrect.');
+									session.beginDialog('askforTrackClaimwEmpIDConfirmation');
 								}
 								else if (data.errorMessage == "Please enter valid date between hospitalization and discharge."){
-									session.send('The date you have entered is incorrect. Let\'s retry.');
-								//	session.cancelDialog('askforDOA','askforDOA', session.dialogData.claimNumber);	
-									session.beginDialog('trackClaimwMAID');
+									session.send('The date you have entered is incorrect.');
+									session.beginDialog('askforTrackClaimwEmpIDConfirmation');
 								}
 							}  
 						}
@@ -566,9 +620,55 @@ bot.dialog('trackClaimwEmpID', [
 				}
 ]);
 
+// Format Number in Indian Format
+function formatNumber(num){
+	var x=num;
+	x=x.toString();
+	var lastThree = x.substring(x.length-3);
+	var otherNumbers = x.substring(0,x.length-3);
+	if(otherNumbers != '')
+		lastThree = ',' + lastThree;
+	var res = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
+
+	return(res);
+
+}
+
 // Receipt Card - Track Claim Result
 function createReceiptCard(session) {
-    return new builder.ReceiptCard(session)
+	
+    return new builder.HeroCard(session)
+        .title(session.userData.trackBenefName + ' (' + session.userData.trackBenefMAID + ')')
+        .subtitle('### - Hospital: ' + session.userData.trackHospitalName + '\r\r ### Status: ' + session.userData.trackClaimStatus)
+        .text('- Claim Number : ** ' + session.userData.trackClaimId + ' ** '+ '\r\r' +
+			'- Claim Type : ' + session.userData.trackClaimType + '\r\r' +
+			'#### Date of Hospitalization : ' + session.userData.trackDoa + '\r\r' +
+			'Date of Discharge: ' + session.userData.trackDod + '\r\r' +
+			'Relation to Beneficiary : ' + session.userData.trackBenefRelation + '\r\r' +
+			'Claim Received Date : ' + session.userData.trackClaimReceivedDate + '\r\r' +
+			'Claim Approved Date : ' + session.userData.trackClaimApprovedDate + '\r\r' +
+			'Claim Denied Date : ' + session.userData.trackClaimDeniedDate + '\r\r' +
+			'Policy Number : ' + session.userData.trackPolicyNo + '\r\r' +
+			'Claimed Amount : &#x20B9; ' + formatNumber(session.userData.trackClmAmount) + '/- \r\r' +
+			'Hospital Discount : &#x20B9; ' + formatNumber(session.userData.trackHospitalDiscount) + '/- \r\r' +
+			'Amount Paid by Beneficiary : &#x20B9; ' + formatNumber(session.userData.trackAmountPaidByPatient) + '/- \r\r' +
+			'Amount Paid by Corporate : &#x20B9; ' + formatNumber(session.userData.trackAmountPaidByCorporate) + '/- \r\r' +
+			'Non Payable Amount : &#x20B9; ' + formatNumber(session.userData.trackNonPayableAmount) + '/- \r\r' +
+			'Policy Excess Amount : &#x20B9; ' + formatNumber(session.userData.trackPolicyExcessAmount) + '/- \r\r' +
+			'Advance Paid by Beneficiary : &#x20B9; ' + formatNumber(session.userData.trackAdvancePaidByPatient) + '/- \r\r' +
+			'Approved Amount : &#x20B9; ' + formatNumber(session.userData.trackClmApprovedAmt) + '/- \r\r' 
+		)
+        .images([
+            builder.CardImage.create(session, 'https://i.imgur.com/PxDzjjI.png')
+        ])
+        .buttons([
+            builder.CardAction.openUrl(session, 'https://track.medibuddy.in/', 'More Information')
+        ]);
+	
+	
+	
+	
+/*     return new builder.ReceiptCard(session)
         .title(session.userData.trackBenefName + ' (' + session.userData.trackBenefMAID + ')')
         .facts([
             builder.Fact.create(session, session.userData.trackClaimId, 'Claim Number'),
@@ -598,7 +698,7 @@ function createReceiptCard(session) {
         .buttons([
             builder.CardAction.openUrl(session, 'https://track.medibuddy.in/', 'More Information')
                 .image('https://raw.githubusercontent.com/amido/azure-vector-icons/master/renders/microsoft-azure.png')
-        ]);
+        ]); */
 }
 
 // Dialog to ask for Claim Number
@@ -666,8 +766,7 @@ bot.dialog('askforPolNo',[
 bot.dialog('doaHelp', function(session, args, next) {
     var msg = "You can enter the date in any format. Eg. if date of admission is 01-Jan-2017 and discharge is 05-Jan-2017, you can enter any date from 1st Jan,2017 to 5th Jan, 2017";
     session.endDialog(msg);
-})
-;
+});
 
 // Generic Help dialog for Bot
 bot.dialog('help', function (session, args, next) {
@@ -692,25 +791,7 @@ bot.dialog('downloadEcard',[
 		session.beginDialog('askforDownloadBy');
 	},
 	function(session, results) {
-		if (results.response) {
-			var item = downloadMenu[results.response.entity];
-			var msg = "You have chosen to download with: %(Description)s.";
-			session.dialogData.item = item;
-			session.send(msg, item);
-			if (results.response.entity == 'Download with Claim ID'){
-				session.beginDialog('downloadwID');
-			}
-			else if (results.response.entity == 'Download with Medi Assist ID'){
-				session.beginDialog('downloadwMAID');
-			}
-			else if (results.response.entity == 'Download with Employee Details'){
-				session.beginDialog('downloadwEmpID');
-			}
-			else if (results.response.entity == 'Download with Policy Number'){
-				session.beginDialog('downloadwPolNo');
-			}
-			
-		}		
+		session.endDialogWithResult(results);
 	}
 ])
 .triggerAction({
@@ -721,21 +802,66 @@ bot.dialog('downloadEcard',[
 });
 
 // Dialog to ask for Download By
-var downloadMenu = {
-		"Download with Claim ID":{
-			Description: "ClaimID"
-		},
-		"Download with Medi Assist ID":{
-			Description: "MAID"
-		},
-		"Download with Employee Details":{
-			Description: "EmpID"
-		},
-		"Download with Policy Number":{
-			Description: "PolNo"
-		},
+bot.dialog('askforDownloadBy',[
+	function (session){
+		var msg = new builder.Message(session)
+			.text("There are four ways to download your e-card. Please select one of the options below: ")
+			.suggestedActions(
+				builder.SuggestedActions.create(
+					session, [
+						builder.CardAction.imBack(session, "Download with Claim ID", "Download with Claim ID"),
+						builder.CardAction.imBack(session, "Download with Medi Assist ID", "Download with Medi Assist ID"),
+						builder.CardAction.imBack(session, "Download with Employee ID", "Download with Employee ID"),
+						builder.CardAction.imBack(session, "Download with Policy Number", "Download with Policy Number")
+					])
+			);
+		session.send(msg);	
+	},
+	function(session, results) {
+		session.endDialogWithResult(results);
+	}
+]);
+
+//Custom redirect to Track with Claim ID
+bot.customAction({
+	matches: /^Download with Claim ID$/gi,
+	onSelectAction: (session, args, next) => {
+		session.beginDialog('downloadwID');
 		
-};
+	}
+});
+
+//Custom redirect to Download with Medi Assist ID
+bot.customAction({
+	matches: /^Download with Medi Assist ID$/gi,
+	onSelectAction: (session, args, next) => {
+		session.beginDialog('downloadwMAID');
+		
+	}
+});
+
+//Custom redirect to Download with Employee ID
+bot.customAction({
+	matches: /^Download with Employee ID$/gi,
+	onSelectAction: (session, args, next) => {
+		session.beginDialog('downloadwEmpID');
+		
+	}
+});
+
+//Custom redirect to Download with Policy Number
+bot.customAction({
+	matches: /^Download with Policy Number$/gi,
+	onSelectAction: (session, args, next) => {
+		session.beginDialog('downloadwPolNo');
+		
+	}
+});
+
+
+
+/* 
+
 
 bot.dialog('askforDownloadBy',[
 	function (session){
@@ -746,7 +872,7 @@ bot.dialog('askforDownloadBy',[
 	}
 ]);
 
-
+ */
 // Dialog to ask for Beneficiary Name
 bot.dialog('askforbenefName',[
 	function (session){
