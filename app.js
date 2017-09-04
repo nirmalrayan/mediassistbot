@@ -153,7 +153,7 @@ bot.dialog('trackClaim', [
 ])
 .triggerAction({
 	matches: [/track claim/i, /track/i, /tracking/i, /claim tracking/i, /claim status/i, /pending claim/i, /claim details/i], 
-	confirmPrompt: "This will cancel your current request. Are you sure?"
+	confirmPrompt: "⚠️ This will cancel your current request. Are you sure?"
 	
 });
 
@@ -232,7 +232,7 @@ bot.customAction({
 // Dialog to ask for Confirmation - Track with Claim Number
 bot.dialog('askforTrackClaimwIDConfirmation',[
 	function (session){
-		builder.Prompts.confirm(session, "Let's try again? (yes/no)")
+		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)")
 	},
 	function (session, results) {
 		if (results.response){
@@ -269,7 +269,7 @@ bot.dialog('trackClaimwID', [
 					session.dialogData.hospitalizationDate = builder.EntityRecognizer.resolveTime([results.response]);
 
 					// Process request and display reservation details
-					session.send("Tracking claim with details: <br/>Claim Number: %s<br/>Date/Time: %s. <br/><br/>Please wait...",
+					session.send("Tracking claim with details: <br/>Claim Number: %s<br/>Date/Time: %s. <br/><br/>Please wait ⏳",
 						session.dialogData.claimNumber, session.dialogData.hospitalizationDate);
 					
 					//Make POST request to MA Server
@@ -349,11 +349,11 @@ bot.dialog('trackClaimwID', [
   							}
 							else if(JSON.stringify(data.isSuccess) === "false"){
 								if(data.errorMessage == "Please enter valid claim ID."){
-									session.send('The claim ID you have entered is incorrect.');
+									session.send('⚠️ The claim ID you have entered is incorrect.');
 									session.beginDialog('askforTrackClaimwIDConfirmation');
 								}
 								else if (data.errorMessage == "Please enter valid date between hospitalization and discharge."){
-									session.send('The date you have entered is incorrect.');
+									session.send('⚠️ The date you have entered is incorrect.');
 									session.beginDialog('askforTrackClaimwIDConfirmation');
 								}
 							}  
@@ -367,7 +367,7 @@ bot.dialog('trackClaimwID', [
 // Dialog to ask for Confirmation - Track with MAID
 bot.dialog('askforTrackClaimwMAIDConfirmation',[
 	function (session){
-		builder.Prompts.confirm(session, "Let's try again? (yes/no)")
+		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)")
 	},
 	function (session, results) {
 		if (results.response){
@@ -404,7 +404,7 @@ bot.dialog('trackClaimwMAID', [
 					session.dialogData.hospitalizationDate = builder.EntityRecognizer.resolveTime([results.response]);
 
 					// Process request and display reservation details
-					session.send("Tracking claim with details: <br/>Medi Assist ID: %s<br/>Date/Time: %s. <br/><br/>Please wait...",
+					session.send("Tracking claim with details: <br/>Medi Assist ID: %s<br/>Date/Time: %s. <br/><br/>Please wait ⏳",
 						session.dialogData.MAID, session.dialogData.hospitalizationDate);
 					
 					//Make POST request to MA Server
@@ -489,11 +489,11 @@ bot.dialog('trackClaimwMAID', [
 							else if(JSON.stringify(data.isSuccess) === "false"){
 								console.log("Error message is "+ data.errorMessage);
 								if(data.errorMessage == "Please enter valid Medi Assist ID."){
-									session.send('The Medi Assist ID you have entered is incorrect.');
+									session.send('⚠️ The Medi Assist ID you have entered is incorrect.');
 									session.beginDialog('askforTrackClaimwMAIDConfirmation');
 								}
 								else if (data.errorMessage == "Please enter valid date between hospitalization and discharge."){
-									session.send('The date you have entered is incorrect.');
+									session.send('⚠️ The date you have entered is incorrect.');
 									session.beginDialog('askforTrackClaimwMAIDConfirmation');
 								}
 							}  
@@ -507,7 +507,7 @@ bot.dialog('trackClaimwMAID', [
 // Dialog to ask for Confirmation - Track with Employee Details
 bot.dialog('askforTrackClaimwEmpIDConfirmation',[
 	function (session){
-		builder.Prompts.confirm(session, "Let's try again? (yes/no)")
+		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)")
 	},
 	function (session, results) {
 		if (results.response){
@@ -538,7 +538,7 @@ bot.dialog('trackClaimwEmpID', [
 					session.dialogData.hospitalizationDate = builder.EntityRecognizer.resolveTime([results.response]);
 
 					// Process request and display reservation details
-					session.send("Tracking claim with details: <br/>Employee ID: %s<br/>Corporate: %s<br/>Date/Time: %s. <br/><br/>Please wait...",
+					session.send("Tracking claim with details: <br/>Employee ID: %s<br/>Corporate: %s<br/>Date/Time: %s. <br/><br/>Please wait ⏳",
 						session.dialogData.EmpID, session.dialogData.Corporate, session.dialogData.hospitalizationDate);
 					
 					//Make POST request to MA Server
@@ -621,11 +621,11 @@ bot.dialog('trackClaimwEmpID', [
   							}
 							else if(JSON.stringify(data.isSuccess) === "false"){
 								if(data.errorMessage == "Please enter valid employee details."){
-									session.send('The employee details you have entered is incorrect.');
+									session.send('⚠️ The employee details you have entered is incorrect.');
 									session.beginDialog('askforTrackClaimwEmpIDConfirmation');
 								}
 								else if (data.errorMessage == "Please enter valid date between hospitalization and discharge."){
-									session.send('The date you have entered is incorrect.');
+									session.send('⚠️ The date you have entered is incorrect.');
 									session.beginDialog('askforTrackClaimwEmpIDConfirmation');
 								}
 							}  
@@ -791,13 +791,13 @@ bot.dialog('askforPolNo',[
 
 // Context Help dialog for Hospitalization date 
 bot.dialog('doaHelp', function(session, args, next) {
-    var msg = "You can enter the date in any format. Eg. if date of admission is 01-Jan-2017 and discharge is 05-Jan-2017, you can enter any date from 1st Jan,2017 to 5th Jan, 2017";
+    var msg = "⛑️ You can enter the date in any format. Eg. if date of admission is 01-Jan-2017 and discharge is 05-Jan-2017, you can enter any date from 1st Jan,2017 to 5th Jan, 2017";
     session.endDialog(msg);
 });
 
 // Generic Help dialog for Bot
 bot.dialog('help', function (session, args, next) {
-    session.endDialog("Medibot can help you track your claim, download e-card or search nearby hospitals within Medi Assist Network. <br/>Please say 'next' to continue");
+    session.endDialog("⛑️ Medibot can help you track your claim, download e-card or search nearby hospitals within Medi Assist Network. <br/>Please say 'next' to continue");
 })
 .triggerAction({
     matches: /^help$/i,
@@ -824,7 +824,7 @@ bot.dialog('downloadEcard',[
 .triggerAction({
 	matches: [/download e-card/i, /download ecard/i, /ecard/i, /tpa card/i, /insurance card/i, /card/i, /download card/i, /^download e-card$/i],
 	// /^download e-card$/i,
-	confirmPrompt: "This will cancel your current request. Are you sure?"
+	confirmPrompt: "⚠️ This will cancel your current request. Are you sure?"
 	
 });
 
@@ -832,7 +832,7 @@ bot.dialog('downloadEcard',[
 bot.dialog('askforDownloadBy',[
 	function (session){
 		var msg = new builder.Message(session)
-			.text("There are four ways to download your e-card. Please select one of the options below: ")
+			.text("Let's get started 🚀. There are four ways to download your e-card. Please select one of the options below: ")
 			.suggestedActions(
 				builder.SuggestedActions.create(
 					session, [
@@ -889,7 +889,7 @@ bot.customAction({
 // Dialog to ask for Confirmation - Download with Claim Number
 bot.dialog('askforDownloadwIDConfirmation',[
 	function (session){
-		builder.Prompts.confirm(session, "Let's try again? (yes/no)")
+		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)")
 	},
 	function (session, results) {
 		if (results.response){
@@ -903,11 +903,10 @@ bot.dialog('askforDownloadwIDConfirmation',[
 	}
 ]);
 
-
 // Dialog to ask for Confirmation - Download with Medi Assist ID
 bot.dialog('askforDownloadwMAIDConfirmation',[
 	function (session){
-		builder.Prompts.confirm(session, "Let's try again? (yes/no)")
+		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)")
 	},
 	function (session, results) {
 		if (results.response){
@@ -921,10 +920,41 @@ bot.dialog('askforDownloadwMAIDConfirmation',[
 	}
 ]);
 
+// Dialog to ask for Confirmation - Download with Employee ID
+bot.dialog('askforDownloadwEmpIDConfirmation',[
+	function (session){
+		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)")
+	},
+	function (session, results) {
+		if (results.response){
+			session.replaceDialog('downloadwEmpID', {reprompt: true});
+		}
+		else {
+			session.endConversation();
+			session.beginDialog('askforMore');
+		}
+		
+	}
+]);
+
+// Dialog to ask for Confirmation - Download with Policy Number
+bot.dialog('askforDownloadwPolNoConfirmation',[
+	function (session){
+		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)")
+	},
+	function (session, results) {
+		if (results.response){
+			session.replaceDialog('downloadwPolNo', {reprompt: true});
+		}
+		else {
+			session.endConversation();
+			session.beginDialog('askforMore');
+		}
+		
+	}
+]);
 
 /* 
-
-
 bot.dialog('askforDownloadBy',[
 	function (session){
 		builder.Prompts.choice(session, "There are four ways to track your claim:", downloadMenu, builder.ListStyle.button);		
@@ -991,6 +1021,7 @@ bot.dialog('downloadwID', [
 
 					// Start the request
 					response = request(options, function (error, response, body) {
+						console.log('OUTPUT: '+JSON.stringify(response));
 						if (!error && response.statusCode == 200) {	
 							var sizeof = require('object-sizeof');
 							console.log(sizeof(body));
@@ -1007,12 +1038,15 @@ bot.dialog('downloadwID', [
 								
 							}
 							else if (sizeof(body) == 0){
-								session.send('I was unable to find your e-card with the details you provided. Let\'s retry.');
-								session.beginDialog('downloadwID');
+								session.send('⚠️ I was unable to find your e-card with the details you provided. ');
+								session.beginDialog('askforDownloadwIDConfirmation');
 							}
 						}
+						else{
+								session.send('⚠️ I was unable to find your e-card with the details you provided. ');
+								session.beginDialog('askforDownloadwIDConfirmation');
+						}
 					});
-					
 					session.endDialog();
 				}
 ]);
@@ -1082,9 +1116,13 @@ bot.dialog('downloadwMAID', [
 								
 							}
 							else if (sizeof(body) == 0){
-								session.send('I was unable to find your e-card with the details you provided. Let\'s retry.');
-								session.beginDialog('downloadwMAID');
+								session.send('⚠️ I was unable to find your e-card with the details you provided. Let\'s retry.');
+								session.beginDialog('askforDownloadwMAIDConfirmation');
 							}
+						}
+						else{
+								session.send('⚠️ I was unable to find your e-card with the details you provided. Let\'s retry.');
+								session.beginDialog('askforDownloadwMAIDConfirmation');							
 						}
 					});
 					
@@ -1152,9 +1190,13 @@ bot.dialog('downloadwEmpID', [
 								
 							}
 							else if (sizeof(body) == 0){
-								session.send('I was unable to find your e-card with the details you provided. Let\'s retry.');
-								session.beginDialog('downloadwEmpID');
+								session.send('⚠️ I was unable to find your e-card with the details you provided. Let\'s retry.');
+								session.beginDialog('askforDownloadwEmpIDConfirmation');
 							}
+						}
+						else{
+								session.send('⚠️ I was unable to find your e-card with the details you provided. Let\'s retry.');
+								session.beginDialog('askforDownloadwEmpIDConfirmation');
 						}
 					});
 					
@@ -1218,9 +1260,13 @@ bot.dialog('downloadwPolNo', [
 								
 							}
 							else if (sizeof(body) == 0){
-								session.send('I was unable to find your e-card with the details you provided. Let\'s retry.');
-								session.beginDialog('downloadwPolNo');
+								session.send('⚠️ I was unable to find your e-card with the details you provided. Let\'s retry.');
+								session.beginDialog('askforDownloadwPolNoConfirmation');
 							}
+						}
+						else{
+								session.send('⚠️ I was unable to find your e-card with the details you provided. Let\'s retry.');
+								session.beginDialog('askforDownloadwPolNoConfirmation');
 						}
 					});
 					
@@ -1253,10 +1299,31 @@ bot.dialog('searchNetwork',[
 .triggerAction({
 	matches: [/search network hospitals/i, /search network/i, /search nearby hospitals/i, /search providers/i, /hospitals around/i],
 	// /^search network hospitals$|^search network$/i,
-	confirmPrompt: "This will cancel your current request. Are you sure?"
+	confirmPrompt: "⚠️ This will cancel your current request. Are you sure?"
 	
 });
 
+// Dialog to ask for Confirmation - Download with Medi Assist ID
+bot.dialog('askforLocationConfirmation',[
+	function (session){
+		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)")
+	},
+	function (session, results) {
+		if (results.response){
+			session.replaceDialog('askforLocation', {reprompt: true});
+		}
+		else {
+			session.endConversation();
+			session.beginDialog('askforMore');
+		}
+		
+	}
+]);
+
+// Function to check if returned JSON object is empty
+function isEmptyObject(obj) {
+  return !Object.keys(obj).length;
+}
 
 bot.dialog('askforLocation',  [
     function (session) {
@@ -1336,11 +1403,15 @@ bot.dialog('askforLocation',  [
 				if (!error && response.statusCode == 200) {	
 					// Print out the response body
 					data = JSON.parse(body);
-					
+					console.log(data);
 					if(JSON.stringify(data.isSuccess) === "true"){				
 						var cards = [];
 						
-						
+					if(isEmptyObject(data.hospitals)){
+						session.send("Sorry! Could not find any hospitals based on your search request.");
+						session.beginDialog('askforLocationConfirmation');
+					}
+					else{
 						
 						for (var item in data.hospitals){	
 							// Get Distance between User and Hospital
@@ -1375,7 +1446,7 @@ bot.dialog('askforLocation',  [
 							
 						}
 
-						session.send("Trying to find hospitals near you. Please wait...");
+						session.send("Trying to find hospitals near you. Please wait ⏳");
 						session.sendTyping();
 						var msg = new builder.Message(session);
 							msg.attachmentLayout(builder.AttachmentLayout.carousel)
@@ -1385,7 +1456,8 @@ bot.dialog('askforLocation',  [
 						setTimeout(function () {
 							session.beginDialog('askforMore');
 						}, 5000);		
-					}					
+					}
+					}
 				}
 			});				
 		}
@@ -1433,7 +1505,7 @@ bot.dialog('askforCallCenter',[
 .triggerAction({
 	matches: [/customer/i, /support/i, /call center/i, /call centre/i, /customer service/i, /cc number/i, /cc/i, /helpline/i, /toll/i, /tech support/i],
 	// /^customer$|^support$|^call centre$|^customer service$|^ cc number$|^cc$|^helpline$|^toll free$|^call center$/i,
-	confirmPrompt: "This will cancel your current request. Are you sure?"
+	confirmPrompt: "⚠️ This will cancel your current request. Are you sure?"
 	
 });
 
@@ -1449,7 +1521,7 @@ bot.dialog('askforHR',[
 .triggerAction({
 	matches: [/HR/i, /join.*company/i, /hr department/i, /human resource/i, /hr dept/i, /career/i, /job/i, /join/i, /opportunity/i, /opportunities/i, /opening/i, /fresher/i],
 	// /^HR$|^human resource$|^hr dept$|^hr department$|^ join.*company$|^careers$|^career$|^job$|^join$|^job|^opportunit$|^opening$|^fresher$|^$|^$/i,
-	confirmPrompt: "This will cancel your current request. Are you sure?"
+	confirmPrompt: "⚠️ This will cancel your current request. Are you sure?"
 	
 });
 
@@ -1464,7 +1536,7 @@ bot.dialog('askforInvestigation',[
 ])
 .triggerAction({
 	matches: [/investigation/i, /forge/i, /malpractice/i, /fishy/i, /suspicious/i, /fordge/i],
-	confirmPrompt: "This will cancel your current request. Are you sure?"
+	confirmPrompt: "⚠️ This will cancel your current request. Are you sure?"
 	
 });
 
@@ -1479,7 +1551,7 @@ bot.dialog('askforGrievance',[
 ])
 .triggerAction({
 	matches: [/grievance/i, /disappoint/i, /angry/i ,/disappointed/i, /dissatisfied/i, /unhappy/i, /horrible/i, /worst/i, /bad/i, /poor/i, /not settled/i, /not paid/i, /not received/i, /very poor/i, /very bad/i, /terrible/i, /not received any amount/i, /not intimated the hospital/i, /not working/i, /support is slow/i, /I did not get/i, /bad service/i, /I did not receive/i, /bad service/i, /bad tpa/i, /bad/i, /worst/i, /complaint/i],
-	confirmPrompt: "This will cancel your current request. Are you sure?"
+	confirmPrompt: "⚠️ This will cancel your current request. Are you sure?"
 	
 });
 
@@ -1494,7 +1566,7 @@ bot.dialog('askforOffshore',[
 ])
 .triggerAction({
 	matches: [/offshore/i, /abroad/i, /overseas contact number/i, /USA/i, /Australia/i, /overseas/i],
-	confirmPrompt: "This will cancel your current request. Are you sure?"
+	confirmPrompt: "⚠️ This will cancel your current request. Are you sure?"
 	
 });
 
@@ -1509,7 +1581,7 @@ bot.dialog('askforGeneralQuery',[
 ])
 .triggerAction({
 	matches: [/register/i, /application/i, /app/i, /medibuddy/i, /transaction/i, /query/i, /queries/i, /question/i, /doubt/i, /clarify/i, /clarity/i, /contact information/i, /registration/i, /can i submit/i, /for how many days/i, /how many/i, /help us urgently/i, /help us/i, /purchase/i, /buy/i, /how much/i, /log in/i, /please guide/i, /responding/i, /please help/i],
-	confirmPrompt: "This will cancel your current request. Are you sure?"
+	confirmPrompt: "⚠️ This will cancel your current request. Are you sure?"
 	
 });
 
