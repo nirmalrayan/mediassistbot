@@ -32,7 +32,7 @@ var bot = new builder.UniversalBot(connector,
 		if(session.message.address.channelId === 'facebook'){
 			var welcomeCard = new builder.HeroCard(session)
 				.title("Hi %s! Nice to see you. I am MediBot. How can I help you?", session.message.address.user.name)
-				.subtitle("I will be your personal healthcare assistant. ℹ️ Type \"show menu\" at any time to see the menu.")
+				.subtitle("I will be your personal healthcare assistant. ℹ️ Type \"show menu\" or \"#\" at any time to see the menu.")
 				.images([
 					new builder.CardImage(session)
 						.url('https://image.ibb.co/k8FF6k/robot_4.png')
@@ -47,7 +47,7 @@ var bot = new builder.UniversalBot(connector,
 			if(session.userData.trackBenefName){
 				var welcomeCard = new builder.HeroCard(session)
 				.title("Hi " + session.userData.trackBenefName + "! Nice to see you. I am MediBot. How can I help you?")
-				.subtitle("I will be your personal healthcare assistant. ℹ️ Type \"show menu\" at any time to see the menu.")
+				.subtitle("I will be your personal healthcare assistant. ℹ️ Type \"show menu\" or \"#\" at any time to see the menu.")
 				.images([
 					new builder.CardImage(session)
 						.url('https://image.ibb.co/k8FF6k/robot_4.png')
@@ -61,7 +61,7 @@ var bot = new builder.UniversalBot(connector,
 			else{
 				var welcomeCard = new builder.HeroCard(session)
 				.title("Greetings! I am MediBot. How can I help you?")
-				.subtitle("I will be your personal healthcare assistant. ℹ️ Type \"#\" at any time to see the menu.")
+				.subtitle("I will be your personal healthcare assistant. ℹ️ Type \"show menu\" or \"#\" at any time to see the menu.")
 				.images([
 					new builder.CardImage(session)
 						.url('https://image.ibb.co/k8FF6k/robot_4.png')
@@ -130,7 +130,6 @@ bot.dialog('showMenu',[
 			.text("My abilities are still growing. I'm trained to help you with the following: ")
 			.attachmentLayout(builder.AttachmentLayout.carousel)
 			.attachments(menucards);
-		console.log("Leaving show menu function");
 		session.send(msg);
 	},
 	function(session, results) {
@@ -144,7 +143,7 @@ bot.dialog('showMenu',[
 // Dialog to start tracking claims
 bot.dialog('trackClaim', [
 	function (session){
-		session.send("Wecome to Claim Tracking System.");
+		session.send("Wecome to Claim Tracking System ✨💫🌟");
 		session.beginDialog('askforTrackBy');
 	},
 	function(session, results) {
@@ -186,7 +185,7 @@ bot.dialog('askforMore',[
 bot.dialog('askforTrackBy',[
 	function (session){
 		var msg = new builder.Message(session)
-			.text("There are three ways to track your claim. Please select one of the options below: ")
+			.text("Sure thing 🙂. There are three ways to track your claim. Please select one of the following options: ")
 			.suggestedActions(
 				builder.SuggestedActions.create(
 					session, [
@@ -261,7 +260,7 @@ bot.dialog('trackClaimwID', [
 						session.beginDialog('askforDOA');
 					}
 					else{
-						session.send("The claim number should only be `numeric` and `eight digits` long.");
+						session.send("⚠️ The claim number should only be `numeric` and `eight digits` long.");
 						session.beginDialog('askforTrackClaimwIDConfirmation');
 					}
 				},
@@ -269,7 +268,7 @@ bot.dialog('trackClaimwID', [
 					session.dialogData.hospitalizationDate = builder.EntityRecognizer.resolveTime([results.response]);
 
 					// Process request and display reservation details
-					session.send("Tracking claim with details: <br/>Claim Number: %s<br/>Date/Time: %s. <br/><br/>Please wait ⏳",
+					session.send("Tracking claim with details 🕵️ <br/>Claim Number: %s<br/>Date/Time: %s. <br/><br/>Please wait ⏳",
 						session.dialogData.claimNumber, session.dialogData.hospitalizationDate);
 					
 					//Make POST request to MA Server
@@ -396,7 +395,7 @@ bot.dialog('trackClaimwMAID', [
 						session.beginDialog('askforDOA');
 					}
 					else{
-						session.send("The Medi Assist ID should only be `numeric` and `ten digits` long.");
+						session.send("⚠️ The Medi Assist ID should only be `numeric` and `ten digits` long.");
 						session.beginDialog('askforTrackClaimwMAIDConfirmation');
 					}
 				},
@@ -404,7 +403,7 @@ bot.dialog('trackClaimwMAID', [
 					session.dialogData.hospitalizationDate = builder.EntityRecognizer.resolveTime([results.response]);
 
 					// Process request and display reservation details
-					session.send("Tracking claim with details: <br/>Medi Assist ID: %s<br/>Date/Time: %s. <br/><br/>Please wait ⏳",
+					session.send("Tracking claim with details 🕵️ <br/>Medi Assist ID: %s<br/>Date/Time: %s. <br/><br/>Please wait ⏳",
 						session.dialogData.MAID, session.dialogData.hospitalizationDate);
 					
 					//Make POST request to MA Server
@@ -538,7 +537,7 @@ bot.dialog('trackClaimwEmpID', [
 					session.dialogData.hospitalizationDate = builder.EntityRecognizer.resolveTime([results.response]);
 
 					// Process request and display reservation details
-					session.send("Tracking claim with details: <br/>Employee ID: %s<br/>Corporate: %s<br/>Date/Time: %s. <br/><br/>Please wait ⏳",
+					session.send("Tracking claim with details 🕵️ <br/>Employee ID: %s<br/>Corporate: %s<br/>Date/Time: %s. <br/><br/>Please wait ⏳",
 						session.dialogData.EmpID, session.dialogData.Corporate, session.dialogData.hospitalizationDate);
 					
 					//Make POST request to MA Server
@@ -653,7 +652,7 @@ function formatNumber(num){
 // Receipt Card - Track Claim Result
 function createReceiptCard(session) {
 	if (session.message.address.channelId === 'facebook'){
-		return session.send('Beneficiary: '+ session.userData.trackBenefName+' | Medi Assist ID: '+ session.userData.trackBenefMAID+' | Hospital: '+ session.userData.trackHospitalName+ ' | Claim Number: '+ session.userData.trackClaimId+' | '
+		return session.send('📝 Beneficiary: '+ session.userData.trackBenefName+' | Medi Assist ID: '+ session.userData.trackBenefMAID+' | Hospital: '+ session.userData.trackHospitalName+ ' | Claim Number: '+ session.userData.trackClaimId+' | '
 		+ ' | Claim Type: '+ session.userData.trackClaimType + ' | Date of Hospitalization: '+ session.userData.trackDoa+ ' | Date of Discharge: ' + session.userData.trackDod 
 		+ ' | Relation to Beneficiary: ' + session.userData.trackBenefRelation+ ' | Claim Received Date: ' + session.userData.trackClaimReceivedDate + ' | Claim Approved Date: '+ 
 		session.userData.trackClaimApprovedDate + ' | Claim Denied Date: ' + session.userData.trackClaimDeniedDate+ ' | Policy Number: ' + session.userData.trackPolicyNo + 
@@ -666,8 +665,8 @@ function createReceiptCard(session) {
 	else{
     return new builder.HeroCard(session)
         .title(session.userData.trackBenefName + ' (' + session.userData.trackBenefMAID + ')')
-        .subtitle('### Hospital: ' + session.userData.trackHospitalName + '\r\r ### Status: ' + session.userData.trackClaimStatus)
-        .text('#### Claim Number :  <span class=\'alignright\'>' + session.userData.trackClaimId + '</span>\r\r' +
+        .subtitle('### Hospital : ' + session.userData.trackHospitalName + '\r\r ### Status : ' + session.userData.trackClaimStatus)
+        .text('#### Claim Number : ' + session.userData.trackClaimId + '\r\r' +
 			'#### Claim Type : ' + session.userData.trackClaimType + '\r\r' +
 			'#### Date of Hospitalization : ' + session.userData.trackDoa + '\r\r' +
 			'#### Date of Discharge: ' + session.userData.trackDod + '\r\r' +
@@ -814,7 +813,7 @@ bot.dialog('help', function (session, args, next) {
 // Dialog to Download E-Card
 bot.dialog('downloadEcard',[
 	function (session){
-		session.send("Welcome to E-Card Download Center.");
+		session.send("Welcome to E-Card Download Center️ 🎊️️🎈🎉");
 		session.beginDialog('askforDownloadBy');
 	},
 	function(session, results) {
@@ -832,7 +831,7 @@ bot.dialog('downloadEcard',[
 bot.dialog('askforDownloadBy',[
 	function (session){
 		var msg = new builder.Message(session)
-			.text("Let's get started 🚀. There are four ways to download your e-card. Please select one of the options below: ")
+			.text("Let's get started 🚀. There are four ways to download your e-card. Please select one of the following options: ")
 			.suggestedActions(
 				builder.SuggestedActions.create(
 					session, [
@@ -987,7 +986,7 @@ bot.dialog('downloadwID', [
 						session.beginDialog('askforbenefName');
 					}
 					else{
-						session.send("The claim number should only be numeric and eight digits long.");
+						session.send("⚠️ The claim number should only be numeric and eight digits long.");
 						session.beginDialog('askforDownloadwIDConfirmation');
 					}
 				},
@@ -995,7 +994,7 @@ bot.dialog('downloadwID', [
 					session.dialogData.benefName = results.response;
 
 					// Process request and display reservation details
-					session.send("Finding Medi Assist E-Card with details: <br/>Claim Number: %s<br/>Beneficiary Name: %s",
+					session.send("Finding Medi Assist E-Card with details 🔎 <br/>Claim Number: %s<br/>Beneficiary Name: %s",
 						session.dialogData.claimNumber, session.dialogData.benefName);
 					
 					var clmId = session.dialogData.claimNumber;
@@ -1066,7 +1065,7 @@ bot.dialog('downloadwMAID', [
 						session.dialogData.MAID = results.response;
 					}
 					else{
-						session.send("The Medi Assist ID should only be numeric and ten digits long.");
+						session.send("⚠️ The Medi Assist ID should only be numeric and ten digits long.");
 						session.beginDialog('askforDownloadwMAIDConfirmation');
 					}
 				},
@@ -1074,7 +1073,7 @@ bot.dialog('downloadwMAID', [
 					session.dialogData.benefName = results.response;
 
 					// Process request and display reservation details
-					session.send("Finding Medi Assist E-Card with details: <br/>Medi Assist ID: %s<br/>Beneficiary Name: %s",
+					session.send("Finding Medi Assist E-Card with details 🔎 <br/>Medi Assist ID: %s<br/>Beneficiary Name: %s",
 						session.dialogData.MAID, session.dialogData.benefName);
 					
 					var MAID = session.dialogData.MAID;
@@ -1147,7 +1146,7 @@ bot.dialog('downloadwEmpID', [
 					session.dialogData.benefName = results.response;
 
 					// Process request and display reservation details
-					session.send("Finding Medi Assist E-Card with details: <br/>Employee ID: %s<br/>Corporate: %s<br/>Beneficiary Name: %s",
+					session.send("Finding Medi Assist E-Card with details 🔎<br/>Employee ID: %s<br/>Corporate: %s<br/>Beneficiary Name: %s",
 						session.dialogData.EmpID, session.dialogData.Corporate, session.dialogData.benefName);
 					
 					var EmpID = session.dialogData.EmpID;
@@ -1217,7 +1216,7 @@ bot.dialog('downloadwPolNo', [
 					session.dialogData.benefName = results.response;
 
 					// Process request and display reservation details
-					session.send("Finding Medi Assist E-Card with details: <br/>Policy Number: %s<br/>Beneficiary Name: %s",
+					session.send("Finding Medi Assist E-Card with details 🔎 <br/>Policy Number: %s<br/>Beneficiary Name: %s",
 						session.dialogData.PolNo, session.dialogData.benefName);
 					
 					var PolNo = (session.dialogData.PolNo).replace(/\//g, "");
@@ -1277,7 +1276,7 @@ bot.dialog('downloadwPolNo', [
 function createHeroCard(session) {
     return new builder.HeroCard(session)
         .title('Download Medi Assist E-Card')
-        .subtitle('Flash this E-Card upon request at the insurance desk in the hospital at the time of admission')
+        .subtitle('ℹ️ Flash this E-Card upon request at the insurance desk in the hospital at the time of admission')
         .text('')
         .images([
             builder.CardImage.create(session, 'https://image.ibb.co/hRiDKv/id_card_4.png')
@@ -1331,7 +1330,7 @@ bot.dialog('askforLocation',  [
 		bot.library(locationDialog.createLibrary(process.env.BING_MAPS_API_KEY));
 		
 		var options = {
-			prompt: 'Where should I search for hospitals? Type an address.',
+			prompt: 'Where should I search for hospitals? 🏥. Type your city.',
 			useNativeControl: true,
 			reverseGeocode: true,
 			skipFavorites: true,
@@ -1349,7 +1348,7 @@ bot.dialog('askforLocation',  [
 			session.beginDialog('askforInsurer');	
         }
 		else{
-			session.send("I was not able to fetch your address. Let's retry");
+			session.send("I was not able to fetch your address 😞. Let's retry");
 			session.beginDialog('askforLocation');
 		}
     },
@@ -1408,7 +1407,7 @@ bot.dialog('askforLocation',  [
 						var cards = [];
 						
 					if(isEmptyObject(data.hospitals)){
-						session.send("Sorry! Could not find any hospitals based on your search request.");
+						session.send("⚠️ Sorry! Could not find any hospitals based on your search request.");
 						session.beginDialog('askforLocationConfirmation');
 					}
 					else{
@@ -1446,7 +1445,7 @@ bot.dialog('askforLocation',  [
 							
 						}
 
-						session.send("Trying to find hospitals near you. Please wait ⏳");
+						session.send("Trying to find hospitals near you 🏥. Please wait ⏳");
 						session.sendTyping();
 						var msg = new builder.Message(session);
 							msg.attachmentLayout(builder.AttachmentLayout.carousel)
@@ -1496,7 +1495,7 @@ bot.dialog('askforSpeciality',[
 // Dialog to redirect to Call Center
 bot.dialog('askforCallCenter',[
 	function (session){
-		session.send("You can reach our call center at `1800 425 9449` or write to `gethelp@mahs.in` for claim related queries");
+		session.send("ℹ️ You can reach our call center at `1800 425 9449` or write to `gethelp@mahs.in` for claim related queries");
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
@@ -1512,7 +1511,7 @@ bot.dialog('askforCallCenter',[
 // Dialog to redirect to HR
 bot.dialog('askforHR',[
 	function (session){
-		session.send("For recent updates on career opportunities, kindly check out the \"Careers\" tab on our Medi Assist facebook page or mail us at `harish.dasepalli@mahs.in`");
+		session.send("ℹ️ For recent updates on career opportunities, kindly check out the \"Careers\" tab on our Medi Assist facebook page or mail us at `harish.dasepalli@mahs.in`");
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
@@ -1528,7 +1527,7 @@ bot.dialog('askforHR',[
 // Dialog to redirect to Investigation
 bot.dialog('askforInvestigation',[
 	function (session){
-		session.send("Thank you for your valuable feedback. We will notify our investigation team");
+		session.send("ℹ️ Thank you for your valuable feedback. We will notify our investigation team");
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
@@ -1543,7 +1542,7 @@ bot.dialog('askforInvestigation',[
 // Dialog to redirect to Grievance
 bot.dialog('askforGrievance',[
 	function (session){
-		session.send("We sincerely regret for the unpleasant experience! I request you to write to us on `gethelp@mahs.in` or call us on our toll free no `1800 425 9449`. Alternatively, you can also download MediBuddy and track your claim on real time basis");
+		session.send("ℹ️ We sincerely regret for the unpleasant experience! I request you to write to us on `gethelp@mahs.in` or call us on our toll free no `1800 425 9449`. Alternatively, you can also download MediBuddy and track your claim on real time basis");
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
@@ -1558,7 +1557,7 @@ bot.dialog('askforGrievance',[
 // Dialog to redirect to Offshore
 bot.dialog('askforOffshore',[
 	function (session){
-		session.send("For further assistance you can either write to `gethelp@mahs.in` or call on our \"Overseas\" contact number at `91-80-67617555`");
+		session.send("ℹ️ For further assistance you can either write to `gethelp@mahs.in` or call on our \"Overseas\" contact number at `91-80-67617555`");
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
@@ -1573,7 +1572,7 @@ bot.dialog('askforOffshore',[
 // Dialog to redirect to General Query
 bot.dialog('askforGeneralQuery',[
 	function (session){
-		session.send("For all your claim/application (MediBuddy)/transaction related queries kindly write to `gethelp@mahs.in` or call us at `1800 425 9449`");
+		session.send("ℹ️ For all your claim/application (MediBuddy)/transaction related queries kindly write to `gethelp@mahs.in` or call us at `1800 425 9449`");
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
@@ -1588,7 +1587,7 @@ bot.dialog('askforGeneralQuery',[
 // Dialog to handle abuse
 bot.dialog('askforAbuse',[
 	function (session){
-		session.send("Hey, that language is uncalled for! I request you to write to us on `gethelp@mahs.in` or call us on our toll free no `1800 425 9449`. Alternatively, you can also download MediBuddy and track your claim on real time basis");
+		session.send("🚫 Hey, that language is uncalled for! I request you to write to us on `gethelp@mahs.in` or call us on our toll free no `1800 425 9449`. Alternatively, you can also download MediBuddy and track your claim on real time basis");
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
@@ -1607,7 +1606,7 @@ function getRandomInt(min, max) {
 // Dialog to handle goodbye
 bot.dialog('sayGoodbye',[
 	function (session){
-		msg = ["See you later, Keep rocking!","See you!","Have a good day.","Later gator!","Talking to you makes my day. Come back soon!", "Ok, bye🙂!", "Till next time!"]
+		msg = ["See you later 👋, Keep rocking!","See you 👋!","Have a good day.","Later gator!","Talking to you makes my day. Come back soon!", "Ok, bye🙂!", "Till next time!"]
 		x = getRandomInt(0,6);
 		session.send(msg[x]);
 	},
@@ -1623,8 +1622,8 @@ bot.dialog('sayGoodbye',[
 // Dialog to handle Compliment
 bot.dialog('sayThanks',[
 	function (session){
-		msg = ["Welcome, It's nothing","That's all right!","Don't mention it.","😊","😍", "That's very kind of you", "Thank you, I appreciate the compliment.", "Thank you very much.","All I can say is, Thanks!", "MediBot appreciates your gratitude! We wish you good health and smiles 🙂"]
-		x = getRandomInt(0,9);
+		msg = ["Welcome, It's nothing","👍","That's all right!","Don't mention it.","😊","😍", "That's very kind of you", "Thank you, I appreciate the compliment.", "Thank you very much. 🙏","All I can say is, Thanks!", "MediBot appreciates your gratitude! We wish you good health and smiles 🙂"]
+		x = getRandomInt(0,10);
 		session.send(msg[x]);
 	},
 	function(session, results) {
@@ -1632,7 +1631,7 @@ bot.dialog('sayThanks',[
 	}
 ])
 .triggerAction({
-	matches: [/thanks/i, /thx/i, /thank/i ,/helpful/i, /kind/i, /You're great/i, /great/i, /amazing/i, /brilliant/i, /excellent/i, /awesome/i, /amazing/i, /love/i, /cute/i, /awww/i, /i like you/i, /like/i]
+	matches: [/thanks/i, /👍/i,/thx/i, /thank/i ,/helpful/i, /kind/i, /You're great/i, /great/i, /amazing/i, /brilliant/i, /excellent/i, /awesome/i, /amazing/i, /love/i, /cute/i, /awww/i, /i like you/i, /like/i]
 	
 });
 
@@ -1653,7 +1652,7 @@ bot.dialog('giveFeedback',[
 	},
 	function (session, results){
 		if (results.response){
-			session.send("Alright, let's get started! What would you like to forward to my masters?");
+			session.send("Sure thing! What would you like to forward to my masters?");
 		}else{
 			session.endConversation();
 			session.beginDialog('askforMore');
