@@ -1585,4 +1585,133 @@ bot.dialog('askforGeneralQuery',[
 	
 });
 
+// Dialog to handle abuse
+bot.dialog('askforAbuse',[
+	function (session){
+		session.send("Hey, that language is uncalled for! I request you to write to us on `gethelp@mahs.in` or call us on our toll free no `1800 425 9449`. Alternatively, you can also download MediBuddy and track your claim on real time basis");
+	},
+	function(session, results) {
+		session.endDialogWithResult(results);
+	}
+])
+.triggerAction({
+	matches: [/anal/i, /ass/i, /asshole/i ,/balls/i, /bitch/i, /butt/i, /fuck/i, /cum/i, /cunt/i, /cock/i, /retard/i, /psycho/i, /mental/i, /finger/i, /jerk/i, /nudity/i, /milf/i, /piss/i, /shit/i, /rape/i, /tit/i, /vagina/i, /sucker/i, /sex/i, /semen/i, /slut/i, /hump/i, /suck/i]
+	
+});
+
+// Get random integer between min (inclusive) and max (inclusive)
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// Dialog to handle goodbye
+bot.dialog('sayGoodbye',[
+	function (session){
+		msg = ["See you later, Keep rocking!","See you!","Have a good day.","Later gator!","Talking to you makes my day. Come back soon!", "Ok, bye🙂!", "Till next time!"]
+		x = getRandomInt(0,6);
+		session.send(msg[x]);
+	},
+	function(session, results) {
+		session.endDialogWithResult(results);
+	}
+])
+.triggerAction({
+	matches: [/bye/i, /see you/i, /cu/i ,/ciao/i, /cheerio/i, /cheers/i, /bai/i, /c u/i, /l8r/i, /exit/i, /quit/i, /take care/i, /cya/i, /shalom/i, /sayonara/i, /farewell/i, /later/i, /so long/i, /peace out/i, /see you/i]
+	
+});
+
+// Dialog to handle Compliment
+bot.dialog('sayThanks',[
+	function (session){
+		msg = ["Welcome, It's nothing","That's all right!","Don't mention it.","😊","😍", "That's very kind of you", "Thank you, I appreciate the compliment.", "Thank you very much.","All I can say is, Thanks!", "MediBot appreciates your gratitude! We wish you good health and smiles 🙂"]
+		x = getRandomInt(0,9);
+		session.send(msg[x]);
+	},
+	function(session, results) {
+		session.endDialogWithResult(results);
+	}
+])
+.triggerAction({
+	matches: [/thanks/i, /thx/i, /thank/i ,/helpful/i, /kind/i, /You're great/i, /great/i, /amazing/i, /brilliant/i, /excellent/i, /awesome/i, /amazing/i, /love/i, /cute/i, /awww/i, /i like you/i, /like/i]
+	
+});
+
+var ratingChoices = ['Poor', 'Ok', 'Good', 'Very Good', 'Excellent'];
+
+// Dialog to handle Feedback
+bot.dialog('giveFeedback',[
+	function (session){
+		
+		session.send("On a scale of 1 - 5, with 1 being `poor` and 5 being `excellent`, what would you rate MediBot?");
+		builder.Prompts.choice(session, 'Choose a rating', ratingChoices);	
+		
+	},
+	function(session, results) {
+		session.userData.rating = results.response.entity;
+		console.log('User has rated '+ session.userData.rating);
+		builder.Prompts.confirm(session,'Awesome! Do you want to share your thoughts about me, the MediBot or Medi Assist Healthcare Services in general with our team? (yes/no)');
+	},
+	function (session, results){
+		if (results.response){
+			session.send("Alright, let's get started! What would you like to forward to my masters?");
+		}else{
+			session.endConversation();
+			session.beginDialog('askforMore');
+		}
+		
+	},
+	function(session, results){
+			
+			session.userData.feedback = results.response;
+			session.send("Thank you for sharing! I will make sure my masters receive your message!");
+			
+			var Request = require('tedious').Request;
+			var TYPES = require('tedious').TYPES;
+
+			// Establish Database connection
+			var Connection = require('tedious').Connection;
+			var config = {
+				userName: process.env.SQL_SERVER_USERNAME,
+				password: process.env.SQL_SERVER_PASSWORD,
+				server: '192.168.1.102',
+				
+				options: {database: process.env.SQL_MEDIBOT_DB}  
+			};
+			var connection = new Connection(config);
+			connection.on('connect', function(err){
+				if (err) return console.log(err);
+				  
+			console.log("Connected to database");
+			//request = new Request("INSERT INTO "+ process.env.SQL_MEDIBOT_FEEDBACK_TABLE+" (Username,Feedback,Rating) VALUES ("+session.userData.benefName+","+session.userData.feedback+","+session.userData.rating+");", function(err){
+			request = new Request("INSERT INTO "+ process.env.SQL_MEDIBOT_FEEDBACK_TABLE+" (Username,Feedback,Rating) VALUES ('Rayan','Nothing2','Excellent');", function(err){
+				console.log(request);
+				if(err) {
+						console.log(err);
+					}
+				});
+				request.on('row', function(columns){
+					columns.forEach(function(column){
+						if(column.value === null) {
+							console.log('NULL');
+						}else{
+							console.log('Feedback id of inserted item is ' + column.value);
+						}
+						
+					});
+					
+				});
+				
+				connection.execSql(request);
+				
+				});
+	},
+	function(session, results){
+		session.endDialogWithResult(results);
+	}
+])
+.triggerAction({
+	matches: [/feedback/i]
+	
+});
+
 server.post('/api/messages', connector.listen());

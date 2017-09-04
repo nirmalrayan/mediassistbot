@@ -34,6 +34,7 @@
     "object-sizeof": "^1.2.0",
     "restify": "^5.0.1",
     "restify-plugins": "^1.6.0",
-    "serve-static-restify": "^1.0.0"
+    "serve-static-restify": "^1.0.0",
+    "tedious": "^2.0.0"
   }
 }
