@@ -261,7 +261,7 @@ bot.dialog('trackClaimwID', [
 						session.beginDialog('askforDOA');
 					}
 					else{
-						session.send("The claim number should only be numeric and eight digits long.");
+						session.send("The claim number should only be `numeric` and `eight digits` long.");
 						session.beginDialog('askforTrackClaimwIDConfirmation');
 					}
 				},
@@ -396,7 +396,7 @@ bot.dialog('trackClaimwMAID', [
 						session.beginDialog('askforDOA');
 					}
 					else{
-						session.send("The claim number should only be numeric and ten digits long.");
+						session.send("The Medi Assist ID should only be `numeric` and `ten digits` long.");
 						session.beginDialog('askforTrackClaimwMAIDConfirmation');
 					}
 				},
@@ -886,6 +886,41 @@ bot.customAction({
 });
 
 
+// Dialog to ask for Confirmation - Download with Claim Number
+bot.dialog('askforDownloadwIDConfirmation',[
+	function (session){
+		builder.Prompts.confirm(session, "Let's try again? (yes/no)")
+	},
+	function (session, results) {
+		if (results.response){
+			session.replaceDialog('downloadwID', {reprompt: true});
+		}
+		else {
+			session.endConversation();
+			session.beginDialog('askforMore');
+		}
+		
+	}
+]);
+
+
+// Dialog to ask for Confirmation - Download with Medi Assist ID
+bot.dialog('askforDownloadwMAIDConfirmation',[
+	function (session){
+		builder.Prompts.confirm(session, "Let's try again? (yes/no)")
+	},
+	function (session, results) {
+		if (results.response){
+			session.replaceDialog('downloadwMAID', {reprompt: true});
+		}
+		else {
+			session.endConversation();
+			session.beginDialog('askforMore');
+		}
+		
+	}
+]);
+
 
 /* 
 
@@ -916,8 +951,15 @@ bot.dialog('downloadwID', [
 						session.beginDialog('askforClaimNumber');
 				},	
 				function (session, results) {
-					session.dialogData.claimNumber = results.response;
-					session.beginDialog('askforbenefName');
+					var clmNoChecker = /^\d{8}$/.test(results.response);
+					if(JSON.stringify(clmNoChecker) == "true"){
+						session.dialogData.claimNumber = results.response;
+						session.beginDialog('askforbenefName');
+					}
+					else{
+						session.send("The claim number should only be numeric and eight digits long.");
+						session.beginDialog('askforDownloadwIDConfirmation');
+					}
 				},
 				function (session, results) {
 					session.dialogData.benefName = results.response;
@@ -981,8 +1023,18 @@ bot.dialog('downloadwMAID', [
 						session.beginDialog('askforMAID');
 				},	
 				function (session, results) {
+					
 					session.dialogData.MAID = results.response;
-					session.beginDialog('askforbenefName');
+					
+					var clmMAIDChecker = /^\d{10}$/.test(results.response);
+					if(JSON.stringify(clmMAIDChecker) == "true"){
+						session.beginDialog('askforbenefName');
+						session.dialogData.MAID = results.response;
+					}
+					else{
+						session.send("The Medi Assist ID should only be numeric and ten digits long.");
+						session.beginDialog('askforDownloadwMAIDConfirmation');
+					}
 				},
 				function (session, results) {
 					session.dialogData.benefName = results.response;
@@ -1426,7 +1478,7 @@ bot.dialog('askforGrievance',[
 	}
 ])
 .triggerAction({
-	matches: [/grievance/i, /disappoint/i, /disappointed/i, /dissatisfied/i, /unhappy/i, /horrible/i, /worst/i, /bad/i, /poor/i, /not settled/i, /not paid/i, /not received/i, /very poor/i, /very bad/i, /terrible/i, /not received any amount/i, /not intimated the hospital/i, /not working/i, /support is slow/i, /I did not get/i, /bad service/i, /I did not receive/i, /bad service/i, /bad tpa/i, /bad/i, /worst/i, /complaint/i],
+	matches: [/grievance/i, /disappoint/i, /angry/i ,/disappointed/i, /dissatisfied/i, /unhappy/i, /horrible/i, /worst/i, /bad/i, /poor/i, /not settled/i, /not paid/i, /not received/i, /very poor/i, /very bad/i, /terrible/i, /not received any amount/i, /not intimated the hospital/i, /not working/i, /support is slow/i, /I did not get/i, /bad service/i, /I did not receive/i, /bad service/i, /bad tpa/i, /bad/i, /worst/i, /complaint/i],
 	confirmPrompt: "This will cancel your current request. Are you sure?"
 	
 });
