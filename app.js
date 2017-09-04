@@ -235,6 +235,7 @@ bot.dialog('askforTrackClaimwIDConfirmation',[
 bot.dialog('trackClaimwID', [
 				function (session){
 					if(!session.dialogData.claimNumber){
+//						console.log(session.message.address.channelId);
 						session.beginDialog('askforClaimNumber');
 					}
 				},	
@@ -636,27 +637,38 @@ function formatNumber(num){
 
 // Receipt Card - Track Claim Result
 function createReceiptCard(session) {
-	
+	if (session.message.address.channelId === 'facebook'){
+		return session.send('Beneficiary: '+ session.userData.trackBenefName+' | Medi Assist ID: '+ session.userData.trackBenefMAID+' | Hospital: '+ session.userData.trackHospitalName+ ' | Claim Number: '+ session.userData.trackClaimId+' | '
+		+ ' | Claim Type: '+ session.userData.trackClaimType + ' | Date of Hospitalization: '+ session.userData.trackDoa+ ' | Date of Discharge: ' + session.userData.trackDod 
+		+ ' | Relation to Beneficiary: ' + session.userData.trackBenefRelation+ ' | Claim Received Date: ' + session.userData.trackClaimReceivedDate + ' | Claim Approved Date: '+ 
+		session.userData.trackClaimApprovedDate + ' | Claim Denied Date: ' + session.userData.trackClaimDeniedDate+ ' | Policy Number: ' + session.userData.trackPolicyNo + 
+	' | Claimed Amount: &#x20B9; '+ formatNumber(session.userData.trackClmAmount) + ' | Hospital Discount : &#x20B9; '+ formatNumber(session.userData.trackHospitalDiscount) + 
+	' | Amount Paid by Beneficiary: &#x20B9; '+ formatNumber(session.userData.trackAmountPaidByPatient) + ' | Amount Paid by Corporate : &#x20B9; '+ formatNumber(session.userData.trackAmountPaidByCorporate) + 
+	' | Non Payable Amount : &#x20B9; ' + formatNumber(session.userData.trackNonPayableAmount) + ' | Policy Excess Amount : &#x20B9; '+ formatNumber(session.userData.trackPolicyExcessAmount) +
+	' | Advance Paid by Beneficiary : &#x20B9; '+formatNumber(session.userData.trackAdvancePaidByPatient)+ ' | Approved Amount : &#x20B9; '+ formatNumber(session.userData.trackClmApprovedAmt)
+	);
+	}
+	else{
     return new builder.HeroCard(session)
         .title(session.userData.trackBenefName + ' (' + session.userData.trackBenefMAID + ')')
-        .subtitle('### - Hospital: ' + session.userData.trackHospitalName + '\r\r ### Status: ' + session.userData.trackClaimStatus)
-        .text('- Claim Number : ** ' + session.userData.trackClaimId + ' ** '+ '\r\r' +
-			'- Claim Type : ' + session.userData.trackClaimType + '\r\r' +
+        .subtitle('### Hospital: ' + session.userData.trackHospitalName + '\r\r ### Status: ' + session.userData.trackClaimStatus)
+        .text('#### Claim Number :  <span class=\'alignright\'>' + session.userData.trackClaimId + '</span>\r\r' +
+			'#### Claim Type : ' + session.userData.trackClaimType + '\r\r' +
 			'#### Date of Hospitalization : ' + session.userData.trackDoa + '\r\r' +
-			'Date of Discharge: ' + session.userData.trackDod + '\r\r' +
-			'Relation to Beneficiary : ' + session.userData.trackBenefRelation + '\r\r' +
-			'Claim Received Date : ' + session.userData.trackClaimReceivedDate + '\r\r' +
-			'Claim Approved Date : ' + session.userData.trackClaimApprovedDate + '\r\r' +
-			'Claim Denied Date : ' + session.userData.trackClaimDeniedDate + '\r\r' +
-			'Policy Number : ' + session.userData.trackPolicyNo + '\r\r' +
-			'Claimed Amount : &#x20B9; ' + formatNumber(session.userData.trackClmAmount) + '/- \r\r' +
-			'Hospital Discount : &#x20B9; ' + formatNumber(session.userData.trackHospitalDiscount) + '/- \r\r' +
-			'Amount Paid by Beneficiary : &#x20B9; ' + formatNumber(session.userData.trackAmountPaidByPatient) + '/- \r\r' +
-			'Amount Paid by Corporate : &#x20B9; ' + formatNumber(session.userData.trackAmountPaidByCorporate) + '/- \r\r' +
-			'Non Payable Amount : &#x20B9; ' + formatNumber(session.userData.trackNonPayableAmount) + '/- \r\r' +
-			'Policy Excess Amount : &#x20B9; ' + formatNumber(session.userData.trackPolicyExcessAmount) + '/- \r\r' +
-			'Advance Paid by Beneficiary : &#x20B9; ' + formatNumber(session.userData.trackAdvancePaidByPatient) + '/- \r\r' +
-			'Approved Amount : &#x20B9; ' + formatNumber(session.userData.trackClmApprovedAmt) + '/- \r\r' 
+			'#### Date of Discharge: ' + session.userData.trackDod + '\r\r' +
+			'#### Relation to Beneficiary : ' + session.userData.trackBenefRelation + '\r\r' +
+			'#### Claim Received Date : ' + session.userData.trackClaimReceivedDate + '\r\r' +
+			'#### Claim Approved Date : ' + session.userData.trackClaimApprovedDate + '\r\r' +
+			'#### Claim Denied Date : ' + session.userData.trackClaimDeniedDate + '\r\r' +
+			'#### Policy Number : ' + session.userData.trackPolicyNo + '\r\r' +
+			'#### Claimed Amount : &#x20B9; ' + formatNumber(session.userData.trackClmAmount) + '/- \r\r' +
+			'#### Hospital Discount : &#x20B9; ' + formatNumber(session.userData.trackHospitalDiscount) + '/- \r\r' +
+			'#### Amount Paid by Beneficiary : &#x20B9; ' + formatNumber(session.userData.trackAmountPaidByPatient) + '/- \r\r' +
+			'#### Amount Paid by Corporate : &#x20B9; ' + formatNumber(session.userData.trackAmountPaidByCorporate) + '/- \r\r' +
+			'#### Non Payable Amount : &#x20B9; ' + formatNumber(session.userData.trackNonPayableAmount) + '/- \r\r' +
+			'#### Policy Excess Amount : &#x20B9; ' + formatNumber(session.userData.trackPolicyExcessAmount) + '/- \r\r' +
+			'#### Advance Paid by Beneficiary : &#x20B9; ' + formatNumber(session.userData.trackAdvancePaidByPatient) + '/- \r\r' +
+			'#### Approved Amount : &#x20B9; ' + formatNumber(session.userData.trackClmApprovedAmt) + '/- \r\r' 
 		)
         .images([
             builder.CardImage.create(session, 'https://i.imgur.com/PxDzjjI.png')
@@ -665,7 +677,7 @@ function createReceiptCard(session) {
             builder.CardAction.openUrl(session, 'https://track.medibuddy.in/', 'More Information')
         ]);
 	
-	
+	}
 	
 	
 /*     return new builder.ReceiptCard(session)
