@@ -29,36 +29,51 @@ var connector = new builder.ChatConnector
 // This is a dinner reservation bot that uses a waterfall technique to prompt users for input.
 var bot = new builder.UniversalBot(connector,
     function (session) {
-		if(session.userData.trackBenefName){
+		if(session.message.address.channelId === 'facebook'){
 			var welcomeCard = new builder.HeroCard(session)
-			.title("Hi " + session.userData.trackBenefName + "! Nice to see you. I am MediBot. How can I help you?")
-			.subtitle("I will be your personal healthcare assistant. ℹ️ Type \"show menu\" at any time to see the menu.")
-			.images([
-				new builder.CardImage(session)
-					.url('https://image.ibb.co/k8FF6k/robot_4.png')
-					.alt('MediBot')
-			])
-			.buttons([
-				builder.CardAction.imBack(session, "Show Menu", "Show Menu")
-			]);
-
+				.title("Hi %s! Nice to see you. I am MediBot. How can I help you?", session.message.address.user.name)
+				.subtitle("I will be your personal healthcare assistant. ℹ️ Type \"show menu\" at any time to see the menu.")
+				.images([
+					new builder.CardImage(session)
+						.url('https://image.ibb.co/k8FF6k/robot_4.png')
+						.alt('MediBot')
+				])
+				.buttons([
+					builder.CardAction.imBack(session, "Show Menu", "Show Menu")
+				]);
+			session.userData.name = session.message.address.user.name;
 		}
 		else{
-			var welcomeCard = new builder.HeroCard(session)
-			.title("Greetings! I am MediBot. How can I help you?")
-			.subtitle("I will be your personal healthcare assistant. ℹ️ Type \"#\" at any time to see the menu.")
-			.images([
-				new builder.CardImage(session)
-					.url('https://image.ibb.co/k8FF6k/robot_4.png')
-					.alt('MediBot')
-			])
-			.buttons([
-				builder.CardAction.imBack(session, "Show Menu", "Show Menu")
-			]);
-		}
-		session.send(new builder.Message(session)
-			.addAttachment(welcomeCard));
-		
+			if(session.userData.trackBenefName){
+				var welcomeCard = new builder.HeroCard(session)
+				.title("Hi " + session.userData.trackBenefName + "! Nice to see you. I am MediBot. How can I help you?")
+				.subtitle("I will be your personal healthcare assistant. ℹ️ Type \"show menu\" at any time to see the menu.")
+				.images([
+					new builder.CardImage(session)
+						.url('https://image.ibb.co/k8FF6k/robot_4.png')
+						.alt('MediBot')
+				])
+				.buttons([
+					builder.CardAction.imBack(session, "Show Menu", "Show Menu")
+				]);
+
+			}
+			else{
+				var welcomeCard = new builder.HeroCard(session)
+				.title("Greetings! I am MediBot. How can I help you?")
+				.subtitle("I will be your personal healthcare assistant. ℹ️ Type \"#\" at any time to see the menu.")
+				.images([
+					new builder.CardImage(session)
+						.url('https://image.ibb.co/k8FF6k/robot_4.png')
+						.alt('MediBot')
+				])
+				.buttons([
+					builder.CardAction.imBack(session, "Show Menu", "Show Menu")
+				]);
+			}
+			session.send(new builder.Message(session)
+				.addAttachment(welcomeCard));
+		}	
     });
 
 // Dialog to show main menu
@@ -642,11 +657,11 @@ function createReceiptCard(session) {
 		+ ' | Claim Type: '+ session.userData.trackClaimType + ' | Date of Hospitalization: '+ session.userData.trackDoa+ ' | Date of Discharge: ' + session.userData.trackDod 
 		+ ' | Relation to Beneficiary: ' + session.userData.trackBenefRelation+ ' | Claim Received Date: ' + session.userData.trackClaimReceivedDate + ' | Claim Approved Date: '+ 
 		session.userData.trackClaimApprovedDate + ' | Claim Denied Date: ' + session.userData.trackClaimDeniedDate+ ' | Policy Number: ' + session.userData.trackPolicyNo + 
-	' | Claimed Amount: &#x20B9; '+ formatNumber(session.userData.trackClmAmount) + ' | Hospital Discount : &#x20B9; '+ formatNumber(session.userData.trackHospitalDiscount) + 
-	' | Amount Paid by Beneficiary: &#x20B9; '+ formatNumber(session.userData.trackAmountPaidByPatient) + ' | Amount Paid by Corporate : &#x20B9; '+ formatNumber(session.userData.trackAmountPaidByCorporate) + 
-	' | Non Payable Amount : &#x20B9; ' + formatNumber(session.userData.trackNonPayableAmount) + ' | Policy Excess Amount : &#x20B9; '+ formatNumber(session.userData.trackPolicyExcessAmount) +
-	' | Advance Paid by Beneficiary : &#x20B9; '+formatNumber(session.userData.trackAdvancePaidByPatient)+ ' | Approved Amount : &#x20B9; '+ formatNumber(session.userData.trackClmApprovedAmt)
-	);
+		' | Claimed Amount: Rs. '+ formatNumber(session.userData.trackClmAmount) + ' | Hospital Discount : Rs. '+ formatNumber(session.userData.trackHospitalDiscount) + 
+		' | Amount Paid by Beneficiary: Rs. '+ formatNumber(session.userData.trackAmountPaidByPatient) + ' | Amount Paid by Corporate : Rs. '+ formatNumber(session.userData.trackAmountPaidByCorporate) + 
+		' | Non Payable Amount : Rs. ' + formatNumber(session.userData.trackNonPayableAmount) + ' | Policy Excess Amount : Rs. '+ formatNumber(session.userData.trackPolicyExcessAmount) +
+		' | Advance Paid by Beneficiary : Rs. '+formatNumber(session.userData.trackAdvancePaidByPatient)+ ' | Approved Amount : Rs. '+ formatNumber(session.userData.trackClmApprovedAmt)
+		);
 	}
 	else{
     return new builder.HeroCard(session)
