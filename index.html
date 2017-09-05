@@ -3,39 +3,266 @@
    <head>
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <title>MediBot</title>
+	  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
 	  <style>
 		body, html{
 			margin: 0 auto;
 			width: 100%;
 			height:100%;
+			background-color: #eaeaea;
+			color: #4A4A4A;
+			overflow: hidden;
+			font-family: 'Open Sans', sans-serif;
 		}
 		
-		#chatbox{
-			position: relative;
+		h2 {
+			font-weight: 600;
+			-webkit-font-smoothing: antialiased;
+		}
+		
+		.padding-none{
+			padding: 0px;
+		}
+		
+		.container-fluid{
+			padding-right: 15px;
+			padding-left: 15px;
+			margin-right: auto;
+			margin-left: auto;
+		}
+		
+		.top-bar{
+			height: 110px;
+			background-color: #865b80;
+		}
+		
+		.chat-container{
+			width: 1135px;
 			margin: 0 auto;
-			width: 750px;
-			min-width: 750px;
-			height: 630px;
-			min-height: 630px;
+			position: relative;
+			background-color: #f9f9f9;
+			top: -95px;
+			z-index: 10;
+			border-radius: 4px;
+			-webkit-box-shadow: 0px 0px 9px 0px rgba(50, 50, 50, 0.3);
+			-moz-box-shadow: 0px 0px 9px 0px rgba(50, 50, 50, 0.3);
+			box-shadow: 0px 0px 9px 0px rgba(50, 50, 50, 0.3);
 		}
 		
+		.chat-box-container {
+			float: left;
+			width: 835px;
+			border-right: 3px solid #e4e4e4;
+		}
+		
+		.sidebar-container {
+			text-align: center;
+			color: #FFF;
+			width: 297px;
+			background-color: #000;
+			background-size: cover;
+			font-weight: 100;
+			border-top-right-radius: 4px;
+			border-bottom-right-radius: 4px;
+			position:relative;
+			height: 1258px;
+			float: left;
+		}
+		
+		.clearfix{
+			clear: both;
+		}
+		
+		.chat-header {
+			height: 75px;
+			background-color: #FFF;
+			border-bottom: 3px solid #e4e4e4;
+			border-radius: 4px 4px 0px 0px;
+		}
+		
+		.chat-header-logo {
+			background-image: url("https://image.ibb.co/iJVLUF/image_1.png");
+			background-repeat: no-repeat;
+			background-size: cover;
+			height: 63px;
+			width: 63px;
+			margin-top: 5px;
+			margin-left: 17px;
+			float: left;
+		}
+		
+		.chat-header-heading {
+			float: left;
+			margin-left: 12px;
+		}
+		
+		.chat-header-sub-heading {
+			float: left;
+			margin-left: 10px;
+		}
+		
+		.chat-header-sub-heading h4 {
+			font-weight: 100;
+			color: #adadad;
+			font-size: 14px;
+			margin-top: 35px;
+			margin-left: 8px;
+			word-spacing: 1px;
+		}
+		
+		ul.share-buttons {
+			list-style: none;
+			padding: 0;
+			float: right;
+			margin-right: 20px;
+			margin-top: 25px;
+		}
+
+		ul.share-buttons li {
+			display: inline;
+			margin-right: 5px;
+		}		
+		
+		.sidebar-background {
+			background-color: rgba(0, 0, 0, 0.7);
+			border-top-right-radius: 4px;
+			border-bottom-right-radius: 4px;
+			height: 1258px;
+		}
+		
+		.chat-box iframe{
+			width: 100%;
+			height: 560px;
+		}
+				
 		#chatbox .wc-card, #chatbox .wc-adaptive-card{
 			width: 538px!important;
 			min-width: 538px!important;
 		}
 		
-		#chatbox iframe{
-			width: 100%;
-			height:100vh;
+
+		a {
+			color: #337ab7;
+			text-decoration: none;
 		}
 		
-		.alignright { text-align: right; }
+		h2 {
+			font-weight: 600;
+			-webkit-font-smoothing: antialiased;
+		}
+		h1, h2, h3, h4, h5, h6 {
+			font-family: 'Open Sans';
+		}
 		
-	  </style>
+		.chat-box {
+			height: 100%;
+			overflow-y: scroll;
+		}
+		
+		.chatbox-container{
+			float:left;
+		}
+		
+		.profile-pic {
+			text-align: center;
+			padding: 30px 0 0 0;
+			border-top-right-radius: 4px;
+		}
+		
+		.profile-pic img {
+			width: 100px;
+			height: 100px;
+			vertical-align: middle;
+			border: 0;
+		}
+		
+		.sidebar-heading {
+    font-size: 30px;
+    font-weight: 400;
+}
+
+.side-bar-text {
+    font-size: 16px;
+    margin-top: 10px;
+    -webkit-font-smoothing: antialiased;
+    font-weight: 400;
+}
+
+.sidebar-online {
+    font-size: 8px;
+    position: relative;
+    left: -5px;
+    top: -1px;
+    color: #35b243;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+    font-family: 'icomoon' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-location {
+    position: relative;
+    left: -11px;
+    top: 1px;
+}
+
+iframe .wc-header{
+	display: none!important;
+}
+		
+		</style>
    </head>
    <body>
-	<div id="chatbox">
-		<iframe src='https://webchat.botframework.com/embed/Medibot_medibuddy?s=p8CLqYqBMz0.cwA.HQg.w4odFNI4CdHeHNxNmp2xjF-OYQH9L9w0qxtBMHjjBxQ'></iframe>
+   <div class="container-fluid padding-none">
+	   <div class="top-bar"></div>
+		<div class="chat-container">
+			<div class="chat-box-container">
+				<div class="chat-header">
+					<div class="chat-header-logo"></div>
+					<div class="chat-header-heading"><h2>MediBot</h2></div>
+					<div class="chat-header-sub-heading">
+						<h4>Come to me with all your claim related queries!</h4>
+					</div>
+					<ul class="share-buttons">
+						<li></li>
+						<li></li>
+						<li></li>
+					</ul>
+				</div>
+				<div class="chat-box" id="chatbox">
+					<iframe src='https://webchat.botframework.com/embed/Medibot_medibuddy?s=p8CLqYqBMz0.cwA.HQg.w4odFNI4CdHeHNxNmp2xjF-OYQH9L9w0qxtBMHjjBxQ'></iframe>
+				</div>
+			</div>
+			<div class="right sidebar-container">
+				<div class="sidebar-background">
+					<div class="profile-pic">
+						<img src="https://image.ibb.co/cXoSbv/image.png" width="300"/>
+					</div>
+					<div class="sidebar-heading">MediBot</div>
+					<div class="side-bar-text">
+						<span class="icon-circle sidebar-online"></span>
+						online now 
+					</div>
+					<div class="side-bar-text">
+						<span class="icon-location"></span>
+						Head Office, Bengaluru
+					</div>
+					<div class="side-bar-text">
+						<p>MediBot is your personal healthcare assistant.</p>
+					</div>
+					<button type="button" class="feedback-button">Feedback</button>
+				</div>
+			</div>
+			<div class="clearfix"></div>
+		</div>
 	</div>
 	</body>
 </html>

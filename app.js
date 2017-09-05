@@ -1282,7 +1282,7 @@ function createHeroCard(session) {
             builder.CardImage.create(session, 'https://image.ibb.co/hRiDKv/id_card_4.png')
         ])
         .buttons([
-            builder.CardAction.openUrl(session, session.userData.downloadURL, 'Download E-Card')
+            builder.CardAction.openUrl(session, session.userData.downloadURL, 'Download E-Card 📥')
         ]);
 };
 
