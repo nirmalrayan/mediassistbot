@@ -685,7 +685,7 @@ function createReceiptCard(session) {
 			'#### Approved Amount : &#x20B9; ' + formatNumber(session.userData.trackClmApprovedAmt) + '/- \r\r' 
 		)
         .images([
-            builder.CardImage.create(session, 'https://image.ibb.co/bZ1nBv/route.png')
+            builder.CardImage.create(session, 'https://i.imgur.com/j6md6yB.png')
         ])
         .buttons([
             builder.CardAction.openUrl(session, 'https://track.medibuddy.in/', 'More Information')
