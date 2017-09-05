@@ -691,7 +691,7 @@ function createReceiptCard(session) {
             builder.CardAction.openUrl(session, 'https://track.medibuddy.in/', 'More Information')
         ]);
 	
-	}
+	}	
 	
 	
 /*     return new builder.ReceiptCard(session)
