@@ -25,10 +25,6 @@
 		}
 		
 		.container-fluid{
-			padding-right: 15px;
-			padding-left: 15px;
-			margin-right: auto;
-			margin-left: auto;
 		}
 		
 		.top-bar{
@@ -41,12 +37,17 @@
 			margin: 0 auto;
 			position: relative;
 			background-color: #f9f9f9;
-			top: -95px;
+			top: -78px;
 			z-index: 10;
 			border-radius: 4px;
 			-webkit-box-shadow: 0px 0px 9px 0px rgba(50, 50, 50, 0.3);
 			-moz-box-shadow: 0px 0px 9px 0px rgba(50, 50, 50, 0.3);
 			box-shadow: 0px 0px 9px 0px rgba(50, 50, 50, 0.3);
+		}
+		
+		.chat-header-heading h2{
+			margin-top: 25px;
+			margin-left: 6px;
 		}
 		
 		.chat-box-container {
@@ -86,7 +87,7 @@
 			background-size: cover;
 			height: 63px;
 			width: 63px;
-			margin-top: 5px;
+			margin-top: 13px;
 			margin-left: 17px;
 			float: left;
 		}
@@ -106,7 +107,7 @@
 			color: #adadad;
 			font-size: 14px;
 			margin-top: 35px;
-			margin-left: 8px;
+			margin-left: 7px;
 			word-spacing: 1px;
 		}
 		
@@ -124,15 +125,19 @@
 		}		
 		
 		.sidebar-background {
-			background-color: rgba(0, 0, 0, 0.7);
+			
+			background-image: url('https://i.imgur.com/YNrnRWV.jpg');
 			border-top-right-radius: 4px;
 			border-bottom-right-radius: 4px;
 			height: 1258px;
+			background-position: top;
+			background-repeat-y: no-repeat;
+			background-color: black;
 		}
 		
 		.chat-box iframe{
 			width: 100%;
-			height: 560px;
+			height: 555px;
 		}
 				
 		#chatbox .wc-card, #chatbox .wc-adaptive-card{
@@ -156,7 +161,6 @@
 		
 		.chat-box {
 			height: 100%;
-			overflow-y: scroll;
 		}
 		
 		.chatbox-container{
@@ -179,6 +183,7 @@
 		.sidebar-heading {
     font-size: 30px;
     font-weight: 400;
+	color: #fa6800;
 }
 
 .side-bar-text {
@@ -208,17 +213,40 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-location {
-    position: relative;
-    left: -11px;
-    top: 1px;
-}
-
 iframe .wc-header{
 	display: none!important;
 }
+
+#BotChatElement .wc-header{
+	display: none !important;
+}
+
+.side-bar-text p{
+	margin: 183px 26px 10px;
+	font-size: 14px;
+}
+
+.side-bar-text img{
+	vertical-align: middle;
+	margin-right: 7px;
+}
+
+button.feedback-button {
+    background-color: #05afe0;
+    border: thin solid #05afe0;
+    padding: 8px 30px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    margin-top: 48px;
+	color: #fff;
+	cursor: pointer;
+}
+
+button.feedback-button:hover{
+cursor: pointer;
+}
 		
-		</style>
+		</style>		
    </head>
    <body>
    <div class="container-fluid padding-none">
@@ -238,7 +266,7 @@ iframe .wc-header{
 					</ul>
 				</div>
 				<div class="chat-box" id="chatbox">
-					<iframe src='https://webchat.botframework.com/embed/Medibot_medibuddy?s=p8CLqYqBMz0.cwA.HQg.w4odFNI4CdHeHNxNmp2xjF-OYQH9L9w0qxtBMHjjBxQ'></iframe>
+					<iframe id="medibot" src='https://webchat.botframework.com/embed/Medibot_medibuddy?s=p8CLqYqBMz0.cwA.HQg.w4odFNI4CdHeHNxNmp2xjF-OYQH9L9w0qxtBMHjjBxQ'></iframe>
 				</div>
 			</div>
 			<div class="right sidebar-container">
@@ -248,17 +276,17 @@ iframe .wc-header{
 					</div>
 					<div class="sidebar-heading">MediBot</div>
 					<div class="side-bar-text">
-						<span class="icon-circle sidebar-online"></span>
+						<img  class="icon-circle sidebar-online" src="https://image.ibb.co/grEyzF/circular_shape_silhouette.png" height="10px" width="10px" />
 						online now 
 					</div>
 					<div class="side-bar-text">
-						<span class="icon-location"></span>
-						Head Office, Bengaluru
+						<img class="glyphicon glyphicon-map-marker" src="https://image.ibb.co/k2ommv/facebook_placeholder_for_locate_places_on_maps.png" />
+						 Head Office, Bengaluru
 					</div>
 					<div class="side-bar-text">
-						<p>MediBot is your personal healthcare assistant.</p>
+						<p>MediBot is your personal healthcare assistant. Keep track of claims, download your Medi Assist e-card and search for nearby hospitals from our network providers.</p>
 					</div>
-					<button type="button" class="feedback-button">Feedback</button>
+					<button type="button" onclick="sendFeedback()"  class="feedback-button">Feedback</button>
 				</div>
 			</div>
 			<div class="clearfix"></div>
