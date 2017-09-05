@@ -152,7 +152,7 @@ bot.dialog('trackClaim', [
 ])
 .triggerAction({
 	matches: [/track claim/i, /track/i, /tracking/i, /claim tracking/i, /claim status/i, /pending claim/i, /claim details/i], 
-	confirmPrompt: "⚠️ This will cancel your current request. Are you sure?"
+	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
 	
 });
 
@@ -823,7 +823,7 @@ bot.dialog('downloadEcard',[
 .triggerAction({
 	matches: [/download e-card/i, /download ecard/i, /ecard/i, /tpa card/i, /insurance card/i, /card/i, /download card/i, /^download e-card$/i],
 	// /^download e-card$/i,
-	confirmPrompt: "⚠️ This will cancel your current request. Are you sure?"
+	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
 	
 });
 
@@ -1298,7 +1298,7 @@ bot.dialog('searchNetwork',[
 .triggerAction({
 	matches: [/search network hospitals/i, /search network/i, /search nearby hospitals/i, /search providers/i, /hospitals around/i],
 	// /^search network hospitals$|^search network$/i,
-	confirmPrompt: "⚠️ This will cancel your current request. Are you sure?"
+	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
 	
 });
 
@@ -1509,7 +1509,7 @@ bot.dialog('askforCallCenter',[
 .triggerAction({
 	matches: [/customer/i, /support/i, /call center/i, /call centre/i, /customer service/i, /cc number/i, /cc/i, /helpline/i, /toll/i, /tech support/i],
 	// /^customer$|^support$|^call centre$|^customer service$|^ cc number$|^cc$|^helpline$|^toll free$|^call center$/i,
-	confirmPrompt: "⚠️ This will cancel your current request. Are you sure?"
+	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
 	
 });
 
@@ -1525,7 +1525,7 @@ bot.dialog('askforHR',[
 .triggerAction({
 	matches: [/HR/i, /join.*company/i, /hr department/i, /human resource/i, /hr dept/i, /career/i, /job/i, /join/i, /opportunity/i, /opportunities/i, /opening/i, /fresher/i],
 	// /^HR$|^human resource$|^hr dept$|^hr department$|^ join.*company$|^careers$|^career$|^job$|^join$|^job|^opportunit$|^opening$|^fresher$|^$|^$/i,
-	confirmPrompt: "⚠️ This will cancel your current request. Are you sure?"
+	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
 	
 });
 
@@ -1540,7 +1540,7 @@ bot.dialog('askforInvestigation',[
 ])
 .triggerAction({
 	matches: [/investigation/i, /forge/i, /malpractice/i, /fishy/i, /suspicious/i, /fordge/i],
-	confirmPrompt: "⚠️ This will cancel your current request. Are you sure?"
+	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
 	
 });
 
@@ -1555,7 +1555,7 @@ bot.dialog('askforGrievance',[
 ])
 .triggerAction({
 	matches: [/grievance/i, /disappoint/i, /angry/i ,/disappointed/i, /dissatisfied/i, /unhappy/i, /horrible/i, /worst/i, /bad/i, /poor/i, /not settled/i, /not paid/i, /not received/i, /very poor/i, /very bad/i, /terrible/i, /not received any amount/i, /not intimated the hospital/i, /not working/i, /support is slow/i, /I did not get/i, /bad service/i, /I did not receive/i, /bad service/i, /bad tpa/i, /bad/i, /worst/i, /complaint/i],
-	confirmPrompt: "⚠️ This will cancel your current request. Are you sure?"
+	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
 	
 });
 
@@ -1570,7 +1570,7 @@ bot.dialog('askforOffshore',[
 ])
 .triggerAction({
 	matches: [/offshore/i, /abroad/i, /overseas contact number/i, /USA/i, /Australia/i, /overseas/i],
-	confirmPrompt: "⚠️ This will cancel your current request. Are you sure?"
+	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
 	
 });
 
@@ -1585,7 +1585,7 @@ bot.dialog('askforGeneralQuery',[
 ])
 .triggerAction({
 	matches: [/register/i, /application/i, /app/i, /medibuddy/i, /transaction/i, /query/i, /queries/i, /question/i, /doubt/i, /clarify/i, /clarity/i, /contact information/i, /registration/i, /can i submit/i, /for how many days/i, /how many/i, /help us urgently/i, /help us/i, /purchase/i, /buy/i, /how much/i, /log in/i, /please guide/i, /responding/i, /please help/i],
-	confirmPrompt: "⚠️ This will cancel your current request. Are you sure?"
+	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
 	
 });
 
