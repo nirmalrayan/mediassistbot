@@ -1435,6 +1435,11 @@ bot.dialog('askforLocation',  [
 									.title(data.hospitals[item].name + " (" + data.hospitals[item].dist + " meters)")
 									.subtitle("Phone: " + data.hospitals[item].phone)
 									.text(nwHospAddress + ', ' + data.hospitals[item].city + ', ' + data.hospitals[item].state + ', ' + data.hospitals[item].pinCode)
+									.images([
+										new builder.CardImage(session)
+											.url('https://i.imgur.com/OaMnJ52.png')
+											.alt(data.hospitals[item].name)
+									])
 									.buttons([
 										builder.CardAction.openUrl(session, "tel:"+nwHospPhNo, "Call Hospital"),
 										builder.CardAction.openUrl(session, "http://maps.google.com/maps?q="+data.hospitals[item].latitude+","+data.hospitals[item].longitude, "View Hospital"),
