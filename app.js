@@ -185,7 +185,7 @@ bot.dialog('askforMore',[
 bot.dialog('askforTrackBy',[
 	function (session){
 		var msg = new builder.Message(session)
-			.text("Sure thing 🙂. There are three ways to track your claim. Please select one of the following options: ")
+			.text("Alright, let's get started 🚀. There are three ways to track your claim. Please select one of the following options: ")
 			.suggestedActions(
 				builder.SuggestedActions.create(
 					session, [
