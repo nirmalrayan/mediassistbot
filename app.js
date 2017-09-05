@@ -35,7 +35,7 @@ var bot = new builder.UniversalBot(connector,
 				.subtitle("I will be your personal healthcare assistant. ℹ️ Type \"show menu\" or \"#\" at any time to see the menu.")
 				.images([
 					new builder.CardImage(session)
-						.url('https://image.ibb.co/k8FF6k/robot_4.png')
+						.url('https://i.imgur.com/HwRgHDI.png')
 						.alt('MediBot')
 				])
 				.buttons([
@@ -50,7 +50,7 @@ var bot = new builder.UniversalBot(connector,
 				.subtitle("I will be your personal healthcare assistant. ℹ️ Type \"show menu\" or \"#\" at any time to see the menu.")
 				.images([
 					new builder.CardImage(session)
-						.url('https://image.ibb.co/k8FF6k/robot_4.png')
+						.url('https://i.imgur.com/HwRgHDI.png')
 						.alt('MediBot')
 				])
 				.buttons([
@@ -64,7 +64,7 @@ var bot = new builder.UniversalBot(connector,
 				.subtitle("I will be your personal healthcare assistant. ℹ️ Type \"show menu\" or \"#\" at any time to see the menu.")
 				.images([
 					new builder.CardImage(session)
-						.url('https://image.ibb.co/k8FF6k/robot_4.png')
+						.url('https://i.imgur.com/HwRgHDI.png')
 						.alt('MediBot')
 				])
 				.buttons([
