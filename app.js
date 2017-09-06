@@ -1620,7 +1620,7 @@ bot.dialog('sayGoodbye',[
 	}
 ])
 .triggerAction({
-	matches: [/bye/i, /see you/i, /cu/i ,/ciao/i, /cheerio/i, /cheers/i, /gtg/i, /got to go/i,/bai/i, /c u/i, /l8r/i, /exit/i, /quit/i, /take care/i, /cya/i, /shalom/i, /sayonara/i, /farewell/i, /later/i, /so long/i, /peace out/i, /see you/i]
+	matches: [/bye/i, /see you/i, /cu/i ,/ciao/i, /ta ta/i, /cheerio/i, /cheers/i, /gtg/i, /got to go/i,/bai/i, /c u/i, /l8r/i, /exit/i, /quit/i, /take care/i, /cya/i, /shalom/i, /sayonara/i, /farewell/i, /later/i, /so long/i, /peace out/i, /see you/i]
 	
 });
 
