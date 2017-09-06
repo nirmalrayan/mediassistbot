@@ -1643,6 +1643,7 @@ bot.dialog('sayThanks',[
 var ratingChoices = ['Poor', 'Ok', 'Good', 'Very Good', 'Excellent'];
 
 // Dialog to handle Feedback
+/*
 bot.dialog('giveFeedback',[
 	function (session){
 		
@@ -1716,6 +1717,6 @@ bot.dialog('giveFeedback',[
 .triggerAction({
 	matches: [/feedback/i]
 	
-});
+}); */
 
 server.post('/api/messages', connector.listen());
