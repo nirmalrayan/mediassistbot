@@ -1707,6 +1707,91 @@ bot.dialog('healthCheck',[
 // Dialog to ask for Health Check city
 bot.dialog('askforCity',[
 	function (session){
+		//Make POST request to MA Server
+			var request = require('request');
+			
+			var card = {
+						  "type": "AdaptiveCard",
+						  "speak": "<s>Your  meeting about \"Adaptive Card design session\"<break strength='weak'/> is starting at 12:30pm</s><s>Do you want to snooze <break strength='weak'/> or do you want to send a late notification to the attendees?</s>",
+						  "body": [
+							{
+							  "type": "TextBlock",
+							  "text": "Health Check",
+							  "size": "large",
+							  "weight": "bolder"
+							},
+							{
+							  "type": "TextBlock",
+							  "text": "Please choose a city",
+							  "isSubtle":true
+							},
+							{
+							  "type": "Input.ChoiceSet",
+							  "id": "snooze",
+							  "style":"compact",
+							  "choices": [
+								{
+								  "title": "Bengaluru",
+								  "value": "Bengaluru",
+								  "isSelected": true
+								},
+								{
+								  "title": "Chennai",
+								  "value": "Chennai"
+								},
+								{
+								  "title": "Delhi",
+								  "value": "Delhi"
+								}
+							  ]
+							},
+							{
+							  "type": "TextBlock",
+							  "text": "Please choose a Category",
+							  "isSubtle":true
+							}
+							
+						  ],
+						  "actions": [
+							{
+							  "type": "Action.Http",
+							  "method": "POST",
+							  "url": "http://foo.com",
+							  "title": "Preventive"
+							},
+							{
+							  "type": "Action.Http",
+							  "method": "POST",
+							  "url": "http://foo.com",
+							  "title": "Diabetes"
+							},
+							{
+							  "type": "Action.Http",
+							  "method": "POST",
+							  "url": "http://foo.com",
+							  "title": "Cancer"
+							},
+							{
+							  "type": "Action.Http",
+							  "method": "POST",
+							  "url": "http://foo.com",
+							  "title": "Cardiac"
+							}
+						  ]
+						};
+			
+			// Start the request
+			request('https://infiniti.medibuddy.in/WAPI/availableCities.json', function (error, response, body) {	
+					if(response.statusCode == 200){
+						var data = JSON.parse(body);
+						console.log(data[process.env.HEALTHCHECK_ID]);
+						
+					}
+				
+			});	
+		session.send(new builder.Message(session)
+				.addAttachment(card));
+		
 		builder.Prompts.text(session, "Please provide your `City` name");		
 	},
 	function(session, results) {
