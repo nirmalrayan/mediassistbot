@@ -1710,6 +1710,25 @@ bot.dialog('askforCity',[
 		//Make POST request to MA Server
 			var request = require('request');
 			
+			var cityChoices = [];
+			// Start the request
+			request('https://infiniti.medibuddy.in/WAPI/availableCities.json', function (error, response, body) {	
+					if(response.statusCode == 200){
+						var data = JSON.parse(body);
+						console.log(data[process.env.HEALTHCHECK_ID]);
+						
+						
+						for (var entity in data){
+							var cityName = {
+								  "title": data[entity],
+								  "value": data[entity]
+								};
+								
+							cityChoices.push(cityName);
+						  }
+					}	  
+					});
+			
 			var card = 
 			{
 			  contentType: "application/vnd.microsoft.card.adaptive",
@@ -1758,39 +1777,13 @@ bot.dialog('askforCity',[
 					  "type": "Input.ChoiceSet",
 					  "id": "category",
 					  "style":"compact",
-					  "choices": [
-						{
-						  "title": "Preventive",
-						  "value": "Preventive",
-						  "isSelected": true
-						},
-						{
-						  "title": "Cardiac",
-						  "value": "Cardiac"
-						},
-						{
-						  "title": "Diabetes",
-						  "value": "Diabetes"
-						},
-						{
-						  "title": "Cancer",
-						  "value": "Cancer"
-						}
-					  ]
+					  "choices": cityChoices
 					}
 				  ]
 			 }
 			};
-			
-			// Start the request
-			request('https://infiniti.medibuddy.in/WAPI/availableCities.json', function (error, response, body) {	
-					if(response.statusCode == 200){
-						var data = JSON.parse(body);
-						console.log(data[process.env.HEALTHCHECK_ID]);
-						
-					}
 				
-			});	
+			
 		session.send(new builder.Message(session)
 				.addAttachment(card));
 		
