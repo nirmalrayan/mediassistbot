@@ -126,6 +126,21 @@ bot.dialog('showMenu',[
 			
 			menucards.push(searchNetworkCard);
 			
+			healthCheckCard = new builder.HeroCard(session)
+									.title("Health Check")
+									.subtitle("Booking health check has never been easier. Find the best hospitals with discounts in your city now.")
+									.text("https://infiniti.medibuddy.in/")
+									.images([
+										new builder.CardImage(session)
+											.url('https://preview.ibb.co/hBHRwk/11.png')
+											.alt('Health Check')
+									])
+									.buttons([
+										builder.CardAction.imBack(session, "Health Check", "Health Check")
+										]);
+			
+			menucards.push(healthCheckCard);
+			
 			var msg = new builder.Message(session)
 			.text("My abilities are still growing. I'm trained to help you with the following: ")
 			.attachmentLayout(builder.AttachmentLayout.carousel)
@@ -1020,7 +1035,6 @@ bot.dialog('downloadwID', [
 
 					// Start the request
 					response = request(options, function (error, response, body) {
-						console.log('OUTPUT: '+JSON.stringify(response));
 						if (!error && response.statusCode == 200) {	
 							var sizeof = require('object-sizeof');
 							console.log(sizeof(body));
@@ -1259,12 +1273,12 @@ bot.dialog('downloadwPolNo', [
 								
 							}
 							else if (sizeof(body) == 0){
-								session.send('⚠️ I was unable to find your e-card with the details you provided. Let\'s retry.');
+								session.send('⚠️ I was unable to find your e-card with the details you provided.');
 								session.beginDialog('askforDownloadwPolNoConfirmation');
 							}
 						}
 						else{
-								session.send('⚠️ I was unable to find your e-card with the details you provided. Let\'s retry.');
+								session.send('⚠️ I was unable to find your e-card with the details you provided.');
 								session.beginDialog('askforDownloadwPolNoConfirmation');
 						}
 					});
@@ -1640,83 +1654,77 @@ bot.dialog('sayThanks',[
 	
 });
 
-var ratingChoices = ['Poor', 'Ok', 'Good', 'Very Good', 'Excellent'];
+//-------------------------------------------------------------------------------------------------------------------------------------
 
-// Dialog to handle Feedback
-/*
-bot.dialog('giveFeedback',[
+// INIFINITI SERVICES
+
+
+// Dialog to 
+bot.dialog('healthCheck',[
 	function (session){
-		
-		session.send("On a scale of 1 - 5, with 1 being `poor` and 5 being `excellent`, what would you rate MediBot?");
-		builder.Prompts.choice(session, 'Choose a rating', ratingChoices);	
-		
-	},
-	function(session, results) {
-		session.userData.rating = results.response.entity;
-		console.log('User has rated '+ session.userData.rating);
-		builder.Prompts.confirm(session,'Awesome! Do you want to share your thoughts about me, the MediBot or Medi Assist Healthcare Services in general with our team? (yes/no)');
+		session.beginDialog('askforCity');
 	},
 	function (session, results){
-		if (results.response){
-			session.send("Sure thing! What would you like to forward to my masters?");
-		}else{
-			session.endConversation();
-			session.beginDialog('askforMore');
-		}
-		
+		session.userData.healthCheckCity = results.response;
+		session.beginDialog('askforCategory');
 	},
-	function(session, results){
-			
-			session.userData.feedback = results.response;
-			session.send("Thank you for sharing! I will make sure my masters receive your message!");
-			
-			var Request = require('tedious').Request;
-			var TYPES = require('tedious').TYPES;
-
-			// Establish Database connection
-			var Connection = require('tedious').Connection;
-			var config = {
-				userName: process.env.SQL_SERVER_USERNAME,
-				password: process.env.SQL_SERVER_PASSWORD,
-				server: '192.168.1.102',
-				
-				options: {database: process.env.SQL_MEDIBOT_DB}  
-			};
-			var connection = new Connection(config);
-			connection.on('connect', function(err){
-				if (err) return console.log(err);
-				  
-			console.log("Connected to database");
-			//request = new Request("INSERT INTO "+ process.env.SQL_MEDIBOT_FEEDBACK_TABLE+" (Username,Feedback,Rating) VALUES ("+session.userData.benefName+","+session.userData.feedback+","+session.userData.rating+");", function(err){
-			request = new Request("INSERT INTO "+ process.env.SQL_MEDIBOT_FEEDBACK_TABLE+" (Username,Feedback,Rating) VALUES ('Rayan','Nothing2','Excellent');", function(err){
-				console.log(request);
-				if(err) {
-						console.log(err);
-					}
-				});
-				request.on('row', function(columns){
-					columns.forEach(function(column){
-						if(column.value === null) {
-							console.log('NULL');
-						}else{
-							console.log('Feedback id of inserted item is ' + column.value);
-						}
-						
-					});
-					
-				});
-				
-				connection.execSql(request);
-				
-				});
+	function(session, results) {
+		session.userData.healthcheckCategory = results.response.entity;	
+		session.send("Trying to find health check packages. Please wait");
+		var keyword = "";
+		var provider = "";
+		var url = "https://infiniti.medibuddy.in/result/package/"+process.env.HEALTHCHECK_ID+"/"+session.userData.healthcheckCategory+"/"+keyword+"/"+provider+"/?c="+session.userData.healthCheckCity;
+		healthCheckCard = new builder.HeroCard(session)
+									.title("Health Check Packages in "+ session.userData.healthCheckCity)
+									.subtitle("Chosen Category: "+session.userData.healthcheckCategory)
+									.text("https://infiniti.medibuddy.in/")
+									.images([
+										new builder.CardImage(session)
+											.url('https://preview.ibb.co/hBHRwk/11.png')
+											.alt('Health Check')
+									])
+									.buttons([
+										builder.CardAction.openUrl(session, url, 'View Packages')
+										]);
+										
+		var msg = new builder.Message(session)
+			.text("Click on `View Packages` below to view all the health check packages in detail")
+			.addAttachment(healthCheckCard);
+		session.send(msg);
 	},
-	function(session, results){
-		session.endDialogWithResult(results);
+	function(sesison, results){	
+		session.endDialogWithResult(results);		
 	}
 ])
 .triggerAction({
-	matches: [/feedback/i]
+	matches: [/health check/i, /health check up/i, /check up/i, /health check package/i],
+	// /^search network hospitals$|^search network$/i,
+	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
 	
-}); */
+});
+
+
+// Dialog to ask for Health Check city
+bot.dialog('askforCity',[
+	function (session){
+		builder.Prompts.text(session, "Please provide your `City` name");		
+	},
+	function(session, results) {
+		session.endDialogWithResult(results);
+	}
+]);
+
+var healthcheckCategories = ["Preventive", "Diabetes", "Cardiac", "Cancer"];
+
+// Dialog to ask for Health Check Category
+bot.dialog('askforCategory',[
+	function (session){
+		session.send("Please choose a category from the options provided");
+		builder.Prompts.choice(session, 'Choose a category', healthcheckCategories);			
+	},
+	function(session, results) {
+		session.endDialogWithResult(results);
+	}
+]);
 
 server.post('/api/messages', connector.listen());
