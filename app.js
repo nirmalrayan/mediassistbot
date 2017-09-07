@@ -1715,13 +1715,16 @@ bot.dialog('askforCity',[
 			  contentType: "application/vnd.microsoft.card.adaptive",
 			 content: {
 				 type: "AdaptiveCard",
-				 speak: "<s>Your  meeting about \"Adaptive Card design session\"<break strength='weak'/> is starting at 12:30pm</s><s>Do you want to snooze <break strength='weak'/> or do you want to send a late notification to the attendees?</s>",
 			     body: [
 					{
 					  "type": "TextBlock",
-					  "text": "Adaptive Card design session",
-					  "size": "large",
-					  "weight": "bolder"
+					  "text": "Select Filters: Health Check",
+					  "weight": "bolder",
+					  "size": "medium"
+					},
+					{
+					  "type": "TextBlock",
+					  "text": "We are one step away. Please choose city and category from options below."
 					},
 					{
 					  "type": "TextBlock",
@@ -1746,32 +1749,34 @@ bot.dialog('askforCity',[
 						  "value": "Mumbai"
 						}
 					  ]
-					}
-				  ],
-				  "actions": [
-					{
-					  "type": "Action.Http",
-					  "method": "POST",
-					  "url": "http://foo.com",
-					  "title": "Preventive"
 					},
 					{
-					  "type": "Action.Http",
-					  "method": "POST",
-					  "url": "http://foo.com",
-					  "title": "Cardiac"
+					  "type": "TextBlock",
+					  "text": "Category"
 					},
 					{
-					  "type": "Action.Http",
-					  "method": "POST",
-					  "url": "http://foo.com",
-					  "title": "Diabetes"
-					},
-					{
-					  "type": "Action.Http",
-					  "method": "POST",
-					  "url": "http://foo.com",
-					  "title": "Cancer"
+					  "type": "Input.ChoiceSet",
+					  "id": "category",
+					  "style":"compact",
+					  "choices": [
+						{
+						  "title": "Preventive",
+						  "value": "Preventive",
+						  "isSelected": true
+						},
+						{
+						  "title": "Cardiac",
+						  "value": "Cardiac"
+						},
+						{
+						  "title": "Diabetes",
+						  "value": "Diabetes"
+						},
+						{
+						  "title": "Cancer",
+						  "value": "Cancer"
+						}
+					  ]
 					}
 				  ]
 			 }
