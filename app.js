@@ -1710,75 +1710,72 @@ bot.dialog('askforCity',[
 		//Make POST request to MA Server
 			var request = require('request');
 			
-			var card = {
-						  "type": "AdaptiveCard",
-						  "speak": "<s>Your  meeting about \"Adaptive Card design session\"<break strength='weak'/> is starting at 12:30pm</s><s>Do you want to snooze <break strength='weak'/> or do you want to send a late notification to the attendees?</s>",
-						  "body": [
-							{
-							  "type": "TextBlock",
-							  "text": "Health Check",
-							  "size": "large",
-							  "weight": "bolder"
-							},
-							{
-							  "type": "TextBlock",
-							  "text": "Please choose a city",
-							  "isSubtle":true
-							},
-							{
-							  "type": "Input.ChoiceSet",
-							  "id": "snooze",
-							  "style":"compact",
-							  "choices": [
-								{
-								  "title": "Bengaluru",
-								  "value": "Bengaluru",
-								  "isSelected": true
-								},
-								{
-								  "title": "Chennai",
-								  "value": "Chennai"
-								},
-								{
-								  "title": "Delhi",
-								  "value": "Delhi"
-								}
-							  ]
-							},
-							{
-							  "type": "TextBlock",
-							  "text": "Please choose a Category",
-							  "isSubtle":true
-							}
-							
-						  ],
-						  "actions": [
-							{
-							  "type": "Action.Http",
-							  "method": "POST",
-							  "url": "http://foo.com",
-							  "title": "Preventive"
-							},
-							{
-							  "type": "Action.Http",
-							  "method": "POST",
-							  "url": "http://foo.com",
-							  "title": "Diabetes"
-							},
-							{
-							  "type": "Action.Http",
-							  "method": "POST",
-							  "url": "http://foo.com",
-							  "title": "Cancer"
-							},
-							{
-							  "type": "Action.Http",
-							  "method": "POST",
-							  "url": "http://foo.com",
-							  "title": "Cardiac"
-							}
-						  ]
-						};
+			var card = 
+			{
+			  contentType: "application/vnd.microsoft.card.adaptive",
+			 content: {
+				 type: "AdaptiveCard",
+				 speak: "<s>Your  meeting about \"Adaptive Card design session\"<break strength='weak'/> is starting at 12:30pm</s><s>Do you want to snooze <break strength='weak'/> or do you want to send a late notification to the attendees?</s>",
+			     body: [
+					{
+					  "type": "TextBlock",
+					  "text": "Adaptive Card design session",
+					  "size": "large",
+					  "weight": "bolder"
+					},
+					{
+					  "type": "TextBlock",
+					  "text": "City Name"
+					},
+					{
+					  "type": "Input.ChoiceSet",
+					  "id": "city",
+					  "style":"compact",
+					  "choices": [
+						{
+						  "title": "Bangalore",
+						  "value": "Bangalore",
+						  "isSelected": true
+						},
+						{
+						  "title": "Chennai",
+						  "value": "Chennai"
+						},
+						{
+						  "title": "Mumbai",
+						  "value": "Mumbai"
+						}
+					  ]
+					}
+				  ],
+				  "actions": [
+					{
+					  "type": "Action.Http",
+					  "method": "POST",
+					  "url": "http://foo.com",
+					  "title": "Preventive"
+					},
+					{
+					  "type": "Action.Http",
+					  "method": "POST",
+					  "url": "http://foo.com",
+					  "title": "Cardiac"
+					},
+					{
+					  "type": "Action.Http",
+					  "method": "POST",
+					  "url": "http://foo.com",
+					  "title": "Diabetes"
+					},
+					{
+					  "type": "Action.Http",
+					  "method": "POST",
+					  "url": "http://foo.com",
+					  "title": "Cancer"
+					}
+				  ]
+			 }
+			};
 			
 			// Start the request
 			request('https://infiniti.medibuddy.in/WAPI/availableCities.json', function (error, response, body) {	
