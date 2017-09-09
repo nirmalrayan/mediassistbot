@@ -1680,7 +1680,7 @@ bot.dialog('healthCheck',[
 									.text("https://infiniti.medibuddy.in/")
 									.images([
 										new builder.CardImage(session)
-											.url('https://preview.ibb.co/hBHRwk/11.png')
+											.url('https://i.imgur.com/LpNLplB.png')
 											.alt('Health Check')
 									])
 									.buttons([
