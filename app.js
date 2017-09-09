@@ -1753,37 +1753,41 @@ bot.dialog('askforCity',[
 					},
 					{
 					  "type": "TextBlock",
-					  "text": "City Name"
+					  "text": "Choose your City"
 					},
 					{
 					  "type": "Input.ChoiceSet",
 					  "id": "city",
 					  "style":"compact",
-					  "choices": [
-						{
-						  "title": "Bangalore",
-						  "value": "Bangalore",
-						  "isSelected": true
-						},
-						{
-						  "title": "Chennai",
-						  "value": "Chennai"
-						},
-						{
-						  "title": "Mumbai",
-						  "value": "Mumbai"
-						}
-					  ]
+					  "choices": cityChoices
 					},
 					{
 					  "type": "TextBlock",
-					  "text": "Category"
+					  "text": "Select your Category"
 					},
 					{
 					  "type": "Input.ChoiceSet",
 					  "id": "category",
 					  "style":"compact",
-					  "choices": cityChoices
+					  "choices": [
+						{
+						  "title": "Preventive",
+						  "value": "Preventive",
+						  "isSelected": true
+						},
+						{
+						  "title": "Diabetes",
+						  "value": "Diabetes"
+						},
+						{
+						  "title": "Cardiac",
+						  "value": "Cardiac"
+						},
+						{
+						  "title": "Cancer",
+						  "value": "Cancer"
+						}
+					  ]
 					}
 				  ]
 			 }
