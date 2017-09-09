@@ -1717,17 +1717,23 @@ bot.dialog('askforCity',[
 						var data = JSON.parse(body);
 						console.log(data[process.env.HEALTHCHECK_ID]);
 						
+						var cities = data[process.env.HEALTHCHECK_ID];
 						
-						for (var entity in data){
+						for (var entity in cities){
+							console.log(entity + ' : '+ cities[entity]);
 							var cityName = {
-								  "title": data[entity],
-								  "value": data[entity]
+								  "title": cities[entity],
+								  "value": cities[entity]
 								};
-								
-							cityChoices.push(cityName);
+							if( cities[entity] == 'Bengaluru' ||  cities[entity] == 'Chennai' ||  cities[entity] == 'Delhi' ||  cities[entity] == 'Hyderabad' ||  cities[entity] == 'Kolkata' ||  cities[entity] == 'Mumbai' ||  cities[entity] == 'Pune'){
+								cityChoices.push(cityName);	
+							}
 						  }
-					}	  
-					});
+						  
+			//			cityChoices = JSON.stringify(cityChoices);
+					}	
+			
+			console.log(cityChoices);
 			
 			var card = 
 			{
@@ -1783,10 +1789,12 @@ bot.dialog('askforCity',[
 			 }
 			};
 				
+			console.log('card is : ' + JSON.stringify(card));
 			
 		session.send(new builder.Message(session)
 				.addAttachment(card));
-		
+		  
+					});
 		builder.Prompts.text(session, "Please provide your `City` name");		
 	},
 	function(session, results) {
