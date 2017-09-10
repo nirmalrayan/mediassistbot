@@ -132,7 +132,7 @@ bot.dialog('showMenu',[
 									.text("https://infiniti.medibuddy.in/")
 									.images([
 										new builder.CardImage(session)
-											.url('https://preview.ibb.co/hBHRwk/11.png')
+											.url('https://i.imgur.com/LpNLplB.png')
 											.alt('Health Check')
 									])
 									.buttons([
@@ -1789,17 +1789,27 @@ bot.dialog('askforCity',[
 						}
 					  ]
 					}
+				  ],
+				  actions: [
+				  {
+						"type": "Action.Submit",
+						"title": "Submit"
+				  }
 				  ]
 			 }
 			};
 				
-			console.log('card is : ' + JSON.stringify(card));
+//			console.log('card is : ' + JSON.stringify(card));
 			
-		session.send(new builder.Message(session)
+		var respx = session.send(new builder.Message(session)
 				.addAttachment(card));
-		  
+		respx = respx.message.value;
+		
+//		session.userData.healthCheckCity = respx;
+		console.log('Healthcheckcity:'+JSON.stringify(respx));
+//		console.log(respx.message.value); 
 					});
-		builder.Prompts.text(session, "Please provide your `City` name");		
+//		builder.Prompts.text(session, "Please provide your `City` name");		
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
