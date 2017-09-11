@@ -1747,7 +1747,7 @@ bot.dialog('askforCity',[
 									cityChoices.push(cityName);
 								}
 							  }
-							  cityChoices.push({"title":"Other", "value":"Ohter"});
+							  cityChoices.push({"title":"Other", "value":"Other"});
 							  
 						}	
 				});	
@@ -1785,7 +1785,8 @@ bot.dialog('askforCity',[
 						{
 						  "type": "Input.ChoiceSet",
 						  "id": "category",
-						  "style":"compact",
+						  "style":"expanded",
+						  "isMultiSelect": false,
 						  "choices": [
 							{
 							  "title": "Preventive",
@@ -1810,8 +1811,7 @@ bot.dialog('askforCity',[
 					  actions: [
 					  {
 							"type": "Action.Submit",
-							"title": "Submit",
-							"data": {"city": "city", "category":"category"}
+							"title": "Find Packages"
 					  }
 					  ]
 				 }
@@ -1829,11 +1829,12 @@ bot.dialog('askforCity',[
 function processSubmitAction(session, message){
 		session.userData.healthcheckCity = message["city"];
 		session.userData.healthcheckCategory = message["category"];	
-		session.send("Trying to find health check packages in "+session.userData.healthcheckCity+" under "+session.userData.healthcheckCategory+" category. Please wait ⏳");
-		healthcheckCard = new builder.HeroCard(session)
+//		session.send("Trying to find health check packages in `"+session.userData.healthcheckCity+"` under `"+session.userData.healthcheckCategory+"` category. Please wait ⏳");
+		if(message["city"] !== "Other"){
+			healthcheckCard = new builder.HeroCard(session)
 									.title("Health Check Packages")
 									.subtitle("Click below to view packages from hospitals in your city")
-									.text("https://network.medibuddy.in")
+									.text("https://infiniti.medibuddy.in")
 									.images([
 										new builder.CardImage(session)
 											.url('https://i.imgur.com/UZXZjqO.png')
@@ -1842,19 +1843,36 @@ function processSubmitAction(session, message){
 									.buttons([
 										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/result/package/"+process.env.HEALTHCHECK_ID+"/"+session.userData.healthcheckCategory+"//"+"/?c="+session.userData.healthcheckCity, "Show Packages")
 										]);
-			
+		}
+		else{
+		healthcheckCard = new builder.HeroCard(session)
+									.title("Health Check Packages")
+									.subtitle("Click below to view packages from hospitals in your city")
+									.text("https://infiniti.medibuddy.in")
+									.images([
+										new builder.CardImage(session)
+											.url('https://i.imgur.com/UZXZjqO.png')
+											.alt('Health Check Packages')
+									])
+									.buttons([
+										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/", "Visit MediBuddy Infiniti")
+										]);
+		}	
 		session.send(new builder.Message(session)
 			.addAttachment(healthcheckCard));
 		
 }
 
-var healthcheckCategories = ["Preventive", "Diabetes", "Cardiac", "Cancer"];
-
 // Dialog to ask for Health Check Category
-bot.dialog('askforCategory',[
+bot.dialog('askforHealthCheckCity',[
 	function (session){
-		session.send("Please choose a category from the options provided");
-		builder.Prompts.choice(session, 'Choose a category', healthcheckCategories);			
+		builder.Prompts.text(session, 'What is your city name?');			
+	},
+	function(session, results) {
+		if(results.response){
+			session.userData.healthcheckCity = results.response;
+			session.send('User entered :' +session.userData.healthcheckCity);
+		}
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
