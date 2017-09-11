@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/nirmalrayan/medibot#readme",
   "dependencies": {
+    "botauth": "^0.2.12",
     "botbuilder": "^3.9.0",
     "botbuilder-location": "^2.0.0",
     "env2": "^2.2.0",

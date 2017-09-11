@@ -8,6 +8,18 @@ var restify = require('restify');
 var builder = require('botbuilder');
 const {Wit, log} = require('node-wit');
 require('env2')('.env'); // loads all entries into process.env
+/* 
+const botauth = require("botauth");
+
+const passport = require("passport");
+const FacebookStrategy = require("passport-facebook").Strategy;
+
+//oauth details for facebook
+const FACEBOOK_APP_ID = envx("FACEBOOK_APP_ID");
+const FACEBOOK_APP_SECRET = envx("FACEBOOK_APP_SECRET");
+
+//encryption key for saved state
+const BOTAUTH_SECRET = envx("BOTAUTH_SECRET");  */
 
 // Setup Restify Server
 var server = restify.createServer();
@@ -1670,7 +1682,6 @@ bot.dialog('healthCheck',[
 	},
 	function(session, results) {
 		session.userData.healthcheckCategory = results.response.entity;	
-		session.send("Trying to find health check packages. Please wait");
 		var keyword = "";
 		var provider = "";
 		var url = "https://infiniti.medibuddy.in/result/package/"+process.env.HEALTHCHECK_ID+"/"+session.userData.healthcheckCategory+"/"+keyword+"/"+provider+"/?c="+session.userData.healthCheckCity;
@@ -1708,113 +1719,134 @@ bot.dialog('healthCheck',[
 bot.dialog('askforCity',[
 	function (session){
 		//Make POST request to MA Server
-			var request = require('request');
-			
-			var cityChoices = [];
-			// Start the request
-			request('https://infiniti.medibuddy.in/WAPI/availableCities.json', function (error, response, body) {	
-					if(response.statusCode == 200){
-						var data = JSON.parse(body);
-						console.log(data[process.env.HEALTHCHECK_ID]);
-						
-						var cities = data[process.env.HEALTHCHECK_ID];
-						
-						for (var entity in cities){
-							console.log(entity + ' : '+ cities[entity]);
-							var cityName = {
-								  "title": cities[entity],
-								  "value": cities[entity]
-								};
-							if( cities[entity] == 'Bengaluru' ||  cities[entity] == 'Chennai' ||  cities[entity] == 'Delhi' ||  cities[entity] == 'Hyderabad' ||  cities[entity] == 'Kolkata' ||  cities[entity] == 'Mumbai' ||  cities[entity] == 'Pune'){
-								cityChoices.push(cityName);	
-							}
-						  }
-						  
-			//			cityChoices = JSON.stringify(cityChoices);
-					}	
-			
-			console.log(cityChoices);
-			
-			var card = 
-			{
-			  contentType: "application/vnd.microsoft.card.adaptive",
-			 content: {
-				 type: "AdaptiveCard",
-			     body: [
-					{
-					  "type": "TextBlock",
-					  "text": "Select Filters: Health Check",
-					  "weight": "bolder",
-					  "size": "medium"
-					},
-					{
-					  "type": "TextBlock",
-					  "text": "We are one step away. Please choose city and category from options below."
-					},
-					{
-					  "type": "TextBlock",
-					  "text": "Choose your City"
-					},
-					{
-					  "type": "Input.ChoiceSet",
-					  "id": "city",
-					  "style":"compact",
-					  "choices": cityChoices
-					},
-					{
-					  "type": "TextBlock",
-					  "text": "Select your Category"
-					},
-					{
-					  "type": "Input.ChoiceSet",
-					  "id": "category",
-					  "style":"compact",
-					  "choices": [
-						{
-						  "title": "Preventive",
-						  "value": "Preventive",
-						  "isSelected": true
-						},
-						{
-						  "title": "Diabetes",
-						  "value": "Diabetes"
-						},
-						{
-						  "title": "Cardiac",
-						  "value": "Cardiac"
-						},
-						{
-						  "title": "Cancer",
-						  "value": "Cancer"
-						}
-					  ]
-					}
-				  ],
-				  actions: [
-				  {
-						"type": "Action.Submit",
-						"title": "Submit"
-				  }
-				  ]
-			 }
-			};
-				
-//			console.log('card is : ' + JSON.stringify(card));
-			
-		var respx = session.send(new builder.Message(session)
-				.addAttachment(card));
-		respx = respx.message.value;
 		
-//		session.userData.healthCheckCity = respx;
-		console.log('Healthcheckcity:'+JSON.stringify(respx));
-//		console.log(respx.message.value); 
-					});
-//		builder.Prompts.text(session, "Please provide your `City` name");		
+			if(session.message && session.message.value){
+				processSubmitAction(session, session.message.value);
+				return;
+			}
+			else
+			{
+				var request = require('request');
+				
+				var cityChoices = [];
+				var city;
+				var category;
+				// Start the request
+				request('https://infiniti.medibuddy.in/WAPI/availableCities.json', function (error, response, body) {	
+						if(response.statusCode == 200){
+							var data = JSON.parse(body);
+							
+							var cities = data[process.env.HEALTHCHECK_ID];
+							var otherFlag = 0;
+							for (var entity in cities){
+								var cityName = {
+									  "title": cities[entity],
+									  "value": cities[entity]
+									};
+								if( cities[entity] == 'Bengaluru' ||  cities[entity] == 'Chennai' ||  cities[entity] == 'Delhi' ||  cities[entity] == 'Hyderabad' ||  cities[entity] == 'Kolkata' ||  cities[entity] == 'Mumbai' ||  cities[entity] == 'Pune'){
+									cityChoices.push(cityName);
+								}
+							  }
+							  cityChoices.push({"title":"Other", "value":"Ohter"});
+							  
+						}	
+				});	
+				
+				var card = 
+				{
+				  contentType: "application/vnd.microsoft.card.adaptive",
+				 content: {
+					 type: "AdaptiveCard",
+					 body: [
+						{
+						  "type": "TextBlock",
+						  "text": "Select Filters: Health Check",
+						  "weight": "bolder",
+						  "size": "medium"
+						},
+						{
+						  "type": "TextBlock",
+						  "text": "We are one step away. Please choose city and category from options below."
+						},
+						{
+						  "type": "TextBlock",
+						  "text": "Choose your City"
+						},
+						{
+						  "type": "Input.ChoiceSet",
+						  "id": "city",
+						  "style":"compact",
+						  "choices": cityChoices
+						},
+						{
+						  "type": "TextBlock",
+						  "text": "Select your Category"
+						},
+						{
+						  "type": "Input.ChoiceSet",
+						  "id": "category",
+						  "style":"compact",
+						  "choices": [
+							{
+							  "title": "Preventive",
+							  "value": "Preventive",
+							  "isSelected": true
+							},
+							{
+							  "title": "Diabetes",
+							  "value": "Diabetes"
+							},
+							{
+							  "title": "Cardiac",
+							  "value": "Cardiac"
+							},
+							{
+							  "title": "Cancer",
+							  "value": "Cancer"
+							}
+						  ]
+						}
+					  ],
+					  actions: [
+					  {
+							"type": "Action.Submit",
+							"title": "Submit",
+							"data": {"city": "city", "category":"category"}
+					  }
+					  ]
+				 }
+				};
+				
+				var respx = session.send(new builder.Message(session)
+					.addAttachment(card));
+			}
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
 	}
 ]);
+
+function processSubmitAction(session, message){
+		session.userData.healthcheckCity = message["city"];
+		session.userData.healthcheckCategory = message["category"];	
+		session.send("Trying to find health check packages in "+session.userData.healthcheckCity+" under "+session.userData.healthcheckCategory+" category. Please wait ⏳");
+		healthcheckCard = new builder.HeroCard(session)
+									.title("Health Check Packages")
+									.subtitle("Click below to view packages from hospitals in your city")
+									.text("https://network.medibuddy.in")
+									.images([
+										new builder.CardImage(session)
+											.url('https://i.imgur.com/UZXZjqO.png')
+											.alt('Health Check Packages')
+									])
+									.buttons([
+										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/result/package/"+process.env.HEALTHCHECK_ID+"/"+session.userData.healthcheckCategory+"//"+"/?c="+session.userData.healthcheckCity, "Show Packages")
+										]);
+			
+		session.send(new builder.Message(session)
+			.addAttachment(healthcheckCard));
+		
+}
 
 var healthcheckCategories = ["Preventive", "Diabetes", "Cardiac", "Cancer"];
 
