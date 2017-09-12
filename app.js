@@ -1792,7 +1792,8 @@ bot.dialog('askforCity',[
 						{
 						  "type": "Input.ChoiceSet",
 						  "id": "category",
-						  "style":"compact",
+						  "style":"expanded",
+						  "isMultiSelect": false,
 						  "choices": [
 							{
 							  "title": "Preventive",
