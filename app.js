@@ -1676,29 +1676,6 @@ bot.dialog('healthCheck',[
 	function (session){
 		session.beginDialog('askforhealthcheckCity');
 	},
-	function(session, results) {
-		session.userData.healthcheckCategory = results.response.entity;	
-		var keyword = "";
-		var provider = "";
-		var url = "https://infiniti.medibuddy.in/result/package/"+process.env.HEALTHCHECK_ID+"/"+session.userData.healthcheckCategory+"/"+keyword+"/"+provider+"/?c="+session.userData.healthCheckCity;
-		healthCheckCard = new builder.HeroCard(session)
-									.title("Health Check Packages in "+ session.userData.healthCheckCity)
-									.subtitle("Chosen Category: "+session.userData.healthcheckCategory)
-									.text("https://infiniti.medibuddy.in/")
-									.images([
-										new builder.CardImage(session)
-											.url('https://i.imgur.com/LpNLplB.png')
-											.alt('Health Check')
-									])
-									.buttons([
-										builder.CardAction.openUrl(session, url, 'View Packages')
-										]);
-										
-		var msg = new builder.Message(session)
-			.text("Click on `View Packages` below to view all the health check packages in detail")
-			.addAttachment(healthCheckCard);
-		session.send(msg);
-	},
 	function(sesison, results){	
 		session.endDialogWithResult(results);		
 	}
@@ -1876,29 +1853,6 @@ bot.dialog('medicine',[
 	function (session){
 		session.beginDialog('askformedicineCity');
 	},
-	function(session, results) {
-		session.userData.healthcheckCategory = results.response.entity;	
-		var keyword = "";
-		var provider = "";
-		var url = "https://infiniti.medibuddy.in/result/package/"+process.env.HEALTHCHECK_ID+"/"+session.userData.healthcheckCategory+"/"+keyword+"/"+provider+"/?c="+session.userData.healthCheckCity;
-		medicineCard = new builder.HeroCard(session)
-									.title("Medicines in "+ session.userData.medicineCity)
-									.subtitle("Chosen Pincode: "+session.userData.medicinePincode)
-									.text("https://infiniti.medibuddy.in/")
-									.images([
-										new builder.CardImage(session)
-											.url('https://i.imgur.com/LpNLplB.png')
-											.alt('Medicine')
-									])
-									.buttons([
-										builder.CardAction.openUrl(session, url, 'Book Medicines')
-										]);
-										
-		var msg = new builder.Message(session)
-			.text("Click on `Book Medicines` below to view all the options for Medicines in your city")
-			.addAttachment(medicineCard);
-		session.send(msg);
-	},
 	function(sesison, results){	
 		session.endDialogWithResult(results);		
 	}
@@ -2034,7 +1988,7 @@ bot.dialog('askformedicineCity',[
 	}
 ]);
 
-function processSubmitAction2(session, message){
+function processSubmitAction3(session, message){
 		session.userData.medicineCity = message["city"];
 		if(message["pincode"].toString().length !== 6){
 			session.send("The pin number you have entered in incorrect. It should be exactly `six` digits long.");
@@ -2055,6 +2009,922 @@ function processSubmitAction2(session, message){
 										]);
 		session.send(new builder.Message(session)
 			.addAttachment(medicineCard));
+		
+}
+
+
+
+// Dialog to Book Consultation
+bot.dialog('consultation',[
+	function (session){
+		session.beginDialog('askforconsultationCity');
+	},
+	function(sesison, results){	
+		session.endDialogWithResult(results);		
+	}
+])
+.triggerAction({
+	matches: [/consultation/i, /consult/i, /doctor/i, /appointment/i],
+	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
+	
+});
+
+
+// Dialog to ask for Consultation city
+bot.dialog('askforconsultationCity',[
+	function (session){
+		//Make POST request to MA Server
+		
+			if(session.message && session.message.value){
+				processSubmitAction3(session, session.message.value);
+				return;
+			}
+
+				var card = 
+				{
+				  "contentType": "application/vnd.microsoft.card.adaptive",
+				 "content": {
+					 
+					"type": "AdaptiveCard",
+					 "body": [
+						{
+						  "type": "TextBlock",
+						  "text": "Select Filters: Book Consultation",
+						  "weight": "bolder",
+						  "size": "medium"
+						},
+						{
+						  "type": "TextBlock",
+						  "text": "We are one step away. Please choose city and speciality to continue.",
+						  "wrap": true,
+						  "maxLines": 4
+						},
+						{
+						  "type": "TextBlock",
+						  "text": "Choose your City"
+						},
+						{
+						  "type": "Input.ChoiceSet",
+						  "id": "city",
+						  "style":"compact",
+						  "choices": [
+							{
+							  "title": "Bengaluru",
+							  "value": "Bengaluru",
+							  "isSelected": true
+							},
+							{
+								"title": "Chennai",
+								"value": "Chennai"
+							},
+							{
+								"title": "Delhi",
+								"value": "Delhi"
+							},
+							{
+								"title": "Hyderabad",
+								"value": "Hyderabad"
+							},
+							{
+								"title": "Kolkata",
+								"value": "Kolkata"
+							},
+							{
+								"title": "Mumbai",
+								"value": "Mumbai"
+							},
+							{
+								"title": "Pune",
+								"value": "Pune"
+							},
+							{
+								"title": "Ahmedabad",
+								"value": "Ahmedabad"
+							},
+							{
+								"title": "Bhubaneswar",
+								"value": "Bhubaneswar"
+							},
+							{
+								"title": "Cochin",
+								"value": "Cochin"
+							},
+							{
+								"title": "Coimbatore",
+								"value": "Coimbatore"
+							},
+							{
+								"title": "Ernakulam",
+								"value": "Ernakulam"
+							},
+							{
+								"title": "Faridabad",
+								"value": "Faridabad"
+							},
+							{
+								"title": "Ghaziabad",
+								"value": "Ghaziabad"
+							},
+							{
+								"title": "Gurgaon",
+								"value": "Gurgaon"
+							},
+							{
+								"title": "Hosur",
+								"value": "Hosur"
+							},
+							{
+								"title": "Kanpur",
+								"value": "Kanpur"
+							},
+							{
+								"title": "Kottayam",
+								"value": "Kottayam"
+							},
+							{
+								"title": "Lucknow",
+								"value": "Lucknow"
+							},
+							{
+								"title": "Mysuru",
+								"value": "Mysuru"
+							},
+							{
+								"title": "Navi Mumbai",
+								"value": "Navi Mumbai"
+							},
+							{
+								"title": "Noida",
+								"value": "Noida"
+							},
+							{
+								"title": "Patiala",
+								"value": "Patiala"
+							},
+							{
+								"title": "Patna",
+								"value": "Patna"
+							},
+							{
+								"title": "Secunderabad",
+								"value": "Secunderabad"
+							},
+							{
+								"title": "Thane",
+								"value": "Thane"
+							},
+							{
+								"title": "Thiruvananthapuram",
+								"value": "Thiruvananthapuram"
+							},
+							{
+								"title": "Thodupuzha",
+								"value": "Thodupuzha"
+							},
+							{
+								"title": "Trichy",
+								"value": "Trichy"
+							},
+							{
+								"title": "Vijayawada",
+								"value": "Vijayawada"
+							},
+							{
+								"title": "Visakhapatnam",
+								"value": "Visakhapatnam"
+							}
+							
+						  ]
+						},
+						{
+						  "type": "TextBlock",
+						  "text": "Select your Speciality"
+						},{
+						  "type": "Input.ChoiceSet",
+						  "id": "speciality",
+						  "style":"compact",
+						  "choices": [
+							{
+							  "title": "Cardiologist",
+							  "value": "Cardiologist"
+							},
+							{
+								"title": "Gynaecologist",
+								"value": "Gynaecologist"
+							},
+							{
+								"title": "Nephrologist",
+								"value": "Nephrologist"
+							},
+							{
+								"title": "Gastroenterologist",
+								"value": "Gastroenterologist"
+							},
+							{
+								"title": "Ophthalmologist",
+								"value": "Ophthalmologist"
+							},
+							{
+								"title": "ENT",
+								"value": "ENT"
+							},
+							{
+								"title": "Dermatologist",
+								"value": "Dermatologist"
+							},
+							{
+								"title": "Dentist",
+								"value": "Dentist"
+							},
+							{
+								"title": "General Physician",
+								"value": "General Physician",
+							  "isSelected": true
+							},
+							{
+								"title": "Neurologist",
+								"value": "Neurologist"
+							},
+							{
+								"title": "Paediatrician",
+								"value": "Paediatrician"
+							},
+							{
+								"title": "Orthopaedician",
+								"value": "Orthopaedician"
+							}
+						  ]
+						}
+					  ],
+					  "actions": [
+					  {
+							"type": "Action.Submit",
+							"title": "Search"
+					  }
+					  ]
+				 }
+				};
+				session.send(new builder.Message(session)
+					.addAttachment(card));
+			
+		
+	},
+	function(session, results) {
+		session.endDialogWithResult(results);
+	}
+]);
+
+function processSubmitAction3(session, message){
+		session.userData.consultationCity = message["city"];
+			session.userData.consultationSpeciality = message["speciality"];				
+			medicineCard = new builder.HeroCard(session)
+									.title("Consultation")
+									.subtitle("Click below to view available consultations in "+message["city"]+" for "+message["speciality"])
+									.text("https://infiniti.medibuddy.in")
+									.images([
+										new builder.CardImage(session)
+											.url('https://i.imgur.com/UZXZjqO.png')
+											.alt('Consultations')
+									])
+									.buttons([
+										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/consultation/"+process.env.CONSULTATION_ID+"//"+session.userData.consultationSpeciality+"/?c="+session.userData.consultationCity, "View Consultations")
+										]);
+		session.send(new builder.Message(session)
+			.addAttachment(medicineCard));
+		
+}
+
+
+
+// Dialog to Book Home Health Care
+bot.dialog('homehealthcare',[
+	function (session){
+		session.beginDialog('askforhomehealthcareCity');
+	},
+	function(sesison, results){	
+		session.endDialogWithResult(results);		
+	}
+])
+.triggerAction({
+	matches: [/home health care/i, /home care/i, /home health/i, /^Home Health Care$/gi],
+	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
+	
+});
+
+
+// Dialog to ask for Consultation city
+bot.dialog('askforhomehealthcareCity',[
+	function (session){
+		//Make POST request to MA Server
+		
+			if(session.message && session.message.value){
+				processSubmitAction4(session, session.message.value);
+				return;
+			}
+
+				var card = 
+				{
+				  "contentType": "application/vnd.microsoft.card.adaptive",
+				 "content": {
+					 
+					"type": "AdaptiveCard",
+					 "body": [
+						{
+						  "type": "TextBlock",
+						  "text": "Select Filters: Book Consultation",
+						  "weight": "bolder",
+						  "size": "medium"
+						},
+						{
+						  "type": "TextBlock",
+						  "text": "We are one step away. Please choose city and speciality to continue.",
+						  "wrap": true,
+						  "maxLines": 4
+						},
+						{
+						  "type": "TextBlock",
+						  "text": "Choose your City"
+						},
+						{
+						  "type": "Input.ChoiceSet",
+						  "id": "city",
+						  "style":"compact",
+						  "choices": [
+							{
+							  "title": "Bengaluru",
+							  "value": "Bengaluru",
+							  "isSelected": true
+							},
+							{
+								"title": "Chennai",
+								"value": "Chennai"
+							},
+							{
+								"title": "Delhi",
+								"value": "Delhi"
+							},
+							{
+								"title": "Hyderabad",
+								"value": "Hyderabad"
+							},
+							{
+								"title": "Kolkata",
+								"value": "Kolkata"
+							},
+							{
+								"title": "Mumbai",
+								"value": "Mumbai"
+							},
+							{
+								"title": "Pune",
+								"value": "Pune"
+							},
+							{
+								"title": "Ahmedabad",
+								"value": "Ahmedabad"
+							},
+							{
+								"title": "Baroda",
+								"value": "Baroda"
+							},
+							{
+								"title": "Chandigarh",
+								"value": "Chandigarh"
+							},
+							{
+								"title": "Gurgaon",
+								"value": "Gurgaon"
+							}
+							
+						  ]
+						},
+						{
+						  "type": "TextBlock",
+						  "text": "Select your Service"
+						},{
+						  "type": "Input.ChoiceSet",
+						  "id": "service",
+						  "style":"compact",
+						  "choices": [
+							{
+							  "title": "Physiotherapist Visit",
+							  "value": "Physiotherapist Visit"
+							},
+							{
+								"title": "Attendant Visit",
+								"value": "Attendant Visit"
+							},
+							{
+								"title": "Nursing Visit",
+								"value": "Nursing Visit",
+								"isSelected": true
+							}
+						  ]
+						}
+					  ],
+					  "actions": [
+					  {
+							"type": "Action.Submit",
+							"title": "Search"
+					  }
+					  ]
+				 }
+				};
+				session.send(new builder.Message(session)
+					.addAttachment(card));
+			
+		
+	},
+	function(session, results) {
+		session.endDialogWithResult(results);
+	}
+]);
+
+function processSubmitAction4(session, message){
+		session.userData.homehealthcareCity = message["city"];
+			session.userData.homehealthcareService = message["service"];				
+			medicineCard = new builder.HeroCard(session)
+									.title("Home Health Care")
+									.subtitle("Click below to view available home health care services in "+message["city"]+" for "+message["service"])
+									.text("https://infiniti.medibuddy.in")
+									.images([
+										new builder.CardImage(session)
+											.url('https://i.imgur.com/UZXZjqO.png')
+											.alt('Home Health Care')
+									])
+									.buttons([
+										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/homehealthcare/"+process.env.HOMEHEALTHCARE_ID+"//"+session.userData.homehealthcareService+"/?c="+session.userData.homehealthcareCity, "View Services")
+										]);
+		session.send(new builder.Message(session)
+			.addAttachment(medicineCard));
+		
+}
+
+// Dialog to Book Tele Consultation
+bot.dialog('teleconsultation',[
+	function (session){
+		session.beginDialog('askforTeleConsultationDetails');
+	},
+	function(sesison, results){	
+		session.endDialogWithResult(results);		
+	}
+])
+.triggerAction({
+	matches: [/telephone consultation/i, /telephonic consultation/i, /teleconsultation/i, /tele consultation/i, /tele-consultation/i, /^Tele Consultation$/gi],
+	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
+	
+});
+
+
+// Dialog to ask for Tele Consultation Details
+bot.dialog('askforTeleConsultationDetails',[
+	function (session){
+		
+			if(session.message && session.message.value){
+				processSubmitAction5(session, session.message.value);
+				return;
+			}
+
+				var card = 
+				{
+				  "contentType": "application/vnd.microsoft.card.adaptive",
+				 "content": {
+					 
+					"type": "AdaptiveCard",
+					 "body": [
+						{
+						  "type": "TextBlock",
+						  "text": "Select Filters: Lab Test",
+						  "weight": "bolder",
+						  "size": "medium"
+						},
+						{
+						  "type": "TextBlock",
+						  "text": "We are one step away. Please type your preferred `speciality` to continue.",
+						  "wrap": true,
+						  "maxLines": 4
+						},
+						{
+						  "type": "TextBlock",
+						  "text": "Select your Service"
+						},
+						{
+						  "type": "Input.ChoiceSet",
+						  "id": "teleservice",
+						  "style":"compact",
+						  "choices": [
+							{
+							  "title": "Ayurveda",
+							  "value": "Ayurveda"
+							},
+							{
+								"title": "Cardiologist",
+								"value": "Cardiologist"
+							},
+							{
+								"title": "Dentist",
+								"value": "Dentist",
+								"isSelected": true
+							},
+							{
+								"title": "Dermatologist",
+								"value": "Dermatologist"
+							},
+							{
+								"title": "Dietitian/Nutritionist",
+								"value": "Dietitian/Nutritionist"
+							},
+							{
+								"title": "Endocrinologist",
+								"value": "Endocrinologist"
+							},
+							{
+								"title": "ENT",
+								"value": "ENT"
+							},
+							{
+								"title": "General Physician",
+								"value": "General Physician"
+							},
+							{
+								"title": "Homoeopath",
+								"value": "Homoeopath"
+							},
+							{
+								"title": "Naturopath",
+								"value": "Naturopath"
+							},
+							{
+								"title": "Nephrologist",
+								"value": "Nephrologist"
+							},
+							{
+								"title": "Neurologist",
+								"value": "Neurologist"
+							},
+							{
+								"title": "Obstetrician/Gyneacologist",
+								"value": "Obstetrician/Gyneacologist"
+							},
+							{
+								"title": "Ophthalmologist",
+								"value": "Ophthalmologist"
+							},
+							{
+								"title": "Orthopedician",
+								"value": "Orthopedician"
+							},
+							{
+								"title": "Paediatrician",
+								"value": "Paediatrician"
+							},
+							{
+								"title": "Physiotherapist",
+								"value": "Physiotherapist"
+							},
+							{
+								"title": "Rheumatologist",
+								"value": "Rheumatologist"
+							},
+							{
+								"title": "Sexologist",
+								"value": "Sexologist"
+							},
+							{
+								"title": "Sports Medicine",
+								"value": "Sports Medicine"
+							}
+						  ]
+						}
+					  ],
+					  "actions": [
+					  {
+							"type": "Action.Submit",
+							"title": "Search"
+					  }
+					  ]
+				 }
+				};
+				session.send(new builder.Message(session)
+					.addAttachment(card));
+			
+		
+	},
+	function(session, results) {
+		session.endDialogWithResult(results);
+	}
+]);
+
+function processSubmitAction5(session, message){
+			session.userData.teleconsultationService = message["teleservice"];				
+			medicineCard = new builder.HeroCard(session)
+									.title("Lab Test")
+									.subtitle("Click below to view available telephonic consultations for "+message["teleservice"])
+									.text("https://infiniti.medibuddy.in")
+									.images([
+										new builder.CardImage(session)
+											.url('https://i.imgur.com/UZXZjqO.png')
+											.alt('Tele Consultation')
+									])
+									.buttons([
+										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/onlineservice/"+process.env.TELE_CONSULTATION+"//"+session.userData.teleconsultationService, "View Services")
+										]);
+		session.send(new builder.Message(session)
+			.addAttachment(medicineCard));
+		
+}
+
+
+// Dialog to Book Lab Test
+bot.dialog('labtest',[
+	function (session){
+		session.beginDialog('askforLabTestDetails');
+	},
+	function(sesison, results){	
+		session.endDialogWithResult(results);		
+	}
+])
+.triggerAction({
+	matches: [/lab test/i, /^Lab Test$/gi, /Laboratory/i, /Lab/i],
+	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
+	
+});
+
+
+// Dialog to ask for Lab Test Details
+bot.dialog('askforLabTestDetails',[
+	function (session){
+		//Make POST request to MA Server
+		
+			if(session.message && session.message.value){
+				processSubmitAction6(session, session.message.value);
+				return;
+			}
+
+				var card = 
+				{
+				  "contentType": "application/vnd.microsoft.card.adaptive",
+				 "content": {
+					 
+					"type": "AdaptiveCard",
+					 "body": [
+						{
+						  "type": "TextBlock",
+						  "text": "Select Filters: Lab Test",
+						  "weight": "bolder",
+						  "size": "medium"
+						},
+						{
+						  "type": "TextBlock",
+						  "text": "We are one step away. Please choose city and type of test to continue.",
+						  "wrap": true,
+						  "maxLines": 4
+						},
+						{
+						  "type": "TextBlock",
+						  "text": "Choose your City"
+						},
+						{
+						  "type": "Input.ChoiceSet",
+						  "id": "city",
+						  "style":"compact",
+						  "choices": [
+							{
+							  "title": "Bengaluru",
+							  "value": "Bengaluru",
+							  "isSelected": true
+							},
+							{
+								"title": "Chennai",
+								"value": "Chennai"
+							},
+							{
+								"title": "Delhi",
+								"value": "Delhi"
+							},
+							{
+								"title": "Hyderabad",
+								"value": "Hyderabad"
+							},
+							{
+								"title": "Kolkata",
+								"value": "Kolkata"
+							},
+							{
+								"title": "Mumbai",
+								"value": "Mumbai"
+							},
+							{
+								"title": "Pune",
+								"value": "Pune"
+							},
+							{
+								"title": "Agra",
+								"value": "Agra"
+							},
+							{
+								"title": "Ahmedabad",
+								"value": "Ahmedabad"
+							},
+							{
+								"title": "Allahabad",
+								"value": "Allahabad"
+							},
+							{
+								"title": "Ambala",
+								"value": "Ambala"
+							},
+							{
+								"title": "Amritsar",
+								"value": "Amritsar"
+							},
+							{
+								"title": "Bareilly",
+								"value": "Bareilly"
+							},
+							{
+								"title": "Bhubaneswar",
+								"value": "Bhubaneswar"
+							},
+							{
+								"title": "Chandigarh",
+								"value": "Chandigarh"
+							},
+							{
+								"title": "Coimbatore",
+								"value": "Coimbatore"
+							},
+							{
+								"title": "Dehradun",
+								"value": "Dehradun"
+							},
+							{
+								"title": "Faridabad",
+								"value": "Faridabad"
+							},
+							{
+								"title": "Ghaziabad",
+								"value": "Ghaziabad"
+							},
+							{
+								"title": "Gurgaon",
+								"value": "Gurgaon"
+							},
+							{
+								"title": "Guwahati",
+								"value": "Guwahati"
+							},
+							{
+								"title": "Gwalior",
+								"value": "Gwalior"
+							},
+							{
+								"title": "Jaipur",
+								"value": "Jaipur"
+							},
+							{
+								"title": "Jalandhar",
+								"value": "Jalandhar"
+							},
+							{
+								"title": "Lucknow",
+								"value": "Lucknow"
+							},
+							{
+								"title": "Ludhiana",
+								"value": "Ludhiana"
+							},
+							{
+								"title": "Meerut",
+								"value": "Meerut"
+							},
+							{
+								"title": "Mohali",
+								"value": "Mohali"
+							},
+							{
+								"title": "Moradabad",
+								"value": "Moradabad"
+							},
+							{
+								"title": "Mysuru",
+								"value": "Mysuru"
+							},
+							{
+								"title": "Navi Mumbai",
+								"value": "Navi Mumbai"
+							},
+							{
+								"title": "Noida",
+								"value": "Noida"
+							},
+							{
+								"title": "Panchkula",
+								"value": "Panchkula"
+							},
+							{
+								"title": "Patna",
+								"value": "Patna"
+							},
+							{
+								"title": "Thane",
+								"value": "Thane"
+							},
+							{
+								"title": "Varanasi",
+								"value": "Varanasi"
+							}
+							
+						  ]
+						},
+						{
+						  "type": "TextBlock",
+						  "text": "Select your Test"
+						},
+						{
+						  "type": "Input.ChoiceSet",
+						  "id": "labtest",
+						  "style":"compact",
+						  "choices": [
+							{
+							  "title": "T3",
+							  "value": "T3",
+								"isSelected": true
+							},
+							{
+								"title": "T4",
+								"value": "T4"
+							},
+							{
+								"title": "HBA1C",
+								"value": "HBA1C"
+							},
+							{
+								"title": "Liver Function Test",
+								"value": "Liver Function Test"
+							},
+							{
+								"title": "CBC",
+								"value": "CBC"
+							},
+							{
+								"title": "Lipid Profile",
+								"value": "Lipid Profile"
+							},
+							{
+								"title": "Platelet Count",
+								"value": "Platelet Count"
+							},
+							{
+								"title": "ESR",
+								"value": "ESR"
+							},
+							{
+								"title": "Thyroid Stimulating Hormone - TSH",
+								"value": "Thyroid Stimulating Hormone - TSH"
+							},
+							{
+								"title": "Vitamin B12",
+								"value": "Vitamin B12"
+							}
+						  ]
+						}
+					  ],
+					  "actions": [
+					  {
+							"type": "Action.Submit",
+							"title": "Search"
+					  }
+					  ]
+				 }
+				};
+				session.send(new builder.Message(session)
+					.addAttachment(card));
+			
+		
+	},
+	function(session, results) {
+		session.endDialogWithResult(results);
+	}
+]);
+
+function processSubmitAction6(session, message){
+		session.userData.labtestCity = message["city"];
+			session.userData.labtest = message["labtest"];				
+			labtestCard = new builder.HeroCard(session)
+									.title("Lab Test")
+									.subtitle("Click below to view `"+message["labtest"]+"` tests in `"+message["city"]+"`")
+									.text("https://infiniti.medibuddy.in")
+									.images([
+										new builder.CardImage(session)
+											.url('https://i.imgur.com/UZXZjqO.png')
+											.alt('Lab Test')
+									])
+									.buttons([
+										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/labtest/"+process.env.LABTEST_ID+"//"+session.userData.labtest+"/?c="+session.userData.labtestCity, "View Lab Tests")
+										]);
+		session.send(new builder.Message(session)
+			.addAttachment(labtestCard));
 		
 }
 
