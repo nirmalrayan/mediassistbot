@@ -83,7 +83,12 @@ var bot = new builder.UniversalBot(connector,
 					builder.CardAction.imBack(session, "Show Menu", "Show Menu")
 				]);
 				
-				session.beginDialog('askName');
+				
+				session.sendTyping();
+				setTimeout(function () {
+					session.beginDialog('askName');
+				}, 8000);		
+			
 			}
 			session.send(new builder.Message(session)
 				.addAttachment(welcomeCard));
