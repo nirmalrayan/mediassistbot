@@ -43,7 +43,7 @@ var bot = new builder.UniversalBot(connector,
     function (session) {
 		if(session.message.address.channelId === 'facebook'){
 			var welcomeCard = new builder.HeroCard(session)
-				.title("Hi %s! Nice to see you. I am MediBot. How can I help you?", session.message.address.user.name)
+				.title("Hi %s! Nice to see you. I am MediBot", session.message.address.user.name)
 				.subtitle("I will be your personal healthcare assistant. ℹ️ Type \"show menu\" or \"#\" at any time to see the menu.")
 				.images([
 					new builder.CardImage(session)
@@ -56,9 +56,9 @@ var bot = new builder.UniversalBot(connector,
 			session.userData.name = session.message.address.user.name;
 		}
 		else{
-			if(session.userData.trackBenefName){
+			if(session.userData.masterName){
 				var welcomeCard = new builder.HeroCard(session)
-				.title("Hi " + session.userData.trackBenefName + "! Nice to see you. I am MediBot. How can I help you?")
+				.title("Hi " + session.userData.masterName + "! Nice to see you again")
 				.subtitle("I will be your personal healthcare assistant. ℹ️ Type \"show menu\" or \"#\" at any time to see the menu.")
 				.images([
 					new builder.CardImage(session)
@@ -72,7 +72,7 @@ var bot = new builder.UniversalBot(connector,
 			}
 			else{
 				var welcomeCard = new builder.HeroCard(session)
-				.title("Greetings! I am MediBot. How can I help you?")
+				.title("Greetings! I'm MediBot")
 				.subtitle("I will be your personal healthcare assistant. ℹ️ Type \"show menu\" or \"#\" at any time to see the menu.")
 				.images([
 					new builder.CardImage(session)
@@ -82,12 +82,31 @@ var bot = new builder.UniversalBot(connector,
 				.buttons([
 					builder.CardAction.imBack(session, "Show Menu", "Show Menu")
 				]);
+				
+				session.beginDialog('askName');
 			}
 			session.send(new builder.Message(session)
 				.addAttachment(welcomeCard));
+			
 		}	
     });
 
+	
+// Dialog to ask for Master Name
+bot.dialog('askName',[
+	function (session){
+			builder.Prompts.text(session, "What's your name?");
+	},
+	function(session, results) {
+		session.userData.masterName =  results.response;
+		session.endConversation('Welcome, '+ results.response);
+	},
+	function(session, results) {
+		session.endDialogWithResult(results);
+	}
+]);
+
+	
 // Dialog to show main menu
 bot.dialog('showMenu',[
 	function (session){	
@@ -96,7 +115,6 @@ bot.dialog('showMenu',[
 			trackClaimCard = new builder.HeroCard(session)
 									.title("Track Claim")
 									.subtitle("Tracking your claim can help you understand where you are in the claims process.")
-									.text("https://track.medibuddy.in")
 									.images([
 										new builder.CardImage(session)
 											.url('https://preview.ibb.co/h3LbU5/1.png')
@@ -111,7 +129,6 @@ bot.dialog('showMenu',[
 			downloadCard = new builder.HeroCard(session)
 									.title("Download E-Card")
 									.subtitle("Getting your E-Card is much simpler and at your finger tips.")
-									.text("https://ecard.medibuddy.in")
 									.images([
 										new builder.CardImage(session)
 											.url('https://preview.ibb.co/cmft95/12.png')
@@ -126,7 +143,6 @@ bot.dialog('showMenu',[
 			searchNetworkCard = new builder.HeroCard(session)
 									.title("Search Network")
 									.subtitle("Search Medi Assist to find the nearest network hospitals.")
-									.text("https://network.medibuddy.in")
 									.images([
 										new builder.CardImage(session)
 											.url('https://preview.ibb.co/hBHRwk/11.png')
@@ -141,10 +157,9 @@ bot.dialog('showMenu',[
 			healthCheckCard = new builder.HeroCard(session)
 									.title("Health Check")
 									.subtitle("Booking health check has never been easier. Find the best hospitals with discounts in your city now.")
-									.text("https://infiniti.medibuddy.in/")
 									.images([
 										new builder.CardImage(session)
-											.url('https://i.imgur.com/LpNLplB.png')
+											.url('https://i.imgur.com/LGKrs5k.png')
 											.alt('Health Check')
 									])
 									.buttons([
@@ -152,9 +167,79 @@ bot.dialog('showMenu',[
 										]);
 			
 			menucards.push(healthCheckCard);
+	
+			medicineCard = new builder.HeroCard(session)
+									.title("Medicine")
+									.subtitle("We bring pharmacies to your doorsteps. Click below to know more about ordering medicines.")
+									.images([
+										new builder.CardImage(session)
+											.url('https://i.imgur.com/zdqBW3P.png')
+											.alt('Medicine')
+									])
+									.buttons([
+										builder.CardAction.imBack(session, "Medicine", "Medicine")
+										]);
+			
+			menucards.push(medicineCard);
+
+			consultationCard = new builder.HeroCard(session)
+									.title("Consultation")
+									.subtitle("Do you want to book a consultation with a doctor of your choice? Click below to know more.")
+									.images([
+										new builder.CardImage(session)
+											.url('https://i.imgur.com/kulyrgx.png')
+											.alt('Medicine')
+									])
+									.buttons([
+										builder.CardAction.imBack(session, "Consultation", "Consultation")
+										]);
+			
+			menucards.push(consultationCard);
+
+			homecareCard = new builder.HeroCard(session)
+									.title("Home Health Care")
+									.subtitle("MediBuddy Infiniti brings `Physiotherapist`, `Attendant` and `Nursing` visit facilities to your home.")
+									.images([
+										new builder.CardImage(session)
+											.url('https://i.imgur.com/FbM1SvH.png')
+											.alt('Medicine')
+									])
+									.buttons([
+										builder.CardAction.imBack(session, "Home Health Care", "Home Health Care")
+										]);
+			
+			menucards.push(homecareCard);
+
+			teleconsultationCard = new builder.HeroCard(session)
+									.title("Tele Consultation")
+									.subtitle("Book a telephonic consultation with our medical professionals at the lowest cost. Click below to learn more.")
+									.images([
+										new builder.CardImage(session)
+											.url('https://i.imgur.com/Ps8hw1x.png')
+											.alt('Tele Consultation')
+									])
+									.buttons([
+										builder.CardAction.imBack(session, "Tele Consultation", "Tele Consultation")
+										]);
+			
+			menucards.push(teleconsultationCard);
+
+			labtestCard = new builder.HeroCard(session)
+									.title("Lab Test")
+									.subtitle("Looking for a clinical laboratory for diagnostics? We have you covered.")
+									.images([
+										new builder.CardImage(session)
+											.url('https://i.imgur.com/BL44d2H.png')
+											.alt('Lab Test')
+									])
+									.buttons([
+										builder.CardAction.imBack(session, "Lab Test", "Lab Test")
+										]);
+			
+			menucards.push(labtestCard);
 			
 			var msg = new builder.Message(session)
-			.text("My abilities are still growing. I'm trained to help you with the following: ")
+			.text("My abilities are still growing. In a nutshell, here's what I can do: ")
 			.attachmentLayout(builder.AttachmentLayout.carousel)
 			.attachments(menucards);
 		session.send(msg);
@@ -1884,7 +1969,7 @@ bot.dialog('askformedicineCity',[
 					 "body": [
 						{
 						  "type": "TextBlock",
-						  "text": "Select Filters: Book Medicines",
+						  "text": "Select Filters: Order Medicines",
 						  "weight": "bolder",
 						  "size": "medium"
 						},
@@ -1988,7 +2073,7 @@ bot.dialog('askformedicineCity',[
 	}
 ]);
 
-function processSubmitAction3(session, message){
+function processSubmitAction2(session, message){
 		session.userData.medicineCity = message["city"];
 		if(message["pincode"].toString().length !== 6){
 			session.send("The pin number you have entered in incorrect. It should be exactly `six` digits long.");
@@ -1996,8 +2081,8 @@ function processSubmitAction3(session, message){
 			session.userData.medicinePincode = message["pincode"];				
 		}
 			medicineCard = new builder.HeroCard(session)
-									.title("Health Check Packages")
-									.subtitle("Click below to upload your prescription")
+									.title("Order Medicine")
+									.subtitle("I still need your prescription to process the order")
 									.text("https://infiniti.medibuddy.in")
 									.images([
 										new builder.CardImage(session)
@@ -2279,7 +2364,7 @@ function processSubmitAction3(session, message){
 			session.userData.consultationSpeciality = message["speciality"];				
 			medicineCard = new builder.HeroCard(session)
 									.title("Consultation")
-									.subtitle("Click below to view available consultations in "+message["city"]+" for "+message["speciality"])
+									.subtitle("I've curated a list of "+message["speciality"]+"s in "+message["city"]+". Click below to know more")
 									.text("https://infiniti.medibuddy.in")
 									.images([
 										new builder.CardImage(session)
@@ -2331,13 +2416,13 @@ bot.dialog('askforhomehealthcareCity',[
 					 "body": [
 						{
 						  "type": "TextBlock",
-						  "text": "Select Filters: Book Consultation",
+						  "text": "Select Filters: Home Health Care",
 						  "weight": "bolder",
 						  "size": "medium"
 						},
 						{
 						  "type": "TextBlock",
-						  "text": "We are one step away. Please choose city and speciality to continue.",
+						  "text": "We are one step away. Please choose city and service to continue.",
 						  "wrap": true,
 						  "maxLines": 4
 						},
@@ -2494,7 +2579,7 @@ bot.dialog('askforTeleConsultationDetails',[
 					 "body": [
 						{
 						  "type": "TextBlock",
-						  "text": "Select Filters: Lab Test",
+						  "text": "Select Filters: Tele Consultation",
 						  "weight": "bolder",
 						  "size": "medium"
 						},
@@ -2618,7 +2703,7 @@ bot.dialog('askforTeleConsultationDetails',[
 function processSubmitAction5(session, message){
 			session.userData.teleconsultationService = message["teleservice"];				
 			medicineCard = new builder.HeroCard(session)
-									.title("Lab Test")
+									.title("Tele Consultation")
 									.subtitle("Click below to view available telephonic consultations for "+message["teleservice"])
 									.text("https://infiniti.medibuddy.in")
 									.images([
