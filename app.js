@@ -1823,7 +1823,6 @@ bot.dialog('askforCity',[
 					  ]
 				 }
 				};
-//				console.log("Final card schema: "+JSON.stringify(card));
 				session.send(new builder.Message(session)
 					.addAttachment(card));
 			
