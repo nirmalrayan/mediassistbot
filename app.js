@@ -1676,10 +1676,6 @@ bot.dialog('healthCheck',[
 	function (session){
 		session.beginDialog('askforCity');
 	},
-	function (session, results){
-		session.userData.healthCheckCity = results.response;
-		session.beginDialog('askforCategory');
-	},
 	function(session, results) {
 		session.userData.healthcheckCategory = results.response.entity;	
 		var keyword = "";
@@ -1724,40 +1720,14 @@ bot.dialog('askforCity',[
 				processSubmitAction(session, session.message.value);
 				return;
 			}
-			else
-			{
-				var request = require('request');
-				
-				var cityChoices = [];
-				var city;
-				var category;
-				// Start the request
-				request('https://infiniti.medibuddy.in/WAPI/availableCities.json', function (error, response, body) {	
-						if(response.statusCode == 200){
-							var data = JSON.parse(body);
-							
-							var cities = data[process.env.HEALTHCHECK_ID];
-							var otherFlag = 0;
-							for (var entity in cities){
-								var cityName = {
-									  "title": cities[entity],
-									  "value": cities[entity]
-									};
-								if( cities[entity] == 'Bengaluru' ||  cities[entity] == 'Chennai' ||  cities[entity] == 'Delhi' ||  cities[entity] == 'Hyderabad' ||  cities[entity] == 'Kolkata' ||  cities[entity] == 'Mumbai' ||  cities[entity] == 'Pune'){
-									cityChoices.push(cityName);
-								}
-							  }
-							  cityChoices.push({"title":"Other", "value":"Other"});
-							  
-						}	
-				});	
-				
+
 				var card = 
 				{
-				  contentType: "application/vnd.microsoft.card.adaptive",
-				 content: {
-					 type: "AdaptiveCard",
-					 body: [
+				  "contentType": "application/vnd.microsoft.card.adaptive",
+				 "content": {
+					 
+					"type": "AdaptiveCard",
+					 "body": [
 						{
 						  "type": "TextBlock",
 						  "text": "Select Filters: Health Check",
@@ -1766,7 +1736,9 @@ bot.dialog('askforCity',[
 						},
 						{
 						  "type": "TextBlock",
-						  "text": "We are one step away. Please choose city and category from options below."
+						  "text": "We are one step away. Please choose city and category from options below.",
+						  "wrap": true,
+						  "maxLines": 4
 						},
 						{
 						  "type": "TextBlock",
@@ -1776,7 +1748,42 @@ bot.dialog('askforCity',[
 						  "type": "Input.ChoiceSet",
 						  "id": "city",
 						  "style":"compact",
-						  "choices": cityChoices
+						  "choices": [
+							{
+							  "title": "Bengaluru",
+							  "value": "Bengaluru",
+							  "isSelected": true
+							},
+							{
+								"title": "Chennai",
+								"value": "Chennai"
+							},
+							{
+								"title": "Delhi",
+								"value": "Delhi"
+							},
+							{
+								"title": "Hyderabad",
+								"value": "Hyderabad"
+							},
+							{
+								"title": "Kolkata",
+								"value": "Kolkata"
+							},
+							{
+								"title": "Mumbai",
+								"value": "Mumbai"
+							},
+							{
+								"title": "Pune",
+								"value": "Pune"
+							},
+							{
+								"title": "Other",
+								"value": "Other"
+							}
+							
+						  ]
 						},
 						{
 						  "type": "TextBlock",
@@ -1785,8 +1792,7 @@ bot.dialog('askforCity',[
 						{
 						  "type": "Input.ChoiceSet",
 						  "id": "category",
-						  "style":"expanded",
-						  "isMultiSelect": false,
+						  "style":"compact",
 						  "choices": [
 							{
 							  "title": "Preventive",
@@ -1808,7 +1814,7 @@ bot.dialog('askforCity',[
 						  ]
 						}
 					  ],
-					  actions: [
+					  "actions": [
 					  {
 							"type": "Action.Submit",
 							"title": "Find Packages"
@@ -1816,10 +1822,11 @@ bot.dialog('askforCity',[
 					  ]
 				 }
 				};
-				
-				var respx = session.send(new builder.Message(session)
+//				console.log("Final card schema: "+JSON.stringify(card));
+				session.send(new builder.Message(session)
 					.addAttachment(card));
-			}
+			
+		
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
@@ -1829,7 +1836,6 @@ bot.dialog('askforCity',[
 function processSubmitAction(session, message){
 		session.userData.healthcheckCity = message["city"];
 		session.userData.healthcheckCategory = message["category"];	
-//		session.send("Trying to find health check packages in `"+session.userData.healthcheckCity+"` under `"+session.userData.healthcheckCategory+"` category. Please wait ⏳");
 		if(message["city"] !== "Other"){
 			healthcheckCard = new builder.HeroCard(session)
 									.title("Health Check Packages")
