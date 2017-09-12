@@ -1882,20 +1882,20 @@ bot.dialog('medicine',[
 		var provider = "";
 		var url = "https://infiniti.medibuddy.in/result/package/"+process.env.HEALTHCHECK_ID+"/"+session.userData.healthcheckCategory+"/"+keyword+"/"+provider+"/?c="+session.userData.healthCheckCity;
 		medicineCard = new builder.HeroCard(session)
-									.title("Health Check Packages in "+ session.userData.healthCheckCity)
-									.subtitle("Chosen Category: "+session.userData.healthcheckCategory)
+									.title("Medicines in "+ session.userData.medicineCity)
+									.subtitle("Chosen Pincode: "+session.userData.medicinePincode)
 									.text("https://infiniti.medibuddy.in/")
 									.images([
 										new builder.CardImage(session)
 											.url('https://i.imgur.com/LpNLplB.png')
-											.alt('Health Check')
+											.alt('Medicine')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, url, 'View Packages')
+										builder.CardAction.openUrl(session, url, 'Book Medicines')
 										]);
 										
 		var msg = new builder.Message(session)
-			.text("Click on `View Packages` below to view all the health check packages in detail")
+			.text("Click on `Book Medicines` below to view all the options for Medicines in your city")
 			.addAttachment(medicineCard);
 		session.send(msg);
 	},
@@ -1930,13 +1930,13 @@ bot.dialog('askformedicineCity',[
 					 "body": [
 						{
 						  "type": "TextBlock",
-						  "text": "Select Filters: Health Check",
+						  "text": "Select Filters: Book Medicines",
 						  "weight": "bolder",
 						  "size": "medium"
 						},
 						{
 						  "type": "TextBlock",
-						  "text": "We are one step away. Please choose city and category from options below.",
+						  "text": "We are one step away. Please choose city and enter your pincode below.",
 						  "wrap": true,
 						  "maxLines": 4
 						},
@@ -2034,7 +2034,7 @@ bot.dialog('askformedicineCity',[
 	}
 ]);
 
-function processSubmitAction(session, message){
+function processSubmitAction2(session, message){
 		session.userData.medicineCity = message["city"];
 		if(message["pincode"].toString().length < 6){
 			session.send("You have entered incorrect pin number.");
@@ -2043,7 +2043,7 @@ function processSubmitAction(session, message){
 		}else{
 			session.userData.medicinePincode = message["pincode"];				
 		}
-			healthcheckCard = new builder.HeroCard(session)
+			medicineCard = new builder.HeroCard(session)
 									.title("Health Check Packages")
 									.subtitle("Click below to view packages from hospitals in your city")
 									.text("https://infiniti.medibuddy.in")
@@ -2056,7 +2056,7 @@ function processSubmitAction(session, message){
 										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/medicines/"+process.env.MEDICINE_ID+"/"+session.userData.medicinePincode+"/?c="+session.userData.medicineCity, "Show Medicines")
 										]);
 		session.send(new builder.Message(session)
-			.addAttachment(healthcheckCard));
+			.addAttachment(medicineCard));
 		
 }
 
