@@ -2036,16 +2036,14 @@ bot.dialog('askformedicineCity',[
 
 function processSubmitAction2(session, message){
 		session.userData.medicineCity = message["city"];
-		if(message["pincode"].toString().length < 6){
-			session.send("You have entered incorrect pin number.");
-			session.beginDialog('askforMedicinePincodeConfirmation');
-			
+		if(message["pincode"].toString().length !== 6){
+			session.send("The pin number you have entered in incorrect. It should be exactly `six` digits long.");
 		}else{
 			session.userData.medicinePincode = message["pincode"];				
 		}
 			medicineCard = new builder.HeroCard(session)
 									.title("Health Check Packages")
-									.subtitle("Click below to view packages from hospitals in your city")
+									.subtitle("Click below to upload your prescription")
 									.text("https://infiniti.medibuddy.in")
 									.images([
 										new builder.CardImage(session)
@@ -2053,29 +2051,12 @@ function processSubmitAction2(session, message){
 											.alt('Health Check Packages')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/medicines/"+process.env.MEDICINE_ID+"/"+session.userData.medicinePincode+"/?c="+session.userData.medicineCity, "Show Medicines")
+										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/medicines/"+process.env.MEDICINE_ID+"/"+session.userData.medicinePincode+"/?c="+session.userData.medicineCity, "Upload Prescription")
 										]);
 		session.send(new builder.Message(session)
 			.addAttachment(medicineCard));
 		
 }
-
-// Dialog to ask for Confirmation - Track with Claim Number
-bot.dialog('askforMedicinePincodeConfirmation',[
-	function (session){
-		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)")
-	},
-	function (session, results) {
-		if (results.response){
-			session.replaceDialog('askformedicineCity', {reprompt: true});
-		}
-		else {
-			session.endConversation();
-			session.beginDialog('askforMore');
-		}
-		
-	}
-]);
 
 
 server.post('/api/messages', connector.listen());
