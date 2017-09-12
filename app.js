@@ -1674,7 +1674,7 @@ bot.dialog('sayThanks',[
 // Dialog to 
 bot.dialog('healthCheck',[
 	function (session){
-		session.beginDialog('askforCity');
+		session.beginDialog('askforhealthcheckCity');
 	},
 	function(session, results) {
 		session.userData.healthcheckCategory = results.response.entity;	
@@ -1712,7 +1712,7 @@ bot.dialog('healthCheck',[
 
 
 // Dialog to ask for Health Check city
-bot.dialog('askforCity',[
+bot.dialog('askforhealthcheckCity',[
 	function (session){
 		//Make POST request to MA Server
 		
@@ -1869,20 +1869,213 @@ function processSubmitAction(session, message){
 		
 }
 
-// Dialog to ask for Health Check Category
-bot.dialog('askforHealthCheckCity',[
+
+
+// Dialog to Order Medicines
+bot.dialog('medicine',[
 	function (session){
-		builder.Prompts.text(session, 'What is your city name?');			
+		session.beginDialog('askformedicineCity');
 	},
 	function(session, results) {
-		if(results.response){
-			session.userData.healthcheckCity = results.response;
-			session.send('User entered :' +session.userData.healthcheckCity);
-		}
+		session.userData.healthcheckCategory = results.response.entity;	
+		var keyword = "";
+		var provider = "";
+		var url = "https://infiniti.medibuddy.in/result/package/"+process.env.HEALTHCHECK_ID+"/"+session.userData.healthcheckCategory+"/"+keyword+"/"+provider+"/?c="+session.userData.healthCheckCity;
+		medicineCard = new builder.HeroCard(session)
+									.title("Health Check Packages in "+ session.userData.healthCheckCity)
+									.subtitle("Chosen Category: "+session.userData.healthcheckCategory)
+									.text("https://infiniti.medibuddy.in/")
+									.images([
+										new builder.CardImage(session)
+											.url('https://i.imgur.com/LpNLplB.png')
+											.alt('Health Check')
+									])
+									.buttons([
+										builder.CardAction.openUrl(session, url, 'View Packages')
+										]);
+										
+		var msg = new builder.Message(session)
+			.text("Click on `View Packages` below to view all the health check packages in detail")
+			.addAttachment(medicineCard);
+		session.send(msg);
+	},
+	function(sesison, results){	
+		session.endDialogWithResult(results);		
+	}
+])
+.triggerAction({
+	matches: [/medicine/i, /medicines/i, /prescription/i, /pharmacy/i, /tablet/i, /syrup/i, /drugs/i],
+	// /^search network hospitals$|^search network$/i,
+	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
+	
+});
+
+
+// Dialog to ask for Medicine city
+bot.dialog('askformedicineCity',[
+	function (session){
+		//Make POST request to MA Server
+		
+			if(session.message && session.message.value){
+				processSubmitAction2(session, session.message.value);
+				return;
+			}
+
+				var card = 
+				{
+				  "contentType": "application/vnd.microsoft.card.adaptive",
+				 "content": {
+					 
+					"type": "AdaptiveCard",
+					 "body": [
+						{
+						  "type": "TextBlock",
+						  "text": "Select Filters: Health Check",
+						  "weight": "bolder",
+						  "size": "medium"
+						},
+						{
+						  "type": "TextBlock",
+						  "text": "We are one step away. Please choose city and category from options below.",
+						  "wrap": true,
+						  "maxLines": 4
+						},
+						{
+						  "type": "TextBlock",
+						  "text": "Choose your City"
+						},
+						{
+						  "type": "Input.ChoiceSet",
+						  "id": "city",
+						  "style":"compact",
+						  "choices": [
+							{
+							  "title": "Bengaluru",
+							  "value": "Bengaluru",
+							  "isSelected": true
+							},
+							{
+								"title": "Chennai",
+								"value": "Chennai"
+							},
+							{
+								"title": "Delhi",
+								"value": "Delhi"
+							},
+							{
+								"title": "Hyderabad",
+								"value": "Hyderabad"
+							},
+							{
+								"title": "Kolkata",
+								"value": "Kolkata"
+							},
+							{
+								"title": "Mumbai",
+								"value": "Mumbai"
+							},
+							{
+								"title": "Pune",
+								"value": "Pune"
+							},
+							{
+								"title": "Ahmedabad",
+								"value": "Ahmedabad"
+							},
+							{
+								"title": "Gurgaon",
+								"value": "Gurgaon"
+							},
+							{
+								"title": "Jaipur",
+								"value": "Jaipur"
+							},
+							{
+								"title": "Navi Mumbai",
+								"value": "Navi Mumbai"
+							},
+							{
+								"title": "Noida",
+								"value": "Noida"
+							},
+							{
+								"title": "Thane",
+								"value": "Thane"
+							}
+							
+						  ]
+						},
+						{
+						  "type": "TextBlock",
+						  "text": "Enter your pincode"
+						},
+						{
+						  "type": "Input.Number",
+						  "id": "pincode",
+						  "placeholder": "Enter pincode, let's check if we operate in your area!",
+						  "speak": "What is your pincode?"
+						}
+					  ],
+					  "actions": [
+					  {
+							"type": "Action.Submit",
+							"title": "Search"
+					  }
+					  ]
+				 }
+				};
+				session.send(new builder.Message(session)
+					.addAttachment(card));
+			
+		
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
 	}
 ]);
+
+function processSubmitAction(session, message){
+		session.userData.medicineCity = message["city"];
+		if(message["pincode"].toString().length < 6){
+			session.send("You have entered incorrect pin number.");
+			session.beginDialog('askforMedicinePincodeConfirmation');
+			
+		}else{
+			session.userData.medicinePincode = message["pincode"];				
+		}
+			healthcheckCard = new builder.HeroCard(session)
+									.title("Health Check Packages")
+									.subtitle("Click below to view packages from hospitals in your city")
+									.text("https://infiniti.medibuddy.in")
+									.images([
+										new builder.CardImage(session)
+											.url('https://i.imgur.com/UZXZjqO.png')
+											.alt('Health Check Packages')
+									])
+									.buttons([
+										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/medicines/"+process.env.MEDICINE_ID+"/"+session.userData.medicinePincode+"/?c="+session.userData.medicineCity, "Show Medicines")
+										]);
+		session.send(new builder.Message(session)
+			.addAttachment(healthcheckCard));
+		
+}
+
+// Dialog to ask for Confirmation - Track with Claim Number
+bot.dialog('askforMedicinePincodeConfirmation',[
+	function (session){
+		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)")
+	},
+	function (session, results) {
+		if (results.response){
+			session.replaceDialog('askformedicineCity', {reprompt: true});
+		}
+		else {
+			session.endConversation();
+			session.beginDialog('askforMore');
+		}
+		
+	}
+]);
+
 
 server.post('/api/messages', connector.listen());
