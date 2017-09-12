@@ -128,7 +128,7 @@ bot.dialog('showMenu',[
 			
 			downloadCard = new builder.HeroCard(session)
 									.title("Download E-Card")
-									.subtitle("Getting your E-Card is much simpler and at your finger tips.")
+									.subtitle("Getting your Medi Assist E-Card is much simpler and at your finger tips. Download your E-Card now.")
 									.images([
 										new builder.CardImage(session)
 											.url('https://preview.ibb.co/cmft95/12.png')
@@ -142,7 +142,7 @@ bot.dialog('showMenu',[
 			
 			searchNetworkCard = new builder.HeroCard(session)
 									.title("Search Network")
-									.subtitle("Search Medi Assist to find the nearest network hospitals.")
+									.subtitle("Search Medi Assist to find the nearest network hospitals and avail e-cashless benefits.")
 									.images([
 										new builder.CardImage(session)
 											.url('https://preview.ibb.co/hBHRwk/11.png')
