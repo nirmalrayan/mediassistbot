@@ -1797,6 +1797,8 @@ bot.dialog('askforhealthcheckCity',[
 		
 			if(session.message && session.message.value){
 				processSubmitAction(session, session.message.value);
+				session.endConversation();
+				session.beginDialog('askforMore');
 				return;
 			}
 
@@ -1974,6 +1976,8 @@ bot.dialog('askformedicineCity',[
 		
 			if(session.message && session.message.value){
 				processSubmitAction2(session, session.message.value);
+				session.endConversation();
+				session.beginDialog('askforMore');
 				return;
 			}
 
@@ -2103,7 +2107,7 @@ function processSubmitAction2(session, message){
 									.text("https://infiniti.medibuddy.in")
 									.images([
 										new builder.CardImage(session)
-											.url('https://i.imgur.com/UZXZjqO.png')
+											.url('https://i.imgur.com/oCmpQ56.png')
 											.alt('Health Check Packages')
 									])
 									.buttons([
@@ -2139,6 +2143,8 @@ bot.dialog('askforconsultationCity',[
 		
 			if(session.message && session.message.value){
 				processSubmitAction3(session, session.message.value);
+				session.endConversation();
+				session.beginDialog('askforMore');
 				return;
 			}
 
@@ -2379,20 +2385,20 @@ bot.dialog('askforconsultationCity',[
 function processSubmitAction3(session, message){
 		session.userData.consultationCity = message["city"];
 			session.userData.consultationSpeciality = message["speciality"];				
-			medicineCard = new builder.HeroCard(session)
+			consultationCard = new builder.HeroCard(session)
 									.title("Consultation")
 									.subtitle("I've curated a list of "+message["speciality"]+"s in "+message["city"]+". Click below to know more")
 									.text("https://infiniti.medibuddy.in")
 									.images([
 										new builder.CardImage(session)
-											.url('https://i.imgur.com/UZXZjqO.png')
+											.url('https://i.imgur.com/E8kTRGq.png')
 											.alt('Consultations')
 									])
 									.buttons([
 										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/consultation/ad131e35ffb9e51184af002219349965//"+session.userData.consultationSpeciality+"/?c="+session.userData.consultationCity, "View Consultations")
 										]);
 		session.send(new builder.Message(session)
-			.addAttachment(medicineCard));
+			.addAttachment(consultationCard));
 		
 }
 
@@ -2421,6 +2427,8 @@ bot.dialog('askforhomehealthcareCity',[
 		
 			if(session.message && session.message.value){
 				processSubmitAction4(session, session.message.value);
+				session.endConversation();
+				session.beginDialog('askforMore');
 				return;
 			}
 
@@ -2545,20 +2553,20 @@ bot.dialog('askforhomehealthcareCity',[
 function processSubmitAction4(session, message){
 		session.userData.homehealthcareCity = message["city"];
 			session.userData.homehealthcareService = message["service"];				
-			medicineCard = new builder.HeroCard(session)
+			homehealthcareCard = new builder.HeroCard(session)
 									.title("Home Health Care")
 									.subtitle("Click below to view available home health care services in "+message["city"]+" for "+message["service"])
 									.text("https://infiniti.medibuddy.in")
 									.images([
 										new builder.CardImage(session)
-											.url('https://i.imgur.com/UZXZjqO.png')
+											.url('https://i.imgur.com/NOVSZ7T.png')
 											.alt('Home Health Care')
 									])
 									.buttons([
 										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/homehealthcare/ba678c34a85141299c0b43ac3b1ee8ca//"+session.userData.homehealthcareService+"/?c="+session.userData.homehealthcareCity, "View Services")
 										]);
 		session.send(new builder.Message(session)
-			.addAttachment(medicineCard));
+			.addAttachment(homehealthcareCard));
 		
 }
 
@@ -2584,6 +2592,8 @@ bot.dialog('askforTeleConsultationDetails',[
 		
 			if(session.message && session.message.value){
 				processSubmitAction5(session, session.message.value);
+				session.endConversation();
+				session.beginDialog('askforMore');
 				return;
 			}
 
@@ -2719,20 +2729,20 @@ bot.dialog('askforTeleConsultationDetails',[
 
 function processSubmitAction5(session, message){
 			session.userData.teleconsultationService = message["teleservice"];				
-			medicineCard = new builder.HeroCard(session)
+			teleconsultCard = new builder.HeroCard(session)
 									.title("Tele Consultation")
 									.subtitle("Click below to view available telephonic consultations for "+message["teleservice"])
 									.text("https://infiniti.medibuddy.in")
 									.images([
 										new builder.CardImage(session)
-											.url('https://i.imgur.com/UZXZjqO.png')
+											.url('https://i.imgur.com/dB94KOE.png')
 											.alt('Tele Consultation')
 									])
 									.buttons([
 										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/onlineservice/4f81d4702c8242009081cfde6301dd38//"+session.userData.teleconsultationService, "View Services")
 										]);
 		session.send(new builder.Message(session)
-			.addAttachment(medicineCard));
+			.addAttachment(teleconsultCard));
 		
 }
 
@@ -2763,6 +2773,8 @@ bot.dialog('askforLabTestDetails',[
 		
 			if(session.message && session.message.value){
 				processSubmitAction6(session, session.message.value);
+				session.endConversation();
+				session.beginDialog('askforMore');
 				return;
 			}
 
@@ -3022,7 +3034,7 @@ function processSubmitAction6(session, message){
 									.text("https://infiniti.medibuddy.in")
 									.images([
 										new builder.CardImage(session)
-											.url('https://i.imgur.com/UZXZjqO.png')
+											.url('https://i.imgur.com/Y3DtlFx.png')
 											.alt('Lab Test')
 									])
 									.buttons([
