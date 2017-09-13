@@ -278,11 +278,11 @@ bot.dialog('trackClaim', [
 bot.dialog('askforMore',[
 	function (session){
 		
+		session.send("How else can I help you?");
 		session.sendTyping();
 		setTimeout(function () {
-			session.send("How else can I help you?");
+			session.beginDialog('showMenu');
 		}, 5000);		
-		session.beginDialog('showMenu');
 		/*
 		builder.Prompts.choice(session, "How else can I help you?", mainMenu, builder.ListStyle.button);		
 	},
@@ -464,6 +464,7 @@ bot.dialog('trackClaimwID', [
 								session.send(msg);
 								session.sendTyping();
 								setTimeout(function () {
+									session.endConversation();
 									session.beginDialog('askforMore');
 								}, 5000);		
   							}
@@ -603,6 +604,7 @@ bot.dialog('trackClaimwMAID', [
 								session.send(msg);
 								session.sendTyping();
 								setTimeout(function () {
+									session.endConversation();		
 									session.beginDialog('askforMore');
 								}, 5000);		
   							}
@@ -736,6 +738,7 @@ bot.dialog('trackClaimwEmpID', [
 								session.send(msg);
 								session.sendTyping();
 								setTimeout(function () {
+									session.endConversation();
 									session.beginDialog('askforMore');
 								}, 5000);		
   							}
@@ -1152,6 +1155,7 @@ bot.dialog('downloadwID', [
 								session.send(msg);
 								session.sendTyping();
 								setTimeout(function () {
+									session.endConversation();	
 									session.beginDialog('askforMore');
 								}, 5000);		
 								
@@ -1230,6 +1234,7 @@ bot.dialog('downloadwMAID', [
 								session.send(msg);
 								session.sendTyping();
 								setTimeout(function () {
+									session.endConversation();
 									session.beginDialog('askforMore');
 								}, 5000);		
 								
@@ -1304,6 +1309,7 @@ bot.dialog('downloadwEmpID', [
 								session.send(msg);
 								session.sendTyping();
 								setTimeout(function () {
+									session.endConversation();
 									session.beginDialog('askforMore');
 								}, 5000);		
 								
@@ -1374,6 +1380,7 @@ bot.dialog('downloadwPolNo', [
 								session.send(msg);
 								session.sendTyping();
 								setTimeout(function () {
+									session.endConversation();
 									session.beginDialog('askforMore');
 								}, 5000);		
 								
@@ -1450,7 +1457,7 @@ bot.dialog('askforLocation',  [
 		bot.library(locationDialog.createLibrary("AjgT49m-_PFYGm_KAZ4nBmOxyNeEyCQXSV_ybfF3wLtebeCDoYVT0JNyOpnB-Y62"));
 		
 		var options = {
-			prompt: 'Where should I search for hospitals? 🏥. Type your city.',
+			prompt: "Where should I search for hospitals? 🏥. Type your city.",
 			useNativeControl: true,
 			reverseGeocode: true,
 			skipFavorites: true,
@@ -1578,6 +1585,7 @@ bot.dialog('askforLocation',  [
 						session.send(msg);						
 						session.sendTyping();
 						setTimeout(function () {
+							session.endConversation();
 							session.beginDialog('askforMore');
 						}, 5000);		
 					}
@@ -2733,6 +2741,8 @@ function processSubmitAction5(session, message){
 bot.dialog('labtest',[
 	function (session){
 		session.beginDialog('askforLabTestDetails');
+	},
+	function (session, results) {
 		session.endConversation();
 	},
 	function(sesison, results){	
