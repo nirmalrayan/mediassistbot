@@ -1444,7 +1444,7 @@ function isEmptyObject(obj) {
 bot.dialog('askforLocation',  [
     function (session) {
 		var locationDialog = require('botbuilder-location');
-		bot.library(locationDialog.createLibrary(process.env.BING_MAPS_API_KEY));
+		bot.library(locationDialog.createLibrary("AjgT49m-_PFYGm_KAZ4nBmOxyNeEyCQXSV_ybfF3wLtebeCDoYVT0JNyOpnB-Y62"));
 		
 		var options = {
 			prompt: 'Where should I search for hospitals? 🏥. Type your city.',
