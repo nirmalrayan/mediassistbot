@@ -1472,7 +1472,7 @@ bot.dialog('askforLocation',  [
 	function (session, results) {
 		if (results.response){
 			session.userData.insurer = results.response;
-			const client = new Wit({accessToken: process.env.WIT_ACCESS_TOKEN});
+			const client = new Wit({accessToken: "YYXX4OGOYWHGWEDZGT72PQRUEJQHBRNM"});
 			client.message(session.userData.insurer, {})
 			.then((data) => {
 			  entities = data['entities'];
@@ -1487,7 +1487,7 @@ bot.dialog('askforLocation',  [
 	function (session, results) {
 		if (results.response){
 			session.userData.speciality = results.response;	
-			const client = new Wit({accessToken: process.env.WIT_ACCESS_TOKEN});
+			const client = new Wit({accessToken: "YYXX4OGOYWHGWEDZGT72PQRUEJQHBRNM"});
 			client.message(session.userData.speciality, {})
 			.then((data) => {
 			  entities = data['entities'];
