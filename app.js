@@ -2733,9 +2733,7 @@ function processSubmitAction5(session, message){
 bot.dialog('labtest',[
 	function (session){
 		session.beginDialog('askforLabTestDetails');
-	},
-	function(sesison, results){	
-		session.endConversation();		
+		session.endConversation();
 	},
 	function(sesison, results){	
 		session.endDialogWithResult(results);		
