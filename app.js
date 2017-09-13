@@ -43,7 +43,6 @@ var bot = new builder.UniversalBot(connector,
 
     function (session) {
 		
-			session.send('Process.env :'+JSON.stringify(process.env));
 		if(session.message.address.channelId === 'facebook'){
 			var welcomeCard = new builder.HeroCard(session)
 				.title("Hi %s! Nice to see you. I am MediBot", session.message.address.user.name)
@@ -85,7 +84,6 @@ var bot = new builder.UniversalBot(connector,
 				.buttons([
 					builder.CardAction.imBack(session, "Show Menu", "Show Menu")
 				]);
-				
 				
 				session.sendTyping();
 				setTimeout(function () {
@@ -1917,7 +1915,7 @@ function processSubmitAction(session, message){
 											.alt('Health Check Packages')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/result/package/"+process.env.HEALTHCHECK_ID+"/"+session.userData.healthcheckCategory+"//"+"/?c="+session.userData.healthcheckCity, "Show Packages")
+										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/result/package/c920aa2144b9e51184af002219349965/"+session.userData.healthcheckCategory+"//"+"/?c="+session.userData.healthcheckCity, "Show Packages")
 										]);
 		}
 		else{
@@ -2098,7 +2096,7 @@ function processSubmitAction2(session, message){
 											.alt('Health Check Packages')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/medicines/"+process.env.MEDICINE_ID+"/"+session.userData.medicinePincode+"/?c="+session.userData.medicineCity, "Upload Prescription")
+										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/medicines/467117a029f0e511aa80002219349965/"+session.userData.medicinePincode+"/?c="+session.userData.medicineCity, "Upload Prescription")
 										]);
 		session.send(new builder.Message(session)
 			.addAttachment(medicineCard));
@@ -2380,7 +2378,7 @@ function processSubmitAction3(session, message){
 											.alt('Consultations')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/consultation/"+process.env.CONSULTATION_ID+"//"+session.userData.consultationSpeciality+"/?c="+session.userData.consultationCity, "View Consultations")
+										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/consultation/ad131e35ffb9e51184af002219349965//"+session.userData.consultationSpeciality+"/?c="+session.userData.consultationCity, "View Consultations")
 										]);
 		session.send(new builder.Message(session)
 			.addAttachment(medicineCard));
@@ -2546,7 +2544,7 @@ function processSubmitAction4(session, message){
 											.alt('Home Health Care')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/homehealthcare/"+process.env.HOMEHEALTHCARE_ID+"//"+session.userData.homehealthcareService+"/?c="+session.userData.homehealthcareCity, "View Services")
+										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/homehealthcare/ba678c34a85141299c0b43ac3b1ee8ca//"+session.userData.homehealthcareService+"/?c="+session.userData.homehealthcareCity, "View Services")
 										]);
 		session.send(new builder.Message(session)
 			.addAttachment(medicineCard));
@@ -2720,7 +2718,7 @@ function processSubmitAction5(session, message){
 											.alt('Tele Consultation')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/onlineservice/"+process.env.TELE_CONSULTATION+"//"+session.userData.teleconsultationService, "View Services")
+										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/onlineservice/4f81d4702c8242009081cfde6301dd38//"+session.userData.teleconsultationService, "View Services")
 										]);
 		session.send(new builder.Message(session)
 			.addAttachment(medicineCard));
@@ -3014,7 +3012,7 @@ function processSubmitAction6(session, message){
 											.alt('Lab Test')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/labtest/"+process.env.LABTEST_ID+"//"+session.userData.labtest+"/?c="+session.userData.labtestCity, "View Lab Tests")
+										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/labtest/f4a83a18cec74f1786b8fd2b9aff4c0c//"+session.userData.labtest+"/?c="+session.userData.labtestCity, "View Lab Tests")
 										]);
 		session.send(new builder.Message(session)
 			.addAttachment(labtestCard));
