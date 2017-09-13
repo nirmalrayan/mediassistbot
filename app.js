@@ -122,7 +122,7 @@ bot.dialog('showMenu',[
 									.subtitle("Tracking your claim can help you understand where you are in the claims process.")
 									.images([
 										new builder.CardImage(session)
-											.url('https://preview.ibb.co/h3LbU5/1.png')
+											.url('https://i.imgur.com/RNwn1DK.png')
 											.alt('Track Claim')
 									])
 									.buttons([
@@ -136,7 +136,7 @@ bot.dialog('showMenu',[
 									.subtitle("Getting your Medi Assist E-Card is much simpler and at your finger tips. Download your E-Card now.")
 									.images([
 										new builder.CardImage(session)
-											.url('https://preview.ibb.co/cmft95/12.png')
+											.url('https://i.imgur.com/80FLdwc.png')
 											.alt('Download E-Card')
 									])
 									.buttons([
@@ -150,7 +150,7 @@ bot.dialog('showMenu',[
 									.subtitle("Search Medi Assist to find the nearest network hospitals and avail e-cashless benefits.")
 									.images([
 										new builder.CardImage(session)
-											.url('https://preview.ibb.co/hBHRwk/11.png')
+											.url('https://i.imgur.com/5Rc0b6m.png')
 											.alt('Search Network')
 									])
 									.buttons([
@@ -1395,7 +1395,7 @@ function createHeroCard(session) {
         .subtitle('ℹ️ Flash this E-Card upon request at the insurance desk in the hospital at the time of admission')
         .text('')
         .images([
-            builder.CardImage.create(session, 'https://image.ibb.co/hRiDKv/id_card_4.png')
+            builder.CardImage.create(session, 'https://i.imgur.com/RKYzoRi.png')
         ])
         .buttons([
             builder.CardAction.openUrl(session, session.userData.downloadURL, 'Download E-Card 📥')
