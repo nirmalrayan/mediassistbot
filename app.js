@@ -278,7 +278,10 @@ bot.dialog('trackClaim', [
 bot.dialog('askforMore',[
 	function (session){
 		
-		session.send("How else can I help you?");
+		session.sendTyping();
+		setTimeout(function () {
+			session.send("How else can I help you?");
+		}, 5000);		
 		session.beginDialog('showMenu');
 		/*
 		builder.Prompts.choice(session, "How else can I help you?", mainMenu, builder.ListStyle.button);		
@@ -2732,6 +2735,9 @@ bot.dialog('labtest',[
 		session.beginDialog('askforLabTestDetails');
 	},
 	function(sesison, results){	
+		session.endConversation();		
+	},
+	function(sesison, results){	
 		session.endDialogWithResult(results);		
 	}
 ])
@@ -3016,7 +3022,7 @@ function processSubmitAction6(session, message){
 										]);
 		session.send(new builder.Message(session)
 			.addAttachment(labtestCard));
-		
+		endConversation();
 }
 
 
