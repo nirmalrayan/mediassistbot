@@ -2728,6 +2728,7 @@ function processSubmitAction5(session, message){
 // Dialog to Book Lab Test
 bot.dialog('labtest',[
 	function (session){
+			session.send('LABTEST ID IS :'+process.env.LABTEST_ID);
 		session.beginDialog('askforLabTestDetails');
 	},
 	function(sesison, results){	
@@ -3001,7 +3002,6 @@ bot.dialog('askforLabTestDetails',[
 function processSubmitAction6(session, message){
 		session.userData.labtestCity = message["city"];
 			session.userData.labtest = message["labtest"];	
-			session.send('LABTEST ID IS :'+process.env.LABTEST_ID);
 			labtestCard = new builder.HeroCard(session)
 									.title("Lab Test")
 									.subtitle("Click below to view `"+message["labtest"]+"` tests in `"+message["city"]+"`")
