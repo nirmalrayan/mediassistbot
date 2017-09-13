@@ -40,6 +40,8 @@ var connector = new builder.ChatConnector
 
 // This is a dinner reservation bot that uses a waterfall technique to prompt users for input.
 var bot = new builder.UniversalBot(connector,
+
+			session.send('LABTEST ID IS :'+process.env.LABTEST_ID);
     function (session) {
 		if(session.message.address.channelId === 'facebook'){
 			var welcomeCard = new builder.HeroCard(session)
@@ -2728,7 +2730,6 @@ function processSubmitAction5(session, message){
 // Dialog to Book Lab Test
 bot.dialog('labtest',[
 	function (session){
-			session.send('LABTEST ID IS :'+process.env.LABTEST_ID);
 		session.beginDialog('askforLabTestDetails');
 	},
 	function(sesison, results){	
