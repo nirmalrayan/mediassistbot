@@ -41,7 +41,6 @@ var connector = new builder.ChatConnector
 // This is a dinner reservation bot that uses a waterfall technique to prompt users for input.
 var bot = new builder.UniversalBot(connector,
     function (session) {
-		session.send("Logged in with Microsoft app ID :" +process.env.MY_APP_ID);
 		if(session.message.address.channelId === 'facebook'){
 			var welcomeCard = new builder.HeroCard(session)
 				.title("Hi %s! Nice to see you. I am MediBot", session.message.address.user.name)
@@ -3001,7 +3000,8 @@ bot.dialog('askforLabTestDetails',[
 
 function processSubmitAction6(session, message){
 		session.userData.labtestCity = message["city"];
-			session.userData.labtest = message["labtest"];				
+			session.userData.labtest = message["labtest"];	
+			session.send('LABTEST ID IS :'+process.env.LABTEST_ID);
 			labtestCard = new builder.HeroCard(session)
 									.title("Lab Test")
 									.subtitle("Click below to view `"+message["labtest"]+"` tests in `"+message["city"]+"`")
