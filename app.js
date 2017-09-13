@@ -3022,7 +3022,6 @@ function processSubmitAction6(session, message){
 										]);
 		session.send(new builder.Message(session)
 			.addAttachment(labtestCard));
-		endConversation();
 }
 
 
