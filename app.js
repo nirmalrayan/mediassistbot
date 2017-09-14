@@ -8,18 +8,14 @@ var restify = require('restify');
 var builder = require('botbuilder');
 const {Wit, log} = require('node-wit');
 require('env2')('.env'); // loads all entries into process.env
-/* 
+/*
 const botauth = require("botauth");
 
 const passport = require("passport");
 const FacebookStrategy = require("passport-facebook").Strategy;
 
-//oauth details for facebook
-const FACEBOOK_APP_ID = envx("FACEBOOK_APP_ID");
-const FACEBOOK_APP_SECRET = envx("FACEBOOK_APP_SECRET");
-
 //encryption key for saved state
-const BOTAUTH_SECRET = envx("BOTAUTH_SECRET");  */
+const BOTAUTH_SECRET = "TESTBOT";  */
 
 // Setup Restify Server
 var server = restify.createServer();
@@ -2612,7 +2608,7 @@ bot.dialog('askforTeleConsultationDetails',[
 						},
 						{
 						  "type": "TextBlock",
-						  "text": "We are one step away. Please type your preferred `speciality` to continue.",
+						  "text": "We are one step away. Please select your preferred `speciality` to continue.",
 						  "wrap": true,
 						  "maxLines": 4
 						},
@@ -2735,7 +2731,7 @@ function processSubmitAction5(session, message){
 									.text("https://infiniti.medibuddy.in")
 									.images([
 										new builder.CardImage(session)
-											.url('https://i.imgur.com/dB94KOE.png')
+											.url('https://i.imgur.com/RpZGGSt.png')
 											.alt('Tele Consultation')
 									])
 									.buttons([
@@ -3046,3 +3042,96 @@ function processSubmitAction6(session, message){
 
 
 server.post('/api/messages', connector.listen());
+/*
+// Initialize with the strategies we want to use
+var ba = new botauth.BotAuthenticator(server, bot, { baseUrl : "https://medibotmb.azurewebsites.net", secret : BOTAUTH_SECRET })
+    .provider("facebook", (options) => { 
+        return new FacebookStrategy({
+            clientID : "1893719730892870",
+            clientSecret : "98e0e4ebdbfd51b8691640b0fe2d574c",
+            callbackURL : options.callbackURL
+        }, (accessToken, refreshToken, profile, done) => {
+            profile = profile || {};
+            profile.accessToken = accessToken;
+            profile.refreshToken = refreshToken;
+            
+            return done(null, profile);
+        });
+	});
+	
+	/**
+ * Just a page to make sure the server is running
+ */
+/*
+server.get("/", (req, res) => {
+    res.send("facebook");
+});
+
+//=========================================================
+// Bot Dialogs
+//=========================================================
+var recog = new builder.LuisRecognizer("4e0df9eb-a11f-495d-8e90-b0579fde9b86");
+
+bot.dialog('/', new builder.IntentDialog({ recognizers : [ recog ]})
+    .matches("SayHello", "/hello")
+    .matches("GetProfile", "/profile")
+    .matches("Logout", "/logout")
+    .onDefault((session, args) => {
+        session.endDialog("I didn't understand that.  Try saying 'show my profile'.");
+    })
+);
+
+bot.dialog("/hello", (session, args) => {
+    session.endDialog("Hello. I can help you get information from facebook.  Try saying 'get profile'.");
+});
+
+bot.dialog("/profile", [].concat( 
+    ba.authenticate("facebook"),
+    function(session, results) {
+        //get the facebook profile
+        var user = ba.profile(session, "facebook");
+        //var user = results.response;
+
+        //call facebook and get something using user.accessToken 
+        var client = restify.createJsonClient({
+            url: 'https://graph.facebook.com',
+            accept : 'application/json',
+            headers : {
+                "Authorization" : `OAuth ${ user.accessToken }`
+            }
+        });
+
+        client.get(`/v2.8/me/picture?redirect=0`, (err, req, res, obj) => {
+            if(!err) {
+                console.log(obj);
+                var msg = new builder.Message()
+                    .attachments([
+                        new builder.HeroCard(session)
+                            .text(user.displayName)
+                            .images([
+                                new builder.CardImage(session).url(obj.data.url)
+                                ]
+                            )
+                        ]
+                    );
+                session.endDialog(msg);
+            } else {
+                console.log(err);
+                session.endDialog("error getting profile");
+            }
+        });
+    }
+));
+
+bot.dialog("/logout", [
+    (session, args, next) => {
+        builder.Prompts.confirm(session, "are you sure you want to logout");        
+    }, (session, args) => {
+        if(args.response) {
+            ba.logout(session, "facebook");
+            session.endDialog("you've been logged out.");
+        } else {
+            session.endDialog("you're still logged in");
+        }
+    }
+]); */

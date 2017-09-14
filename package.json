@@ -34,6 +34,7 @@
     "microsoft-adaptivecards": "^0.6.1",
     "node-wit": "^4.3.0",
     "object-sizeof": "^1.2.0",
+    "passport-facebook": "^2.1.1",
     "restify": "^5.0.1",
     "restify-plugins": "^1.6.0",
     "serve-static-restify": "^1.0.0",
