@@ -8,14 +8,14 @@ var restify = require('restify');
 var builder = require('botbuilder');
 const {Wit, log} = require('node-wit');
 require('env2')('.env'); // loads all entries into process.env
-/*
+
 const botauth = require("botauth");
 
 const passport = require("passport");
 const FacebookStrategy = require("passport-facebook").Strategy;
 
 //encryption key for saved state
-const BOTAUTH_SECRET = "TESTBOT";  */
+const BOTAUTH_SECRET = "TESTBOT";  
 
 // Setup Restify Server
 var server = restify.createServer();
@@ -3042,7 +3042,7 @@ function processSubmitAction6(session, message){
 
 
 server.post('/api/messages', connector.listen());
-/*
+
 // Initialize with the strategies we want to use
 var ba = new botauth.BotAuthenticator(server, bot, { baseUrl : "https://medibotmb.azurewebsites.net", secret : BOTAUTH_SECRET })
     .provider("facebook", (options) => { 
@@ -3062,7 +3062,7 @@ var ba = new botauth.BotAuthenticator(server, bot, { baseUrl : "https://medibotm
 	/**
  * Just a page to make sure the server is running
  */
-/*
+
 server.get("/", (req, res) => {
     res.send("facebook");
 });
@@ -3072,7 +3072,7 @@ server.get("/", (req, res) => {
 //=========================================================
 var recog = new builder.LuisRecognizer("4e0df9eb-a11f-495d-8e90-b0579fde9b86");
 
-bot.dialog('/', new builder.IntentDialog({ recognizers : [ recog ]})
+bot.dialog('/facebook', new builder.IntentDialog({ recognizers : [ recog ]})
     .matches("SayHello", "/hello")
     .matches("GetProfile", "/profile")
     .matches("Logout", "/logout")
@@ -3134,4 +3134,4 @@ bot.dialog("/logout", [
             session.endDialog("you're still logged in");
         }
     }
-]); */
+]); 
