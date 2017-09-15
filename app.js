@@ -3063,7 +3063,7 @@ var ba = new botauth.BotAuthenticator(server, bot, { baseUrl : "https://medibotm
  * Just a page to make sure the server is running
  */
 
-server.get("/", (req, res) => {
+server.get("/facebook", (req, res) => {
     res.send("facebook");
 });
 
@@ -3072,7 +3072,7 @@ server.get("/", (req, res) => {
 //=========================================================
 var recog = new builder.LuisRecognizer("4e0df9eb-a11f-495d-8e90-b0579fde9b86");
 
-bot.dialog('/facebook', new builder.IntentDialog({ recognizers : [ recog ]})
+bot.dialog('facebook', new builder.IntentDialog({ recognizers : [ recog ]})
     .matches("SayHello", "/hello")
     .matches("GetProfile", "/profile")
     .matches("Logout", "/logout")
