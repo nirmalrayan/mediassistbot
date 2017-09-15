@@ -915,9 +915,40 @@ bot.dialog('doaHelp', function(session, args, next) {
 });
 
 // Generic Help dialog for Bot
-bot.dialog('help', function (session, args, next) {
-    session.endDialog("⛑️ Medibot can help you track your claim, download e-card or search nearby hospitals within Medi Assist Network. <br/>Please say 'next' to continue");
-})
+bot.dialog('help', function (session, args, next) {[
+	function(session){
+			session.send("⛑️ Medibot can help you track your claim, download e-card or search nearby hospitals within Medi Assist Network.");
+		builder.Prompts.confirm("Do you need help understanding how claims work?");
+	},
+	function(session, results){
+		if(results.response){
+			howClaimsWorkCard = new builder.HeroCard(session)
+									.title("Health Check")
+									.subtitle("Booking health check has never been easier. Find the best hospitals with discounts in your city now.")
+									.images([
+										new builder.VideoCard(session)
+											.title('How Claims Work')
+											.subtitle('by Medi Assist')
+											.text('Understanding how claims work will help you in making the right decisions at the right time. Watch this video to know more.')
+											.media([
+												{ url: 'https://www.youtube.com/watch?v=ye3-5B7707Q' }
+											])
+											.buttons([
+												builder.CardAction.openUrl(session, 'https://www.mediassistindia.com/', 'Learn More')
+											])
+									])
+									.buttons([
+										builder.CardAction.imBack(session, "Health Check", "Health Check")
+										]);
+
+			var msg = new builder.Message(session)
+			.attachmentLayout(builder.AttachmentLayout.carousel)
+			.attachments(howClaimsWorkCard);
+		session.send(msg);
+		session.endDialog();
+		}
+	}
+]})
 .triggerAction({
     matches: /^help$/i,
     onSelectAction: (session, args, next) => {
