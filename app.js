@@ -17,6 +17,7 @@ const FacebookStrategy = require("passport-facebook").Strategy;
 //encryption key for saved state
 const BOTAUTH_SECRET = "TESTBOT";  
 
+
 // Setup Restify Server
 var server = restify.createServer();
 server.listen(process.env.PORT || process.env.port || 3000, function() 
@@ -34,7 +35,7 @@ server.listen(process.env.PORT || process.env.port || 3000, function()
 var connector = new builder.ChatConnector
 ({ appId: process.env.MY_APP_ID, appPassword: process.env.MY_APP_PASSWORD }); 
 
-// This is a dinner reservation bot that uses a waterfall technique to prompt users for input.
+//MAIN.
 var bot = new builder.UniversalBot(connector,
 
     function (session) {
@@ -57,7 +58,7 @@ var bot = new builder.UniversalBot(connector,
 			if(session.userData.masterName){
 				var welcomeCard = new builder.HeroCard(session)
 				.title("Hi " + session.userData.masterName + "! Nice to see you again")
-				.subtitle("I will be your personal healthcare assistant. ℹ️ Type \"show menu\" or \"#\" at any time to see the menu.")
+				.subtitle("I will be your personal healthcare assistant. ℹ️ Type `\"show menu\"` or `\"#\"` at any time to see the menu.")
 				.images([
 					new builder.CardImage(session)
 						.url('https://i.imgur.com/HwRgHDI.png')
@@ -91,7 +92,11 @@ var bot = new builder.UniversalBot(connector,
 				.addAttachment(welcomeCard));
 			
 		}	
-    });
+	});
+	
+//LUIS Configuration
+var recog = new builder.LuisRecognizer("4e0df9eb-a11f-495d-8e90-b0579fde9b86");
+bot.recognizer(recog);
 
 	
 // Dialog to ask for Master Name
@@ -119,7 +124,7 @@ bot.dialog('showMenu',[
 									.subtitle("Tracking your claim can help you understand where you are in the claims process.")
 									.images([
 										new builder.CardImage(session)
-											.url('https://i.imgur.com/RNwn1DK.png')
+											.url('https://i.imgur.com/EgFg36v.png')
 											.alt('Track Claim')
 									])
 									.buttons([
@@ -239,7 +244,49 @@ bot.dialog('showMenu',[
 										]);
 			
 			menucards.push(labtestCard);
+
+			secondOpinionCard = new builder.HeroCard(session)
+									.title("Second Opinion")
+									.subtitle("An expert opinion allows you to access the expertise and clinical guidance of our world class physicians remotely from your home.")
+									.images([
+										new builder.CardImage(session)
+											.url('https://i.imgur.com/RNwn1DK.png')
+											.alt('Second Opinion')
+									])
+									.buttons([
+										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/gso/259fb4d2abcb480fb4e8778a33b9c9d2", "Get Second Opinion")
+										]);
 			
+			menucards.push(secondOpinionCard);
+
+			genomeStudyCard = new builder.HeroCard(session)
+									.title("Genome Study")
+									.subtitle("Genome study involves DNA analysis to help predict, prevent and cure diseases. Find the method that's right for your research.")
+									.images([
+										new builder.CardImage(session)
+											.url('https://i.imgur.com/0LaERtC.png')
+											.alt('Genome Study')
+									])
+									.buttons([
+										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/genome/1b1fbfb833ea4e8d96c0a0325da21d69", "Book Genome Study Package")
+										]);
+			
+			menucards.push(genomeStudyCard);
+
+			helpCard = new builder.HeroCard(session)
+									.title("Information Center")
+									.subtitle("I can help you plan your hospitalization, book eCashless or help you understand how claims work. Click below to know more.")
+									.images([
+										new builder.CardImage(session)
+											.url('https://i.imgur.com/mtyutuq.png')
+											.alt('Help')
+									])
+									.buttons([
+										builder.CardAction.imBack(session, "Help", "Help")
+										]);
+			
+			menucards.push(helpCard);
+
 			var msg = new builder.Message(session)
 			.text("My abilities are still growing. In a nutshell, here's what I can do: ")
 			.attachmentLayout(builder.AttachmentLayout.carousel)
@@ -915,47 +962,102 @@ bot.dialog('doaHelp', function(session, args, next) {
 });
 
 // Generic Help dialog for Bot
-bot.dialog('help', function (session, args, next) {[
+bot.dialog('help', [
 	function(session){
 			session.send("⛑️ Medibot can help you track your claim, download e-card or search nearby hospitals within Medi Assist Network.");
-		builder.Prompts.confirm("Do you need help understanding how claims work?");
+			builder.Prompts.confirm(session,"Do you need help understanding how claims work? (yes/no)")
 	},
 	function(session, results){
 		if(results.response){
-			howClaimsWorkCard = new builder.HeroCard(session)
-									.title("Health Check")
-									.subtitle("Booking health check has never been easier. Find the best hospitals with discounts in your city now.")
-									.images([
-										new builder.VideoCard(session)
-											.title('How Claims Work')
-											.subtitle('by Medi Assist')
-											.text('Understanding how claims work will help you in making the right decisions at the right time. Watch this video to know more.')
-											.media([
-												{ url: 'https://www.youtube.com/watch?v=ye3-5B7707Q' }
-											])
-											.buttons([
-												builder.CardAction.openUrl(session, 'https://www.mediassistindia.com/', 'Learn More')
-											])
+		var cards = [];
+			howClaimsWorkCard = new builder.VideoCard(session)
+									.title('How Claims Work')
+									.subtitle('by Medi Assist')
+									.text('Understanding how claims work will help you in making the right decisions at the right time. Watch this video to know more.')
+									.media([
+										{ url: 'https://redirector.googlevideo.com/videoplayback?id=o-AKfiO18rQ6PJsKTH-jf_NfQDuZmwQ4OHuwvVzZYspG3F&expire=1505492761&mm=31&mn=sn-ab5szn76&mime=video%2Fmp4&dur=154.087&itag=22&pl=53&ip=2001%3A19f0%3A5%3A1de%3A5400%3Aff%3Afe4f%3A2207&key=yt6&ei=uKq7Wc_tNa6p8gSO14OgAg&ms=au&source=youtube&mv=m&sparams=dur%2Cei%2Cid%2Cinitcwndbps%2Cip%2Cipbits%2Citag%2Clmt%2Cmime%2Cmm%2Cmn%2Cms%2Cmv%2Cpl%2Cratebypass%2Crequiressl%2Csource%2Cexpire&ipbits=0&requiressl=yes&mt=1505471077&initcwndbps=4132500&signature=AA85CFD9E8A0FAADF849874D9944ADA71FABA9BB.12209AD809EADCA51E78087AC08A0BFB582EBFB7&lmt=1471497193909465&ratebypass=yes' }
 									])
 									.buttons([
-										builder.CardAction.imBack(session, "Health Check", "Health Check")
-										]);
+										builder.CardAction.openUrl(session, 'https://www.mediassistindia.com/', 'Visit Medi Assist')
+									]);
+			cards.push(howClaimsWorkCard);
 
-			var msg = new builder.Message(session)
-			.attachmentLayout(builder.AttachmentLayout.carousel)
-			.attachments(howClaimsWorkCard);
-		session.send(msg);
-		session.endDialog();
+			secondOpinionCard = new builder.HeroCard(session)
+									.title("Second Opinion")
+									.subtitle("An expert opinion allows you to access the expertise and clinical guidance of our world class physicians remotely from your home.")
+									.images([
+										new builder.CardImage(session)
+											.url('https://i.imgur.com/RNwn1DK.png')
+											.alt('Second Opinion')
+									])
+									.buttons([
+										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/gso/259fb4d2abcb480fb4e8778a33b9c9d2", "Get Second Opinion")
+										]);
+			
+			cards.push(secondOpinionCard);
+
+			howEcashlessWorksCard = new builder.VideoCard(session)
+									.title('Plan Cashless Hospitalization')
+									.subtitle('by Medi Assist')
+									.text('And watch this video on how you can plan a cashless hospitalization from the comfort of your home.')
+									.media([
+										{ url: 'https://redirector.googlevideo.com/videoplayback?source=youtube&pl=33&dur=88.398&id=o-ADxxPDaZrTgbXKFAtpBMkclSponVczPxe0AMU09GNEiy&ei=B7K7WZXFIqOr-AO5srjYCA&itag=22&lmt=1471712672818513&requiressl=yes&key=yt6&ip=2600%3A3c01%3A%3Af03c%3A91ff%3Afe24%3Ab564&mime=video%2Fmp4&signature=4CCB3ED2DD50978E634254250014E9FC82A71FEB.53362160533AF3707B90C4A0E2CFCCB374C7E72C&expire=1505494631&mt=1505472944&mv=m&initcwndbps=4832500&ipbits=0&ratebypass=yes&ms=au&mm=31&mn=sn-n4v7sn7z&sparams=dur%2Cei%2Cid%2Cinitcwndbps%2Cip%2Cipbits%2Citag%2Clmt%2Cmime%2Cmm%2Cmn%2Cms%2Cmv%2Cpl%2Cratebypass%2Crequiressl%2Csource%2Cexpire' }
+									])
+									.buttons([
+										builder.CardAction.openUrl(session, 'https://www.mediassistindia.com/', 'Visit Medi Assist')
+									]);
+			cards.push(howEcashlessWorksCard)
+			const msg = new builder.Message(session);
+			msg.attachmentLayout(builder.AttachmentLayout.carousel)
+			.text("Let's try and ease just some of anxiety by helping you plan the hospitalization.")
+				.attachments(cards);
+			session.send(msg);
+		}
+
+		builder.Prompts.confirm(session, "Would you like me to help you plan a cashless hospitalization? (yes/no)");
+	},
+	function(session, results){
+		if(results.response){
+			var cards = [];
+			searchNetworkCard = new builder.HeroCard(session)
+						.title("Search Network")
+						.subtitle("Search Medi Assist to find the nearest network hospitals and avail e-cashless benefits.")
+						.images([
+							new builder.CardImage(session)
+								.url('https://i.imgur.com/5Rc0b6m.png')
+								.alt('Search Network')
+						])
+						.buttons([
+							builder.CardAction.imBack(session, "Search Network", "Search Network")
+							]);
+			cards.push(searchNetworkCard);
+
+			bookECashlessCard = new builder.HeroCard(session)
+						.title("Book eCashless from home")
+						.subtitle("You can now plan a cashless hospitalization from the comfort of your home at least 48 hours prior to expected date of admission.")
+						.images([
+							new builder.CardImage(session)
+								.url('https://i.imgur.com/YV8DQ05.png')
+								.alt('Book E-Cashless')
+						])
+						.buttons([
+							builder.CardAction.openUrl(session, "https://m.medibuddy.in/submitecashless.aspx", "Book eCashless Hospitalization")
+							]);
+			cards.push(bookECashlessCard);
+			const msg = new builder.Message(session);
+			msg.attachmentLayout(builder.AttachmentLayout.carousel)
+				.text("Here's what I found to help you with planning your cashless hospitalization: ")
+				.attachments(cards);
+			session.send(msg);
+			session.endDialog();
 		}
 	}
-]})
+])
 .triggerAction({
-    matches: /^help$/i,
-    onSelectAction: (session, args, next) => {
-        // Add the help dialog to the dialog stack 
-        // (override the default behavior of replacing the stack)
-        session.beginDialog(args.action, args);
-    }
+	matches: /^help$/i,
+	onSelectAction: (session, args) => {
+		session.beginDialog(args.action, args);
+	}
 });
 
 //------------------------------------------------------------------------------------------------------------------------------------------------//
@@ -3101,10 +3203,9 @@ server.get("/facebook", (req, res) => {
 //=========================================================
 // Bot Dialogs
 //=========================================================
-var recog = new builder.LuisRecognizer("4e0df9eb-a11f-495d-8e90-b0579fde9b86");
-
+/*
 bot.dialog('facebook', new builder.IntentDialog({ recognizers : [ recog ]})
-    .matches("SayHello", "/hello")
+    .matches("SayHello", "hello")
     .matches("GetProfile", "/profile")
     .matches("Logout", "/logout")
     .onDefault((session, args) => {
@@ -3112,8 +3213,10 @@ bot.dialog('facebook', new builder.IntentDialog({ recognizers : [ recog ]})
     })
 );
 
-bot.dialog("/hello", (session, args) => {
+bot.dialog("hello", (session, args) => {
     session.endDialog("Hello. I can help you get information from facebook.  Try saying 'get profile'.");
+}).triggerAction({
+    matches: 'SayHello'
 });
 
 bot.dialog("/profile", [].concat( 
@@ -3156,7 +3259,7 @@ bot.dialog("/profile", [].concat(
 
 bot.dialog("/logout", [
     (session, args, next) => {
-        builder.Prompts.confirm(session, "are you sure you want to logout");        
+        builder.Prompts.confirm(session, "are you sure you want to logout")      
     }, (session, args) => {
         if(args.response) {
             ba.logout(session, "facebook");
@@ -3166,3 +3269,4 @@ bot.dialog("/logout", [
         }
     }
 ]); 
+*/
