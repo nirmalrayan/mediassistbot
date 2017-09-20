@@ -3200,6 +3200,13 @@ server.get("/facebook", (req, res) => {
     res.send("facebook");
 });
 
+
+bot.dialog("hello", (session, args) => {
+    session.endDialog("Hello. I can help you get information from facebook.  Try saying 'get profile'.");
+}).triggerAction({
+    matches: 'SayHello'
+});
+
 //=========================================================
 // Bot Dialogs
 //=========================================================
@@ -3213,11 +3220,6 @@ bot.dialog('facebook', new builder.IntentDialog({ recognizers : [ recog ]})
     })
 );
 
-bot.dialog("hello", (session, args) => {
-    session.endDialog("Hello. I can help you get information from facebook.  Try saying 'get profile'.");
-}).triggerAction({
-    matches: 'SayHello'
-});
 
 bot.dialog("/profile", [].concat( 
     ba.authenticate("facebook"),
