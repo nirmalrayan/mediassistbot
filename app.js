@@ -188,7 +188,6 @@ bot.dialog("/logout", [
 // Dialog to ask for Master Name
 bot.dialog('askName',[
 	function (session, args){
-			session.userData.masterName = builder.EntityRecognizer.findEntity(args.intent.entities, 'setName')
 			builder.Prompts.text(session, "What's your name?");
 	},
 	function(session, results) {
