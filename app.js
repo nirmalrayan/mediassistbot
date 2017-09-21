@@ -25,11 +25,6 @@ server.listen(process.env.PORT || process.env.port || 3000, function()
    console.log('%s listening to %s', server.name, server.url); 
 });
 
-//Direct to index.html web page
- server.get('/', restify.plugins.serveStatic({
- directory: __dirname,
- default: '/index.html'
-})); 
 
 // Create chat bot
 var connector = new builder.ChatConnector
@@ -90,18 +85,42 @@ var bot = new builder.UniversalBot(connector,
 			}
 			session.send(new builder.Message(session)
 				.addAttachment(welcomeCard));
-			
+			session.beginDialog("/refer");
 		}	
 	});
+
+//Direct to index.html web page
+ server.get('/', restify.plugins.serveStatic({
+ directory: __dirname,
+ default: '/index.html'	
+})); 
 	
 //LUIS Configuration
-var recog = new builder.LuisRecognizer("4e0df9eb-a11f-495d-8e90-b0579fde9b86");
-bot.recognizer(recog);
+var recognizer = new builder.LuisRecognizer("https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/4e0df9eb-a11f-495d-8e90-b0579fde9b86?subscription-key=5ccd61decaf04a0caff771ac48a46ded&timezoneOffset=330&verbose=true&q=");
+var intents = new builder.IntentDialog({recognizers: [recognizer]});
+//bot.recognizer(recog);
+
+bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer]})
+    .matches("SayHello", "hello")
+    .matches("GetProfile", "/profile")
+    .matches("Logout", "/logout")
+    .onDefault((session, args) => {
+        session.endDialog("I didn't understand that.  Try saying 'show my profile'.");
+    })
+);
+
+
+bot.dialog("hello", (session, args) => {
+    session.endDialog("Hello. I can help you get information from facebook.  Try saying 'get profile'.");
+}).triggerAction({
+    matches: 'SayHello'
+});
 
 	
 // Dialog to ask for Master Name
 bot.dialog('askName',[
 	function (session){
+			session.userData.masterName = builder.EntityRecognizer.findEntity(args.intent.entities, 'setName')
 			builder.Prompts.text(session, "What's your name?");
 	},
 	function(session, results) {
@@ -1032,6 +1051,20 @@ bot.dialog('help', [
 							]);
 			cards.push(searchNetworkCard);
 
+			secondOpinionCard = new builder.HeroCard(session)
+									.title("Second Opinion")
+									.subtitle("An expert opinion allows you to access the expertise and clinical guidance of our world class physicians remotely from your home.")
+									.images([
+										new builder.CardImage(session)
+											.url('https://i.imgur.com/RNwn1DK.png')
+											.alt('Second Opinion')
+									])
+									.buttons([
+										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/gso/259fb4d2abcb480fb4e8778a33b9c9d2", "Get Second Opinion")
+										]);
+			
+			cards.push(secondOpinionCard);
+
 			bookECashlessCard = new builder.HeroCard(session)
 						.title("Book eCashless from home")
 						.subtitle("You can now plan a cashless hospitalization from the comfort of your home at least 48 hours prior to expected date of admission.")
@@ -1041,7 +1074,8 @@ bot.dialog('help', [
 								.alt('Book E-Cashless')
 						])
 						.buttons([
-							builder.CardAction.openUrl(session, "https://m.medibuddy.in/submitecashless.aspx", "Book eCashless Hospitalization")
+							builder.CardAction.openUrl(session, "https://m.medibuddy.in/submitecashless.aspx", "Book eCashless Hospitalization"),
+							builder.CardAction.openUrl(session, "https://www.mediassistindia.com/ecashless-paving-the-way-for-digital-transformation/", "Read more about eCashless")						
 							]);
 			cards.push(bookECashlessCard);
 			const msg = new builder.Message(session);
@@ -1049,8 +1083,27 @@ bot.dialog('help', [
 				.text("Here's what I found to help you with planning your cashless hospitalization: ")
 				.attachments(cards);
 			session.send(msg);
-			session.endDialog();
 		}
+		
+		const msg = new builder.Message(session);
+			msg.text("Would any of these topics be of interest to you?")
+				.addAttachment(new builder.HeroCard(session)
+						.images([
+							new builder.CardImage(session)
+								.url('https://i.imgur.com/7XCSpue.png')
+								.alt('Other Help Topics')
+						])
+						.buttons([
+							builder.CardAction.openUrl(session, "https://www.mediassistindia.com/get-insights-into-your-non-medical-expenses-now-with-medibuddy/", "Non Medical Expenses"),
+							builder.CardAction.openUrl(session, "https://www.mediassistindia.com/ecashless-paving-the-way-for-digital-transformation/", "Difference between claimed and approved amount"),
+							builder.CardAction.openUrl(session, "https://www.mediassistindia.com/hospitalization-claims-and-expenses-things-you-should-know/", "Raising reimbursement claims for pre- and post-hospitalization expenses"),
+							builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/", "Medicines and post-operative home healthcare")								
+							]));
+			session.send(msg);
+			
+			session.endDialog();
+
+
 	}
 ])
 .triggerAction({
@@ -3195,17 +3248,11 @@ var ba = new botauth.BotAuthenticator(server, bot, { baseUrl : "https://medibotm
 	/**
  * Just a page to make sure the server is running
  */
-
+/*
 server.get("/facebook", (req, res) => {
     res.send("facebook");
-});
+});*/
 
-
-bot.dialog("hello", (session, args) => {
-    session.endDialog("Hello. I can help you get information from facebook.  Try saying 'get profile'.");
-}).triggerAction({
-    matches: 'SayHello'
-});
 
 //=========================================================
 // Bot Dialogs
@@ -3218,7 +3265,7 @@ bot.dialog('facebook', new builder.IntentDialog({ recognizers : [ recog ]})
     .onDefault((session, args) => {
         session.endDialog("I didn't understand that.  Try saying 'show my profile'.");
     })
-);
+);*/
 
 
 bot.dialog("/profile", [].concat( 
@@ -3271,4 +3318,3 @@ bot.dialog("/logout", [
         }
     }
 ]); 
-*/
