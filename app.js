@@ -131,6 +131,7 @@ var ba = new botauth.BotAuthenticator(server, bot, { baseUrl : "https://medibotm
         });
 	});
 
+
 bot.dialog("profile", [].concat( 
     ba.authenticate("facebook"),
     function(session, results) {
