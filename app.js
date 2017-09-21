@@ -137,7 +137,7 @@ bot.dialog("profile", [].concat(
     function(session, results) {
         //get the facebook profile
 		var user = ba.profile(session, "facebook");
-		console.log('Facebook profile response: '+JSON.stringify(user));
+		console.log('Facebook profile response: '+user);
         //var user = results.response;
 
         //call facebook and get something using user.accessToken 
