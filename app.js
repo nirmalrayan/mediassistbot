@@ -17,7 +17,6 @@ const FacebookStrategy = require("passport-facebook").Strategy;
 //encryption key for saved state
 const BOTAUTH_SECRET = "TESTBOT";  
 
-
 // Setup Restify Server
 var server = restify.createServer();
 server.listen(process.env.PORT || process.env.port || 3000, function() 
@@ -78,9 +77,9 @@ var bot = new builder.UniversalBot(connector,
 				]);
 				
 				session.sendTyping();
-				setTimeout(function () {
+/* 				setTimeout(function () {
 					session.beginDialog('askName');
-				}, 8000);		
+				}, 8000);	 */	
 			
 			}
 			session.send(new builder.Message(session)
@@ -101,8 +100,8 @@ var recognizer = new builder.LuisRecognizer("https://westus.api.cognitive.micros
 
 bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer]})
     .matches("SayHello", "hello")
-    .matches("GetProfile", "/profile")
-    .matches("Logout", "/logout")
+    .matches("GetProfile", "profile")
+    .matches("Logout", "logout")
     .onDefault((session, args) => {
         session.endDialog("I didn't understand that.  Try saying 'show my profile'.");
     })
@@ -132,11 +131,12 @@ var ba = new botauth.BotAuthenticator(server, bot, { baseUrl : "https://medibotm
         });
 	});
 
-bot.dialog("/profile", [].concat( 
+bot.dialog("profile", [].concat( 
     ba.authenticate("facebook"),
     function(session, results) {
         //get the facebook profile
-        var user = ba.profile(session, "facebook");
+		var user = ba.profile(session, "facebook");
+		console.log('Facebook profile response: '+JSON.stringify(user));
         //var user = results.response;
 
         //call facebook and get something using user.accessToken 
@@ -170,7 +170,7 @@ bot.dialog("/profile", [].concat(
     }
 ));
 
-bot.dialog("/logout", [
+bot.dialog("logout", [
     (session, args, next) => {
         builder.Prompts.confirm(session, "are you sure you want to logout")      
     }, (session, args) => {
