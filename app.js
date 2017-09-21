@@ -97,7 +97,6 @@ var bot = new builder.UniversalBot(connector,
 	
 //LUIS Configuration
 var recognizer = new builder.LuisRecognizer("https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/4e0df9eb-a11f-495d-8e90-b0579fde9b86?subscription-key=5ccd61decaf04a0caff771ac48a46ded&timezoneOffset=330&verbose=true&q=");
-var intents = new builder.IntentDialog({recognizers: [recognizer]});
 //bot.recognizer(recog);
 
 bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer]})
@@ -115,6 +114,75 @@ bot.dialog("hello", (session, args) => {
 }).triggerAction({
     matches: 'SayHello'
 });
+
+
+// Initialize with the strategies we want to use
+var ba = new botauth.BotAuthenticator(server, bot, { baseUrl : "https://medibotmb.azurewebsites.net", secret : BOTAUTH_SECRET })
+    .provider("facebook", (options) => { 
+        return new FacebookStrategy({
+            clientID : "1893719730892870",
+            clientSecret : "98e0e4ebdbfd51b8691640b0fe2d574c",
+            callbackURL : options.callbackURL
+        }, (accessToken, refreshToken, profile, done) => {
+            profile = profile || {};
+            profile.accessToken = accessToken;
+            profile.refreshToken = refreshToken;
+            
+            return done(null, profile);
+        });
+	});
+
+bot.dialog("/profile", [].concat( 
+    ba.authenticate("facebook"),
+    function(session, results) {
+        //get the facebook profile
+        var user = ba.profile(session, "facebook");
+        //var user = results.response;
+
+        //call facebook and get something using user.accessToken 
+        var client = restify.createJsonClient({
+            url: 'https://graph.facebook.com',
+            accept : 'application/json',
+            headers : {
+                "Authorization" : `OAuth ${ user.accessToken }`
+            }
+        });
+
+        client.get(`/v2.8/me/picture?redirect=0`, (err, req, res, obj) => {
+            if(!err) {
+                console.log(obj);
+                var msg = new builder.Message()
+                    .attachments([
+                        new builder.HeroCard(session)
+                            .text(user.displayName)
+                            .images([
+                                new builder.CardImage(session).url(obj.data.url)
+                                ]
+                            )
+                        ]
+                    );
+                session.endDialog(msg);
+            } else {
+                console.log(err);
+                session.endDialog("error getting profile");
+            }
+        });
+    }
+));
+
+bot.dialog("/logout", [
+    (session, args, next) => {
+        builder.Prompts.confirm(session, "are you sure you want to logout")      
+    }, (session, args) => {
+        if(args.response) {
+            ba.logout(session, "facebook");
+            session.endDialog("you've been logged out.");
+        } else {
+            session.endDialog("you're still logged in");
+        }
+    }
+]); 
+
 
 	
 // Dialog to ask for Master Name
@@ -3230,7 +3298,7 @@ function processSubmitAction6(session, message){
 server.post('/api/messages', connector.listen());
 
 // Initialize with the strategies we want to use
-var ba = new botauth.BotAuthenticator(server, bot, { baseUrl : "https://medibotmb.azurewebsites.net", secret : BOTAUTH_SECRET })
+/*var ba = new botauth.BotAuthenticator(server, bot, { baseUrl : "https://medibotmb.azurewebsites.net", secret : BOTAUTH_SECRET })
     .provider("facebook", (options) => { 
         return new FacebookStrategy({
             clientID : "1893719730892870",
@@ -3267,54 +3335,3 @@ bot.dialog('facebook', new builder.IntentDialog({ recognizers : [ recog ]})
     })
 );*/
 
-
-bot.dialog("/profile", [].concat( 
-    ba.authenticate("facebook"),
-    function(session, results) {
-        //get the facebook profile
-        var user = ba.profile(session, "facebook");
-        //var user = results.response;
-
-        //call facebook and get something using user.accessToken 
-        var client = restify.createJsonClient({
-            url: 'https://graph.facebook.com',
-            accept : 'application/json',
-            headers : {
-                "Authorization" : `OAuth ${ user.accessToken }`
-            }
-        });
-
-        client.get(`/v2.8/me/picture?redirect=0`, (err, req, res, obj) => {
-            if(!err) {
-                console.log(obj);
-                var msg = new builder.Message()
-                    .attachments([
-                        new builder.HeroCard(session)
-                            .text(user.displayName)
-                            .images([
-                                new builder.CardImage(session).url(obj.data.url)
-                                ]
-                            )
-                        ]
-                    );
-                session.endDialog(msg);
-            } else {
-                console.log(err);
-                session.endDialog("error getting profile");
-            }
-        });
-    }
-));
-
-bot.dialog("/logout", [
-    (session, args, next) => {
-        builder.Prompts.confirm(session, "are you sure you want to logout")      
-    }, (session, args) => {
-        if(args.response) {
-            ba.logout(session, "facebook");
-            session.endDialog("you've been logged out.");
-        } else {
-            session.endDialog("you're still logged in");
-        }
-    }
-]); 
