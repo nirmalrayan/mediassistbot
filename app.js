@@ -157,7 +157,8 @@ bot.dialog("profile", [].concat(
                 console.log(obj);
                 var msg = new builder.Message()
                     .attachments([
-                        new builder.HeroCard(session)
+						new builder.HeroCard(session)
+							.title('Facebook Authentication - Successful')
                             .text(user.displayName)
                             .images([
                                 new builder.CardImage(session).url(obj.data.url)
@@ -3338,3 +3339,7 @@ bot.dialog('facebook', new builder.IntentDialog({ recognizers : [ recog ]})
     })
 );*/
 
+
+server.post('/fbloginbutton', (req, res, session) => {
+    session.beginDialog('profile');
+});
