@@ -81,11 +81,8 @@ var bot = new builder.UniversalBot(connector,
 				.buttons([
 					builder.CardAction.imBack(session, "Show Menu", "Show Menu")
 				]);
-				
-				session.sendTyping();
- 				setTimeout(function () {
-					session.beginDialog('hello');
-				}, 8000);	 
+
+				session.beginDialog('hello'); 
 			
 			}
 			session.send(new builder.Message(session)
@@ -116,9 +113,9 @@ bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer]})
 
 bot.dialog("hello", (session, args) => {
 	if(session.userData.fbLogin){
-		session.endDialog("Hello. You can type `show menu` or `#` at any time of the conversation to go back to the main menu.");
+		session.endDialog("Hello. You can type `\"show menu\"` or `\"#\""` at any time of the conversation to go back to the main menu.");
 	}else{
-		session.endDialog("Hello. I can help you get information from facebook.  Try saying 'get profile'.");
+		session.endDialog("Hello. I can help you get information from facebook.  Try saying `\"get profile\"`.");
 	}
 }).triggerAction({
     matches: 'SayHello'
@@ -174,6 +171,7 @@ bot.dialog("profile", [].concat(
                             )
                         ]
 					);
+				session.userData.masterName = user.displayName;
 				session.userData.fbLogin = "true";
                 session.endDialog(msg);
             } else {
