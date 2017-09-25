@@ -113,7 +113,7 @@ bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer]})
 
 bot.dialog("hello", (session, args) => {
 	if(session.userData.fbLogin){
-		session.endDialog("Hello. You can type `\"show menu\"` or `\"#\""` at any time of the conversation to go back to the main menu.");
+		session.endDialog("Hello. You can type `\"show menu\"` or `\"#\"` at any time of the conversation to go back to the main menu.");
 	}else{
 		session.endDialog("Hello. I can help you get information from facebook.  Try saying `\"get profile\"`.");
 	}
