@@ -9,7 +9,13 @@ var builder = require('botbuilder');
 const {Wit, log} = require('node-wit');
 require('env2')('.env'); // loads all entries into process.env
 
-var FRONTEND_URL = process.env.BOT_FRONTEND_URL || 'https://localhost';
+const botauth = require("botauth");
+
+const passport = require("passport");
+const FacebookStrategy = require("passport-facebook").Strategy;
+
+//encryption key for saved state
+const BOTAUTH_SECRET = "TESTBOT";  
 
 // Setup Restify Server
 var server = restify.createServer();
@@ -17,6 +23,8 @@ server.listen(process.env.PORT || process.env.port || 3000, function()
 {
    console.log('%s listening to %s', server.name, server.url); 
 });
+server.use(restify.plugins.bodyParser());
+server.use(restify.plugins.queryParser());
 
 
 // Create chat bot
@@ -24,8 +32,8 @@ var connector = new builder.ChatConnector
 ({ appId: process.env.MY_APP_ID, appPassword: process.env.MY_APP_PASSWORD }); 
 
 //MAIN.
-var bot = new builder.UniversalBot(connector);
-/*
+var bot = new builder.UniversalBot(connector,
+
     function (session) {
 		
 		if(session.message.address.channelId === 'facebook'){
@@ -71,22 +79,114 @@ var bot = new builder.UniversalBot(connector);
 				]);
 				
 				session.sendTyping();
-				setTimeout(function () {
+/* 				setTimeout(function () {
 					session.beginDialog('askName');
-				}, 8000);	 
+				}, 8000);	 */	
 			
 			}
 			session.send(new builder.Message(session)
 				.addAttachment(welcomeCard));
 			session.beginDialog("/refer");
 		}	
-	});*/
+	});
 
 //Direct to index.html web page
  server.get('/', restify.plugins.serveStatic({
  directory: __dirname,
  default: '/index.html'	
 })); 
+	
+//LUIS Configuration
+var recognizer = new builder.LuisRecognizer("https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/4e0df9eb-a11f-495d-8e90-b0579fde9b86?subscription-key=5ccd61decaf04a0caff771ac48a46ded&timezoneOffset=330&verbose=true&q=");
+//bot.recognizer(recog);
+
+bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer]})
+    .matches("SayHello", "hello")
+    .matches("GetProfile", "profile")
+    .matches("Logout", "logout")
+    .onDefault((session, args) => {
+        session.endDialog("I didn't understand that.  Try saying 'show my profile'.");
+    })
+);
+
+
+bot.dialog("hello", (session, args) => {
+    session.endDialog("Hello. I can help you get information from facebook.  Try saying 'get profile'.");
+}).triggerAction({
+    matches: 'SayHello'
+});
+
+
+// Initialize with the strategies we want to use
+var ba = new botauth.BotAuthenticator(server, bot, { baseUrl : "https://medibotmb.azurewebsites.net", secret : BOTAUTH_SECRET })
+    .provider("facebook", (options) => { 
+        return new FacebookStrategy({
+            clientID : "1893719730892870",
+            clientSecret : "98e0e4ebdbfd51b8691640b0fe2d574c",
+            callbackURL : options.callbackURL
+        }, (accessToken, refreshToken, profile, done) => {
+            profile = profile || {};
+            profile.accessToken = accessToken;
+            profile.refreshToken = refreshToken;
+            
+            return done(null, profile);
+        });
+	});
+
+
+bot.dialog("profile", [].concat( 
+    ba.authenticate("facebook"),
+    function(session, results) {
+        //get the facebook profile
+		var user = ba.profile(session, "facebook");
+		console.log('Facebook profile response: '+user);
+        //var user = results.response;
+
+        //call facebook and get something using user.accessToken 
+        var client = restify.createJsonClient({
+            url: 'https://graph.facebook.com',
+            accept : 'application/json',
+            headers : {
+                "Authorization" : `OAuth ${ user.accessToken }`
+            }
+        });
+
+        client.get(`/v2.8/me/picture?redirect=0`, (err, req, res, obj) => {
+            if(!err) {
+                console.log(obj);
+                var msg = new builder.Message()
+                    .attachments([
+                        new builder.HeroCard(session)
+                            .text(user.displayName)
+                            .images([
+                                new builder.CardImage(session).url(obj.data.url)
+                                ]
+                            )
+                        ]
+                    );
+                session.endDialog(msg);
+            } else {
+                console.log(err);
+                session.endDialog("error getting profile");
+            }
+        });
+    }
+));
+
+bot.dialog("logout", [
+    (session, args, next) => {
+        builder.Prompts.confirm(session, "are you sure you want to logout")      
+    }, (session, args) => {
+        if(args.response) {
+            ba.logout(session, "facebook");
+            session.endDialog("you've been logged out.");
+        } else {
+            session.endDialog("you're still logged in");
+        }
+    }
+]); 
+
+
 	
 // Dialog to ask for Master Name
 bot.dialog('askName',[
@@ -3199,107 +3299,41 @@ function processSubmitAction6(session, message){
 
 server.post('/api/messages', connector.listen());
 
+// Initialize with the strategies we want to use
+/*var ba = new botauth.BotAuthenticator(server, bot, { baseUrl : "https://medibotmb.azurewebsites.net", secret : BOTAUTH_SECRET })
+    .provider("facebook", (options) => { 
+        return new FacebookStrategy({
+            clientID : "1893719730892870",
+            clientSecret : "98e0e4ebdbfd51b8691640b0fe2d574c",
+            callbackURL : options.callbackURL
+        }, (accessToken, refreshToken, profile, done) => {
+            profile = profile || {};
+            profile.accessToken = accessToken;
+            profile.refreshToken = refreshToken;
+            
+            return done(null, profile);
+        });
+	});
+	
+	/**
+ * Just a page to make sure the server is running
+ */
+/*
+server.get("/facebook", (req, res) => {
+    res.send("facebook");
+});*/
 
-server.get('/authorize', restify.plugins.queryParser(), function (req, res, next) {
-  if (req.query && req.query.redirect_uri && req.query.username) {
-    var username = req.query.username;
 
-    // Here, it would be possible to take username (and perhaps password and other data)
-    // and do some verifications with a backend system. The authorization_code query string
-    // argument is an arbitrary pass-through value that could be stored as well
-    // to enable verifying it once Facebook sends the `Account Linking webhook event`
-    // that we handle below. In this case, we are passing the username via the authorization_code
-    // since that avoids a need for an external databases in this simple scenario.
+//=========================================================
+// Bot Dialogs
+//=========================================================
+/*
+bot.dialog('facebook', new builder.IntentDialog({ recognizers : [ recog ]})
+    .matches("SayHello", "hello")
+    .matches("GetProfile", "/profile")
+    .matches("Logout", "/logout")
+    .onDefault((session, args) => {
+        session.endDialog("I didn't understand that.  Try saying 'show my profile'.");
+    })
+);*/
 
-    var redirectUri = req.query.redirect_uri + '&authorization_code=' + username;
-    return res.redirect(redirectUri, next);
-  } else {
-    return res.send(400, 'Request did not contain redirect_uri and username in the query string');
-  }
-});
-
-var intents = new builder.IntentDialog();
-bot.dialog('/', intents);
-
-console.log('All intents are :' + JSON.stringify(intents));
-
-intents.onDefault(function (session) {
-  var accountLinking = session.message.sourceEvent.account_linking;
-  if (accountLinking) {
-    // This is the handling for the `Account Linking webhook event` where we could
-    // verify the authorization_code and that the linking was successful.
-    // The authorization_code is the value we passed above and
-    // status has value `linked` in case the linking succeeded.
-    var username = accountLinking.authorization_code;
-    var authorizationStatus = accountLinking.status;
-    if (authorizationStatus === 'linked') {
-      // Persist username under the userData
-      session.userData.username = username;
-      session.endDialog('Account linked - you are now known as ' + username);
-    } else if (authorizationStatus === 'unlinked') {
-      // Remove username from the userData
-      delete session.userData.username;
-      session.endDialog('Account unlinked');
-    } else {
-      session.endDialog('Unknown account linking event received');
-    }
-  } else {
-    var storedUsername = session.userData.username;
-    if (storedUsername) {
-      session.endDialog('You are known as ' + storedUsername + ' - type "unlink account" to try out unlinking');
-    } else {
-      session.endDialog('I hear you - type "link account" to try out account linking');
-    }
-  }
-});
-
-intents.matches(/^link account/i,
-  function (session) {
-    var message = new builder.Message(session)
-      .sourceEvent({
-        facebook: {
-          attachment: {
-            type: 'template',
-            payload: {
-              template_type: 'generic',
-              elements: [{
-                title: 'Welcome to Account Linking',
-                image_url: FRONTEND_URL + '/static/linking.png',
-                buttons: [{
-                  type: 'account_link',
-                  url: FRONTEND_URL + '/static/index.html'
-                }]
-              }]
-            }
-          }
-        }
-      });
-    session.endDialog(message);
-  }
-);
-
-intents.matches(/^unlink account/i,
-  function (session) {
-    request({
-      url: 'https://graph.facebook.com/v2.6/me/unlink_accounts',
-      method: 'POST',
-      qs: {
-        access_token: process.env.FACEBOOK_PAGE_TOKEN
-      },
-      body: {
-        psid: session.message.address.user.id
-      },
-      json: true
-    }, function (error, response, body) {
-      if (!error && response.statusCode === 200) {
-        // No need to do anything send anything to the user
-        // in the success case since we respond only after
-        // we have received the account unlinking webhook
-        // event from Facebook.
-        session.endDialog();
-      } else {
-        session.endDialog('Error while unlinking account');
-      }
-    });
-  }
-);
