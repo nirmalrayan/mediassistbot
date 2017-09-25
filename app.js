@@ -98,7 +98,7 @@ var recognizer = new builder.LuisRecognizer("https://westus.api.cognitive.micros
 //bot.recognizer(recog);
 
 bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer]})
-    .matches("SayHello", "hello")
+//    .matches("SayHello", "hello")
     .matches("GetProfile", "profile")
     .matches("Logout", "logout")
     .onDefault((session, args) => {
