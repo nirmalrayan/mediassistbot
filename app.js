@@ -115,7 +115,11 @@ bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer]})
 
 
 bot.dialog("hello", (session, args) => {
-    session.endDialog("Hello. I can help you get information from facebook.  Try saying 'get profile'.");
+	if(session.userData.fbLogin){
+		session.endDialog("Hello. You can type `show menu` or `#` at any time of the conversation to go back to the main menu.");
+	}else{
+		session.endDialog("Hello. I can help you get information from facebook.  Try saying 'get profile'.");
+	}
 }).triggerAction({
     matches: 'SayHello'
 });
@@ -169,7 +173,8 @@ bot.dialog("profile", [].concat(
                                 ]
                             )
                         ]
-                    );
+					);
+				session.userData.fbLogin = "true";
                 session.endDialog(msg);
             } else {
                 console.log(err);
