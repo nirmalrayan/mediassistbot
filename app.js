@@ -160,6 +160,7 @@ bot.dialog("profile", [].concat(
                     .attachments([
 						new builder.HeroCard(session)
 							.title('Facebook Authentication - Successful')
+							.subtitle('You can type `\"logout\"` at anytime to sign out of facebook.')
                             .text(user.displayName)
                             .images([
                                 new builder.CardImage(session).url(obj.data.url)
