@@ -63,7 +63,11 @@ var bot = new builder.UniversalBot(connector,
 				.buttons([
 					builder.CardAction.imBack(session, "Show Menu", "Show Menu")
 				]);
-
+				
+				session.sendTyping();
+ 				setTimeout(function () {
+					session.beginDialog('hello');
+				}, 8000);	
 			}
 			else{
 				var welcomeCard = new builder.HeroCard(session)
@@ -79,9 +83,9 @@ var bot = new builder.UniversalBot(connector,
 				]);
 				
 				session.sendTyping();
-/* 				setTimeout(function () {
-					session.beginDialog('askName');
-				}, 8000);	 */	
+ 				setTimeout(function () {
+					session.beginDialog('hello');
+				}, 8000);	 
 			
 			}
 			session.send(new builder.Message(session)
