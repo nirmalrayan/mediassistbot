@@ -64,10 +64,6 @@ var bot = new builder.UniversalBot(connector,
 					builder.CardAction.imBack(session, "Show Menu", "Show Menu")
 				]);
 				
-				session.sendTyping();
- 				setTimeout(function () {
-					session.beginDialog('hello');
-				}, 8000);	
 			}
 			else{
 				var welcomeCard = new builder.HeroCard(session)
