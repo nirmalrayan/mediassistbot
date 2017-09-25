@@ -139,11 +139,12 @@ bot.dialog("profile", [].concat(
     function(session, results) {
         //get the facebook profile
 		var user = ba.profile(session, "facebook");
+		var restifyclnt = require('restify-clients');
 		console.log('Facebook profile response: '+user);
         //var user = results.response;
 
         //call facebook and get something using user.accessToken 
-        var client = restify.plugins.createJsonClient({
+        var client = restifyclnt.createJsonClient({
             url: 'https://graph.facebook.com',
             accept : 'application/json',
             headers : {
