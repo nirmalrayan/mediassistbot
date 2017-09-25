@@ -7,6 +7,7 @@ var http = require('http');
 var restify = require('restify');
 var builder = require('botbuilder');
 const {Wit, log} = require('node-wit');
+var restifyp = require('restify-plugins');
 require('env2')('.env'); // loads all entries into process.env
 
 const botauth = require("botauth");
@@ -143,7 +144,7 @@ bot.dialog("profile", [].concat(
         //var user = results.response;
 
         //call facebook and get something using user.accessToken 
-        var client = restify.createJsonClient({
+        var client = restifyp.createJsonClient({
             url: 'https://graph.facebook.com',
             accept : 'application/json',
             headers : {
