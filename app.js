@@ -181,7 +181,7 @@ bot.dialog("profile", [].concat(
 
 bot.dialog("logout", [
     (session, args, next) => {
-        builder.Prompts.confirm(session, "are you sure you want to logout")      
+        builder.Prompts.confirm(session, "are you sure you want to logout? (yes/no)")      
     }, (session, args) => {
         if(args.response) {
             ba.logout(session, "facebook");
