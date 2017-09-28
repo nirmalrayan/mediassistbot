@@ -29,7 +29,7 @@ server.use(restify.plugins.queryParser());
 
 // Create chat bot
 var connector = new builder.ChatConnector
-({ appId: "49fb58af-7528-4c84-ab67-3473dc07cb32", appPassword: "xCfd5jb4a9UpMjeKgc6YodY" }); 
+({ appId: "dcda60fe-72d4-4796-a728-de8fa3aef2a5", appPassword: "XmWPdDZynzVfx1gX7KQCnOp" }); 
 
 //MAIN.
 var bot = new builder.UniversalBot(connector,
