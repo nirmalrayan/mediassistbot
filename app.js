@@ -26,6 +26,7 @@ server.listen(process.env.PORT || process.env.port || 3000, function()
 server.use(restify.plugins.bodyParser());
 server.use(restify.plugins.queryParser());
 
+
 // Create chat bot
 var connector = new builder.ChatConnector
 ({ appId: process.env.MY_APP_ID, appPassword: process.env.MY_APP_PASSWORD }); 
@@ -1711,7 +1712,7 @@ function isEmptyObject(obj) {
 bot.dialog('askforLocation',  [
     function (session) {
 		var locationDialog = require('botbuilder-location');
-		bot.library(locationDialog.createLibrary(process.env.BING_MAPS_API_KEY));
+		bot.library(locationDialog.createLibrary("AjgT49m-_PFYGm_KAZ4nBmOxyNeEyCQXSV_ybfF3wLtebeCDoYVT0JNyOpnB-Y62"));
 		
 		var options = {
 			prompt: "Where should I search for hospitals? 🏥. Type your city.",
@@ -1739,7 +1740,7 @@ bot.dialog('askforLocation',  [
 	function (session, results) {
 		if (results.response){
 			session.userData.insurer = results.response;
-			const client = new Wit({accessToken: process.env.WIT_ACCESS_TOKEN});
+			const client = new Wit({accessToken: "YYXX4OGOYWHGWEDZGT72PQRUEJQHBRNM"});
 			client.message(session.userData.insurer, {})
 			.then((data) => {
 			  entities = data['entities'];
@@ -1754,7 +1755,7 @@ bot.dialog('askforLocation',  [
 	function (session, results) {
 		if (results.response){
 			session.userData.speciality = results.response;	
-			const client = new Wit({accessToken: process.env.WIT_ACCESS_TOKEN});
+			const client = new Wit({accessToken: "YYXX4OGOYWHGWEDZGT72PQRUEJQHBRNM"});
 			client.message(session.userData.speciality, {})
 			.then((data) => {
 			  entities = data['entities'];
