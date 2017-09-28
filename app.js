@@ -919,7 +919,7 @@ function createReceiptCard(session) {
 		+ ' | Relation to Beneficiary: ' + session.userData.trackBenefRelation+ ' | Claim Received Date: ' + session.userData.trackClaimReceivedDate + ' | Claim Approved Date: '+ 
 		session.userData.trackClaimApprovedDate + ' | Claim Denied Date: ' + session.userData.trackClaimDeniedDate+ ' | Policy Number: ' + session.userData.trackPolicyNo + 
 		' | Claimed Amount: Rs. '+ formatNumber(session.userData.trackClmAmount) + ' | Hospital Discount : Rs. '+ formatNumber(session.userData.trackHospitalDiscount) + 
-		' | Amount Paid by Beneficiary: Rs. '+ formatNumber(session.userData.trackAmountPaidByPatient) + ' | Amount Paid by Corporate : Rs. '+ formatNumber(session.userData.trackAmountPaidByCorporate) + 
+		' | Amount Pa  by Beneficiary: Rs. '+ formatNumber(session.userData.trackAmountPaidByPatient) + ' | Amount Paid by Corporate : Rs. '+ formatNumber(session.userData.trackAmountPaidByCorporate) + 
 		' | Non Payable Amount : Rs. ' + formatNumber(session.userData.trackNonPayableAmount) + ' | Policy Excess Amount : Rs. '+ formatNumber(session.userData.trackPolicyExcessAmount) +
 		' | Advance Paid by Beneficiary : Rs. '+formatNumber(session.userData.trackAdvancePaidByPatient)+ ' | Approved Amount : Rs. '+ formatNumber(session.userData.trackClmApprovedAmt)
 		);
