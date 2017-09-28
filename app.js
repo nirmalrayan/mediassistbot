@@ -26,7 +26,6 @@ server.listen(process.env.PORT || 3000, function()
 server.use(restify.plugins.bodyParser());
 server.use(restify.plugins.queryParser());
 
-
 // Create chat bot
 var connector = new builder.ChatConnector
 ({ appId: process.env.MY_APP_ID, appPassword: process.env.MY_APP_PASSWORD }); 
