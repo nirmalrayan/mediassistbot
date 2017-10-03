@@ -31,6 +31,8 @@ var connector = new builder.ChatConnector
 ({ appId: "dcda60fe-72d4-4796-a728-de8fa3aef2a5", appPassword: "XmWPdDZynzVfx1gX7KQCnOp" }); 
 
 //MAIN.
+
+console.log('Connector data: '+ JSON.stringify(connector));
 var bot = new builder.UniversalBot(connector,
 
     function (session) {
@@ -189,8 +191,6 @@ bot.dialog("logout", [
         }
     }
 ]); 
-
-
 	
 // Dialog to ask for Master Name
 bot.dialog('askName',[
