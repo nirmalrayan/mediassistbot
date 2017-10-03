@@ -19,7 +19,6 @@ const BOTAUTH_SECRET = "TESTBOT";
 
 // Setup Restify Server
 var server = restify.createServer();
-server.url = 3000;
 server.listen(process.env.PORT || process.env.port || 3000, function() 
 {
    console.log('%s listening to %s', server.name, server.url); 
@@ -98,7 +97,7 @@ var recognizer = new builder.LuisRecognizer("https://westus.api.cognitive.micros
 //bot.recognizer(recog);
 
 bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer]})
-//    .matches("SayHello", "hello")
+    .matches("SayHello", "hello")
     .matches("GetProfile", "profile")
     .matches("Logout", "logout")
     .onDefault((session, args) => {
@@ -116,7 +115,6 @@ bot.dialog("hello", (session, args) => {
 }).triggerAction({
     matches: 'SayHello'
 });
-
 
 // Initialize with the strategies we want to use
 var ba = new botauth.BotAuthenticator(server, bot, { baseUrl : "https://medibotmb.azurewebsites.net", secret : BOTAUTH_SECRET })
