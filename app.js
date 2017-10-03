@@ -31,8 +31,6 @@ var connector = new builder.ChatConnector
 ({ appId: "dcda60fe-72d4-4796-a728-de8fa3aef2a5", appPassword: "XmWPdDZynzVfx1gX7KQCnOp" }); 
 
 //MAIN.
-
-console.log('Connector data: '+ JSON.stringify(connector));
 var bot = new builder.UniversalBot(connector,
 
     function (session) {
@@ -93,6 +91,9 @@ var bot = new builder.UniversalBot(connector,
  directory: __dirname,
  default: '/index.html'	
 })); 
+
+
+console.log('Connector data: '+ JSON.stringify(bot));
 	
 //LUIS Configuration
 var recognizer = new builder.LuisRecognizer("https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/4e0df9eb-a11f-495d-8e90-b0579fde9b86?subscription-key=5ccd61decaf04a0caff771ac48a46ded&timezoneOffset=330&verbose=true&q=");
