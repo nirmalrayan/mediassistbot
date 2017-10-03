@@ -29,7 +29,7 @@ server.use(restify.plugins.queryParser());
 console.log('This is microsoft app id: '+ process.env.MY_APP_ID);
 // Create chat bot
 var connector = new builder.ChatConnector
-({ appId: process.env.MY_APP_ID, appPassword: process.env.MY_APP_PASSWORD }); 
+({ appId: "dcda60fe-72d4-4796-a728-de8fa3aef2a5", appPassword: "XmWPdDZynzVfx1gX7KQCnOp" }); 
 
 //MAIN.
 var bot = new builder.UniversalBot(connector,
