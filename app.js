@@ -121,7 +121,7 @@ var ba = new botauth.BotAuthenticator(server, bot, { baseUrl : "https://medibotm
     .provider("facebook", (options) => { 
         return new FacebookStrategy({
             clientID : "1893719730892870",
-            clientSecret : "98e0e4ebdbfd51b8691640b0fe2d574c",
+            clientSecret : "6e3f289736f656fc2b1288abf93d2504",
             callbackURL : options.callbackURL
         }, (accessToken, refreshToken, profile, done) => {
             profile = profile || {};
