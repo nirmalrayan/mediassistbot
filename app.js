@@ -3339,9 +3339,9 @@ bot.dialog('facebook', new builder.IntentDialog({ recognizers : [ recog ]})
     .onDefault((session, args) => {
         session.endDialog("I didn't understand that.  Try saying 'show my profile'.");
     })
-);*/
+);
 
 
 server.post('/fbloginbutton', (req, res, session) => {
     session.beginDialog('profile');
-});
+});*/
