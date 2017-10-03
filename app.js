@@ -19,13 +19,14 @@ const BOTAUTH_SECRET = "TESTBOT";
 
 // Setup Restify Server
 var server = restify.createServer();
-/*server.listen(3001, function() 
+server.listen(process.env.PORT || process.env.port || 3000, function() 
 {
    console.log('%s listening to %s', server.name, server.url); 
-});*/
+});
 server.use(restify.plugins.bodyParser());
 server.use(restify.plugins.queryParser());
 
+console.log('This is microsoft app id: '+ process.eventNames.MY_APP_ID);
 // Create chat bot
 var connector = new builder.ChatConnector
 ({ appId: process.env.MY_APP_ID, appPassword: process.env.MY_APP_PASSWORD }); 
@@ -105,6 +106,7 @@ bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer]})
     })
 );
 
+
 bot.dialog("hello", (session, args) => {
 	if(session.userData.fbLogin){
 		session.endDialog("Hello. You can type `\"show menu\"` or `\"#\"` at any time of the conversation to go back to the main menu.");
@@ -121,7 +123,7 @@ var ba = new botauth.BotAuthenticator(server, bot, { baseUrl : "https://medibotm
     .provider("facebook", (options) => { 
         return new FacebookStrategy({
             clientID : "1893719730892870",
-            clientSecret : "6e3f289736f656fc2b1288abf93d2504",
+            clientSecret : "98e0e4ebdbfd51b8691640b0fe2d574c",
             callbackURL : options.callbackURL
         }, (accessToken, refreshToken, profile, done) => {
             profile = profile || {};
