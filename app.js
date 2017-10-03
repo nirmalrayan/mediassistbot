@@ -26,7 +26,7 @@ server.listen(process.env.PORT || process.env.port || 3000, function()
 server.use(restify.plugins.bodyParser());
 server.use(restify.plugins.queryParser());
 
-console.log('This is microsoft app id: '+ process.eventNames.MY_APP_ID);
+console.log('This is microsoft app id: '+ process.env.MY_APP_ID);
 // Create chat bot
 var connector = new builder.ChatConnector
 ({ appId: process.env.MY_APP_ID, appPassword: process.env.MY_APP_PASSWORD }); 
