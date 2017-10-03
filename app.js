@@ -19,10 +19,10 @@ const BOTAUTH_SECRET = "TESTBOT";
 
 // Setup Restify Server
 var server = restify.createServer();
-server.listen(3001, function() 
+/*server.listen(3001, function() 
 {
    console.log('%s listening to %s', server.name, server.url); 
-});
+});*/
 server.use(restify.plugins.bodyParser());
 server.use(restify.plugins.queryParser());
 
