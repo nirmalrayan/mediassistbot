@@ -23,8 +23,8 @@ server.listen(process.env.PORT || process.env.port || 3000, function()
 {
    console.log('%s listening to %s', server.name, server.url); 
 });
-server.use(restify.plugins.bodyParser());
-server.use(restify.plugins.queryParser());
+/*server.use(restify.plugins.bodyParser());
+server.use(restify.plugins.queryParser());*/
 
 // Create chat bot
 var connector = new builder.ChatConnector
@@ -82,7 +82,7 @@ var bot = new builder.UniversalBot(connector,
 			}
 			session.send(new builder.Message(session)
 				.addAttachment(welcomeCard));
-			session.beginDialog("/refer");
+//			session.beginDialog("/refer");
 		}	
 	});
 
@@ -91,13 +91,11 @@ var bot = new builder.UniversalBot(connector,
  directory: __dirname,
  default: '/index.html'	
 })); 
-	
+	/*
 //LUIS Configuration
 var recognizer = new builder.LuisRecognizer("https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/4e0df9eb-a11f-495d-8e90-b0579fde9b86?subscription-key=5ccd61decaf04a0caff771ac48a46ded&timezoneOffset=330&verbose=true&q=");
 //bot.recognizer(recog);
 
-
-console.log('Connector data: '+ JSON.stringify(recognizer));
 
 bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer]})
     .matches("SayHello", "hello")
@@ -192,7 +190,7 @@ bot.dialog("logout", [
         }
     }
 ]); 
-	
+	*/
 // Dialog to ask for Master Name
 bot.dialog('askName',[
 	function (session, args){
