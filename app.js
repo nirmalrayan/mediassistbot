@@ -28,7 +28,7 @@ server.use(restify.plugins.queryParser());*/
 
 // Create chat bot
 var connector = new builder.ChatConnector
-({ appId: "dcda60fe-72d4-4796-a728-de8fa3aef2a5", appPassword: "TX4vj0vhZgqZNarPg6XcymJ" }); 
+({ appId: process.env.MY_APP_ID, appPassword: process.env.MY_APP_PASSWORD }); 
 
 //MAIN.
 var bot = new builder.UniversalBot(connector,
@@ -685,10 +685,10 @@ bot.dialog('trackClaimwMAID', [
 						if (!error && response.statusCode == 200) {	
 							// Print out the response body
 							data = JSON.parse(body);
-							console.log(data);
+//							console.log(data);
 							
 							if(JSON.stringify(data.isSuccess) === "true"){
-						    	console.log(JSON.stringify(data.isSuccess));
+//						    	console.log(JSON.stringify(data.isSuccess));
 
 								var claimdata = data.claimDetails;
 							
@@ -820,7 +820,7 @@ bot.dialog('trackClaimwEmpID', [
 						if (!error && response.statusCode == 200) {	
 							// Print out the response body
 							data = JSON.parse(body);
-							console.log(data);
+//							console.log(data);
 							
 							if(JSON.stringify(data.isSuccess) === "true"){
 
@@ -1784,7 +1784,7 @@ bot.dialog('askforLocation',  [
 				if (!error && response.statusCode == 200) {	
 					// Print out the response body
 					data = JSON.parse(body);
-					console.log(data);
+//					console.log(data);
 					if(JSON.stringify(data.isSuccess) === "true"){				
 						var cards = [];
 						
