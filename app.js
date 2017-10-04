@@ -9,6 +9,7 @@ var builder = require('botbuilder');
 const {Wit, log} = require('node-wit');
 require('env2')('.env'); // loads all entries into process.env
 console.log(process.env);
+console.log('This is the value of process.env.MY_APP_ID:'+process.env.MY_APP_ID);
 const botauth = require("botauth");
 
 const passport = require("passport");
