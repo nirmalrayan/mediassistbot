@@ -19,12 +19,13 @@ const BOTAUTH_SECRET = "TESTBOT";
 
 // Setup Restify Server
 var server = restify.createServer();
-server.listen(process.env.PORT || process.env.port || 3010, function() 
+server.listen(process.env.PORT || process.env.port || 3000, function() 
 {
    console.log('%s listening to %s', server.name, server.url); 
 });
-//server.use(restify.plugins.bodyParser());
-//server.use(restify.plugins.queryParser());
+server.use(restify.plugins.bodyParser());
+server.use(restify.plugins.queryParser());
+
 
 // Create chat bot
 var connector = new builder.ChatConnector
@@ -34,7 +35,7 @@ var connector = new builder.ChatConnector
 var bot = new builder.UniversalBot(connector,
 
     function (session) {
-		console.log('Started building bot');
+		
 		if(session.message.address.channelId === 'facebook'){
 			var welcomeCard = new builder.HeroCard(session)
 				.title("Hi %s! Nice to see you. I am MediBot", session.message.address.user.name)
@@ -77,13 +78,13 @@ var bot = new builder.UniversalBot(connector,
 					builder.CardAction.imBack(session, "Show Menu", "Show Menu")
 				]);
 
-//				session.beginDialog('hello'); 
-			}
+				session.beginDialog('hello'); 
+			
 			}
 			session.send(new builder.Message(session)
 				.addAttachment(welcomeCard));
-//			session.beginDialog("/refer");
-	
+			session.beginDialog("/refer");
+		}	
 	});
 
 //Direct to index.html web page
@@ -91,14 +92,13 @@ var bot = new builder.UniversalBot(connector,
  directory: __dirname,
  default: '/index.html'	
 })); 
-	/*
+	
 //LUIS Configuration
 var recognizer = new builder.LuisRecognizer("https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/4e0df9eb-a11f-495d-8e90-b0579fde9b86?subscription-key=5ccd61decaf04a0caff771ac48a46ded&timezoneOffset=330&verbose=true&q=");
 //bot.recognizer(recog);
 
-
 bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer]})
-    .matches("SayHello", "hello")
+//    .matches("SayHello", "hello")
     .matches("GetProfile", "profile")
     .matches("Logout", "logout")
     .onDefault((session, args) => {
@@ -116,6 +116,7 @@ bot.dialog("hello", (session, args) => {
 }).triggerAction({
     matches: 'SayHello'
 });
+
 
 // Initialize with the strategies we want to use
 var ba = new botauth.BotAuthenticator(server, bot, { baseUrl : "https://medibotmb.azurewebsites.net", secret : BOTAUTH_SECRET })
@@ -180,7 +181,7 @@ bot.dialog("profile", [].concat(
 
 bot.dialog("logout", [
     (session, args, next) => {
-        builder.Prompts.confirm(session, "are you sure you want to logout? (yes/no)")      
+        builder.Prompts.confirm(session, "are you sure you want to logout")      
     }, (session, args) => {
         if(args.response) {
             ba.logout(session, "facebook");
@@ -190,7 +191,9 @@ bot.dialog("logout", [
         }
     }
 ]); 
-	*/
+
+
+	
 // Dialog to ask for Master Name
 bot.dialog('askName',[
 	function (session, args){
@@ -685,10 +688,10 @@ bot.dialog('trackClaimwMAID', [
 						if (!error && response.statusCode == 200) {	
 							// Print out the response body
 							data = JSON.parse(body);
-//							console.log(data);
+							console.log(data);
 							
 							if(JSON.stringify(data.isSuccess) === "true"){
-//						    	console.log(JSON.stringify(data.isSuccess));
+						    	console.log(JSON.stringify(data.isSuccess));
 
 								var claimdata = data.claimDetails;
 							
@@ -820,7 +823,7 @@ bot.dialog('trackClaimwEmpID', [
 						if (!error && response.statusCode == 200) {	
 							// Print out the response body
 							data = JSON.parse(body);
-//							console.log(data);
+							console.log(data);
 							
 							if(JSON.stringify(data.isSuccess) === "true"){
 
@@ -916,7 +919,7 @@ function createReceiptCard(session) {
 		+ ' | Relation to Beneficiary: ' + session.userData.trackBenefRelation+ ' | Claim Received Date: ' + session.userData.trackClaimReceivedDate + ' | Claim Approved Date: '+ 
 		session.userData.trackClaimApprovedDate + ' | Claim Denied Date: ' + session.userData.trackClaimDeniedDate+ ' | Policy Number: ' + session.userData.trackPolicyNo + 
 		' | Claimed Amount: Rs. '+ formatNumber(session.userData.trackClmAmount) + ' | Hospital Discount : Rs. '+ formatNumber(session.userData.trackHospitalDiscount) + 
-		' | Amount Pa  by Beneficiary: Rs. '+ formatNumber(session.userData.trackAmountPaidByPatient) + ' | Amount Paid by Corporate : Rs. '+ formatNumber(session.userData.trackAmountPaidByCorporate) + 
+		' | Amount Paid by Beneficiary: Rs. '+ formatNumber(session.userData.trackAmountPaidByPatient) + ' | Amount Paid by Corporate : Rs. '+ formatNumber(session.userData.trackAmountPaidByCorporate) + 
 		' | Non Payable Amount : Rs. ' + formatNumber(session.userData.trackNonPayableAmount) + ' | Policy Excess Amount : Rs. '+ formatNumber(session.userData.trackPolicyExcessAmount) +
 		' | Advance Paid by Beneficiary : Rs. '+formatNumber(session.userData.trackAdvancePaidByPatient)+ ' | Approved Amount : Rs. '+ formatNumber(session.userData.trackClmApprovedAmt)
 		);
@@ -1784,7 +1787,7 @@ bot.dialog('askforLocation',  [
 				if (!error && response.statusCode == 200) {	
 					// Print out the response body
 					data = JSON.parse(body);
-//					console.log(data);
+					console.log(data);
 					if(JSON.stringify(data.isSuccess) === "true"){				
 						var cards = [];
 						
@@ -3338,9 +3341,9 @@ bot.dialog('facebook', new builder.IntentDialog({ recognizers : [ recog ]})
     .onDefault((session, args) => {
         session.endDialog("I didn't understand that.  Try saying 'show my profile'.");
     })
-);
+);*/
 
 
 server.post('/fbloginbutton', (req, res, session) => {
     session.beginDialog('profile');
-});*/
+});
