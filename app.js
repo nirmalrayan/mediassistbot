@@ -19,12 +19,12 @@ const BOTAUTH_SECRET = "TESTBOT";
 
 // Setup Restify Server
 var server = restify.createServer();
-server.listen(process.env.PORT || process.env.port || 3000, function() 
+server.listen(process.env.PORT || process.env.port || 3010, function() 
 {
    console.log('%s listening to %s', server.name, server.url); 
 });
-server.use(restify.plugins.bodyParser());
-server.use(restify.plugins.queryParser());
+//server.use(restify.plugins.bodyParser());
+//server.use(restify.plugins.queryParser());
 
 // Create chat bot
 var connector = new builder.ChatConnector
