@@ -77,7 +77,7 @@ var bot = new builder.UniversalBot(connector,
 					builder.CardAction.imBack(session, "Show Menu", "Show Menu")
 				]);
 
-				session.beginDialog('hello'); 
+//				session.beginDialog('hello'); 
 			
 			}
 			session.send(new builder.Message(session)
