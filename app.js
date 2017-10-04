@@ -8,7 +8,7 @@ var restify = require('restify');
 var builder = require('botbuilder');
 const {Wit, log} = require('node-wit');
 require('env2')('.env'); // loads all entries into process.env
-
+console.log(process.env);
 const botauth = require("botauth");
 
 const passport = require("passport");
@@ -23,8 +23,8 @@ server.listen(process.env.PORT || process.env.port || 3000, function()
 {
    console.log('%s listening to %s', server.name, server.url); 
 });
-/*server.use(restify.plugins.bodyParser());
-server.use(restify.plugins.queryParser());*/
+server.use(restify.plugins.bodyParser());
+server.use(restify.plugins.queryParser());
 
 // Create chat bot
 var connector = new builder.ChatConnector
