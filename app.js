@@ -34,7 +34,7 @@ var connector = new builder.ChatConnector
 var bot = new builder.UniversalBot(connector,
 
     function (session) {
-		
+		console.log('Started building bot');
 		if(session.message.address.channelId === 'facebook'){
 			var welcomeCard = new builder.HeroCard(session)
 				.title("Hi %s! Nice to see you. I am MediBot", session.message.address.user.name)
