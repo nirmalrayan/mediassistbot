@@ -25,7 +25,7 @@
   "homepage": "https://github.com/nirmalrayan/medibot#readme",
   "dependencies": {
     "botauth": "^0.2.12",
-    "botbuilder": "^3.9.0",
+    "botbuilder": "^3.10.2",
     "botbuilder-location": "^2.0.0",
     "env2": "^2.2.0",
     "geolib": "^2.0.23",
@@ -35,9 +35,9 @@
     "object-sizeof": "^1.2.0",
     "passport": "^0.4.0",
     "passport-facebook": "^2.1.1",
-    "restify": "^5.0.1",
-    "restify-clients": "^1.5.1",
+    "restify": "^5.2.0",
+    "restify-clients": "^1.5.2",
     "restify-plugins": "^1.6.0",
-    "serve-static-restify": "^1.0.0"
+    "serve-static-restify": "^2.0.0"
   }
 }
