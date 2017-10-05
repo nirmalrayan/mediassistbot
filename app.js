@@ -24,8 +24,8 @@ server.listen(process.env.PORT || process.env.port || 3000, function()
 {
    console.log('%s listening to %s', server.name, server.url); 
 });
-server.use(restify.plugins.bodyParser());
-server.use(restify.plugins.queryParser());
+//server.use(restify.plugins.bodyParser());
+//server.use(restify.plugins.queryParser());
 
 
 // Create chat bot
@@ -134,7 +134,6 @@ var ba = new botauth.BotAuthenticator(server, bot, { baseUrl : "https://medibot.
             return done(null, profile);
         });
 	});
-
 
 bot.dialog("profile", [].concat( 
     ba.authenticate("facebook"),
