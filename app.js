@@ -87,7 +87,7 @@ var bot = new builder.UniversalBot(connector,
 			}
 			session.send(new builder.Message(session)
 				.addAttachment(welcomeCard));
-			session.beginDialog("/refer");
+//			session.beginDialog("/refer");
 		}	
 	});
 
