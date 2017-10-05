@@ -82,7 +82,7 @@ var bot = new builder.UniversalBot(connector,
 					builder.CardAction.imBack(session, "Show Menu", "Show Menu")
 				]);
 
-				session.beginDialog('hello'); 
+//				session.beginDialog('hello'); 
 			
 			}
 			session.send(new builder.Message(session)
@@ -98,9 +98,9 @@ var bot = new builder.UniversalBot(connector,
 })); 
 	
 //LUIS Configuration
-var recognizer = new builder.LuisRecognizer("https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/4e0df9eb-a11f-495d-8e90-b0579fde9b86?subscription-key=5ccd61decaf04a0caff771ac48a46ded&timezoneOffset=330&verbose=true&q=");
+//var recognizer = new builder.LuisRecognizer("https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/4e0df9eb-a11f-495d-8e90-b0579fde9b86?subscription-key=5ccd61decaf04a0caff771ac48a46ded&timezoneOffset=330&verbose=true&q=");
 //bot.recognizer(recog);
-
+/*
 bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer]})
 //    .matches("SayHello", "hello")
     .matches("GetProfile", "profile")
@@ -110,7 +110,7 @@ bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer]})
     })
 );
 
-
+*/
 bot.dialog("hello", (session, args) => {
 	if(session.userData.fbLogin){
 		session.endDialog("Hello. You can type `\"show menu\"` or `\"#\"` at any time of the conversation to go back to the main menu.");
@@ -121,9 +121,8 @@ bot.dialog("hello", (session, args) => {
     matches: 'SayHello'
 });
 
-
 // Initialize with the strategies we want to use
-var ba = new botauth.BotAuthenticator(server, bot, { baseUrl : "https://medibotmb.azurewebsites.net", secret : BOTAUTH_SECRET })
+var ba = new botauth.BotAuthenticator(server, bot, { baseUrl : "https://medibot.azurewebsites.net", secret : BOTAUTH_SECRET })
     .provider("facebook", (options) => { 
         return new FacebookStrategy({
             clientID : "1893719730892870",
