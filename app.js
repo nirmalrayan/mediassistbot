@@ -5,7 +5,6 @@
 // Add your requirements
 var http = require('http');
 var restify = require('restify');
-
 var builder = require('botbuilder');
 const {Wit, log} = require('node-wit');
 require('env2')('.env'); // loads all entries into process.env
@@ -33,6 +32,7 @@ server.use(restify.plugins.queryParser());
 var connector = new builder.ChatConnector
 ({ appId: process.env.MY_APP_ID, appPassword: process.env.MY_APP_PASSWORD }); 
 
+
 //MAIN.
 var bot = new builder.UniversalBot(connector,
 
@@ -50,7 +50,7 @@ var bot = new builder.UniversalBot(connector,
 				.buttons([
 					builder.CardAction.imBack(session, "Show Menu", "Show Menu")
 				]);
-			session.userData.masterName = session.message.address.user.name;
+			session.userData.name = session.message.address.user.name;
 		}
 		else{
 			if(session.userData.masterName){
@@ -123,8 +123,8 @@ bot.dialog("hello", (session, args) => {
 var ba = new botauth.BotAuthenticator(server, bot, { baseUrl : "https://medibot.azurewebsites.net", secret : BOTAUTH_SECRET })
     .provider("facebook", (options) => { 
         return new FacebookStrategy({
-            clientID : process.env.FB_APP_ID,
-            clientSecret : process.env.FB_APP_PWD,
+            clientID : "1893719730892870",
+            clientSecret : "98e0e4ebdbfd51b8691640b0fe2d574c",
             callbackURL : options.callbackURL
         }, (accessToken, refreshToken, profile, done) => {
             profile = profile || {};
@@ -134,6 +134,7 @@ var ba = new botauth.BotAuthenticator(server, bot, { baseUrl : "https://medibot.
             return done(null, profile);
         });
 	});
+
 
 bot.dialog("profile", [].concat( 
     ba.authenticate("facebook"),
