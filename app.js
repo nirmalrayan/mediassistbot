@@ -24,8 +24,8 @@ server.listen(process.env.PORT || process.env.port || 3000, function()
 {
    console.log('%s listening to %s', server.name, server.url); 
 });
-server.use(restify.plugins.bodyParser());
-server.use(restify.plugins.queryParser());
+//server.use(restify.plugins.bodyParser());
+//server.use(restify.plugins.queryParser());
 }catch(err){
 	console.log("There was an error while listening to restify server: "+err);
 }
@@ -3346,7 +3346,7 @@ bot.dialog('facebook', new builder.IntentDialog({ recognizers : [ recog ]})
     })
 );*/
 
-
+/*
 server.post('/fbloginbutton', (req, res, session) => {
     session.beginDialog('profile');
-});
+});*/
