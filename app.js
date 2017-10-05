@@ -18,17 +18,15 @@ const FacebookStrategy = require("passport-facebook").Strategy;
 const BOTAUTH_SECRET = "TESTBOT";  
 
 // Setup Restify Server
-try{
+
 var server = restify.createServer();
 server.listen(process.env.PORT || process.env.port || 3000, function() 
 {
    console.log('%s listening to %s', server.name, server.url); 
 });
-//server.use(restify.plugins.bodyParser());
-//server.use(restify.plugins.queryParser());
-}catch(err){
-	console.log("There was an error while listening to restify server: "+err);
-}
+server.use(restify.plugins.bodyParser());
+server.use(restify.plugins.queryParser());
+
 
 // Create chat bot
 var connector = new builder.ChatConnector
@@ -82,12 +80,12 @@ var bot = new builder.UniversalBot(connector,
 					builder.CardAction.imBack(session, "Show Menu", "Show Menu")
 				]);
 
-//				session.beginDialog('hello'); 
+				session.beginDialog('hello'); 
 			
 			}
 			session.send(new builder.Message(session)
 				.addAttachment(welcomeCard));
-//			session.beginDialog("/refer");
+			session.beginDialog("/refer");
 		}	
 	});
 
@@ -98,9 +96,9 @@ var bot = new builder.UniversalBot(connector,
 })); 
 	
 //LUIS Configuration
-//var recognizer = new builder.LuisRecognizer("https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/4e0df9eb-a11f-495d-8e90-b0579fde9b86?subscription-key=5ccd61decaf04a0caff771ac48a46ded&timezoneOffset=330&verbose=true&q=");
+var recognizer = new builder.LuisRecognizer("https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/4e0df9eb-a11f-495d-8e90-b0579fde9b86?subscription-key=5ccd61decaf04a0caff771ac48a46ded&timezoneOffset=330&verbose=true&q=");
 //bot.recognizer(recog);
-/*
+
 bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer]})
 //    .matches("SayHello", "hello")
     .matches("GetProfile", "profile")
@@ -110,7 +108,7 @@ bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer]})
     })
 );
 
-*/
+
 bot.dialog("hello", (session, args) => {
 	if(session.userData.fbLogin){
 		session.endDialog("Hello. You can type `\"show menu\"` or `\"#\"` at any time of the conversation to go back to the main menu.");
