@@ -50,7 +50,7 @@ var bot = new builder.UniversalBot(connector,
 				.buttons([
 					builder.CardAction.imBack(session, "Show Menu", "Show Menu")
 				]);
-			session.userData.name = session.message.address.user.name;
+			session.userData.masterName = session.message.address.user.name;
 		}
 		else{
 			if(session.userData.masterName){
@@ -123,8 +123,8 @@ bot.dialog("hello", (session, args) => {
 var ba = new botauth.BotAuthenticator(server, bot, { baseUrl : "https://medibot.azurewebsites.net", secret : BOTAUTH_SECRET })
     .provider("facebook", (options) => { 
         return new FacebookStrategy({
-            clientID : "1893719730892870",
-            clientSecret : "6e3f289736f656fc2b1288abf93d2504",
+            clientID : process.env.FB_APP_ID,
+            clientSecret : process.env.FB_APP_PWD,
             callbackURL : options.callbackURL
         }, (accessToken, refreshToken, profile, done) => {
             profile = profile || {};
