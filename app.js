@@ -123,8 +123,8 @@ bot.dialog("hello", (session, args) => {
 var ba = new botauth.BotAuthenticator(server, bot, { baseUrl : "https://medibot.azurewebsites.net", secret : BOTAUTH_SECRET })
     .provider("facebook", (options) => { 
         return new FacebookStrategy({
-            clientID : "1893719730892870",
-            clientSecret : "98e0e4ebdbfd51b8691640b0fe2d574c",
+            clientID : "237966616730835",
+            clientSecret : "fbbb50fedbbf667de389668d9abb1a5b",
             callbackURL : options.callbackURL
         }, (accessToken, refreshToken, profile, done) => {
             profile = profile || {};
