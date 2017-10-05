@@ -33,7 +33,6 @@ server.use(restify.plugins.queryParser());
 var connector = new builder.ChatConnector
 ({ appId: process.env.MY_APP_ID, appPassword: process.env.MY_APP_PASSWORD }); 
 
-
 //MAIN.
 var bot = new builder.UniversalBot(connector,
 
