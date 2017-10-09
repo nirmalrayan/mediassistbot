@@ -50,7 +50,6 @@ var bot = new builder.UniversalBot(connector,
 				.buttons([
 					builder.CardAction.imBack(session, "Show Menu", "Show Menu")
 				]); 
-				//session.send("Hi "+session.userData.masterName);
 		}
 		else{
 			if(session.userData.masterName){
@@ -81,10 +80,10 @@ var bot = new builder.UniversalBot(connector,
 				]);
 			
 			}
+		}	
 			session.send(new builder.Message(session)
 				.addAttachment(welcomeCard));
 			session.beginDialog("/refer");
-		}	
 	});
 
 //Direct to index.html web page
