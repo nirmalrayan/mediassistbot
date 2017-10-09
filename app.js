@@ -51,7 +51,7 @@ var bot = new builder.UniversalBot(connector,
 					builder.CardAction.imBack(session, "Show Menu", "Show Menu")
 				]); */
 				session.send("Hi "+session.message.address.user.name);
-			session.userData.masterName = session.message.address.user.name;
+			//session.userData.masterName = session.message.address.user.name;
 		}
 		else{
 			if(session.userData.masterName){
