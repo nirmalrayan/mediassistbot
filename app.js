@@ -40,7 +40,7 @@ var bot = new builder.UniversalBot(connector,
 		
 		if(session.message.address.channelId === 'facebook'){
  			var welcomeCard = new builder.HeroCard(session)
-				.title("Hi %s! Nice to see you. I am MediBot", session.message.address.user.name)
+				.title("Hi "+session.message.address.user.name+"! Nice to see you. I am MediBot")
 				.subtitle("I will be your personal healthcare assistant. ℹ️ Type \"show menu\" or \"#\" at any time to see the menu.")
 				.images([
 					new builder.CardImage(session)
