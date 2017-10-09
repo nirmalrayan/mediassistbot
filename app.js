@@ -39,7 +39,7 @@ var bot = new builder.UniversalBot(connector,
     function (session) {
 		
 		if(session.message.address.channelId === 'facebook'){
-			var welcomeCard = new builder.HeroCard(session)
+/* 			var welcomeCard = new builder.HeroCard(session)
 				.title("Hi %s! Nice to see you. I am MediBot", session.message.address.user.name)
 				.subtitle("I will be your personal healthcare assistant. ℹ️ Type \"show menu\" or \"#\" at any time to see the menu.")
 				.images([
@@ -49,7 +49,8 @@ var bot = new builder.UniversalBot(connector,
 				])
 				.buttons([
 					builder.CardAction.imBack(session, "Show Menu", "Show Menu")
-				]);
+				]); */
+				session.send("Hi "+session.message.address.user.name);
 			session.userData.masterName = session.message.address.user.name;
 		}
 		else{
