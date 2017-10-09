@@ -100,9 +100,9 @@ var recognizer = new builder.LuisRecognizer("https://westus.api.cognitive.micros
 //bot.recognizer(recog);
 
 bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer]})
-//    .matches("SayHello", "hello")
-    .matches("GetProfile", "profile")
-    .matches("Logout", "logout")
+    .matches("SayHello", "hello")
+ //   .matches("GetProfile", "profile")
+ //  .matches("Logout", "logout")
     .onDefault((session, args) => {
         session.endDialog("I didn't understand that.  Try saying 'show my profile'.");
     })
@@ -118,7 +118,7 @@ bot.dialog("hello", (session, args) => {
 }).triggerAction({
     matches: 'SayHello'
 });
-
+/*
 // Initialize with the strategies we want to use
 var ba = new botauth.BotAuthenticator(server, bot, { baseUrl : "https://medibot.azurewebsites.net", secret : BOTAUTH_SECRET })
     .provider("facebook", (options) => { 
@@ -135,7 +135,8 @@ var ba = new botauth.BotAuthenticator(server, bot, { baseUrl : "https://medibot.
         });
 	});
 
-
+*/
+/*
 bot.dialog("profile", [].concat( 
     ba.authenticate("facebook"),
     function(session, results) {
@@ -193,7 +194,7 @@ bot.dialog("logout", [
     }
 ]); 
 
-
+*/
 	
 // Dialog to ask for Master Name
 bot.dialog('askName',[
