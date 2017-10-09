@@ -79,8 +79,6 @@ var bot = new builder.UniversalBot(connector,
 				.buttons([
 					builder.CardAction.imBack(session, "Show Menu", "Show Menu")
 				]);
-
-				session.beginDialog('hello'); 
 			
 			}
 			session.send(new builder.Message(session)
@@ -104,7 +102,7 @@ bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer]})
  //   .matches("GetProfile", "profile")
  //  .matches("Logout", "logout")
     .onDefault((session, args) => {
-        session.endDialog("I didn't understand that.  Try saying 'show my profile'.");
+        session.endDialog("I didn't understand that.  Try saying 'show menu' or '#' to go back to the main menu.");
     })
 );
 
