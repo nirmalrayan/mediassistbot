@@ -98,20 +98,16 @@ var recognizer = new builder.LuisRecognizer("https://westus.api.cognitive.micros
 
 bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer]})
     .matches("SayHello", "hello")
- //   .matches("GetProfile", "profile")
+    .matches("GetName", "setName")
  //  .matches("Logout", "logout")
     .onDefault((session, args) => {
-        session.endDialog("I didn't understand that.  Try saying 'show menu' or '#' to go back to the main menu.");
+        session.endDialog("Sorry, I did not understand \`%s\`.  Try saying `show menu` or `#` to go back to the main menu and `help` if you need assistance.", session.message.text);
     })
 );
 
 
 bot.dialog("hello", (session, args) => {
-	if(session.userData.fbLogin){
 		session.endDialog("Hello. You can type `\"show menu\"` or `\"#\"` at any time of the conversation to go back to the main menu.");
-	}else{
-		session.endDialog("Hello. I can help you get information from facebook.  Try saying `\"get profile\"`.");
-	}
 }).triggerAction({
     matches: 'SayHello'
 });
@@ -194,18 +190,28 @@ bot.dialog("logout", [
 */
 	
 // Dialog to ask for Master Name
-bot.dialog('askName',[
-	function (session, args){
-			builder.Prompts.text(session, "What's your name?");
+bot.dialog('setName',[
+	function (session, args, next){
+			var nameEntity = builder.EntityRecognizer.findEntity(args.entities, 'SetName');
+			if(nameEntity){
+				session.userData.masterName = nameEntity.entity;
+//				next({ response: nameEntity.entity });
+				session.endConversation('Welcome, '+ session.userData.masterName+"!");
+			}
+			else{
+				builder.Prompts.text(session, 'Please enter your name');
+			}
 	},
-	function(session, results) {
-		session.userData.masterName =  results.response;
-		session.endConversation('Welcome, '+ results.response);
+	function(session, results){
+		session.userData.masterName = results.response;
+		session.endConversation('Welcome, '+ session.userData.masterName+"!");
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
 	}
-]);
+]).triggerAction({
+    matches: 'GetName'
+});;
 
 	
 // Dialog to show main menu
@@ -1892,9 +1898,8 @@ bot.dialog('askforCallCenter',[
 	}
 ])
 .triggerAction({
-	matches: [/customer/i, /support/i, /call center/i, /call centre/i, /customer service/i, /cc number/i, /cc/i, /helpline/i, /toll/i, /tech support/i],
+	matches: [/customer/i, /support/i, /call center/i, /call centre/i, /customer service/i, /cc number/i, /cc/i, /helpline/i, /toll/i, /tech support/i]
 	// /^customer$|^support$|^call centre$|^customer service$|^ cc number$|^cc$|^helpline$|^toll free$|^call center$/i,
-	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
 	
 });
 
@@ -1908,9 +1913,8 @@ bot.dialog('askforHR',[
 	}
 ])
 .triggerAction({
-	matches: [/HR/i, /join.*company/i, /hr department/i, /human resource/i, /hr dept/i, /career/i, /job/i, /join/i, /opportunity/i, /opportunities/i, /opening/i, /fresher/i],
+	matches: [/HR/i, /join.*company/i, /hr department/i, /human resource/i, /hr dept/i, /career/i, /job/i, /join/i, /opportunity/i, /opportunities/i, /opening/i, /fresher/i]
 	// /^HR$|^human resource$|^hr dept$|^hr department$|^ join.*company$|^careers$|^career$|^job$|^join$|^job|^opportunit$|^opening$|^fresher$|^$|^$/i,
-	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
 	
 });
 
@@ -1924,8 +1928,7 @@ bot.dialog('askforInvestigation',[
 	}
 ])
 .triggerAction({
-	matches: [/investigation/i, /forge/i, /malpractice/i, /fishy/i, /suspicious/i, /fordge/i],
-	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
+	matches: [/investigation/i, /forge/i, /malpractice/i, /fishy/i, /suspicious/i, /fordge/i]
 	
 });
 
@@ -1940,7 +1943,6 @@ bot.dialog('askforGrievance',[
 ])
 .triggerAction({
 	matches: [/grievance/i, /disappoint/i, /angry/i ,/disappointed/i, /dissatisfied/i, /unhappy/i, /horrible/i, /worst/i, /bad/i, /poor/i, /not settled/i, /not paid/i, /not received/i, /very poor/i, /very bad/i, /terrible/i, /not received any amount/i, /not intimated the hospital/i, /not working/i, /support is slow/i, /I did not get/i, /bad service/i, /I did not receive/i, /bad service/i, /bad tpa/i, /bad/i, /worst/i, /complaint/i],
-	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
 	
 });
 
@@ -1954,23 +1956,21 @@ bot.dialog('askforOffshore',[
 	}
 ])
 .triggerAction({
-	matches: [/offshore/i, /abroad/i, /overseas contact number/i, /USA/i, /Australia/i, /overseas/i],
-	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
+	matches: [/offshore/i, /abroad/i, /overseas contact number/i, /USA/i, /Australia/i, /overseas/i]
 	
 });
 
 // Dialog to redirect to General Query
 bot.dialog('askforGeneralQuery',[
 	function (session){
-		session.send("ℹ️ For all your claim/application (MediBuddy)/transaction related queries kindly write to `gethelp@mahs.in` or call us at `1800 425 9449`");
+		session.endConversation("ℹ️ For all your claim/application (MediBuddy)/transaction related queries kindly write to `gethelp@mahs.in` or call us at `1800 425 9449`");
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
 	}
 ])
 .triggerAction({
-	matches: [/register/i, /application/i, /app/i, /medibuddy/i, /transaction/i, /query/i, /queries/i, /question/i, /doubt/i, /clarify/i, /clarity/i, /contact information/i, /registration/i, /can i submit/i, /for how many days/i, /how many/i, /help us urgently/i, /help us/i, /purchase/i, /buy/i, /how much/i, /log in/i, /please guide/i, /responding/i, /please help/i],
-	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
+	matches: [/register/i, /application/i, /app/i, /medibuddy/i, /transaction/i, /query/i, /queries/i, /question/i, /doubt/i, /clarify/i, /clarity/i, /contact information/i, /registration/i, /can i submit/i, /for how many days/i, /how many/i, /help us urgently/i, /help us/i, /purchase/i, /buy/i, /how much/i, /log in/i, /please guide/i, /responding/i, /please help/i]
 	
 });
 
@@ -1985,7 +1985,6 @@ bot.dialog('askforAbuse',[
 ])
 .triggerAction({
 	matches: [/anal/i, /ass/i, /asshole/i ,/balls/i, /bitch/i, /butt/i, /fuck/i, /cum/i, /cunt/i, /cock/i, /retard/i, /psycho/i, /mental/i, /finger/i, /jerk/i, /nudity/i, /milf/i, /piss/i, /shit/i, /rape/i, /tit/i, /vagina/i, /sucker/i, /sex/i, /semen/i, /slut/i, /hump/i, /suck/i]
-	
 });
 
 // Get random integer between min (inclusive) and max (inclusive)
