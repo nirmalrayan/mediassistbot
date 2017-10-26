@@ -102,8 +102,8 @@ bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer]})
 	.matches("CustomerCare", "askforCallCenter")
 	.matches("HR", "askforHR")
 	.matches("Grievance", "askforGrievance")
-	.matches("Abuse","askforAbuse")
 	.matches("GeneralQuery", "askforGeneralQuery")
+	.matches("Abuse","askforAbuse")
  //  .matches("Logout", "logout")
     .onDefault((session, args) => {
         session.endDialog("Sorry, I did not understand \`%s\`.  Try saying `show menu` or `#` to go back to the main menu and `help` if you need assistance.", session.message.text);
@@ -2032,14 +2032,57 @@ bot.dialog('sayThanks',[
 //-------------------------------------------------------------------------------------------------------------------------------------
 
 // INIFINITI SERVICES
+// Dialog to ask for Healthcheck City - Facebook
+bot.dialog('askforhealthcheckCityFB',[
+	function (session){
+		const citieslist = ['Bengaluru', 'Chennai', 'Delhi', 'Hyderabad','Kolkata', 'Mumbai', 'Pune', 'Other'];
+		const card = new builder.ThumbnailCard(session)
+					.text('Please choose from the list of cities')
+					.title('Cities')
+					.buttons(choices.map(choice => new builder.CardAction.imBack(session, choice, choice)));
+		const message = new builder.Message(session)
+						.addAttachment(card);
+		builder.Prompts.choice(session, message, citieslist);		
+	},
+	function(session, results) {
+		if(results.response && results.response.entity){
+			session.userData.healthcheckCity = results.response.entity;
+			session.endConversation(`You chose ${results.response.entity}`);
+		}
+		else	
+			session.endConversation(`Sorry, i didn't understand your choice.`);
+	}
+]);
 
+
+// Dialog to ask for Healthcheck Category - Facebook
+bot.dialog('askforhealthcheckCategoryFB',[
+	function (session){
+		const categorylist = ['Preventive', 'Diabetes', 'Cardiac', 'Cancer'];
+		const card = new builder.ThumbnailCard(session)
+					.text('Please choose from the list of categories')
+					.title('Cities')
+					.buttons(choices.map(choice => new builder.CardAction.imBack(session, choice, choice)));
+		const message = new builder.Message(session)
+						.addAttachment(card);
+		builder.Prompts.choice(session, message, categorylist);		
+	},
+	function(session, results) {
+		if(results.response && results.response.entity){
+			session.userData.healthcheckCategory = results.response.entity;
+			session.endConversation(`You chose ${results.response.entity}`);
+		}
+		else	
+			session.endConversation(`Sorry, i didn't understand your choice.`);
+	}
+]);
 
 // Dialog to 
 bot.dialog('healthCheck',[
 	function (session){
 		session.beginDialog('askforhealthcheckCity');
 	},
-	function(sesison, results){	
+	function(session, results){	
 		session.endDialogWithResult(results);		
 	}
 ])
@@ -2062,6 +2105,11 @@ bot.dialog('askforhealthcheckCity',[
 				session.beginDialog('askforMore');
 				return;
 			}
+			if(session.message.address.channelId === 'facebook'){
+					session.send('Our services are available in Bengaluru, Chennai, Delhi, Hyderabad, Kolkata, Mumbai, Pune and other cities.')
+					session.beginDialog('askforhealthcheckCityFB');
+					session.beginDialog('askforhealthcheckCategoryFB');
+			}else{
 
 				var card = 
 				{
@@ -2167,7 +2215,7 @@ bot.dialog('askforhealthcheckCity',[
 				};
 				session.send(new builder.Message(session)
 					.addAttachment(card));
-			
+			}
 		
 	},
 	function(session, results) {
