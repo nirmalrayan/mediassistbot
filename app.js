@@ -2225,6 +2225,11 @@ function processSubmitAction(session, message){
 		session.userData.healthcheckCity = message["city"];
 		session.userData.healthcheckCategory = message["category"];	
 		if(message["city"] !== "Other"){
+			if(session.message.address.channelId === 'facebook'){
+					session.beginDialog('displayhealthcheckFB');
+					return;
+				//	session.beginDialog('askforhealthcheckCategoryFB');
+			}
 			healthcheckCard = new builder.HeroCard(session)
 									.title("Health Check Packages")
 									.subtitle("Click below to view packages from hospitals in your city")
