@@ -2034,7 +2034,7 @@ bot.dialog('sayThanks',[
 // INIFINITI SERVICES
 // Dialog to ask for Healthcheck City - Facebook
 bot.dialog('askforhealthcheckCityFB',[
-	function (session){
+	function (session, args, next){
 		const citieslist = ['Bengaluru', 'Chennai', 'Delhi', 'Hyderabad','Kolkata', 'Mumbai', 'Pune', 'Other'];
 		const card = new builder.ThumbnailCard(session)
 					.text('Please choose from the list of cities')
@@ -2044,30 +2044,30 @@ bot.dialog('askforhealthcheckCityFB',[
 						.addAttachment(card);
 		builder.Prompts.choice(session, message, citieslist);		
 	},
-	function(session, results) {
+	function(session, results, next) {
 		if(results.response && results.response.entity){
 			session.userData.healthcheckCity = results.response.entity;
-			session.endDialog(`You chose ${results.response.entity}`);
+			session.send(`You chose ${results.response.entity}`);
 		}
 		else	
-			session.endDialog(`Sorry, i didn't understand your choice.`);
+			session.send(`Sorry, i didn't understand your choice.`);
 	}
 ]);
 
 
 // Dialog to ask for Healthcheck Category - Facebook
 bot.dialog('askforhealthcheckCategoryFB',[
-	function (session){
+	function (session, args, next){
 		const categorylist = ['Preventive', 'Diabetes', 'Cardiac', 'Cancer'];
 		const card = new builder.ThumbnailCard(session)
 					.text('Please choose from the list of categories')
-					.title('Cities')
+					.title('Categories')
 					.buttons(categorylist.map(choice => new builder.CardAction.imBack(session, choice, choice)));
 		const message = new builder.Message(session)
 						.addAttachment(card);
 		builder.Prompts.choice(session, message, categorylist);		
 	},
-	function(session, results) {
+	function(session, results, next) {
 		if(results.response && results.response.entity){
 			session.userData.healthcheckCategory = results.response.entity;
 			session.endConversation(`You chose ${results.response.entity}`);
