@@ -2045,7 +2045,7 @@ bot.dialog('displayhealthcheckFB',
 											.alt('Health Check Packages')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/", "Visit MediBuddy Infiniti")
+										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/", "View Packages")
 										]);
 		session.endConversation(new builder.Message(session)
 			.addAttachment(healthcheckCard));		
@@ -2097,12 +2097,6 @@ bot.dialog('askforhealthcheckCity',[
 	function (session){
 		//Make POST request to MA Server
 		
-			if(session.message.address.channelId === 'facebook'){
-					session.beginDialog('displayhealthcheckFB');
-					return;
-				//	session.beginDialog('askforhealthcheckCategoryFB');
-			}else{
-
 			if(session.message && session.message.value){
 				processSubmitAction(session, session.message.value);
 				session.endConversation();
@@ -2213,7 +2207,7 @@ bot.dialog('askforhealthcheckCity',[
 				};
 				session.send(new builder.Message(session)
 					.addAttachment(card));
-			}
+			
 		
 	},
 	function(session, results) {
@@ -2228,7 +2222,6 @@ function processSubmitAction(session, message){
 			if(session.message.address.channelId === 'facebook'){
 					session.beginDialog('displayhealthcheckFB');
 					return;
-				//	session.beginDialog('askforhealthcheckCategoryFB');
 			}
 			healthcheckCard = new builder.HeroCard(session)
 									.title("Health Check Packages")
@@ -2261,7 +2254,6 @@ function processSubmitAction(session, message){
 			.addAttachment(healthcheckCard));
 		
 }
-
 
 
 // Dialog to Order Medicines
