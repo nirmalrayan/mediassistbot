@@ -2039,7 +2039,7 @@ bot.dialog('askforhealthcheckCityFB',[
 		const card = new builder.ThumbnailCard(session)
 					.text('Please choose from the list of cities')
 					.title('Cities')
-					.buttons(choices.map(choice => new builder.CardAction.imBack(session, choice, choice)));
+					.buttons(citieslist.map(choice => new builder.CardAction.imBack(session, choice, choice)));
 		const message = new builder.Message(session)
 						.addAttachment(card);
 		builder.Prompts.choice(session, message, citieslist);		
@@ -2062,7 +2062,7 @@ bot.dialog('askforhealthcheckCategoryFB',[
 		const card = new builder.ThumbnailCard(session)
 					.text('Please choose from the list of categories')
 					.title('Cities')
-					.buttons(choices.map(choice => new builder.CardAction.imBack(session, choice, choice)));
+					.buttons(categorylist.map(choice => new builder.CardAction.imBack(session, choice, choice)));
 		const message = new builder.Message(session)
 						.addAttachment(card);
 		builder.Prompts.choice(session, message, categorylist);		
