@@ -2103,6 +2103,11 @@ bot.dialog('askforhealthcheckCity',[
 				session.beginDialog('askforMore');
 				return;
 			}
+
+			if(session.message.address.channelId === 'facebook'){
+				session.beginDialog('displayhealthcheckFB');
+				return;
+			}
 				var card = 
 				{
 				  "contentType": "application/vnd.microsoft.card.adaptive",
