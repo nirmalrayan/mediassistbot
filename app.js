@@ -2097,18 +2097,18 @@ bot.dialog('askforhealthcheckCity',[
 	function (session){
 		//Make POST request to MA Server
 		
-			if(session.message && session.message.value){
-				processSubmitAction(session, session.message.value);
-				session.endConversation();
-				session.beginDialog('askforMore');
-				return;
-			}
 			if(session.message.address.channelId === 'facebook'){
 					session.beginDialog('displayhealthcheckFB');
 					return;
 				//	session.beginDialog('askforhealthcheckCategoryFB');
 			}else{
 
+			if(session.message && session.message.value){
+				processSubmitAction(session, session.message.value);
+				session.endConversation();
+				session.beginDialog('askforMore');
+				return;
+			}
 				var card = 
 				{
 				  "contentType": "application/vnd.microsoft.card.adaptive",
