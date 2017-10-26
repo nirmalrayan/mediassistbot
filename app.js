@@ -2047,10 +2047,10 @@ bot.dialog('askforhealthcheckCityFB',[
 	function(session, results) {
 		if(results.response && results.response.entity){
 			session.userData.healthcheckCity = results.response.entity;
-			session.endConversation(`You chose ${results.response.entity}`);
+			session.endDialog(`You chose ${results.response.entity}`);
 		}
 		else	
-			session.endConversation(`Sorry, i didn't understand your choice.`);
+			session.endDialog(`Sorry, i didn't understand your choice.`);
 	}
 ]);
 
