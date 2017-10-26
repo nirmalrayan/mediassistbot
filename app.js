@@ -2033,7 +2033,7 @@ bot.dialog('sayThanks',[
 
 // INIFINITI SERVICES
 // Dialog to ask for Healthcheck City - Facebook
-bot.dialog('askforhealthcheckCityFB',[
+bot.dialog('askforhealthcheckCityFB',
 	function (session, args, next){
 		const citieslist = ['Bengaluru', 'Chennai', 'Delhi', 'Hyderabad','Kolkata', 'Mumbai', 'Pune', 'Other'];
 		const card = new builder.ThumbnailCard(session)
@@ -2052,11 +2052,11 @@ bot.dialog('askforhealthcheckCityFB',[
 		else	
 			session.endDialog(`Sorry, i didn't understand your choice.`);
 	}
-]);
+);
 
 
 // Dialog to ask for Healthcheck Category - Facebook
-bot.dialog('askforhealthcheckCategoryFB',[
+bot.dialog('askforhealthcheckCategoryFB',
 	function (session, args, next){
 		const categorylist = ['Preventive', 'Diabetes', 'Cardiac', 'Cancer'];
 		const card = new builder.ThumbnailCard(session)
@@ -2075,7 +2075,7 @@ bot.dialog('askforhealthcheckCategoryFB',[
 		else	
 			session.endDialog(`Sorry, i didn't understand your choice.`);
 	}
-]);
+);
 
 // Dialog to 
 bot.dialog('healthCheck',[
