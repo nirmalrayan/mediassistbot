@@ -2033,28 +2033,26 @@ bot.dialog('sayThanks',[
 
 // INIFINITI SERVICES
 // Dialog to ask for Healthcheck City - Facebook
-bot.dialog('askforhealthcheckCityFB',[
-	function (session, args, next){
-		const citieslist = ['Bengaluru', 'Chennai', 'Delhi', 'Hyderabad','Kolkata', 'Mumbai', 'Pune', 'Other'];
-		const card = new builder.ThumbnailCard(session)
-					.text('Please choose from the list of cities')
-					.title('Cities')
-					.buttons(citieslist.map(choice => new builder.CardAction.imBack(session, choice, choice)));
-		const message = new builder.Message(session)
-						.addAttachment(card);
-		builder.Prompts.choice(session, message, citieslist);		
-	},
-	function(session, results, next) {
-		if(results.response && results.response.entity){
-			session.userData.healthcheckCity = results.response.entity;
-			session.endDialog(`You chose ${results.response.entity}`);
-		}
-		else	
-			session.endDialog(`Sorry, i didn't understand your choice.`);
+bot.dialog('displayhealthcheckFB',
+	function (session){
+		healthcheckCard = new builder.HeroCard(session)
+									.title("Health Check Packages")
+									.subtitle("Click below to view packages from hospitals in your city")
+									.text("https://infiniti.medibuddy.in")
+									.images([
+										new builder.CardImage(session)
+											.url('https://i.imgur.com/UZXZjqO.png')
+											.alt('Health Check Packages')
+									])
+									.buttons([
+										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/", "Visit MediBuddy Infiniti")
+										]);
+		session.endConversation(new builder.Message(session)
+			.addAttachment(healthcheckCard));		
 	}
-]);
+);
 
-
+/* 
 // Dialog to ask for Healthcheck Category - Facebook
 bot.dialog('askforhealthcheckCategoryFB',
 	function (session, args, next){
@@ -2075,7 +2073,7 @@ bot.dialog('askforhealthcheckCategoryFB',
 		else	
 			session.endDialog(`Sorry, i didn't understand your choice.`);
 	}
-);
+); */
 
 // Dialog to 
 bot.dialog('healthCheck',[
@@ -2106,9 +2104,9 @@ bot.dialog('askforhealthcheckCity',[
 				return;
 			}
 			if(session.message.address.channelId === 'facebook'){
-					session.send('Our services are available in Bengaluru, Chennai, Delhi, Hyderabad, Kolkata, Mumbai, Pune and other cities.')
-					session.beginDialog('askforhealthcheckCityFB');
-					session.beginDialog('askforhealthcheckCategoryFB');
+					session.beginDialog('displayhealthcheckFB');
+					return;
+				//	session.beginDialog('askforhealthcheckCategoryFB');
 			}else{
 
 				var card = 
