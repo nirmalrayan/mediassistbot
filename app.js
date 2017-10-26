@@ -2237,6 +2237,11 @@ function processSubmitAction(session, message){
 										]);
 		}
 		else{
+			
+			if(session.message.address.channelId === 'facebook'){
+					session.beginDialog('displayhealthcheckFB');
+					return;
+			}
 		healthcheckCard = new builder.HeroCard(session)
 									.title("Health Check Packages")
 									.subtitle("Click below to view packages from hospitals in your city")
