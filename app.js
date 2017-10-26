@@ -2047,10 +2047,10 @@ bot.dialog('askforhealthcheckCityFB',[
 	function(session, results, next) {
 		if(results.response && results.response.entity){
 			session.userData.healthcheckCity = results.response.entity;
-			session.send(`You chose ${results.response.entity}`);
+			session.endDialog(`You chose ${results.response.entity}`);
 		}
 		else	
-			session.send(`Sorry, i didn't understand your choice.`);
+			session.endDialog(`Sorry, i didn't understand your choice.`);
 	}
 ]);
 
@@ -2070,10 +2070,10 @@ bot.dialog('askforhealthcheckCategoryFB',[
 	function(session, results, next) {
 		if(results.response && results.response.entity){
 			session.userData.healthcheckCategory = results.response.entity;
-			session.endConversation(`You chose ${results.response.entity}`);
+			session.endDialog(`You chose ${results.response.entity}`);
 		}
 		else	
-			session.endConversation(`Sorry, i didn't understand your choice.`);
+			session.endDialog(`Sorry, i didn't understand your choice.`);
 	}
 ]);
 
