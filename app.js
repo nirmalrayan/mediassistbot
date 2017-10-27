@@ -2032,7 +2032,7 @@ bot.dialog('sayThanks',[
 //-------------------------------------------------------------------------------------------------------------------------------------
 
 // INIFINITI SERVICES
-// Dialog to ask for Healthcheck City - Facebook
+// Dialog to display health check card - Facebook
 bot.dialog('displayhealthcheckFB',
 	function (session){
 		healthcheckCard = new builder.HeroCard(session)
@@ -2052,6 +2052,100 @@ bot.dialog('displayhealthcheckFB',
 	}
 );
 
+// Dialog to display medicine card - Facebook
+bot.dialog('displaymedicineFB',
+	function (session){
+		medicineCard = new builder.HeroCard(session)
+									.title("Order Medicine")
+									.subtitle("Book prescription medicines effortlessly")
+									.text("https://infiniti.medibuddy.in")
+									.images([
+										new builder.CardImage(session)
+											.url('https://i.imgur.com/oCmpQ56.png')
+											.alt('Order Medicine')
+									])
+									.buttons([
+										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/", "Order Medicines")
+										]);
+		session.send(new builder.Message(session)
+			.addAttachment(medicineCard));	
+	}
+);
+
+// Dialog to display consultation card - Facebook
+bot.dialog('displayconsultationFB',
+	function (session){
+			consultationCard = new builder.HeroCard(session)
+									.title("Consultation")
+									.subtitle("I've curated a list of "+message["speciality"]+"s in "+message["city"]+". Click below to know more")
+									.text("https://infiniti.medibuddy.in")
+									.images([
+										new builder.CardImage(session)
+											.url('https://i.imgur.com/E8kTRGq.png')
+											.alt('Consultations')
+									])
+									.buttons([
+										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/", "View Consultations")
+										]);
+		session.send(new builder.Message(session)
+			.addAttachment(consultationCard));
+	}
+);// Dialog to display home health care card - Facebook
+bot.dialog('displayhomehealthcareFB',
+	function (session){
+			homehealthcareCard = new builder.HeroCard(session)
+									.title("Home Health Care")
+									.subtitle("Click below to view available home health care services in "+message["city"]+" for "+message["service"])
+									.text("https://infiniti.medibuddy.in")
+									.images([
+										new builder.CardImage(session)
+											.url('https://i.imgur.com/NOVSZ7T.png')
+											.alt('Home Health Care')
+									])
+									.buttons([
+										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/", "View Services")
+										]);
+		session.send(new builder.Message(session)
+			.addAttachment(homehealthcareCard));
+	}
+);// Dialog to display tele consultation card - Facebook
+bot.dialog('displayteleconsultationFB',
+	function (session){
+
+		teleconsultationCard = new builder.HeroCard(session)
+								.title("Tele Consultation")
+								.subtitle("Book a telephonic consultation with our medical professionals at the lowest cost. Click below to learn more.")
+								.images([
+									new builder.CardImage(session)
+										.url('https://i.imgur.com/Ps8hw1x.png')
+										.alt('Tele Consultation')
+								])
+								.buttons([
+									builder.CardAction.imBack(session, "https://infiniti.medibuddy.in/onlineservice/4f81d4702c8242009081cfde6301dd38//General%20Physician", "Tele Consultation")
+									]);
+		
+		session.send(new builder.Message(session)
+			.addAttachment(teleconsultationCard));	
+	}
+);// Dialog to display lab test card - Facebook
+bot.dialog('displaylabtestFB',
+	function (session){
+		labtestCard = new builder.HeroCard(session)
+								.title("Lab Test")
+								.subtitle("Click below to view available lab tests in your city")
+								.text("https://infiniti.medibuddy.in")
+								.images([
+									new builder.CardImage(session)
+										.url('https://i.imgur.com/Y3DtlFx.png')
+										.alt('Lab Test')
+								])
+								.buttons([
+									builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/labtest/f4a83a18cec74f1786b8fd2b9aff4c0c//"+session.userData.labtest+"/?c="+session.userData.labtestCity, "View Lab Tests")
+									]);
+		session.send(new builder.Message(session)
+			.addAttachment(labtestCard));
+	}
+);
 /* 
 // Dialog to ask for Healthcheck Category - Facebook
 bot.dialog('askforhealthcheckCategoryFB',
@@ -2295,6 +2389,12 @@ bot.dialog('askformedicineCity',[
 				return;
 			}
 
+			
+			if(session.message.address.channelId === 'facebook'){
+				session.beginDialog('displaymedicineFB');
+				return;
+			}
+
 				var card = 
 				{
 				  "contentType": "application/vnd.microsoft.card.adaptive",
@@ -2410,6 +2510,10 @@ bot.dialog('askformedicineCity',[
 
 function processSubmitAction2(session, message){
 		session.userData.medicineCity = message["city"];
+		if(session.message.address.channelId === 'facebook'){
+			session.beginDialog('displaymedicineFB');
+			return;
+		}		
 		if(message["pincode"].toString().length !== 6){
 			session.send("The pin number you have entered in incorrect. It should be exactly `six` digits long.");
 		}else{
@@ -2462,6 +2566,10 @@ bot.dialog('askforconsultationCity',[
 				return;
 			}
 
+			if(session.message.address.channelId === 'facebook'){
+				session.beginDialog('displayconsultationFB');
+				return;
+			}
 				var card = 
 				{
 				  "contentType": "application/vnd.microsoft.card.adaptive",
@@ -2697,6 +2805,10 @@ bot.dialog('askforconsultationCity',[
 ]);
 
 function processSubmitAction3(session, message){
+		if(session.message.address.channelId === 'facebook'){
+			session.beginDialog('displayconsultationFB');
+			return;
+		}	
 		session.userData.consultationCity = message["city"];
 			session.userData.consultationSpeciality = message["speciality"];				
 			consultationCard = new builder.HeroCard(session)
@@ -2746,6 +2858,10 @@ bot.dialog('askforhomehealthcareCity',[
 				return;
 			}
 
+			if(session.message.address.channelId === 'facebook'){
+				session.beginDialog('displayhomehealthcareFB');
+				return;
+			}
 				var card = 
 				{
 				  "contentType": "application/vnd.microsoft.card.adaptive",
@@ -2865,6 +2981,10 @@ bot.dialog('askforhomehealthcareCity',[
 ]);
 
 function processSubmitAction4(session, message){
+		if(session.message.address.channelId === 'facebook'){
+			session.beginDialog('displayhomehealthcareFB');
+			return;
+		}	
 		session.userData.homehealthcareCity = message["city"];
 			session.userData.homehealthcareService = message["service"];				
 			homehealthcareCard = new builder.HeroCard(session)
@@ -2910,7 +3030,10 @@ bot.dialog('askforTeleConsultationDetails',[
 				session.beginDialog('askforMore');
 				return;
 			}
-
+			if(session.message.address.channelId === 'facebook'){
+				session.beginDialog('displayteleconsultationFB');
+				return;
+			}
 				var card = 
 				{
 				  "contentType": "application/vnd.microsoft.card.adaptive",
@@ -3042,6 +3165,10 @@ bot.dialog('askforTeleConsultationDetails',[
 ]);
 
 function processSubmitAction5(session, message){
+			if(session.message.address.channelId === 'facebook'){
+				session.beginDialog('displayteleconsultationFB');
+				return;
+			}	
 			session.userData.teleconsultationService = message["teleservice"];				
 			teleconsultCard = new builder.HeroCard(session)
 									.title("Tele Consultation")
@@ -3091,7 +3218,10 @@ bot.dialog('askforLabTestDetails',[
 				session.beginDialog('askforMore');
 				return;
 			}
-
+			if(session.message.address.channelId === 'facebook'){
+				session.beginDialog('displaylabtestFB');
+				return;
+			}
 				var card = 
 				{
 				  "contentType": "application/vnd.microsoft.card.adaptive",
@@ -3340,6 +3470,10 @@ bot.dialog('askforLabTestDetails',[
 ]);
 
 function processSubmitAction6(session, message){
+		if(session.message.address.channelId === 'facebook'){
+			session.beginDialog('displaylabtestFB');
+			return;
+		}
 		session.userData.labtestCity = message["city"];
 			session.userData.labtest = message["labtest"];	
 			labtestCard = new builder.HeroCard(session)
