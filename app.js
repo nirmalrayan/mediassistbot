@@ -2095,7 +2095,7 @@ bot.dialog('displayhomehealthcareFB',
 	function (session){
 			homehealthcareCard = new builder.HeroCard(session)
 									.title("Home Health Care")
-									.subtitle("Click below to view available home health care services in "+message["city"]+" for "+message["service"])
+									.subtitle("Choose your city and Service to view the list of Home Health Care packages available.)
 									.text("https://infiniti.medibuddy.in")
 									.images([
 										new builder.CardImage(session)
