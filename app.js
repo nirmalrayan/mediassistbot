@@ -2077,7 +2077,7 @@ bot.dialog('displayconsultationFB',
 	function (session){
 			consultationCard = new builder.HeroCard(session)
 									.title("Consultation")
-									.subtitle("I've curated a list of "+message["speciality"]+"s in "+message["city"]+". Click below to know more")
+									.subtitle("Select your city and speciality to book your preferred consultation. Click below to know more")
 									.text("https://infiniti.medibuddy.in")
 									.images([
 										new builder.CardImage(session)
