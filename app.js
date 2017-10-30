@@ -2144,7 +2144,7 @@ bot.dialog('displaylabtestFB',
 										.alt('Lab Test')
 								])
 								.buttons([
-									builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/labtest/f4a83a18cec74f1786b8fd2b9aff4c0c//Platelet%20Count/?c=Bengaluru"+session.userData.labtest+"/?c="+session.userData.labtestCity, "View Lab Tests")
+									builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/labtest/f4a83a18cec74f1786b8fd2b9aff4c0c//Platelet%20Count/?c=Bengaluru", "View Lab Tests")
 									]);
 		session.send(new builder.Message(session)
 			.addAttachment(labtestCard));
