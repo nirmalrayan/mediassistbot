@@ -104,6 +104,7 @@ bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer]})
 	.matches("Grievance", "askforGrievance")
 	.matches("GeneralQuery", "askforGeneralQuery")
 	.matches("Abuse","askforAbuse")
+	.matches("NotTrained","idontknow")
  //  .matches("Logout", "logout")
     .onDefault((session, args) => {
         session.endDialog("Sorry, I did not understand \`%s\`.  Try saying `show menu` or `#` to go back to the main menu and `help` if you need assistance.", session.message.text);
@@ -115,6 +116,12 @@ bot.dialog("hello", (session, args) => {
 		session.endDialog("Hello. You can type `\"show menu\"` or `\"#\"` at any time of the conversation to go back to the main menu.");
 }).triggerAction({
     matches: 'SayHello'
+});
+
+bot.dialog("idontknow", (session, args) => {
+		session.endDialog("I'm sorry. I'm not yet trained to respond to this query but I'm getting smarter everyday!");
+}).triggerAction({
+    matches: 'NotTrained'
 });
 /*
 // Initialize with the strategies we want to use
