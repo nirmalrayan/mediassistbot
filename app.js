@@ -1,6 +1,6 @@
 //Author: Nirmal Rayan
 //Version: 1.0
-//Application: Medibot (Microsoft Bot Framework)
+//Application: MediBuddy (Microsoft Bot Framework)
 
 // Add your requirements
 var http = require('http');
@@ -40,12 +40,12 @@ var bot = new builder.UniversalBot(connector,
 		
 		if(session.message.address.channelId === 'facebook'){
  			var welcomeCard = new builder.HeroCard(session)
-				.title("Hi "+session.message.address.user.name+"! Nice to see you. I am MediBot")
+				.title("Hi "+session.message.address.user.name+"! Nice to see you. I am MediBuddy")
 				.subtitle("I will be your personal healthcare assistant. ℹ️ Type \"show menu\" or \"#\" at any time to see the menu.")
 				.images([
 					new builder.CardImage(session)
 						.url('https://i.imgur.com/HwRgHDI.png')
-						.alt('MediBot')
+						.alt('MediBuddy')
 				])
 				.buttons([
 					builder.CardAction.imBack(session, "Show Menu", "Show Menu")
@@ -59,7 +59,7 @@ var bot = new builder.UniversalBot(connector,
 				.images([
 					new builder.CardImage(session)
 						.url('https://i.imgur.com/HwRgHDI.png')
-						.alt('MediBot')
+						.alt('MediBuddy')
 				])
 				.buttons([
 					builder.CardAction.imBack(session, "Show Menu", "Show Menu")
@@ -68,12 +68,12 @@ var bot = new builder.UniversalBot(connector,
 			}
 			else{
 				var welcomeCard = new builder.HeroCard(session)
-				.title("Greetings! I'm MediBot")
+				.title("Greetings! I'm MediBuddy")
 				.subtitle("I will be your personal healthcare assistant. ℹ️ Type \"show menu\" or \"#\" at any time to see the menu.")
 				.images([
 					new builder.CardImage(session)
 						.url('https://i.imgur.com/HwRgHDI.png')
-						.alt('MediBot')
+						.alt('MediBuddy')
 				])
 				.buttons([
 					builder.CardAction.imBack(session, "Show Menu", "Show Menu")
@@ -1069,7 +1069,7 @@ bot.dialog('doaHelp', function(session, args, next) {
 // Generic Help dialog for Bot
 bot.dialog('help', [
 	function(session){
-			session.send("⛑️ Medibot can help you track your claim, download e-card or search nearby hospitals within Medi Assist Network.");
+			session.send("⛑️ MediBuddy can help you track your claim, download e-card or search nearby hospitals within Medi Assist Network.");
 			builder.Prompts.confirm(session,"Do you need help understanding how claims work? (yes/no)")
 	},
 	function(session, results){
@@ -2016,7 +2016,7 @@ bot.dialog('sayGoodbye',[
 // Dialog to handle Compliment
 bot.dialog('sayThanks',[
 	function (session){
-		msg = ["Welcome, It's nothing","👍","That's all right!","Don't mention it.","😊","😍", "That's very kind of you", "Thank you, I appreciate the compliment.", "Thank you very much. 🙏","All I can say is, Thanks!", "MediBot appreciates your gratitude! We wish you good health and smiles 🙂"]
+		msg = ["Welcome, It's nothing","👍","That's all right!","Don't mention it.","😊","😍", "That's very kind of you", "Thank you, I appreciate the compliment.", "Thank you very much. 🙏","All I can say is, Thanks!", "MediBuddy appreciates your gratitude! We wish you good health and smiles 🙂"]
 		x = getRandomInt(0,10);
 		session.send(msg[x]);
 	},
@@ -2144,7 +2144,7 @@ bot.dialog('displaylabtestFB',
 										.alt('Lab Test')
 								])
 								.buttons([
-									builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/labtest/f4a83a18cec74f1786b8fd2b9aff4c0c//Platelet%20Count/?c=Bengaluru", "View Lab Tests")
+									builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/labtest/f4a83a18cec74f1786b8fd2b9aff4c0c//Platelet%20Count/?c=Bengaluru/", "View Lab Tests")
 									]);
 		session.send(new builder.Message(session)
 			.addAttachment(labtestCard));
