@@ -103,7 +103,7 @@ bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer]})
 	.matches("HR", "askforHR")
 	.matches("Grievance", "askforGrievance")
 	.matches("GeneralQuery", "askforGeneralQuery")
-	.matches("Abuse","askforAbuse")
+//	.matches("Abuse","askforAbuse")
 	.matches("NotTrained","idontknow")
  //  .matches("Logout", "logout")
     .onDefault((session, args) => {
@@ -3548,3 +3548,16 @@ bot.dialog('facebook', new builder.IntentDialog({ recognizers : [ recog ]})
 server.post('/fbloginbutton', (req, res, session) => {
     session.beginDialog('profile');
 });*/
+
+const ncu = require('npm-check-updates');
+ 
+ncu.run({
+    // Always specify the path to the package file
+    packageFile: 'package.json',
+    // Any command-line option can be specified here.
+    // These are set by default:
+    silent: true,
+    jsonUpgraded: true
+}).then((upgraded) => {
+    console.log('dependencies to upgrade:', upgraded);
+});
