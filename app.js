@@ -17,6 +17,31 @@ const FacebookStrategy = require("passport-facebook").Strategy;
 //encryption key for saved state
 const BOTAUTH_SECRET = "TESTBOT";  
 
+//Establish Database connection
+const sql = require('mssql');
+
+const config = {
+	user: 'sa',
+	password: 'MediAssist@123',
+	server: 'MISRPTSRV',
+	database: 'QlikView',
+
+	options: {
+		encrypt: true
+	}
+};
+
+(async function() {
+	try{
+		const pool = await sql.connect(config);
+		const result = await sql.query`select top 10 * from Temp_MonthsData where ClmID = 91913002`;
+		console.dir(result);
+
+	}catch (err){
+		console.log('Something unexpected has happened in database querying!');
+	}
+})();
+
 // Setup Restify Server
 
 var server = restify.createServer();
