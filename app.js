@@ -18,7 +18,7 @@ const FacebookStrategy = require("passport-facebook").Strategy;
 const BOTAUTH_SECRET = "TESTBOT";  
 
 //Establish Database connection
-const sql = require('mssql');
+/*const sql = require('mssql');
 
 const config = {
 	user: 'sa',
@@ -41,7 +41,7 @@ const config = {
 		console.log('Something unexpected has happened in database querying!');
 	}
 })();
-
+*/
 // Setup Restify Server
 
 var server = restify.createServer();
