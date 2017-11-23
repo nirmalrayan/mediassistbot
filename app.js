@@ -3532,6 +3532,7 @@ function processSubmitAction6(session, message){
 server.post('/api/messages', connector.listen());
 
 // Initialize with the strategies we want to use
+
 /*var ba = new botauth.BotAuthenticator(server, bot, { baseUrl : "https://medibotmb.azurewebsites.net", secret : BOTAUTH_SECRET })
     .provider("facebook", (options) => { 
         return new FacebookStrategy({
