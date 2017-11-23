@@ -3574,7 +3574,7 @@ bot.dialog('facebook', new builder.IntentDialog({ recognizers : [ recog ]})
 server.post('/fbloginbutton', (req, res, session) => {
     session.beginDialog('profile');
 });*/
-
+/*
 const ncu = require('npm-check-updates');
  
 ncu.run({
@@ -3586,4 +3586,4 @@ ncu.run({
     jsonUpgraded: true
 }).then((upgraded) => {
     console.log('dependencies to upgrade:', upgraded);
-});
+});*/
