@@ -152,6 +152,7 @@ bot.dialog("idontknow", (session, args) => {
 });
 /*
 // Initialize with the strategies we want to use
+
 var ba = new botauth.BotAuthenticator(server, bot, { baseUrl : "https://medibot.azurewebsites.net", secret : BOTAUTH_SECRET })
     .provider("facebook", (options) => { 
         return new FacebookStrategy({
