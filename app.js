@@ -45,7 +45,6 @@ const config = {
 */
 
 // Setup Restify Server
-
 var server = restify.createServer();
 server.listen(process.env.PORT || process.env.port || 3000, function() 
 {
@@ -59,6 +58,7 @@ server.use(restify.plugins.queryParser());
 var connector = new builder.ChatConnector
 ({ appId: process.env.MY_APP_ID, appPassword: process.env.MY_APP_PASSWORD }); 
 
+console.log('This is the process app id ' + process.env.MY_APP_ID);
 
 //MAIN.
 var bot = new builder.UniversalBot(connector,
