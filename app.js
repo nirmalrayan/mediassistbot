@@ -45,7 +45,7 @@ const config = {
 
 // Setup Restify Server
 var server = restify.createServer();
-server.listen(process.env.PORT || process.env.port || 3000, function() 
+server.listen(process.env.PORT || process.env.port || 3978, function() 
 {
    console.log('%s listening to %s', server.name, server.url); 
 console.log('This is the process app id ' + process.env.MY_APP_ID);
