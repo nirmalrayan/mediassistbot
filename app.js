@@ -18,7 +18,6 @@ const FacebookStrategy = require("passport-facebook").Strategy;
 const BOTAUTH_SECRET = "TESTBOT";  
 
 //Establish Database connection
-
 /*const sql = require('mssql');
 
 const config = {
