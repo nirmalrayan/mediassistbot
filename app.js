@@ -9,13 +9,13 @@ var builder = require('botbuilder');
 const {Wit, log} = require('node-wit');
 require('env2')('.env'); // loads all entries into process.env
 
-const botauth = require("botauth");
+//const botauth = require("botauth");
 
 const passport = require("passport");
 const FacebookStrategy = require("passport-facebook").Strategy;
 
 //encryption key for saved state
-const BOTAUTH_SECRET = "TESTBOT";  
+//const BOTAUTH_SECRET = "TESTBOT";  
 
 //Establish Database connection
 /*const sql = require('mssql');
@@ -117,7 +117,7 @@ var bot = new builder.UniversalBot(connector,
  default: '/index.html'	
 })); 
 	
-//LUIS Configuration
+//LUIS Configuration 
 var recognizer = new builder.LuisRecognizer("https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/4e0df9eb-a11f-495d-8e90-b0579fde9b86?subscription-key=28d864504065472ba9543c81c6f97264&verbose=true&timezoneOffset=0&q=");
 //bot.recognizer(recog);
 
