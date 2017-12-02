@@ -48,8 +48,6 @@ var server = restify.createServer();
 server.listen(process.env.PORT || process.env.port || 3978, function() 
 {
    console.log('%s listening to %s', server.name, server.url); 
-console.log('This is the process app id ' + process.env.MY_APP_ID);
-
 });
 server.use(restify.plugins.bodyParser());
 server.use(restify.plugins.queryParser());
@@ -59,7 +57,6 @@ server.use(restify.plugins.queryParser());
 var connector = new builder.ChatConnector
 ({ appId: process.env.MY_APP_ID, appPassword: process.env.MY_APP_PASSWORD }); 
 
-console.log('This is the process app id ' + process.env.MY_APP_ID);
 
 //MAIN.
 var bot = new builder.UniversalBot(connector,
@@ -121,7 +118,7 @@ var bot = new builder.UniversalBot(connector,
 })); 
 	
 //LUIS Configuration
-var recognizer = new builder.LuisRecognizer("https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/4e0df9eb-a11f-495d-8e90-b0579fde9b86?subscription-key=5ccd61decaf04a0caff771ac48a46ded&verbose=true&timezoneOffset=0&q=");
+var recognizer = new builder.LuisRecognizer("https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/4e0df9eb-a11f-495d-8e90-b0579fde9b86?subscription-key=28d864504065472ba9543c81c6f97264&verbose=true&timezoneOffset=0&q=");
 //bot.recognizer(recog);
 
 bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer]})
