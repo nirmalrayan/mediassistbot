@@ -110,6 +110,7 @@ var bot = new builder.UniversalBot(connector,
 			session.beginDialog("/refer");
 	}).set('storage', inMemoryStorage); // Register in memory storage
 
+	
 //Direct to index.html web page
  server.get('/', restify.plugins.serveStatic({
  directory: __dirname,
