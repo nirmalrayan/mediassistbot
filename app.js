@@ -55,7 +55,7 @@ server.use(restify.plugins.queryParser());
 
 // Create chat bot
 var connector = new builder.ChatConnector
-({ appId: process.env.MY_APP_ID, appPassword: process.env.MY_APP_PASSWORD }); 
+({ appId: '31db772c-9761-4b25-b568-f1e140b26b4a', appPassword: 'ymdcesGVEJ1769-[~kJEM6%' }); 
 
 
 //MAIN.
