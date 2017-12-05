@@ -45,7 +45,7 @@ const config = {
 
 // Setup Restify Server
 var server = restify.createServer();
-server.listen(process.env.PORT || process.env.port || 3979, function() 
+server.listen(process.env.PORT || process.env.port || 3100, function() 
 {
    console.log('%s listening to %s', server.name, server.url); 
 });
@@ -110,7 +110,7 @@ var bot = new builder.UniversalBot(connector,
 			session.beginDialog("/refer");
 	}).set('storage', inMemoryStorage); // Register in memory storage
 
-	
+
 //Direct to index.html web page
  server.get('/', restify.plugins.serveStatic({
  directory: __dirname,
