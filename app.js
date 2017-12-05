@@ -57,10 +57,9 @@ server.use(restify.plugins.queryParser());
 var connector = new builder.ChatConnector
 ({ appId: process.env.MY_APP_ID, appPassword: process.env.MY_APP_PASSWORD }); 
 
-
+var inMemoryStorage =  new builder.MemoryBotStorage();
 //MAIN.
 var bot = new builder.UniversalBot(connector,
-
     function (session) {
 		
 		if(session.message.address.channelId === 'facebook'){
@@ -109,7 +108,7 @@ var bot = new builder.UniversalBot(connector,
 			session.send(new builder.Message(session)
 				.addAttachment(welcomeCard));
 			session.beginDialog("/refer");
-	});
+	}).set('storage', inMemoryStorage); // Register in memory storage
 
 //Direct to index.html web page
  server.get('/', restify.plugins.serveStatic({
