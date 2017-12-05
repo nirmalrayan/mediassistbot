@@ -6,7 +6,7 @@
 var http = require('http');
 var restify = require('restify');
 var builder = require('botbuilder');
-const {Wit, log} = require('node-wit');
+const Wit = require('node-wit').Wit;
 require('env2')('.env'); // loads all entries into process.env
 
 //const botauth = require("botauth");
