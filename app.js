@@ -11,8 +11,8 @@ require('env2')('.env'); // loads all entries into process.env
 
 //const botauth = require("botauth");
 
-const passport = require("passport");
-const FacebookStrategy = require("passport-facebook").Strategy;
+//const passport = require("passport");
+//const FacebookStrategy = require("passport-facebook").Strategy;
 
 //encryption key for saved state
 //const BOTAUTH_SECRET = "TESTBOT";  
