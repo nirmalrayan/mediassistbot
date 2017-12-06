@@ -6,46 +6,21 @@
 var http = require('http');
 var restify = require('restify');
 var builder = require('botbuilder');
-const Wit = require('node-wit').Wit;
+const {Wit, log} = require('node-wit');
 require('env2')('.env'); // loads all entries into process.env
 
-//const botauth = require("botauth");
+const botauth = require("botauth");
 
-//const passport = require("passport");
-//const FacebookStrategy = require("passport-facebook").Strategy;
+const passport = require("passport");
+const FacebookStrategy = require("passport-facebook").Strategy;
 
 //encryption key for saved state
-//const BOTAUTH_SECRET = "TESTBOT";  
-
-//Establish Database connection
-/*const sql = require('mssql');
-
-const config = {
-	user: 'sa',
-	password: 'MediAssist@123',
-	server: 'MISRPTSRV',
-	database: 'QlikView',
-
-	options: {
-		encrypt: true
-	}
-};
-
-(async function() {
-	try{
-		const pool = await sql.connect(config);
-		const result = await sql.query`select top 10 * from Temp_MonthsData where ClmID = 91913002`;
-		console.dir(result);
-
-	}catch (err){
-		console.log('Something unexpected has happened in database querying!');
-	}
-})();
-*/
+const BOTAUTH_SECRET = "TESTBOT";  
 
 // Setup Restify Server
+
 var server = restify.createServer();
-server.listen(process.env.PORT || process.env.port || 3100, function() 
+server.listen(process.env.PORT || process.env.port || 3000, function() 
 {
    console.log('%s listening to %s', server.name, server.url); 
 });
@@ -57,9 +32,10 @@ server.use(restify.plugins.queryParser());
 var connector = new builder.ChatConnector
 ({ appId: process.env.MY_APP_ID, appPassword: process.env.MY_APP_PASSWORD }); 
 
-var inMemoryStorage =  new builder.MemoryBotStorage();
+
 //MAIN.
 var bot = new builder.UniversalBot(connector,
+
     function (session) {
 		
 		if(session.message.address.channelId === 'facebook'){
@@ -108,7 +84,7 @@ var bot = new builder.UniversalBot(connector,
 			session.send(new builder.Message(session)
 				.addAttachment(welcomeCard));
 			session.beginDialog("/refer");
-	}).set('storage', inMemoryStorage); // Register in memory storage
+	});
 
 //Direct to index.html web page
  server.get('/', restify.plugins.serveStatic({
@@ -116,10 +92,9 @@ var bot = new builder.UniversalBot(connector,
  default: '/index.html'	
 })); 
 	
-//LUIS Configuration 
-var recognizer = new builder.LuisRecognizer("https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/4e0df9eb-a11f-495d-8e90-b0579fde9b86?subscription-key=28d864504065472ba9543c81c6f97264&verbose=true&timezoneOffset=0&q=");
+//LUIS Configuration
+var recognizer = new builder.LuisRecognizer("https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/4e0df9eb-a11f-495d-8e90-b0579fde9b86?subscription-key=5ccd61decaf04a0caff771ac48a46ded&timezoneOffset=330&verbose=true&q=");
 //bot.recognizer(recog);
-
 
 bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer]})
     .matches("SayHello", "hello")
@@ -150,7 +125,6 @@ bot.dialog("idontknow", (session, args) => {
 });
 /*
 // Initialize with the strategies we want to use
-
 var ba = new botauth.BotAuthenticator(server, bot, { baseUrl : "https://medibot.azurewebsites.net", secret : BOTAUTH_SECRET })
     .provider("facebook", (options) => { 
         return new FacebookStrategy({
@@ -3533,7 +3507,6 @@ function processSubmitAction6(session, message){
 server.post('/api/messages', connector.listen());
 
 // Initialize with the strategies we want to use
-
 /*var ba = new botauth.BotAuthenticator(server, bot, { baseUrl : "https://medibotmb.azurewebsites.net", secret : BOTAUTH_SECRET })
     .provider("facebook", (options) => { 
         return new FacebookStrategy({
@@ -3575,7 +3548,7 @@ bot.dialog('facebook', new builder.IntentDialog({ recognizers : [ recog ]})
 server.post('/fbloginbutton', (req, res, session) => {
     session.beginDialog('profile');
 });*/
-/*
+
 const ncu = require('npm-check-updates');
  
 ncu.run({
@@ -3587,4 +3560,4 @@ ncu.run({
     jsonUpgraded: true
 }).then((upgraded) => {
     console.log('dependencies to upgrade:', upgraded);
-});*/
+});
