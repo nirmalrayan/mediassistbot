@@ -120,6 +120,7 @@ var bot = new builder.UniversalBot(connector,
 var recognizer = new builder.LuisRecognizer("https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/4e0df9eb-a11f-495d-8e90-b0579fde9b86?subscription-key=28d864504065472ba9543c81c6f97264&verbose=true&timezoneOffset=0&q=");
 //bot.recognizer(recog);
 
+
 bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer]})
     .matches("SayHello", "hello")
 	.matches("GetName", "setName")
