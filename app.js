@@ -91,7 +91,10 @@ var bot = new builder.UniversalBot(connector,
  directory: __dirname,
  default: '/index.html'	
 })); 
-	
+
+
+server.post('/api/messages', connector.listen());
+
 //LUIS Configuration
 var recognizer = new builder.LuisRecognizer("https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/4e0df9eb-a11f-495d-8e90-b0579fde9b86?subscription-key=5ccd61decaf04a0caff771ac48a46ded&timezoneOffset=330&verbose=true&q=");
 //bot.recognizer(recog);
@@ -3504,7 +3507,6 @@ function processSubmitAction6(session, message){
 }
 
 
-server.post('/api/messages', connector.listen());
 
 // Initialize with the strategies we want to use
 /*var ba = new botauth.BotAuthenticator(server, bot, { baseUrl : "https://medibotmb.azurewebsites.net", secret : BOTAUTH_SECRET })
@@ -3548,7 +3550,7 @@ bot.dialog('facebook', new builder.IntentDialog({ recognizers : [ recog ]})
 server.post('/fbloginbutton', (req, res, session) => {
     session.beginDialog('profile');
 });*/
-
+/*
 const ncu = require('npm-check-updates');
  
 ncu.run({
@@ -3560,4 +3562,4 @@ ncu.run({
     jsonUpgraded: true
 }).then((upgraded) => {
     console.log('dependencies to upgrade:', upgraded);
-});
+});*/
