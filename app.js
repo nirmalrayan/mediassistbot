@@ -34,7 +34,6 @@ var connector = new builder.ChatConnector
 	appPassword: process.env.MY_APP_PASSWORD,
     stateEndpoint: process.env.BotStateEndpoint,
     openIdMetadata: process.env.BotOpenIdMetadata  }); 
-
 	
 //MAIN.
 var bot = new builder.UniversalBot(connector,
