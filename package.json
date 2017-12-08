@@ -32,6 +32,7 @@
     "http": "0.0.0",
     "microsoft-adaptivecards": "^0.6.1",
     "node-wit": "^4.3.0",
+    "npm-check-updates": "^2.13.0",
     "object-sizeof": "^1.2.0",
     "passport": "^0.4.0",
     "passport-facebook": "^2.1.1",
