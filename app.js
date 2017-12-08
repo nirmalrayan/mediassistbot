@@ -20,20 +20,19 @@ const BOTAUTH_SECRET = "TESTBOT";
 // Setup Restify Server
 
 var server = restify.createServer();
-server.listen(process.env.PORT || process.env.port || 65530, function() 
+server.listen(process.env.PORT || process.env.port || 65535, function() 
 {
    console.log('%s listening to %s', server.name, server.url); 
 });
 server.use(restify.plugins.bodyParser());
 server.use(restify.plugins.queryParser());
 
+var inMemoryStorage = new builder.MemoryBotStorage(); 
 
 // Create chat bot
 var connector = new builder.ChatConnector
-({  appId: process.env.MY_APP_ID, 
-	appPassword: process.env.MY_APP_PASSWORD,
-    stateEndpoint: process.env.BotStateEndpoint,
-    openIdMetadata: process.env.BotOpenIdMetadata  }); 
+({  appId: process.env.MicrosoftAppId, 
+	appPassword: process.env.MicrosoftAppPassword  }); 
 	
 //MAIN.
 var bot = new builder.UniversalBot(connector,
@@ -86,7 +85,7 @@ var bot = new builder.UniversalBot(connector,
 			session.send(new builder.Message(session)
 				.addAttachment(welcomeCard));
 			session.beginDialog("/refer");
-	});
+	}).set('storage', inMemoryStorage); // Register in-memory storage 
 
 //Direct to index.html web page
  server.get('/', restify.plugins.serveStatic({
