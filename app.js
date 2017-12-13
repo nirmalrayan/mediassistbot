@@ -98,21 +98,17 @@ var bot = new builder.UniversalBot(connector,
 server.post('/api/messages', connector.listen());
 
 //QnA Maker Configuration
-var recognizer1 = new cognitiveservices.QnAMakerRecognizer({
+var qnarecognizer  = new cognitiveservices.QnAMakerRecognizer({
 	knowledgeBaseId: process.env.QnAknowledgeBaseId, 
-	subscriptionKey: process.env.QnASubscriptionKey});
-	
-var basicQnAMakerDialog = new cognitiveservices.QnAMakerDialog({
-	recognizers: [recognizer1],
-	defaultMessage: 'No match! Try changing the query terms!',
-	qnaThreshold: 0.3
-});
+	subscriptionKey: process.env.QnASubscriptionKey,
+	top: 4});
 
 //LUIS Configuration
-var recognizer = new builder.LuisRecognizer("https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/4e0df9eb-a11f-495d-8e90-b0579fde9b86?subscription-key=5ccd61decaf04a0caff771ac48a46ded&timezoneOffset=330&verbose=true&q=");
+var model = process.env.LUISURI
+var recognizer = new builder.LuisRecognizer(model);
 //bot.recognizer(recog);
 
-bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer]})
+bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer, qnarecognizer]})
     .matches("SayHello", "hello")
 	.matches("GetName", "setName")
 	.matches("CustomerCare", "askforCallCenter")
@@ -121,10 +117,15 @@ bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer]})
 	.matches("GeneralQuery", "askforGeneralQuery")
 //	.matches("Abuse","askforAbuse")
 	.matches("NotTrained","idontknow")
+	.matches("qna", [
+    function (session, args, next) {
+        var answerEntity = builder.EntityRecognizer.findEntity(args.entities, 'answer');
+        session.send(answerEntity.entity);
+    }
+])
  //  .matches("Logout", "logout")
     .onDefault((session, args) => {
-		session.endDialog("QnAMaker", basicQnAMakerDialog);
- //       session.endDialog("Sorry, I did not understand \`%s\`.  Try saying `show menu` or `#` to go back to the main menu and `help` if you need assistance.", session.message.text);
+        session.endDialog("Sorry, I did not understand \`%s\`.  Try saying `show menu` or `#` to go back to the main menu and `help` if you need assistance.", session.message.text);
     })
 );
 
