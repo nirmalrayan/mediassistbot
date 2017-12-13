@@ -7,15 +7,16 @@ var http = require('http');
 var restify = require('restify');
 var builder = require('botbuilder');
 const {Wit, log} = require('node-wit');
+var cognitiveservices = require('botbuilder-cognitiveservices');
 require('env2')('.env'); // loads all entries into process.env
 
-const botauth = require("botauth");
+//const botauth = require("botauth");
 
-const passport = require("passport");
-const FacebookStrategy = require("passport-facebook").Strategy;
+//const passport = require("passport");
+//const FacebookStrategy = require("passport-facebook").Strategy;
 
 //encryption key for saved state
-const BOTAUTH_SECRET = "TESTBOT";  
+//const BOTAUTH_SECRET = "TESTBOT";  
 
 // Setup Restify Server
 
@@ -96,6 +97,17 @@ var bot = new builder.UniversalBot(connector,
 
 server.post('/api/messages', connector.listen());
 
+//QnA Maker Configuration
+var recognizer = new cognitiveservices.QnAMakerRecognizer({
+	knowledgeBaseId: process.env.QnAknowledgeBaseId, 
+	subscriptionKey: process.env.QnASubscriptionKey});
+	
+var basicQnAMakerDialog = new cognitiveservices.QnAMakerDialog({
+	recognizers: [recognizer],
+	defaultMessage: 'No match! Try changing the query terms!',
+	qnaThreshold: 0.3
+});
+
 //LUIS Configuration
 var recognizer = new builder.LuisRecognizer("https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/4e0df9eb-a11f-495d-8e90-b0579fde9b86?subscription-key=5ccd61decaf04a0caff771ac48a46ded&timezoneOffset=330&verbose=true&q=");
 //bot.recognizer(recog);
@@ -111,7 +123,8 @@ bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer]})
 	.matches("NotTrained","idontknow")
  //  .matches("Logout", "logout")
     .onDefault((session, args) => {
-        session.endDialog("Sorry, I did not understand \`%s\`.  Try saying `show menu` or `#` to go back to the main menu and `help` if you need assistance.", session.message.text);
+		bot.dialog('/', basicQnAMakerDialog);
+ //       session.endDialog("Sorry, I did not understand \`%s\`.  Try saying `show menu` or `#` to go back to the main menu and `help` if you need assistance.", session.message.text);
     })
 );
 

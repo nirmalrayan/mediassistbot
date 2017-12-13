@@ -4,12 +4,12 @@
   "description": "Build a bot in Node.js on Microsoft Bot Framework",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "node publish.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nirmalrayan/medibot.git"
+    "url": "git+https://github.com/nirmalrayan/medibuddy-chatbot.git"
   },
   "keywords": [
     "bot",
@@ -21,11 +21,12 @@
   "author": "Nirmal Rayan",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/nirmalrayan/medibot/issues"
+    "url": "https://github.com/nirmalrayan/medibuddy-chatbot/issues"
   },
-  "homepage": "https://github.com/nirmalrayan/medibot#readme",
+  "homepage": "https://github.com/nirmalrayan/medibuddy-chatbot#readme",
   "dependencies": {
     "botbuilder": "^3.13.0",
+    "botbuilder-cognitiveservices": "^1.1.0",
     "botbuilder-location": "^2.0.0",
     "env2": "^2.2.0",
     "geolib": "^2.0.23",
