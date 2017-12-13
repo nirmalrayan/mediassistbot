@@ -123,7 +123,7 @@ bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer]})
 	.matches("NotTrained","idontknow")
  //  .matches("Logout", "logout")
     .onDefault((session, args) => {
-		bot.dialog('/', basicQnAMakerDialog);
+		session.enddialog(basicQnAMakerDialog);
  //       session.endDialog("Sorry, I did not understand \`%s\`.  Try saying `show menu` or `#` to go back to the main menu and `help` if you need assistance.", session.message.text);
     })
 );
