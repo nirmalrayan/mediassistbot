@@ -98,12 +98,12 @@ var bot = new builder.UniversalBot(connector,
 server.post('/api/messages', connector.listen());
 
 //QnA Maker Configuration
-var recognizer = new cognitiveservices.QnAMakerRecognizer({
+var recognizer1 = new cognitiveservices.QnAMakerRecognizer({
 	knowledgeBaseId: process.env.QnAknowledgeBaseId, 
 	subscriptionKey: process.env.QnASubscriptionKey});
 	
 var basicQnAMakerDialog = new cognitiveservices.QnAMakerDialog({
-	recognizers: [recognizer],
+	recognizers: [recognizer1],
 	defaultMessage: 'No match! Try changing the query terms!',
 	qnaThreshold: 0.3
 });
@@ -123,7 +123,7 @@ bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer]})
 	.matches("NotTrained","idontknow")
  //  .matches("Logout", "logout")
     .onDefault((session, args) => {
-		bot.dialog("QnAMaker", basicQnAMakerDialog);
+		session.endDialog("QnAMaker", basicQnAMakerDialog);
  //       session.endDialog("Sorry, I did not understand \`%s\`.  Try saying `show menu` or `#` to go back to the main menu and `help` if you need assistance.", session.message.text);
     })
 );
