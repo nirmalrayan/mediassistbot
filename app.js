@@ -1105,7 +1105,7 @@ bot.dialog('help', [
 									.subtitle('by Medi Assist')
 									.text('Understanding how claims work will help you in making the right decisions at the right time. Watch this video to know more.')
 									.media([
-										{ url: 'https://redirector.googlevideo.com/videoplayback?id=o-AKfiO18rQ6PJsKTH-jf_NfQDuZmwQ4OHuwvVzZYspG3F&expire=1505492761&mm=31&mn=sn-ab5szn76&mime=video%2Fmp4&dur=154.087&itag=22&pl=53&ip=2001%3A19f0%3A5%3A1de%3A5400%3Aff%3Afe4f%3A2207&key=yt6&ei=uKq7Wc_tNa6p8gSO14OgAg&ms=au&source=youtube&mv=m&sparams=dur%2Cei%2Cid%2Cinitcwndbps%2Cip%2Cipbits%2Citag%2Clmt%2Cmime%2Cmm%2Cmn%2Cms%2Cmv%2Cpl%2Cratebypass%2Crequiressl%2Csource%2Cexpire&ipbits=0&requiressl=yes&mt=1505471077&initcwndbps=4132500&signature=AA85CFD9E8A0FAADF849874D9944ADA71FABA9BB.12209AD809EADCA51E78087AC08A0BFB582EBFB7&lmt=1471497193909465&ratebypass=yes' }
+										{ url: 'https://medibuddymedia.blob.core.windows.net/asset-72bacdc7-eb1d-4e63-844e-bfc4cb979dae/Introduction to Claims.mp4?sv=2015-07-08&sr=c&si=8905b3dc-886f-4623-ae01-df3ceab17265&sig=CFwEPm9pqJA64LvMgiIj8mV0Svakb%2FdPY9UzWL32PPM%3D&st=2017-11-30T12%3A59%3A39Z&se=2117-11-30T12%3A59%3A39Z' }
 									])
 									.buttons([
 										builder.CardAction.openUrl(session, 'https://www.mediassistindia.com/', 'Visit Medi Assist')
@@ -1131,7 +1131,7 @@ bot.dialog('help', [
 									.subtitle('by Medi Assist')
 									.text('And watch this video on how you can plan a cashless hospitalization from the comfort of your home.')
 									.media([
-										{ url: 'https://redirector.googlevideo.com/videoplayback?source=youtube&pl=33&dur=88.398&id=o-ADxxPDaZrTgbXKFAtpBMkclSponVczPxe0AMU09GNEiy&ei=B7K7WZXFIqOr-AO5srjYCA&itag=22&lmt=1471712672818513&requiressl=yes&key=yt6&ip=2600%3A3c01%3A%3Af03c%3A91ff%3Afe24%3Ab564&mime=video%2Fmp4&signature=4CCB3ED2DD50978E634254250014E9FC82A71FEB.53362160533AF3707B90C4A0E2CFCCB374C7E72C&expire=1505494631&mt=1505472944&mv=m&initcwndbps=4832500&ipbits=0&ratebypass=yes&ms=au&mm=31&mn=sn-n4v7sn7z&sparams=dur%2Cei%2Cid%2Cinitcwndbps%2Cip%2Cipbits%2Citag%2Clmt%2Cmime%2Cmm%2Cmn%2Cms%2Cmv%2Cpl%2Cratebypass%2Crequiressl%2Csource%2Cexpire' }
+										{ url: 'https://medibuddymedia.blob.core.windows.net/asset-1e65cb49-6769-4559-b7cc-2ae35a1fb682/Plan your Hospitalization with eCashless!.mp4?sv=2015-07-08&sr=c&si=49628a29-025d-404f-84b7-50767b69b4a9&sig=1DAlO0iugFVJ3NBMfX657WqG76%2FvKigyaMCse8YJj0Y%3D&st=2017-12-01T12%3A47%3A08Z&se=2117-12-01T12%3A47%3A08Z' }
 									])
 									.buttons([
 										builder.CardAction.openUrl(session, 'https://www.mediassistindia.com/', 'Visit Medi Assist')
@@ -3234,7 +3234,6 @@ bot.dialog('labtest',[
 	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
 	
 });
-
 
 // Dialog to ask for Lab Test Details
 bot.dialog('askforLabTestDetails',[
