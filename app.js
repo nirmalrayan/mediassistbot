@@ -576,7 +576,7 @@ bot.dialog('trackClaimwID', [
 
 					// Configure the request
 					var options = {
-						url: 'https://track.medibuddy.in/api/TrackClaimWithClaimNumber/.json',
+						url: 'https://www.medibuddy.in/WAPI//infiniti/track/ClaimWithClaimNumber.json',
 						method: 'POST',
 						headers: headers,
 						form: {'claimNumber':session.dialogData.claimNumber,'date':session.dialogData.hospitalizationDate}
@@ -712,7 +712,7 @@ bot.dialog('trackClaimwMAID', [
 
 					// Configure the request
 					var options = {
-						url: 'https://track.medibuddy.in/api/TrackClaimWithMAID/.json',
+						url: 'https://www.medibuddy.in/WAPI//infiniti/track/ClaimWithMAID.json',
 						method: 'POST',
 						headers: headers,
 						form: {'maid':session.dialogData.MAID,'date':session.dialogData.hospitalizationDate}
@@ -847,7 +847,7 @@ bot.dialog('trackClaimwEmpID', [
 
 					// Configure the request
 					var options = {
-						url: 'https://track.medibuddy.in/api/TrackClaimWithEmpDetails/.json',
+						url: 'https://www.medibuddy.in/WAPI//infiniti/track/ClaimWithEmpDetails.json',
 						method: 'POST',
 						headers: headers,
 						form: {'employeeId':session.dialogData.EmpID, 'corporateName': session.dialogData.Corporate, 'date':session.dialogData.hospitalizationDate}
