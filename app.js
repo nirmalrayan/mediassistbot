@@ -985,7 +985,7 @@ function createReceiptCard(session) {
             builder.CardImage.create(session, 'https://i.imgur.com/j6md6yB.png')
         ])
         .buttons([
-            builder.CardAction.openUrl(session, 'https://track.medibuddy.in/', 'More Information')
+            builder.CardAction.openUrl(session, 'https://www.medibuddy.in/claim', 'More Information')
         ]);
 	
 	}	
@@ -1205,10 +1205,10 @@ bot.dialog('help', [
 								.alt('Other Help Topics')
 						])
 						.buttons([
-							builder.CardAction.openUrl(session, "https://www.mediassistindia.com/get-insights-into-your-non-medical-expenses-now-with-medibuddy/", "Non Medical Expenses"),
-							builder.CardAction.openUrl(session, "https://www.mediassistindia.com/ecashless-paving-the-way-for-digital-transformation/", "Difference between claimed and approved amount"),
-							builder.CardAction.openUrl(session, "https://www.mediassistindia.com/hospitalization-claims-and-expenses-things-you-should-know/", "Raising reimbursement claims for pre- and post-hospitalization expenses"),
-							builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/", "Medicines and post-operative home healthcare")								
+							builder.CardAction.openUrl(session, "http://blogs.medibuddy.in/get-insights-into-your-non-medical-expenses-now-with-medibuddy/", "Non Medical Expenses"),
+							builder.CardAction.openUrl(session, "http://blogs.medibuddy.in/ecashless-paving-the-way-for-digital-transformation/", "Difference between claimed and approved amount"),
+							builder.CardAction.openUrl(session, "http://blogs.medibuddy.in/cashless-hospitalization-claim-medical-insurance-network-hospitals/", "Raising reimbursement claims for pre- and post-hospitalization expenses"),
+							builder.CardAction.openUrl(session, "https://www.medibuddy.in/", "Medicines and post-operative home healthcare")								
 							]));
 			session.send(msg);
 			
@@ -1811,10 +1811,10 @@ bot.dialog('askforLocation',  [
 
 			// Configure the request
 			var options = {
-				url: 'https://track.medibuddy.in/api/GetHospitalsByLocation/.json',
+				url: 'https://www.medibuddy.in/api/GetHospitalsByLocation/.json',
 				method: 'POST',
 				headers: headers,
-				form: {"insuranceCompany":session.userData.speciality,"latitude":session.userData.lat,"longitude":session.userData.lng,"distance":10,"hospSpeciality":session.userData.speciality,"maRating":""}
+				form: {"insuranceCompany":session.userData.insurer,"latitude":session.userData.lat,"longitude":session.userData.lng,"distance":10,"hospSpeciality":session.userData.speciality,"maRating":""}
 			}
 
 			// Start the request
@@ -2063,14 +2063,14 @@ bot.dialog('displayhealthcheckFB',
 		healthcheckCard = new builder.HeroCard(session)
 									.title("Health Check Packages")
 									.subtitle("Click below to view packages from hospitals in your city")
-									.text("https://infiniti.medibuddy.in")
+									.text("https://www.medibuddy.in/")
 									.images([
 										new builder.CardImage(session)
 											.url('https://i.imgur.com/UZXZjqO.png')
 											.alt('Health Check Packages')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/", "View Packages")
+										builder.CardAction.openUrl(session, "https://www.medibuddy.in/", "View Packages")
 										]);
 		session.endConversation(new builder.Message(session)
 			.addAttachment(healthcheckCard));		
@@ -2083,14 +2083,14 @@ bot.dialog('displaymedicineFB',
 		medicineCard = new builder.HeroCard(session)
 									.title("Order Medicine")
 									.subtitle("Book prescription medicines effortlessly")
-									.text("https://infiniti.medibuddy.in")
+									.text("https://www.medibuddy.in/")
 									.images([
 										new builder.CardImage(session)
 											.url('https://i.imgur.com/oCmpQ56.png')
 											.alt('Order Medicine')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/", "Order Medicines")
+										builder.CardAction.openUrl(session, "https://www.medibuddy.in/", "Order Medicines")
 										]);
 		session.send(new builder.Message(session)
 			.addAttachment(medicineCard));	
@@ -2103,14 +2103,14 @@ bot.dialog('displayconsultationFB',
 			consultationCard = new builder.HeroCard(session)
 									.title("Consultation")
 									.subtitle("Select your city and speciality to book your preferred consultation. Click below to know more")
-									.text("https://infiniti.medibuddy.in")
+									.text("https://www.medibuddy.in/")
 									.images([
 										new builder.CardImage(session)
 											.url('https://i.imgur.com/E8kTRGq.png')
 											.alt('Consultations')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/", "View Consultations")
+										builder.CardAction.openUrl(session, "https://www.medibuddy.in/", "View Consultations")
 										]);
 		session.send(new builder.Message(session)
 			.addAttachment(consultationCard));
@@ -2123,14 +2123,14 @@ bot.dialog('displayhomehealthcareFB',
 			homehealthcareCard = new builder.HeroCard(session)
 									.title("Home Health Care")
 									.subtitle("Choose your city and Service to view the list of Home Health Care packages available.")
-									.text("https://infiniti.medibuddy.in")
+									.text("https://www.medibuddy.in/")
 									.images([
 										new builder.CardImage(session)
 											.url('https://i.imgur.com/NOVSZ7T.png')
 											.alt('Home Health Care')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/", "View Services")
+										builder.CardAction.openUrl(session, "https://www.medibuddy.in/", "View Services")
 										]);
 		session.send(new builder.Message(session)
 			.addAttachment(homehealthcareCard));
@@ -2150,7 +2150,7 @@ bot.dialog('displayteleconsultationFB',
 										.alt('Tele Consultation')
 								])
 								.buttons([
-									builder.CardAction.imBack(session, "https://infiniti.medibuddy.in/onlineservice/4f81d4702c8242009081cfde6301dd38//General%20Physician", "Tele Consultation")
+									builder.CardAction.imBack(session, "https://www.medibuddy.in/onlineservice/4f81d4702c8242009081cfde6301dd38//General-Physician", "Tele Consultation")
 									]);
 		
 		session.send(new builder.Message(session)
@@ -2169,7 +2169,7 @@ bot.dialog('displaylabtestFB',
 										.alt('Lab Test')
 								])
 								.buttons([
-									builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/labtest/f4a83a18cec74f1786b8fd2b9aff4c0c//Platelet%20Count/?c=Bengaluru/", "View Lab Tests")
+									builder.CardAction.openUrl(session, "https://www.medibuddy.in/labtest/f4a83a18cec74f1786b8fd2b9aff4c0c//Platelet-Count/?c=Bengaluru/", "View Lab Tests")
 									]);
 		session.send(new builder.Message(session)
 			.addAttachment(labtestCard));
@@ -2354,14 +2354,14 @@ function processSubmitAction(session, message){
 			healthcheckCard = new builder.HeroCard(session)
 									.title("Health Check Packages")
 									.subtitle("Click below to view packages from hospitals in your city")
-									.text("https://infiniti.medibuddy.in")
+									.text("https://www.medibuddy.in")
 									.images([
 										new builder.CardImage(session)
 											.url('https://i.imgur.com/UZXZjqO.png')
 											.alt('Health Check Packages')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/result/package/c920aa2144b9e51184af002219349965/"+session.userData.healthcheckCategory+"//"+"/?c="+session.userData.healthcheckCity, "Show Packages")
+										builder.CardAction.openUrl(session, "https://www.medibuddy.in/result/package/c920aa2144b9e51184af002219349965/"+session.userData.healthcheckCategory+"//"+"/?c="+session.userData.healthcheckCity, "Show Packages")
 										]);
 		}
 		else{
@@ -2373,14 +2373,14 @@ function processSubmitAction(session, message){
 		healthcheckCard = new builder.HeroCard(session)
 									.title("Health Check Packages")
 									.subtitle("Click below to view packages from hospitals in your city")
-									.text("https://infiniti.medibuddy.in")
+									.text("https://www.medibuddy.in")
 									.images([
 										new builder.CardImage(session)
 											.url('https://i.imgur.com/UZXZjqO.png')
 											.alt('Health Check Packages')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/", "Visit MediBuddy Infiniti")
+										builder.CardAction.openUrl(session, "https://www.medibuddy.in/", "Visit MediBuddy Infiniti")
 										]);
 		}	
 		session.send(new builder.Message(session)
@@ -2558,7 +2558,7 @@ function processSubmitAction2(session, message){
 											.alt('Health Check Packages')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/medicines/467117a029f0e511aa80002219349965/"+session.userData.medicinePincode+"/?c="+session.userData.medicineCity, "Upload Prescription")
+										builder.CardAction.openUrl(session, "https://www.medibuddy.in/medicines/467117a029f0e511aa80002219349965/"+session.userData.medicinePincode+"/?c="+session.userData.medicineCity, "Upload Prescription")
 										]);
 		session.send(new builder.Message(session)
 			.addAttachment(medicineCard));
@@ -2843,14 +2843,14 @@ function processSubmitAction3(session, message){
 			consultationCard = new builder.HeroCard(session)
 									.title("Consultation")
 									.subtitle("I've curated a list of "+message["speciality"]+"s in "+message["city"]+". Click below to know more")
-									.text("https://infiniti.medibuddy.in")
+									.text("https://www.medibuddy.in")
 									.images([
 										new builder.CardImage(session)
 											.url('https://i.imgur.com/E8kTRGq.png')
 											.alt('Consultations')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/consultation/ad131e35ffb9e51184af002219349965//"+session.userData.consultationSpeciality+"/?c="+session.userData.consultationCity, "View Consultations")
+										builder.CardAction.openUrl(session, "https://www.medibuddy.in/consultation/ad131e35ffb9e51184af002219349965//"+session.userData.consultationSpeciality+"/?c="+session.userData.consultationCity, "View Consultations")
 										]);
 		session.send(new builder.Message(session)
 			.addAttachment(consultationCard));
@@ -3019,14 +3019,14 @@ function processSubmitAction4(session, message){
 			homehealthcareCard = new builder.HeroCard(session)
 									.title("Home Health Care")
 									.subtitle("Click below to view available home health care services in "+message["city"]+" for "+message["service"])
-									.text("https://infiniti.medibuddy.in")
+									.text("https://www.medibuddy.in")
 									.images([
 										new builder.CardImage(session)
 											.url('https://i.imgur.com/NOVSZ7T.png')
 											.alt('Home Health Care')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/homehealthcare/ba678c34a85141299c0b43ac3b1ee8ca//"+session.userData.homehealthcareService+"/?c="+session.userData.homehealthcareCity, "View Services")
+										builder.CardAction.openUrl(session, "https://www.medibuddy.in/homehealthcare/ba678c34a85141299c0b43ac3b1ee8ca//"+session.userData.homehealthcareService+"/?c="+session.userData.homehealthcareCity, "View Services")
 										]);
 		session.send(new builder.Message(session)
 			.addAttachment(homehealthcareCard));
@@ -3202,14 +3202,14 @@ function processSubmitAction5(session, message){
 			teleconsultCard = new builder.HeroCard(session)
 									.title("Tele Consultation")
 									.subtitle("Click below to view available telephonic consultations for "+message["teleservice"])
-									.text("https://infiniti.medibuddy.in")
+									.text("https://www.medibuddy.in")
 									.images([
 										new builder.CardImage(session)
 											.url('https://i.imgur.com/RpZGGSt.png')
 											.alt('Tele Consultation')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/onlineservice/4f81d4702c8242009081cfde6301dd38//"+session.userData.teleconsultationService, "View Services")
+										builder.CardAction.openUrl(session, "https://www.medibuddy.in/onlineservice/4f81d4702c8242009081cfde6301dd38//"+session.userData.teleconsultationService, "View Services")
 										]);
 		session.send(new builder.Message(session)
 			.addAttachment(teleconsultCard));
@@ -3507,14 +3507,14 @@ function processSubmitAction6(session, message){
 			labtestCard = new builder.HeroCard(session)
 									.title("Lab Test")
 									.subtitle("Click below to view `"+message["labtest"]+"` tests in `"+message["city"]+"`")
-									.text("https://infiniti.medibuddy.in")
+									.text("https://www.medibuddy.in")
 									.images([
 										new builder.CardImage(session)
 											.url('https://i.imgur.com/Y3DtlFx.png')
 											.alt('Lab Test')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/labtest/f4a83a18cec74f1786b8fd2b9aff4c0c//"+session.userData.labtest+"/?c="+session.userData.labtestCity, "View Lab Tests")
+										builder.CardAction.openUrl(session, "https://www.medibuddy.in/labtest/f4a83a18cec74f1786b8fd2b9aff4c0c//"+session.userData.labtest+"/?c="+session.userData.labtestCity, "View Lab Tests")
 										]);
 		session.send(new builder.Message(session)
 			.addAttachment(labtestCard));
