@@ -384,7 +384,7 @@ bot.dialog('showMenu',[
 											.alt('Second Opinion')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/gso/259fb4d2abcb480fb4e8778a33b9c9d2", "Get Second Opinion")
+										builder.CardAction.openUrl(session, "https://www.medibuddy.in/gso/259fb4d2abcb480fb4e8778a33b9c9d2", "Get Second Opinion")
 										]);
 			
 			menucards.push(secondOpinionCard);
@@ -1121,7 +1121,7 @@ bot.dialog('help', [
 											.alt('Second Opinion')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/gso/259fb4d2abcb480fb4e8778a33b9c9d2", "Get Second Opinion")
+										builder.CardAction.openUrl(session, "https://www.medibuddy.in/gso/259fb4d2abcb480fb4e8778a33b9c9d2", "Get Second Opinion")
 										]);
 			
 			cards.push(secondOpinionCard);
@@ -1171,7 +1171,7 @@ bot.dialog('help', [
 											.alt('Second Opinion')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/gso/259fb4d2abcb480fb4e8778a33b9c9d2", "Get Second Opinion")
+										builder.CardAction.openUrl(session, "https://www.medibuddy.in/gso/259fb4d2abcb480fb4e8778a33b9c9d2", "Get Second Opinion")
 										]);
 			
 			cards.push(secondOpinionCard);
@@ -1750,7 +1750,7 @@ bot.dialog('askforLocation',  [
 		bot.library(locationDialog.createLibrary("AjgT49m-_PFYGm_KAZ4nBmOxyNeEyCQXSV_ybfF3wLtebeCDoYVT0JNyOpnB-Y62"));
 		
 		var options = {
-			prompt: "Where should I search for hospitals? 🏥. Type your city.",
+			prompt: 'Where should I search for hospitals? 🏥. Type your city.',
 			useNativeControl: true,
 			reverseGeocode: true,
 			skipFavorites: true,
@@ -1811,7 +1811,7 @@ bot.dialog('askforLocation',  [
 
 			// Configure the request
 			var options = {
-				url: 'https://www.medibuddy.in/api/GetHospitalsByLocation/.json',
+				url: 'http://track-api-lb.medibuddy.in/networkhospital/gethospitaldetailslist/.json',
 				method: 'POST',
 				headers: headers,
 				form: {"insuranceCompany":session.userData.insurer,"latitude":session.userData.lat,"longitude":session.userData.lng,"distance":10,"hospSpeciality":session.userData.speciality,"maRating":""}
