@@ -26,7 +26,7 @@ var sqlConfig = {
     enforceTable: true, // If this property is not set to true it defaults to false. When false if the specified table is not found, the bot will throw an error.
     options: {
         database: process.env.AzureSQLDatabase,
-        table: 'MediBuddyConversationLogger',
+        table: process.env.AzureSQLDBTable,
         encrypt: true,
         rowCollectionOnRequestCompletion: true
     }
