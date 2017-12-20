@@ -6,7 +6,7 @@
 var http = require('http');
 var restify = require('restify');
 var builder = require('botbuilder');
-var azure = require('botbuilder-azure');
+//var azure = require('botbuilder-azure');
 const {Wit, log} = require('node-wit');
 var cognitiveservices = require('botbuilder-cognitiveservices');
 require('env2')('.env'); // loads all entries into process.env
@@ -18,7 +18,7 @@ require('env2')('.env'); // loads all entries into process.env
 
 //encryption key for saved state
 //const BOTAUTH_SECRET = "TESTBOT";  
-
+/*
 var sqlConfig = {
     userName: process.env.AzureSQLUserName,
     password: process.env.AzureSQLPassword,
@@ -35,7 +35,7 @@ var sqlConfig = {
 var sqlClient = new azure.AzureSqlClient(sqlConfig);
 
 var sqlStorage = new azure.AzureBotStorage({ gzipData: false }, sqlClient);
-
+*/
 // Setup Restify Server
 var server = restify.createServer();
 server.listen(process.env.PORT || process.env.port || 65535, function() 
@@ -103,7 +103,8 @@ var bot = new builder.UniversalBot(connector,
 			session.send(new builder.Message(session)
 				.addAttachment(welcomeCard));
 			session.beginDialog("/refer");
-	}).set('storage', sqlStorage); // Register in-memory storage 
+	}).set('storage', inMemoryStorage); // Register in-memory storage 
+
 
 //Direct to index.html web page
  server.get('/', restify.plugins.serveStatic({
