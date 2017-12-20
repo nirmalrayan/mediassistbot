@@ -37,7 +37,6 @@ var sqlClient = new azure.AzureSqlClient(sqlConfig);
 var sqlStorage = new azure.AzureBotStorage({ gzipData: false }, sqlClient);
 
 // Setup Restify Server
-
 var server = restify.createServer();
 server.listen(process.env.PORT || process.env.port || 65535, function() 
 {
