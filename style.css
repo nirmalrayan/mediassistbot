@@ -9,7 +9,6 @@ header { display:table-cell; background: url(bg-sm.jpg) no-repeat #000; backgrou
 .social{text-align: center; margin-top:40px;}
 .social a { display: inline-block; margin: 0 0 0 4px!important; transition: .5s; clear: both; float: none; width: 14px; height: 14px; padding: 8px; border-radius: 20px; border: 1px solid #ddd; overflow: hidden; text-align: center; line-height: 12px; background: #fff;}
 .social svg {width: 14px; height: 14px;}
-		
 h2 {font-weight: normal; font-size:16px;}
 
 .wc-header, .wc-upload, .wc-message-from-me.wc-message-from, .wc-message-from {display:none!important;}
