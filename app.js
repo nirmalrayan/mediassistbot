@@ -72,7 +72,7 @@ var bot = new builder.UniversalBot(connector,
 		}
 		else{
 			if(session.userData.masterName){
-				var welcomeCard = new builder.HeroCard(session)
+				var welcomeCard = new builder.ThumbnailCard(session)
 				.title("Hi " + session.userData.masterName + "! Nice to see you again")
 				.subtitle("I will be your personal healthcare assistant. ℹ️ Type `\"show menu\"` or `\"#\"` at any time to see the menu.")
 				.images([
@@ -86,7 +86,7 @@ var bot = new builder.UniversalBot(connector,
 				
 			}
 			else{
-				var welcomeCard = new builder.HeroCard(session)
+				var welcomeCard = new builder.ThumbnailCard(session)
 				.title("Greetings! I'm MediBuddy")
 				.subtitle("I will be your personal healthcare assistant. ℹ️ Type \"show menu\" or \"#\" at any time to see the menu.")
 				.images([
@@ -103,7 +103,7 @@ var bot = new builder.UniversalBot(connector,
 			session.send(new builder.Message(session)
 				.addAttachment(welcomeCard));
 			session.beginDialog("/refer");
-	}).set('storage', sqlStorage); // Register in-memory storage 
+	}).set('storage', inMemoryStorage); // Register in-memory storage 
 
 
 //Direct to index.html web page
