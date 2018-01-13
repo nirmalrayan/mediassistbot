@@ -2068,7 +2068,7 @@ bot.dialog('sayThanks',[
 	}
 ])
 .triggerAction({
-	matches: [/thanks/i, /👍/i,/thx/i, /thank/i ,/helpful/i, /kind/i, /You're great/i, /great/i, /amazing/i, /brilliant/i, /excellent/i, /awesome/i, /amazing/i, /love/i, /cute/i, /awww/i, /i like you/i, /like/i]
+	matches: 'compliment'
 	
 });
 
