@@ -86,12 +86,10 @@
     </div>
     <script src="https://cdn.botframework.com/botframework-webchat/latest/botchat.js"></script>
     <script>
-      import { env } from './environments/environment';
-
       BotChat.App({
-        directLine: { secret: env.DirectlineSecret },
-        user: { id: env.MY_APP_ID },
-        bot: { id: env.BotID },
+        directLine: { secret: '0TjVVFscnUY.cwA.GWM.iCDsLb1adwGX2WxyjAy9L1Bku3YN2xGnW8TIBm31dSw' },
+        user: { id: '31db772c-9761-4b25-b568-f1e140b26b4a' },
+        bot: { id: 'medibot_4ttx4fdwLSX' },
         resize: 'detect'
       }, document.getElementById("bot"));
       
