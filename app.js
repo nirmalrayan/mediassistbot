@@ -10,7 +10,45 @@ var azure = require('botbuilder-azure');
 const {Wit, log} = require('node-wit');
 var cognitiveservices = require('botbuilder-cognitiveservices');
 require('env2')('.env'); // loads all entries into process.env
+var Connection = require('tedious').Connection;
+var Request = require('tedious').Request;
 
+// Create connection to database
+var config = 
+   {
+     userName: process.env.AzureSQLUserName, 
+     password: process.env.AzureSQLPassword, 
+     server: process.env.AzureSQLServer, 
+     options: 
+        {
+           database: process.env.AzureSQLDatabase 
+           , encrypt: true
+        }
+   }
+
+var connection = new Connection(config);
+
+function storeFeedback(userid, username, servicename, helpful, feedback, rating)
+   { console.log('Inserting feedback into Table..');
+
+	   var requestString = "INSERT INTO Feedback (UserID, UserName, ServiceName, Helpful, Feedback, Rating) values ("+userid+","+username+","+servicename+","+helpful+","+feedback+","+rating+")";
+	   // Read all rows from table
+	   console.log(requestString);
+     request = new Request(
+          requestString,
+             function(err, rowCount, rows) 
+                {
+                    console.log(rowCount + ' row(s) inserted successfully!');
+                }
+            );
+
+/*     request.on('row', function(columns) {
+        columns.forEach(function(column) {
+            console.log("%s\t%s", column.metadata.colName, column.value);
+         });
+             });*/
+     connection.execSql(request);
+   }
 //const botauth = require("botauth");
 
 //const passport = require("passport");
@@ -31,10 +69,10 @@ var sqlConfig = {
         rowCollectionOnRequestCompletion: true
     }
 }
-
+/*
 var sqlClient = new azure.AzureSqlClient(sqlConfig);
 
-var sqlStorage = new azure.AzureBotStorage({ gzipData: false }, sqlClient);
+var sqlStorage = new azure.AzureBotStorage({ gzipData: false }, sqlClient);*/
 
 // Setup Restify Server
 var server = restify.createServer();
@@ -56,7 +94,8 @@ var connector = new builder.ChatConnector
 var bot = new builder.UniversalBot(connector,
 
     function (session) {
-		
+		session.userData.userID = session.message.user.id;
+		session.userData.userName = session.message.user.name;
 		if(session.message.address.channelId === 'facebook'){
  			var welcomeCard = new builder.HeroCard(session)
 				.title("Hi "+session.message.address.user.name+"! Nice to see you. I am MediBuddy")
@@ -111,7 +150,6 @@ var bot = new builder.UniversalBot(connector,
  directory: __dirname,
  default: '/index.html'	
 })); 
-
 
 server.post('/api/messages', connector.listen());
 
@@ -446,7 +484,7 @@ bot.dialog('showMenu',[
 	}
 ])
 .triggerAction({
-	matches: [/^show menu$/i, /#/i]
+	matches: [/^show menu$/i, /#/i, 'showMenu']
 });
 
 // Dialog to start tracking claims
@@ -460,7 +498,7 @@ bot.dialog('trackClaim', [
 	}
 ])
 .triggerAction({
-	matches: [/track claim/i, /track/i, /tracking/i, /claim tracking/i, /claim status/i, /pending claim/i, /claim details/i], 
+	matches: [/track claim/i, /track/i, /tracking/i, /claim tracking/i, /claim status/i, /pending claim/i, /claim details/i, 'track claim'], 
 	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
 	
 });
@@ -654,6 +692,7 @@ bot.dialog('trackClaimwID', [
 								var msg = new builder.Message(session).addAttachment(card);
 								session.send(msg);
 								session.sendTyping();
+								session.beginDialog('askforFeedback');
 								setTimeout(function () {
 									session.endConversation();
 									session.beginDialog('askforMore');
@@ -671,7 +710,6 @@ bot.dialog('trackClaimwID', [
 							}  
 						}
 					});
-					
 					session.endDialog();
 				}
 ]);
@@ -1103,6 +1141,56 @@ bot.dialog('askforPolNo',[
 	}
 ]);
 
+// Dialog to ask for Feedback
+bot.dialog('askforFeedback',[
+	function (session){
+		builder.Prompts.confirm(session, "Did you find this helpful? (yes/no)");		
+	},
+	function(session, results){
+		if(results.response){
+			
+			var wasHelpful = 1;
+
+			console.log(wasHelpful);
+			var connection = new Connection(config);
+			// Attempt to connect and execute queries if connection goes through
+			connection.on('connect', function(err) 
+			{
+				if (err) 
+				{
+					console.log(err);
+				}
+				else
+				{
+					var serviceName = "Track Claim with ID";
+					storeFeedback(JSON.stringify(session.message.user.id), JSON.stringify(session.message.user.name), serviceName, wasHelpful,'','');
+				}
+			}
+			);
+		}
+		else{
+			var wasHelpful = 0;
+
+			console.log(wasHelpful);
+			var connection = new Connection(config);
+			// Attempt to connect and execute queries if connection goes through
+			connection.on('connect', function(err) 
+			{
+				if (err) 
+				{
+					console.log(err);
+				}
+				else
+				{
+					console.log('SESSION DETAILS'+ JSON.stringify(session.message.user.id));
+					storeFeedback(session.message.user.id, session.message.user.name, 'Track Claim with ID', wasHelpful, '','');
+				}
+			}
+			);			
+		}
+	}
+]);
+
 // Context Help dialog for Hospitalization date 
 bot.dialog('doaHelp', function(session, args, next) {
     var msg = "⛑️ You can enter the date in any format. Eg. if date of admission is 01-Jan-2017 and discharge is 05-Jan-2017, you can enter any date from 1st Jan,2017 to 5th Jan, 2017";
@@ -1256,7 +1344,7 @@ bot.dialog('downloadEcard',[
 	}
 ])
 .triggerAction({
-	matches: [/download e-card/i, /download ecard/i, /ecard/i, /tpa card/i, /insurance card/i, /card/i, /download card/i, /^download e-card$/i],
+	matches: [/download e-card/i, /download ecard/i, /ecard/i, /tpa card/i, /insurance card/i, /card/i, /download card/i, /^download e-card$/i, 'downloadECard'],
 	// /^download e-card$/i,
 	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
 	
@@ -1734,7 +1822,7 @@ bot.dialog('searchNetwork',[
 	}
 ])
 .triggerAction({
-	matches: [/search network hospitals/i, /search network/i, /search nearby hospitals/i, /search providers/i, /hospitals around/i],
+	matches: [/search network hospitals/i, /search network/i, /search nearby hospitals/i, /search providers/i, /hospitals around/i, 'searchNetwork'],
 	// /^search network hospitals$|^search network$/i,
 	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
 	
@@ -1976,7 +2064,7 @@ bot.dialog('askforInvestigation',[
 	}
 ])
 .triggerAction({
-	matches: [/investigation/i, /forge/i, /malpractice/i, /fishy/i, /suspicious/i, /fordge/i]
+	matches: [/investigation/i, /forge/i, /malpractice/i, /fishy/i, /suspicious/i, /fordge/i, 'Investigation']
 	
 });
 
@@ -1999,12 +2087,12 @@ bot.dialog('askforOffshore',[
 	function (session){
 		session.send("ℹ️ For further assistance you can either write to `gethelp@mahs.in` or call on our \"Overseas\" contact number at `91-80-67617555`");
 	},
-	function(session, results) {
+	function(session, results) {i 
 		session.endDialogWithResult(results);
 	}
 ])
 .triggerAction({
-	matches: [/offshore/i, /abroad/i, /overseas contact number/i, /USA/i, /Australia/i, /overseas/i]
+	matches: [/offshore/i, /abroad/i, /overseas contact number/i, /USA/i, /Australia/i, /overseas/i, 'Offshore']
 	
 });
 
@@ -2018,7 +2106,7 @@ bot.dialog('askforGeneralQuery',[
 	}
 ])
 .triggerAction({
-	matches: [/register/i, /application/i, /app/i, /medibuddy/i, /transaction/i, /query/i, /queries/i, /question/i, /doubt/i, /clarify/i, /clarity/i, /contact information/i, /registration/i, /can i submit/i, /for how many days/i, /how many/i, /help us urgently/i, /help us/i, /purchase/i, /buy/i, /how much/i, /log in/i, /please guide/i, /responding/i, /please help/i]
+	matches: [/register/i, /application/i, /app/i, /transaction/i, /query/i, /queries/i, /question/i, /doubt/i, /clarify/i, /clarity/i, /contact information/i, /registration/i, /can i submit/i, /for how many days/i, /how many/i, /help us urgently/i, /help us/i, /purchase/i, /buy/i, /how much/i, /log in/i, /please guide/i, /responding/i, /please help/i]
 	
 });
 
@@ -2052,8 +2140,7 @@ bot.dialog('sayGoodbye',[
 	}
 ])
 .triggerAction({
-	matches: [/bye/i, /see you/i, /cu/i ,/ciao/i, /ta ta/i, /cheerio/i, /cheers/i, /gtg/i, /got to go/i,/bai/i, /c u/i, /l8r/i, /exit/i, /quit/i, /take care/i, /cya/i, /shalom/i, /sayonara/i, /farewell/i, /later/i, /so long/i, /peace out/i, /see you/i]
-	
+	matches: [/bye/i, /see you/i, /cu/i ,/ciao/i, /ta ta/i, /cheerio/i, /cheers/i, /gtg/i, /got to go/i,/bai/i, /c u/i, /l8r/i, /exit/i, /quit/i, /take care/i, /cya/i, /shalom/i, /sayonara/i, /farewell/i, /so long/i, /peace out/i, /see you/i]
 });
 
 // Dialog to handle Compliment
@@ -2226,7 +2313,7 @@ bot.dialog('healthCheck',[
 	}
 ])
 .triggerAction({
-	matches: [/health check/i, /health check up/i, /check up/i, /health check package/i],
+	matches: [/health check/i, /health check up/i, /check up/i, /health check package/i, 'healthCheck'],
 	// /^search network hospitals$|^search network$/i,
 	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
 	
@@ -2417,7 +2504,7 @@ bot.dialog('medicine',[
 	}
 ])
 .triggerAction({
-	matches: [/medicine/i, /medicines/i, /prescription/i, /pharmacy/i, /tablet/i, /syrup/i, /drugs/i],
+	matches: [/medicine/i, /medicines/i, /prescription/i, /pharmacy/i, /tablet/i, /syrup/i, /drugs/i, 'Medicine'],
 	// /^search network hospitals$|^search network$/i,
 	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
 	
@@ -2595,7 +2682,7 @@ bot.dialog('consultation',[
 	}
 ])
 .triggerAction({
-	matches: [/consultation/i, /consult/i, /doctor/i, /appointment/i],
+	matches: [/consultation/i, /consult/i, /doctor/i, /appointment/i, 'Consultation'],
 	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
 	
 });
@@ -2887,7 +2974,7 @@ bot.dialog('homehealthcare',[
 	}
 ])
 .triggerAction({
-	matches: [/home health care/i, /home care/i, /home health/i, /^Home Health Care$/gi],
+	matches: [/home health care/i, /home care/i, /home health/i, /^Home Health Care$/gi, 'HomeHealthCare'],
 	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
 	
 });
@@ -3061,7 +3148,7 @@ bot.dialog('teleconsultation',[
 	}
 ])
 .triggerAction({
-	matches: [/telephone consultation/i, /telephonic consultation/i, /teleconsultation/i, /tele consultation/i, /tele-consultation/i, /^Tele Consultation$/gi],
+	matches: [/telephone consultation/i, /telephonic consultation/i, /teleconsultation/i, /tele consultation/i, /tele-consultation/i, /^Tele Consultation$/gi, 'TeleConsultation'],
 	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
 	
 });
@@ -3248,7 +3335,7 @@ bot.dialog('labtest',[
 	}
 ])
 .triggerAction({
-	matches: [/lab test/i, /^Lab Test$/gi, /Laboratory/i, /Lab/i],
+	matches: [/lab test/i, /^Lab Test$/gi, /Laboratory/i, /Lab/i, 'labTest'],
 	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
 	
 });
