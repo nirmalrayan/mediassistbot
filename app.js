@@ -30,8 +30,8 @@ var connection = new Connection(config);
 
 function storeFeedback(userid, username, servicename, helpful, feedback, rating)
    { console.log('Inserting feedback into Table..');
-
-	   var requestString = "INSERT INTO Feedback (UserID, UserName, ServiceName, Helpful, Feedback, Rating) values ("+userid+","+username+","+servicename+","+helpful+","+feedback+","+rating+")";
+   		console.log("Feedback value" + feedback);
+	   var requestString = "INSERT INTO ["+process.env.AzureSQLDatabase+"].[dbo].[Feedback] (UserID, UserName, ServiceName, Helpful, Feedback, Rating) values ("+userid+","+username+","+servicename+","+helpful+","+feedback+","+rating+")";
 	   // Read all rows from table
 	   console.log(requestString);
      request = new Request(
@@ -642,34 +642,32 @@ bot.dialog('trackClaimwID', [
 					response = request(options, function (error, response, body) {
 						if (!error && response.statusCode == 200) {	
 							data = JSON.parse(body);
-							
 							if(JSON.stringify(data.isSuccess) === "true"){
-
+								
 								var claimdata = data.claimDetails;
-							
 								session.userData.trackIsSuccess = JSON.stringify(data.isSuccess);
 								session.userData.trackIsRetailPolicy = JSON.stringify(data.isRetailPolicy);
 								
 								//Claim Details
 								session.userData.trackClaimId = JSON.stringify(claimdata[0].claimDetails.claimId);
 								session.userData.trackClaimType = claimdata[0].claimDetails.claimType;
-								session.userData.trackClaimReceivedDate = claimdata[0].claimDetails.claimReceivedDate;
+//								session.userData.trackClaimReceivedDate = claimdata[0].claimDetails.claimReceivedDate;
 								session.userData.trackClmAmount = JSON.stringify(claimdata[0].claimDetails.clmAmount);
 								session.userData.trackClmApprovedAmt = JSON.stringify(claimdata[0].claimDetails.clmApprovedAmt);
 								session.userData.trackclmPreAuthAmt = JSON.stringify(claimdata[0].claimDetails.clmPreAuthAmt);
 								session.userData.trackClaimStatus = claimdata[0].claimDetails.claimStatus;
 								session.userData.trackDoa = claimdata[0].claimDetails.doa;
 								session.userData.trackDod = claimdata[0].claimDetails.dod;
-								session.userData.trackClaimApprovedDate = claimdata[0].claimDetails.claimApprovedDate;
-								if(claimdata[0].claimDetails.claimDeniedDate === "01-Jan-0001" ){
-									session.userData.trackClaimDeniedDate = "-";
-								}else{
-									session.userData.trackClaimDeniedDate = claimdata[0].claimDetails.claimDeniedDate;
-								}
+//								session.userData.trackClaimApprovedDate = claimdata[0].claimDetails.claimApprovedDate;
+//								if(claimdata[0].claimDetails.claimDeniedDate === "01-Jan-0001" ){
+//									session.userData.trackClaimDeniedDate = "-";
+//								}else{
+//									session.userData.trackClaimDeniedDate = claimdata[0].claimDetails.claimDeniedDate;
+//								}
 								session.userData.trackHospitalName = claimdata[0].claimDetails.hospitalName;
 								session.userData.trackIsClmNMI = JSON.stringify(claimdata[0].claimDetails.isClmNMI);
 								session.userData.trackIsClmDenied = JSON.stringify(claimdata[0].claimDetails.isClmDenied);
-								session.userData.trackDenialReasons = claimdata[0].claimDetails.denialReasons;
+//								session.userData.trackDenialReasons = claimdata[0].claimDetails.denialReasons;
 								
 								//Policy Details
 								session.userData.trackPolicyNo = claimdata[0].beneficiaryDetails.policyNo;
@@ -678,21 +676,21 @@ bot.dialog('trackClaimwID', [
 								session.userData.trackBenefRelation = claimdata[0].beneficiaryDetails.benefRelation;
 								
 								//Discharge Summary
-								session.userData.trackNonPayableAmount = JSON.stringify(claimdata[0].dischargeSummary.nonPayableAmount);
-								session.userData.trackNonPayReason =claimdata[0].dischargeSummary.nonPayReason;
-								session.userData.trackAmountPaidByPatient = JSON.stringify(claimdata[0].dischargeSummary.amountPaidByPatient);
+//								session.userData.trackNonPayableAmount = JSON.stringify(claimdata[0].dischargeSummary.nonPayableAmount);
+//								session.userData.trackNonPayReason =claimdata[0].dischargeSummary.nonPayReason;
+/*								session.userData.trackAmountPaidByPatient = JSON.stringify(claimdata[0].dischargeSummary.amountPaidByPatient);
 								session.userData.trackAmountPaidByCorporate = JSON.stringify(claimdata[0].dischargeSummary.amountPaidByCorporate);
 								session.userData.trackPolicyExcessAmount = JSON.stringify(claimdata[0].dischargeSummary.policyExcessAmount);
 								session.userData.trackHospitalDiscount = JSON.stringify(claimdata[0].dischargeSummary.hospitalDiscount);
 								session.userData.trackAdvancePaidByPatient = JSON.stringify(claimdata[0].dischargeSummary.advancePaidByPatient);
 								session.userData.trackDeductionReason = claimdata[0].dischargeSummary.deductionReason;
-								
+*/								
 								
 								var card = createReceiptCard(session);
 								var msg = new builder.Message(session).addAttachment(card);
 								session.send(msg);
-								session.sendTyping();
 								session.beginDialog('askforFeedback');
+								session.sendTyping();
 								setTimeout(function () {
 									session.endConversation();
 									session.beginDialog('askforMore');
@@ -817,7 +815,7 @@ bot.dialog('trackClaimwMAID', [
 								session.userData.trackBenefRelation = claimdata[0].beneficiaryDetails.benefRelation;
 								
 								//Discharge Summary
-								session.userData.trackNonPayableAmount = JSON.stringify(claimdata[0].dischargeSummary.nonPayableAmount);
+/*								session.userData.trackNonPayableAmount = JSON.stringify(claimdata[0].dischargeSummary.nonPayableAmount);
 								session.userData.trackNonPayReason =claimdata[0].dischargeSummary.nonPayReason;
 								session.userData.trackAmountPaidByPatient = JSON.stringify(claimdata[0].dischargeSummary.amountPaidByPatient);
 								session.userData.trackAmountPaidByCorporate = JSON.stringify(claimdata[0].dischargeSummary.amountPaidByCorporate);
@@ -825,7 +823,7 @@ bot.dialog('trackClaimwMAID', [
 								session.userData.trackHospitalDiscount = JSON.stringify(claimdata[0].dischargeSummary.hospitalDiscount);
 								session.userData.trackAdvancePaidByPatient = JSON.stringify(claimdata[0].dischargeSummary.advancePaidByPatient);
 								session.userData.trackDeductionReason = claimdata[0].dischargeSummary.deductionReason;
-								
+*/								
 								
 								var card = createReceiptCard(session);
 								var msg = new builder.Message(session).addAttachment(card);
@@ -951,7 +949,7 @@ bot.dialog('trackClaimwEmpID', [
 								session.userData.trackBenefRelation = claimdata[0].beneficiaryDetails.benefRelation;
 								
 								//Discharge Summary
-								session.userData.trackNonPayableAmount = JSON.stringify(claimdata[0].dischargeSummary.nonPayableAmount);
+/*								session.userData.trackNonPayableAmount = JSON.stringify(claimdata[0].dischargeSummary.nonPayableAmount);
 								session.userData.trackNonPayReason =claimdata[0].dischargeSummary.nonPayReason;
 								session.userData.trackAmountPaidByPatient = JSON.stringify(claimdata[0].dischargeSummary.amountPaidByPatient);
 								session.userData.trackAmountPaidByCorporate = JSON.stringify(claimdata[0].dischargeSummary.amountPaidByCorporate);
@@ -959,7 +957,7 @@ bot.dialog('trackClaimwEmpID', [
 								session.userData.trackHospitalDiscount = JSON.stringify(claimdata[0].dischargeSummary.hospitalDiscount);
 								session.userData.trackAdvancePaidByPatient = JSON.stringify(claimdata[0].dischargeSummary.advancePaidByPatient);
 								session.userData.trackDeductionReason = claimdata[0].dischargeSummary.deductionReason;
-								
+*/								
 								
 								var card = createReceiptCard(session);
 								var msg = new builder.Message(session).addAttachment(card);
@@ -1007,12 +1005,12 @@ function createReceiptCard(session) {
 	if (session.message.address.channelId === 'facebook'){
 		return session.send('📝 Beneficiary: '+ session.userData.trackBenefName+' | Medi Assist ID: '+ session.userData.trackBenefMAID+' | Hospital: '+ session.userData.trackHospitalName+ ' | Claim Number: '+ session.userData.trackClaimId+' | '
 		+ ' | Claim Type: '+ session.userData.trackClaimType + ' | Date of Hospitalization: '+ session.userData.trackDoa+ ' | Date of Discharge: ' + session.userData.trackDod 
-		+ ' | Relation to Beneficiary: ' + session.userData.trackBenefRelation+ ' | Claim Received Date: ' + session.userData.trackClaimReceivedDate + ' | Claim Approved Date: '+ 
-		session.userData.trackClaimApprovedDate + ' | Claim Denied Date: ' + session.userData.trackClaimDeniedDate+ ' | Policy Number: ' + session.userData.trackPolicyNo + 
-		' | Claimed Amount: Rs. '+ formatNumber(session.userData.trackClmAmount) + ' | Hospital Discount : Rs. '+ formatNumber(session.userData.trackHospitalDiscount) + 
+		+ ' | Relation to Beneficiary: ' + session.userData.trackBenefRelation+ /*' | Claim Received Date: ' + session.userData.trackClaimReceivedDate + ' | Claim Approved Date: '+ 
+		session.userData.trackClaimApprovedDate + ' | Claim Denied Date: ' + session.userData.trackClaimDeniedDate+ */' | Policy Number: ' + session.userData.trackPolicyNo + 
+		' | Claimed Amount: Rs. '+ formatNumber(session.userData.trackClmAmount) + /*' | Hospital Discount : Rs. '+ formatNumber(session.userData.trackHospitalDiscount) + 
 		' | Amount Paid by Beneficiary: Rs. '+ formatNumber(session.userData.trackAmountPaidByPatient) + ' | Amount Paid by Corporate : Rs. '+ formatNumber(session.userData.trackAmountPaidByCorporate) + 
 		' | Non Payable Amount : Rs. ' + formatNumber(session.userData.trackNonPayableAmount) + ' | Policy Excess Amount : Rs. '+ formatNumber(session.userData.trackPolicyExcessAmount) +
-		' | Advance Paid by Beneficiary : Rs. '+formatNumber(session.userData.trackAdvancePaidByPatient)+ ' | Approved Amount : Rs. '+ formatNumber(session.userData.trackClmApprovedAmt)
+		' | Advance Paid by Beneficiary : Rs. '+formatNumber(session.userData.trackAdvancePaidByPatient)+ */' | Approved Amount : Rs. '+ formatNumber(session.userData.trackClmApprovedAmt)
 		);
 	}
 	else{
@@ -1024,17 +1022,17 @@ function createReceiptCard(session) {
 			'#### Date of Hospitalization : ' + session.userData.trackDoa + '\r\r' +
 			'#### Date of Discharge: ' + session.userData.trackDod + '\r\r' +
 			'#### Relation to Beneficiary : ' + session.userData.trackBenefRelation + '\r\r' +
-			'#### Claim Received Date : ' + session.userData.trackClaimReceivedDate + '\r\r' +
-			'#### Claim Approved Date : ' + session.userData.trackClaimApprovedDate + '\r\r' +
-			'#### Claim Denied Date : ' + session.userData.trackClaimDeniedDate + '\r\r' +
+//			'#### Claim Received Date : ' + session.userData.trackClaimReceivedDate + '\r\r' +
+//			'#### Claim Approved Date : ' + session.userData.trackClaimApprovedDate + '\r\r' +
+//			'#### Claim Denied Date : ' + session.userData.trackClaimDeniedDate + '\r\r' +
 			'#### Policy Number : ' + session.userData.trackPolicyNo + '\r\r' +
 			'#### Claimed Amount : &#x20B9; ' + formatNumber(session.userData.trackClmAmount) + '/- \r\r' +
-			'#### Hospital Discount : &#x20B9; ' + formatNumber(session.userData.trackHospitalDiscount) + '/- \r\r' +
+/*			'#### Hospital Discount : &#x20B9; ' + formatNumber(session.userData.trackHospitalDiscount) + '/- \r\r' +
 			'#### Amount Paid by Beneficiary : &#x20B9; ' + formatNumber(session.userData.trackAmountPaidByPatient) + '/- \r\r' +
 			'#### Amount Paid by Corporate : &#x20B9; ' + formatNumber(session.userData.trackAmountPaidByCorporate) + '/- \r\r' +
 			'#### Non Payable Amount : &#x20B9; ' + formatNumber(session.userData.trackNonPayableAmount) + '/- \r\r' +
 			'#### Policy Excess Amount : &#x20B9; ' + formatNumber(session.userData.trackPolicyExcessAmount) + '/- \r\r' +
-			'#### Advance Paid by Beneficiary : &#x20B9; ' + formatNumber(session.userData.trackAdvancePaidByPatient) + '/- \r\r' +
+			'#### Advance Paid by Beneficiary : &#x20B9; ' + formatNumber(session.userData.trackAdvancePaidByPatient) + '/- \r\r' +*/
 			'#### Approved Amount : &#x20B9; ' + formatNumber(session.userData.trackClmApprovedAmt) + '/- \r\r' 
 		)
         .images([
@@ -1144,14 +1142,11 @@ bot.dialog('askforPolNo',[
 // Dialog to ask for Feedback
 bot.dialog('askforFeedback',[
 	function (session){
-		builder.Prompts.confirm(session, "Did you find this helpful? (yes/no)");		
+		builder.Prompts.confirm(session, "Did you find this helpful? (yes/no)");	
 	},
 	function(session, results){
 		if(results.response){
-			
 			var wasHelpful = 1;
-
-			console.log(wasHelpful);
 			var connection = new Connection(config);
 			// Attempt to connect and execute queries if connection goes through
 			connection.on('connect', function(err) 
@@ -1162,13 +1157,13 @@ bot.dialog('askforFeedback',[
 				}
 				else
 				{
-					var serviceName = "Track Claim with ID";
-					storeFeedback(JSON.stringify(session.message.user.id), JSON.stringify(session.message.user.name), serviceName, wasHelpful,'','');
+					var serviceName = JSON.stringify("Track Claim with ID");
+					storeFeedback(JSON.stringify(session.message.user.id).replace(/"/g, "'"), JSON.stringify(session.message.user.name).replace(/"/g, "'"), serviceName.replace(/"/g, "'"), wasHelpful,'','');
 				}
 			}
 			);
 		}
-		else{
+		else if (results.response.toLowerCase() == 'no'){
 			var wasHelpful = 0;
 
 			console.log(wasHelpful);
@@ -1182,7 +1177,6 @@ bot.dialog('askforFeedback',[
 				}
 				else
 				{
-					console.log('SESSION DETAILS'+ JSON.stringify(session.message.user.id));
 					storeFeedback(session.message.user.id, session.message.user.name, 'Track Claim with ID', wasHelpful, '','');
 				}
 			}
