@@ -611,6 +611,7 @@ bot.dialog('askforFeedback',[
 				}
 				else
 				{
+					console.log('This is session.message data' + JSON.stringify(session.message));
 					var serviceName = JSON.stringify("Track Claim with ID");
 					storeFeedback(JSON.stringify(session.message.user.id).replace(/"/g, "'"), JSON.stringify(session.message.user.name).replace(/"/g, "'"), serviceName.replace(/"/g, "'"), wasHelpful,JSON.stringify('OK').replace(/"/g, "'"),JSON.stringify('5').replace(/"/g, "'"));
 				}
