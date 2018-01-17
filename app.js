@@ -573,8 +573,7 @@ bot.customAction({
 bot.customAction({
 	matches: /^Track with Employee ID$/gi,
 	onSelectAction: (session, args, next) => {
-		session.beginDialog('trackClaimwEmpID');
-		
+		session.beginDialog('trackClaimwEmpID');	
 	}
 });
 
@@ -589,7 +588,37 @@ bot.dialog('askforTrackClaimwIDConfirmation',[
 		}
 		else {
 			session.endConversation();
-			session.beginDialog('askforMore');
+		}
+	}
+]);
+
+
+// Dialog to ask for Feedback
+bot.dialog('askforFeedback',[
+	function (session){
+		builder.Prompts.confirm(session, "💡 Did you find this helpful? (yes/no)")
+	},
+	function (session, results) {
+		if (results.response){
+			var wasHelpful = 1;
+			var connection = new Connection(config);
+			// Attempt to connect and execute queries if connection goes through
+			connection.on('connect', function(err) 
+			{
+				if (err) 
+				{
+					console.log(err);
+				}
+				else
+				{
+					var serviceName = JSON.stringify("Track Claim with ID");
+					storeFeedback(JSON.stringify(session.message.user.id).replace(/"/g, "'"), JSON.stringify(session.message.user.name).replace(/"/g, "'"), serviceName.replace(/"/g, "'"), wasHelpful,JSON.stringify('OK').replace(/"/g, "'"),JSON.stringify('5').replace(/"/g, "'"));
+				}
+			}
+			);
+		}
+		else {
+			session.endConversation();
 		}
 		
 	}
@@ -690,11 +719,11 @@ bot.dialog('trackClaimwID', [
 								var msg = new builder.Message(session).addAttachment(card);
 								session.send(msg);
 								session.beginDialog('askforFeedback');
-								session.sendTyping();
+/*								session.sendTyping();
 								setTimeout(function () {
 									session.endConversation();
 									session.beginDialog('askforMore');
-								}, 5000);		
+								}, 5000);	*/	
   							}
 							else if(JSON.stringify(data.isSuccess) === "false"){
 								if(data.errorMessage == "Please enter valid claim ID."){
@@ -829,6 +858,7 @@ bot.dialog('trackClaimwMAID', [
 								var msg = new builder.Message(session).addAttachment(card);
 								session.send("Here are your latest claim details:");
 								session.send(msg);
+								session.beginDialog('askforFeedback');
 								session.sendTyping();
 								setTimeout(function () {
 									session.endConversation();		
@@ -1041,41 +1071,7 @@ function createReceiptCard(session) {
         .buttons([
             builder.CardAction.openUrl(session, 'https://www.medibuddy.in/claim', 'More Information')
         ]);
-	
 	}	
-	
-	
-/*     return new builder.ReceiptCard(session)
-        .title(session.userData.trackBenefName + ' (' + session.userData.trackBenefMAID + ')')
-        .facts([
-            builder.Fact.create(session, session.userData.trackClaimId, 'Claim Number'),
-            builder.Fact.create(session, session.userData.trackClaimType, 'Claim Type'),
-			builder.Fact.create(session, session.userData.trackHospitalName, 'Hospital Name'),
-			builder.Fact.create(session, session.userData.trackDoa, 'Date of Hospitalization'),
-			builder.Fact.create(session, session.userData.trackDoa, 'Date of Discharge'),
-			builder.Fact.create(session, session.userData.trackClaimStatus, 'Claim Status'),
-			builder.Fact.create(session, session.userData.trackBenefRelation, 'Relation'),
-			builder.Fact.create(session, session.userData.trackClaimReceivedDate, 'Claim Received Date'),
-			builder.Fact.create(session, session.userData.trackClaimApprovedDate, 'Claim Approved Date'),
-			builder.Fact.create(session, session.userData.trackClaimDeniedDate, 'Claim Denied Date'),
-			builder.Fact.create(session, session.userData.trackPolicyNo, 'Policy Number')
-			
-			
-        ])
-        .items([
-            builder.ReceiptItem.create(session, 'Rs. '+ session.userData.trackClmAmount, 'Claimed Amount'),
-            builder.ReceiptItem.create(session, 'Rs. ' + session.userData.trackHospitalDiscount, 'Hospital Discount'),
-            builder.ReceiptItem.create(session, 'Rs. '+ session.userData.trackAmountPaidByPatient, 'Amount Paid by Beneficiary'),
-            builder.ReceiptItem.create(session, 'Rs. '+ session.userData.trackAmountPaidByCorporate, 'Amount Paid by Corporate'),
-            builder.ReceiptItem.create(session, 'Rs. '+ session.userData.trackNonPayableAmount, 'Non Payable Amount'),
-            builder.ReceiptItem.create(session, 'Rs. '+ session.userData.trackPolicyExcessAmount, 'Policy Excess Amount'),
-            builder.ReceiptItem.create(session, 'Rs. '+ session.userData.trackAdvancePaidByPatient, 'Advance Paid by Beneficiary')
-        ])
-        .total('Rs. ' + session.userData.trackClmApprovedAmt)
-        .buttons([
-            builder.CardAction.openUrl(session, 'https://track.medibuddy.in/', 'More Information')
-                .image('https://raw.githubusercontent.com/amido/azure-vector-icons/master/renders/microsoft-azure.png')
-        ]); */
 }
 
 // Dialog to ask for Claim Number
@@ -1136,52 +1132,6 @@ bot.dialog('askforPolNo',[
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
-	}
-]);
-
-// Dialog to ask for Feedback
-bot.dialog('askforFeedback',[
-	function (session){
-		builder.Prompts.confirm(session, "Did you find this helpful? (yes/no)");	
-	},
-	function(session, results){
-		if(results.response){
-			var wasHelpful = 1;
-			var connection = new Connection(config);
-			// Attempt to connect and execute queries if connection goes through
-			connection.on('connect', function(err) 
-			{
-				if (err) 
-				{
-					console.log(err);
-				}
-				else
-				{
-					var serviceName = JSON.stringify("Track Claim with ID");
-					storeFeedback(JSON.stringify(session.message.user.id).replace(/"/g, "'"), JSON.stringify(session.message.user.name).replace(/"/g, "'"), serviceName.replace(/"/g, "'"), wasHelpful,'','');
-				}
-			}
-			);
-		}
-		else if (results.response.toLowerCase() == 'no'){
-			var wasHelpful = 0;
-
-			console.log(wasHelpful);
-			var connection = new Connection(config);
-			// Attempt to connect and execute queries if connection goes through
-			connection.on('connect', function(err) 
-			{
-				if (err) 
-				{
-					console.log(err);
-				}
-				else
-				{
-					storeFeedback(session.message.user.id, session.message.user.name, 'Track Claim with ID', wasHelpful, '','');
-				}
-			}
-			);			
-		}
 	}
 ]);
 
