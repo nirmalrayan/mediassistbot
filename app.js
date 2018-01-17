@@ -618,8 +618,24 @@ bot.dialog('askforFeedback',[
 			}
 			);
 		}
-		else {
-			session.endConversation();
+		else {	
+			var wasHelpful = 0;
+			var connection = new Connection(config);
+			// Attempt to connect and execute queries if connection goes through
+			connection.on('connect', function(err) 
+			{
+				if (err) 
+				{
+					console.log(err);
+				}
+				else
+				{
+					console.log('This is session.message data' + JSON.stringify(session.message));
+					var serviceName = JSON.stringify("Track Claim with ID");
+					storeFeedback(JSON.stringify(session.message.user.id).replace(/"/g, "'"), serviceName.replace(/"/g, "'"), wasHelpful,JSON.stringify('OK').replace(/"/g, "'"),JSON.stringify('5').replace(/"/g, "'"), JSON.stringify(session.message.timestamp).replace(/"/g, "'"), JSON.stringify(session.message.source).replace(/"/g, "'"));
+				}
+			}
+			);
 		}
 		
 	}
