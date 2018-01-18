@@ -654,7 +654,7 @@ bot.dialog('askforFeedback',[
 				}
 			}
 			);
-		session.beginDialog('askforMore2');
+//		session.beginDialog('askforMore2');
 		session.endDialog();
 		}
 		else {	
@@ -1329,6 +1329,8 @@ bot.dialog('help', [
 							builder.CardAction.openUrl(session, "https://goo.gl/mz8uQL", "Medicines and post-operative home healthcare")								
 							]));
 			session.send(msg);
+			session.userData.serviceName = "Information Center";
+			session.beginDialog('askforFeedback');
 			
 			session.endDialog();
 	}
