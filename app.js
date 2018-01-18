@@ -654,8 +654,8 @@ bot.dialog('askforFeedback',[
 				}
 			}
 			);
-//		session.beginDialog('askforMore2');
-		session.endDialog();
+		session.beginDialog('askforMore2');
+		session.endConversation();
 		}
 		else {	
 			session.beginDialog('askforFeedbackReason');
