@@ -31,7 +31,7 @@ var connection = new Connection(config);
 function storeFeedback(userid, servicename, helpful, feedback, timestamp, source)
    { console.log('Inserting feedback into Table..');
    		console.log("Feedback value" + feedback);
-	   var requestString = "INSERT INTO ["+process.env.AzureSQLDatabase+"].[dbo].[Feedback] (UserID, ServiceName, Helpful, Feedback, Rating, FeedbackDate, FeedbackSource) values ("+userid+","+servicename+","+helpful+","+feedback+","+rating+","+timestamp+","+source+")";
+	   var requestString = "INSERT INTO ["+process.env.AzureSQLDatabase+"].[dbo].[Feedback] (UserID, ServiceName, Helpful, Feedback, FeedbackDate, FeedbackSource) values ("+userid+","+servicename+","+helpful+","+feedback+","+timestamp+","+source+")";
 	   // Read all rows from table
 	   console.log(requestString);
      request = new Request(
