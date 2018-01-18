@@ -2156,7 +2156,7 @@ bot.dialog('displaymedicineFB',
 											.alt('Order Medicine')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://www.medibuddy.in/", "Order Medicines")
+										builder.CardAction.openUrl(session, "https://www.medibuddy.in/?service=medicine", "Order Medicines")
 										]);
 		session.send(new builder.Message(session)
 			.addAttachment(medicineCard));	
@@ -2176,7 +2176,7 @@ bot.dialog('displayconsultationFB',
 											.alt('Consultations')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://www.medibuddy.in/", "View Consultations")
+										builder.CardAction.openUrl(session, "https://www.medibuddy.in/?service=consultation", "View Consultations")
 										]);
 		session.send(new builder.Message(session)
 			.addAttachment(consultationCard));
@@ -2196,7 +2196,7 @@ bot.dialog('displayhomehealthcareFB',
 											.alt('Home Health Care')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://www.medibuddy.in/", "View Services")
+										builder.CardAction.openUrl(session, "https://www.medibuddy.in/?service=homehealthcare", "View Services")
 										]);
 		session.send(new builder.Message(session)
 			.addAttachment(homehealthcareCard));
@@ -2216,7 +2216,7 @@ bot.dialog('displayteleconsultationFB',
 										.alt('Tele Consultation')
 								])
 								.buttons([
-									builder.CardAction.imBack(session, "https://www.medibuddy.in/onlineservice/4f81d4702c8242009081cfde6301dd38//General-Physician", "Tele Consultation")
+									builder.CardAction.imBack(session, "https://www.medibuddy.in/?service=teleconsultation", "Tele Consultation")
 									]);
 		
 		session.send(new builder.Message(session)
@@ -2235,7 +2235,7 @@ bot.dialog('displaylabtestFB',
 										.alt('Lab Test')
 								])
 								.buttons([
-									builder.CardAction.openUrl(session, "https://www.medibuddy.in/labtest/f4a83a18cec74f1786b8fd2b9aff4c0c//Platelet-Count/?c=Bengaluru/", "View Lab Tests")
+									builder.CardAction.openUrl(session, "https://www.medibuddy.in/?service=labtest", "View Lab Tests")
 									]);
 		session.send(new builder.Message(session)
 			.addAttachment(labtestCard));
