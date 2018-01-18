@@ -531,6 +531,34 @@ bot.dialog('askforMore',[
 	}
 ]);
 
+// Dialog for displaying menu after completing requested tasks
+bot.dialog('askforMore2',[
+	function (session){
+		session.send('Thanks, a lot!');
+		session.send("How else can I help you?");
+		session.sendTyping();
+		setTimeout(function () {
+			session.beginDialog('showMenu');
+		}, 5000);		
+		/*
+		builder.Prompts.choice(session, "How else can I help you?", mainMenu, builder.ListStyle.button);		
+	},
+	function (session, results) {
+		if(results.response.entity == 'Track Claim'){
+			session.beginDialog('trackClaim');
+		}
+		else if(results.response.entity == 'Download E-Card'){
+			session.beginDialog('downloadEcard');
+		}
+		else if(results.response.entity == 'Search Network Hospitals'){
+			session.beginDialog('searchNetwork');
+		}
+	},
+	function(session, results) {
+		session.endDialogWithResult(results);	*/
+	}
+]);
+
 // Dialog to ask for Track By
 bot.dialog('askforTrackBy',[
 	function (session){
@@ -626,7 +654,7 @@ bot.dialog('askforFeedback',[
 				}
 			}
 			);
-		session.beginDialog('askforMore');
+		session.beginDialog('askforMore2');
 		session.endDialog();
 		}
 		else {	
@@ -652,6 +680,8 @@ bot.dialog('askforFeedback',[
 			}
 		}
 		);
+		session.beginDialog('askforMore2');
+		session.endDialog();
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
