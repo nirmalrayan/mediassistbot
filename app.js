@@ -620,6 +620,7 @@ bot.dialog('askforFeedback',[
 		}
 		else {	
 			var wasHelpful = 0;
+			session.beginDialog('askforFeedbackReason');
 			var connection = new Connection(config);
 			// Attempt to connect and execute queries if connection goes through
 			connection.on('connect', function(err) 
@@ -1175,7 +1176,7 @@ bot.dialog('help', [
 										{ url: 'https://medibuddymedia.blob.core.windows.net/asset-72bacdc7-eb1d-4e63-844e-bfc4cb979dae/Introduction to Claims.mp4?sv=2015-07-08&sr=c&si=8905b3dc-886f-4623-ae01-df3ceab17265&sig=CFwEPm9pqJA64LvMgiIj8mV0Svakb%2FdPY9UzWL32PPM%3D&st=2017-11-30T12%3A59%3A39Z&se=2117-11-30T12%3A59%3A39Z' }
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, 'https://www.mediassistindia.com/', 'Visit Medi Assist')
+										builder.CardAction.openUrl(session, 'https://goog.gl/mz8uQL', 'Visit MediBuddy')
 									]);
 			cards.push(howClaimsWorkCard);
 
@@ -1280,8 +1281,6 @@ bot.dialog('help', [
 			session.send(msg);
 			
 			session.endDialog();
-
-
 	}
 ])
 .triggerAction({
