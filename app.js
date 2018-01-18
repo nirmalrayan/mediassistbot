@@ -782,7 +782,7 @@ bot.dialog('trackClaimwID', [
 								var card = createReceiptCard(session);
 								var msg = new builder.Message(session).addAttachment(card);
 								session.send(msg);
-								session.userData.serviceName = "Track Claim with ID";
+								session.userData.serviceName = "Track with Claim ID";
 								session.beginDialog('askforFeedback');
 /*								session.sendTyping();
 								setTimeout(function () {
@@ -923,12 +923,13 @@ bot.dialog('trackClaimwMAID', [
 								var msg = new builder.Message(session).addAttachment(card);
 								session.send("Here are your latest claim details:");
 								session.send(msg);
+								session.userData.serviceName = "Track with Medi Assist ID";
 								session.beginDialog('askforFeedback');
-								session.sendTyping();
+/*								session.sendTyping();
 								setTimeout(function () {
 									session.endConversation();		
 									session.beginDialog('askforMore');
-								}, 5000);		
+								}, 5000);		*/
   							}
 							else if(JSON.stringify(data.isSuccess) === "false"){
 								console.log("Error message is "+ data.errorMessage);
@@ -1058,11 +1059,13 @@ bot.dialog('trackClaimwEmpID', [
 								var msg = new builder.Message(session).addAttachment(card);
 								session.send("Here are your latest claim details:");
 								session.send(msg);
-								session.sendTyping();
+								session.userData.serviceName = "Track with Employee ID";
+								session.beginDialog('askforFeedback');
+/*								session.sendTyping();
 								setTimeout(function () {
 									session.endConversation();
 									session.beginDialog('askforMore');
-								}, 5000);		
+								}, 5000);		*/
   							}
 							else if(JSON.stringify(data.isSuccess) === "false"){
 								if(data.errorMessage == "Please enter valid employee details."){
@@ -1559,11 +1562,13 @@ bot.dialog('downloadwID', [
 								var ecard = createHeroCard(session);
 								var msg = new builder.Message(session).addAttachment(ecard);
 								session.send(msg);
-								session.sendTyping();
+								session.userData.serviceName = "Download with Claim ID";
+								session.beginDialog('askforFeedback');
+/*								session.sendTyping();
 								setTimeout(function () {
 									session.endConversation();	
 									session.beginDialog('askforMore');
-								}, 5000);		
+								}, 5000);		*/
 								
 							}
 							else if (sizeof(body) == 0){
@@ -1638,11 +1643,13 @@ bot.dialog('downloadwMAID', [
 								var ecard = createHeroCard(session);
 								var msg = new builder.Message(session).addAttachment(ecard);
 								session.send(msg);
-								session.sendTyping();
+								session.userData.serviceName = "Download with Medi Assist ID";
+								session.beginDialog('askforFeedback');
+/*								session.sendTyping();
 								setTimeout(function () {
 									session.endConversation();
 									session.beginDialog('askforMore');
-								}, 5000);		
+								}, 5000);		*/
 								
 							}
 							else if (sizeof(body) == 0){
@@ -1713,11 +1720,13 @@ bot.dialog('downloadwEmpID', [
 								var ecard = createHeroCard(session);
 								var msg = new builder.Message(session).addAttachment(ecard);
 								session.send(msg);
-								session.sendTyping();
+								session.userData.serviceName = "Download with Employee ID";
+								session.beginDialog('askforFeedback');
+/*								session.sendTyping();
 								setTimeout(function () {
 									session.endConversation();
 									session.beginDialog('askforMore');
-								}, 5000);		
+								}, 5000);		*/
 								
 							}
 							else if (sizeof(body) == 0){
@@ -1784,11 +1793,13 @@ bot.dialog('downloadwPolNo', [
 								var ecard = createHeroCard(session);
 								var msg = new builder.Message(session).addAttachment(ecard);
 								session.send(msg);
-								session.sendTyping();
+								session.userData.serviceName = "Download with Policy Number";
+								session.beginDialog('askforFeedback');
+/*								session.sendTyping();
 								setTimeout(function () {
 									session.endConversation();
 									session.beginDialog('askforMore');
-								}, 5000);		
+								}, 5000);		*/
 								
 							}
 							else if (sizeof(body) == 0){
@@ -1988,12 +1999,14 @@ bot.dialog('askforLocation',  [
 						var msg = new builder.Message(session);
 							msg.attachmentLayout(builder.AttachmentLayout.carousel)
 							.attachments(cards);
-						session.send(msg);						
-						session.sendTyping();
+						session.send(msg);
+						session.userData.serviceName = "Search Network";
+						session.beginDialog('askforFeedback');						
+/*						session.sendTyping();
 						setTimeout(function () {
 							session.endConversation();
 							session.beginDialog('askforMore');
-						}, 5000);		
+						}, 5000);		*/
 					}
 					}
 				}
