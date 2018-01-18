@@ -1273,9 +1273,9 @@ bot.dialog('help', [
 						])
 						.buttons([
 							builder.CardAction.openUrl(session, "http://blogs.medibuddy.in/get-insights-into-your-non-medical-expenses-now-with-medibuddy/", "Non Medical Expenses"),
-							builder.CardAction.openUrl(session, "http://blogs.medibuddy.in/ecashless-paving-the-way-for-digital-transformation/", "Difference between claimed and approved amount"),
-							builder.CardAction.openUrl(session, "http://blogs.medibuddy.in/cashless-hospitalization-claim-medical-insurance-network-hospitals/", "Raising reimbursement claims for pre- and post-hospitalization expenses"),
-							builder.CardAction.openUrl(session, "https://www.medibuddy.in/", "Medicines and post-operative home healthcare")								
+							builder.CardAction.openUrl(session, "http://blogs.medibuddy.in/claimed-and-approved-amounts-difference/", "Difference between claimed and approved amount"),
+							builder.CardAction.openUrl(session, "http://blogs.medibuddy.in/faster-claim-reimbursement-medibuddy-5-step-process/", "Raising reimbursement claims for pre- and post-hospitalization expenses"),
+							builder.CardAction.openUrl(session, "https://goo.gl/mz8uQL", "Medicines and post-operative home healthcare")								
 							]));
 			session.send(msg);
 			
