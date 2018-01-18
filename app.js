@@ -28,7 +28,7 @@ var config =
 
 var connection = new Connection(config);
 
-function storeFeedback(userid, servicename, helpful, feedback, rating, timestamp, source)
+function storeFeedback(userid, servicename, helpful, feedback, timestamp, source)
    { console.log('Inserting feedback into Table..');
    		console.log("Feedback value" + feedback);
 	   var requestString = "INSERT INTO ["+process.env.AzureSQLDatabase+"].[dbo].[Feedback] (UserID, ServiceName, Helpful, Feedback, Rating, FeedbackDate, FeedbackSource) values ("+userid+","+servicename+","+helpful+","+feedback+","+rating+","+timestamp+","+source+")";
@@ -593,6 +593,16 @@ bot.dialog('askforTrackClaimwIDConfirmation',[
 ]);
 
 
+// Dialog to ask for Claim Number
+bot.dialog('askforFeedbackReason',[
+	function (session){
+		builder.Prompts.text(session, "Please share your thoughts about me or your experience in general and I'll forward them to my masters");		
+	},
+	function(session, results) {
+		session.endDialogWithResult(results);
+	}
+]);
+
 // Dialog to ask for Feedback
 bot.dialog('askforFeedback',[
 	function (session){
@@ -612,33 +622,39 @@ bot.dialog('askforFeedback',[
 				else
 				{
 					console.log('This is session.message data' + JSON.stringify(session.message));
-					var serviceName = JSON.stringify("Track Claim with ID");
-					storeFeedback(JSON.stringify(session.message.user.id).replace(/"/g, "'"), serviceName.replace(/"/g, "'"), wasHelpful,JSON.stringify('OK').replace(/"/g, "'"),JSON.stringify('5').replace(/"/g, "'"), JSON.stringify(session.message.timestamp).replace(/"/g, "'"), JSON.stringify(session.message.source).replace(/"/g, "'"));
+					storeFeedback(JSON.stringify(session.message.user.id).replace(/"/g, "'"), JSON.stringify(session.userData.serviceName).replace(/"/g, "'"), wasHelpful,JSON.stringify('No Feedback Taken').replace(/"/g, "'"), JSON.stringify(session.message.timestamp).replace(/"/g, "'"), JSON.stringify(session.message.source).replace(/"/g, "'"));
 				}
 			}
 			);
+		session.beginDialog('askforMore');
+		session.endDialog();
 		}
 		else {	
-			var wasHelpful = 0;
 			session.beginDialog('askforFeedbackReason');
-			var connection = new Connection(config);
-			// Attempt to connect and execute queries if connection goes through
-			connection.on('connect', function(err) 
-			{
-				if (err) 
-				{
-					console.log(err);
-				}
-				else
-				{
-					console.log('This is session.message data' + JSON.stringify(session.message));
-					var serviceName = JSON.stringify("Track Claim with ID");
-					storeFeedback(JSON.stringify(session.message.user.id).replace(/"/g, "'"), serviceName.replace(/"/g, "'"), wasHelpful,JSON.stringify('OK').replace(/"/g, "'"),JSON.stringify('5').replace(/"/g, "'"), JSON.stringify(session.message.timestamp).replace(/"/g, "'"), JSON.stringify(session.message.source).replace(/"/g, "'"));
-				}
-			}
-			);
 		}
 		
+	},
+	function (session, results) {
+		session.userData.FeedbackResponse = results.response;
+		var wasHelpful = 0;
+		var connection = new Connection(config);
+		// Attempt to connect and execute queries if connection goes through
+		connection.on('connect', function(err) 
+		{
+			if (err) 
+			{
+				console.log(err);
+			}
+			else
+			{
+				console.log('This is session.message data' + JSON.stringify(session.message));
+				storeFeedback(JSON.stringify(session.message.user.id).replace(/"/g, "'"), JSON.stringify(session.userData.serviceName).replace(/"/g, "'"), wasHelpful,JSON.stringify(session.userData.FeedbackResponse).replace(/"/g, "'"), JSON.stringify(session.message.timestamp).replace(/"/g, "'"), JSON.stringify(session.message.source).replace(/"/g, "'"));
+			}
+		}
+		);
+	},
+	function(session, results) {
+		session.endDialogWithResult(results);
 	}
 ]);
 
@@ -736,6 +752,7 @@ bot.dialog('trackClaimwID', [
 								var card = createReceiptCard(session);
 								var msg = new builder.Message(session).addAttachment(card);
 								session.send(msg);
+								session.userData.serviceName = "Track Claim with ID";
 								session.beginDialog('askforFeedback');
 /*								session.sendTyping();
 								setTimeout(function () {
