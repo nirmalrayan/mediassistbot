@@ -426,7 +426,7 @@ bot.dialog('showMenu',[
 											.alt('Hospitalization')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://www.medibuddy.in/hospitalization", "Book Hospitalization")
+										builder.CardAction.openUrl(session, "https://www.medibuddy.in/hospitalization", "Hospitalization")
 										]);
 			
 			menucards.push(hospitalizationCard);
