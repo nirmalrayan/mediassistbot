@@ -2325,7 +2325,7 @@ bot.dialog('displayteleconsultationFB',
 										.alt('Tele Consultation')
 								])
 								.buttons([
-									builder.CardAction.imBack(session, "https://www.medibuddy.in/?service=teleconsultation", "Tele Consultation")
+									builder.CardAction.openUrl(session, "https://www.medibuddy.in/?service=teleconsultation", "Tele Consultation")
 									]);
 		
 		session.send(new builder.Message(session)
