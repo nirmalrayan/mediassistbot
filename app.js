@@ -391,7 +391,7 @@ bot.dialog('showMenu',[
 
 			homecareCard = new builder.HeroCard(session)
 									.title("Home Health Care")
-									.subtitle("MediBuddy Infiniti brings `Physiotherapist`, `Attendant` and `Nursing` visit facilities to your home.")
+									.subtitle("MediBuddy brings `Physiotherapist`, `Attendant` and `Nursing` visit facilities to your home.")
 									.images([
 										new builder.CardImage(session)
 											.url('https://i.imgur.com/FbM1SvH.png')
@@ -433,7 +433,7 @@ bot.dialog('showMenu',[
 
 			teleconsultationCard = new builder.HeroCard(session)
 										.title("Tele Consultation")
-									.subtitle("Book a telephonic consultation with our medical professionals at the lowest cost. Click below to learn more.")
+									.subtitle("Book a telephonic consultation with our trusted doctors, specialists and super specialists.")
 									.images([
 										new builder.CardImage(session)
 											.url('https://i.imgur.com/Ps8hw1x.png')
@@ -461,7 +461,7 @@ bot.dialog('showMenu',[
 
 			secondOpinionCard = new builder.HeroCard(session)
 									.title("Second Opinion")
-									.subtitle("An expert opinion allows you to access the expertise and clinical guidance of our world class physicians remotely from your home.")
+									.subtitle("Access the expertise and clinical guidance of our world class physicians remotely from your home.")
 									.images([
 										new builder.CardImage(session)
 											.url('https://i.imgur.com/RNwn1DK.png')
@@ -475,7 +475,7 @@ bot.dialog('showMenu',[
 
 			genomeStudyCard = new builder.HeroCard(session)
 									.title("Genome Study")
-									.subtitle("Genome study involves DNA analysis to help predict, prevent and cure diseases. Find the method that's right for your research.")
+									.subtitle("Genome study involves DNA analysis to help predict, prevent and cure diseases.")
 									.images([
 										new builder.CardImage(session)
 											.url('https://i.imgur.com/0LaERtC.png')
@@ -489,7 +489,7 @@ bot.dialog('showMenu',[
 
 			helpCard = new builder.HeroCard(session)
 									.title("Information Center")
-									.subtitle("I can help you plan your hospitalization, book eCashless or help you understand how claims work. Click below to know more.")
+									.subtitle("I can help you plan your hospitalization, book eCashless or help you understand how claims work.")
 									.images([
 										new builder.CardImage(session)
 											.url('https://i.imgur.com/mtyutuq.png')
