@@ -1246,7 +1246,7 @@ bot.dialog('help', [
 	function(session, results){
 		if(results.response){
 		var cards = [];
-			if(channelId === "facebook"){
+			if(session.message.address.channelId === "facebook"){
 			howClaimsWorkCard = new builder.VideoCard(session)
 									.title('How Claims Work')
 									.subtitle('by Medi Assist')
