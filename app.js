@@ -1248,16 +1248,16 @@ bot.dialog('help', [
 		var cards = [];
 			if(session.message.address.channelId === "facebook"){
 			howClaimsWorkCard = new builder.VideoCard(session)
-									.title('How Claims Work')
-									.subtitle('by Medi Assist')
-									.text('Understanding how claims work will help you in making the right decisions at the right time. Watch this video to know more.')
-								    .image(builder.CardImage.create(session, 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Big_buck_bunny_poster_big.jpg/220px-Big_buck_bunny_poster_big.jpg'))
-									.media([
-										{ url: 'https://medibuddymedia.blob.core.windows.net/asset-72bacdc7-eb1d-4e63-844e-bfc4cb979dae/Introduction to Claims.mp4?sv=2015-07-08&sr=c&si=8905b3dc-886f-4623-ae01-df3ceab17265&sig=CFwEPm9pqJA64LvMgiIj8mV0Svakb%2FdPY9UzWL32PPM%3D&st=2017-11-30T12%3A59%3A39Z&se=2117-11-30T12%3A59%3A39Z' }
-									])
-									.buttons([
-										builder.CardAction.openUrl(session, 'https://goog.gl/mz8uQL', 'Visit MediBuddy')
-									]);
+        .title('Big Buck Bunny')
+        .subtitle('by the Blender Institute')
+        .text('Big Buck Bunny (code-named Peach) is a short computer-animated comedy film by the Blender Institute, part of the Blender Foundation. Like the foundation\'s previous film Elephants Dream, the film was made using Blender, a free software application for animation made by the same foundation. It was released as an open-source film under Creative Commons License Attribution 3.0.')
+        .image(builder.CardImage.create(session, 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Big_buck_bunny_poster_big.jpg/220px-Big_buck_bunny_poster_big.jpg'))
+        .media([
+            { url: 'http://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4' }
+        ])
+        .buttons([
+            builder.CardAction.openUrl(session, 'https://peach.blender.org/', 'Learn More')
+        ]);
 //			cards.push(howClaimsWorkCard);
 			session.send(new builder.Message(session)
 				.addAttachment(howClaimsWorkCard));
