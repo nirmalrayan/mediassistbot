@@ -1316,7 +1316,7 @@ bot.dialog('help', [
 										{ url: 'https://medibuddymedia.blob.core.windows.net/asset-1e65cb49-6769-4559-b7cc-2ae35a1fb682/Plan your Hospitalization with eCashless!.mp4?sv=2015-07-08&sr=c&si=49628a29-025d-404f-84b7-50767b69b4a9&sig=1DAlO0iugFVJ3NBMfX657WqG76%2FvKigyaMCse8YJj0Y%3D&st=2017-12-01T12%3A47%3A08Z&se=2117-12-01T12%3A47%3A08Z' }
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, 'https://www.mediassistindia.com/', 'Visit Medi Assist')
+										builder.CardAction.openUrl(session, 'https://www.mediassistindia.com/', 'Visit MediBuddy')
 									]);
 			cards.push(howEcashlessWorksCard)
 			const msg = new builder.Message(session);
