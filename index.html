@@ -18,7 +18,7 @@
       .social{text-align: center; margin-top:40px;}
       .social a { display: inline-block; margin: 0 0 0 4px!important; transition: .5s; clear: both; float: none; width: 14px; height: 14px; padding: 8px; border-radius: 20px; border: 1px solid #ddd; overflow: hidden; text-align: center; line-height: 12px; background: #fff;}
       .social svg {width: 14px; height: 14px;}
-      h2 {font-weight: normal; font-size:16px;}
+      h2 {font-weight: normal; font-size:14px; margin-top: 60px;}
 
       .wc-header, .wc-upload, .wc-message-from-me.wc-message-from, .wc-message-from {display:none!important;}
       .wc-console .wc-textbox {left:0;}
@@ -75,6 +75,14 @@
         header {width:100%; position:absolute; z-index:1; top:0; left:0; right:0; bottom:0;}
         #bot {width:100%}
       }
+
+      .sidebar-online{
+        font-size: 8px;
+        position:relative;
+        left: -5px;
+        top: -1px;
+        color: #35b243;
+      }
     </style>
 	 <title>MediBuddy - Conversation Bot</title>
   </head>
@@ -86,7 +94,7 @@
       <div id="bot"></div>
       <header id="hdr">
         <div class="logo"><img src="https://i.imgur.com/Nsxo4EK.png" alt=""><span class="medibuddy">Medi<span>Buddy</span></span></div>
-        <div class="status online"></div>
+        <div class="status online"><span class="icon-circle sidebar-online"></span> online now</div>
         <h2>Hi! I am your health buddy and I will help you manage all your healthcare needs! Ask me anything, and I'll try my best to get you the answers that you need.</h2>
         <p><a href="javascript:void(0);" onClick="hideHdr();" class="showSearch">Start chat now</a></p>
         <div class="social">
