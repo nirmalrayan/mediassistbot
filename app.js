@@ -417,6 +417,20 @@ bot.dialog('showMenu',[
 			
 			menucards.push(dentalCard);
 
+			hospitalizationCard = new builder.HeroCard(session)
+									.title("Hospitalization")
+									.subtitle("Plan your hospitalization with MediBuddy at a trusted hospital with the benefit of preferred pricing.")
+									.images([
+										new builder.CardImage(session)
+											.url('https://i.imgur.com/f9r4jrZ.png')
+											.alt('Hospitalization')
+									])
+									.buttons([
+										builder.CardAction.openUrl(session, "https://www.medibuddy.in/hospitalization", "Book Hospitalization")
+										]);
+			
+			menucards.push(hospitalizationCard);
+
 			teleconsultationCard = new builder.HeroCard(session)
 										.title("Tele Consultation")
 									.subtitle("Book a telephonic consultation with our medical professionals at the lowest cost. Click below to learn more.")
