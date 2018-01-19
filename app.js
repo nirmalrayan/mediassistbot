@@ -1258,8 +1258,9 @@ bot.dialog('help', [
 									.buttons([
 										builder.CardAction.openUrl(session, 'https://goog.gl/mz8uQL', 'Visit MediBuddy')
 									]);
-			cards.push(howClaimsWorkCard);
-
+//			cards.push(howClaimsWorkCard);
+			session.send(new builder.Message(session)
+				.addAttachment(howClaimsWorkCard));
 			howEcashlessWorksCard = new builder.VideoCard(session)
 									.title('Plan Cashless Hospitalization')
 									.subtitle('by Medi Assist')
@@ -1271,13 +1272,15 @@ bot.dialog('help', [
 									.buttons([
 										builder.CardAction.openUrl(session, 'https://www.mediassistindia.com/', 'Visit Medi Assist')
 									]);
-			cards.push(howEcashlessWorksCard)
-			const msg = new builder.Message(session);
+//			cards.push(howEcashlessWorksCard)
+			session.send(new builder.Message(session)
+				.addAttachment(howEcashlessWorksCard));
+/*			const msg = new builder.Message(session);
 			msg.attachmentLayout(builder.AttachmentLayout.carousel)
 			.text("Let's try and ease just some of anxiety by helping you plan the hospitalization.")
 				.attachments(cards);
 			session.send(msg);
-			
+*/			
 			}else{
 			howClaimsWorkCard = new builder.VideoCard(session)
 									.title('How Claims Work')
