@@ -1295,7 +1295,7 @@ bot.dialog('help', [
 
 			secondOpinionCard = new builder.HeroCard(session)
 									.title("Second Opinion")
-									.subtitle("An expert opinion allows you to access the expertise and clinical guidance of our world class physicians remotely from your home.")
+									.subtitle("An expert opinion allows you to access the expertise and clinical guidance of our world class physicians remotely from your home.\n\n")
 									.images([
 										new builder.CardImage(session)
 											.url('https://i.imgur.com/RNwn1DK.png')
