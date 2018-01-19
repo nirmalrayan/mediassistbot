@@ -99,7 +99,7 @@ var bot = new builder.UniversalBot(connector,
 		if(session.message.address.channelId === 'facebook'){
  			var welcomeCard = new builder.HeroCard(session)
 				.title("Hi "+session.message.address.user.name+"! Nice to see you. I am MediBuddy")
-				.subtitle("I will be your personal healthcare assistant. \n\nℹ️ Type \"`show menu`\" or \"#\" at any time to see the menu.")
+				.subtitle("I will be your personal healthcare assistant. \n\nℹ️ Type \"show menu\" or \"#\" at any time to see the menu.")
 				.images([
 					new builder.CardImage(session)
 						.url('https://i.imgur.com/HwRgHDI.png')
@@ -113,7 +113,7 @@ var bot = new builder.UniversalBot(connector,
 			if(session.userData.masterName){
 				var welcomeCard = new builder.ThumbnailCard(session)
 				.title("Hi " + session.userData.masterName + "! Nice to see you again")
-				.subtitle("I will be your personal healthcare assistant. \n\nℹ️ Type \"`show menu`\" or `\"#\"` at any time to see the menu.")
+				.subtitle("I will be your personal healthcare assistant. \n\nℹ️ Type \"`show menu`\" or \"`#`\" at any time to see the menu.")
 				.images([
 					new builder.CardImage(session)
 						.url('https://i.imgur.com/HwRgHDI.png')
@@ -127,7 +127,7 @@ var bot = new builder.UniversalBot(connector,
 			else{
 				var welcomeCard = new builder.ThumbnailCard(session)
 				.title("Greetings! I'm MediBuddy")
-				.subtitle("I will be your personal healthcare assistant. \n\nℹ️ Type \"`show menu`\" or \"#\" at any time to see the menu.")
+				.subtitle("I will be your personal healthcare assistant. \n\nℹ️ Type \"`show menu`\" or \"`#`\" at any time to see the menu.")
 				.images([
 					new builder.CardImage(session)
 						.url('https://i.imgur.com/HwRgHDI.png')
