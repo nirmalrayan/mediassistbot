@@ -381,7 +381,7 @@ bot.dialog('showMenu',[
 									.images([
 										new builder.CardImage(session)
 											.url('https://i.imgur.com/kulyrgx.png')
-											.alt('Medicine')
+											.alt('Consultation')
 									])
 									.buttons([
 										builder.CardAction.imBack(session, "Consultation", "Consultation")
@@ -395,7 +395,7 @@ bot.dialog('showMenu',[
 									.images([
 										new builder.CardImage(session)
 											.url('https://i.imgur.com/FbM1SvH.png')
-											.alt('Medicine')
+											.alt('Home Health Care')
 									])
 									.buttons([
 										builder.CardAction.imBack(session, "Home Health Care", "Home Health Care")
@@ -403,8 +403,22 @@ bot.dialog('showMenu',[
 			
 			menucards.push(homecareCard);
 
+			dentalCard = new builder.HeroCard(session)
+									.title("Dental")
+									.subtitle("Your smile is important to us. Schedule appointments and consult with oral health care specialists, at your convenience.")
+									.images([
+										new builder.CardImage(session)
+											.url('https://i.imgur.com/rbKLQB9.png')
+											.alt('Dental')
+									])
+									.buttons([
+										builder.CardAction.imBack(session, "Dental", "Dental")
+										]);
+			
+			menucards.push(dentalCard);
+
 			teleconsultationCard = new builder.HeroCard(session)
-									.title("Tele Consultation")
+										.title("Tele Consultation")
 									.subtitle("Book a telephonic consultation with our medical professionals at the lowest cost. Click below to learn more.")
 									.images([
 										new builder.CardImage(session)
@@ -1332,7 +1346,7 @@ bot.dialog('help', [
 			session.userData.serviceName = "Information Center";
 			session.beginDialog('askforFeedback');
 			
-			session.endDialog();
+			session.endConversation();
 	}
 ])
 .triggerAction({
@@ -2264,6 +2278,26 @@ bot.dialog('displayhomehealthcareFB',
 	}
 );
 
+// Dialog to display dental card - Facebook
+bot.dialog('displaydentalFB',
+	function (session){
+			dentalCard = new builder.HeroCard(session)
+									.title("Dental")
+									.subtitle("Choose your city and speciality to view the list of Dental Care packages available.")
+									.text("https://www.medibuddy.in/")
+									.images([
+										new builder.CardImage(session)
+											.url('https://i.imgur.com/rbKLQB9.png')
+											.alt('Dental')
+									])
+									.buttons([
+										builder.CardAction.openUrl(session, "https://www.medibuddy.in/?service=dental", "View Services")
+										]);
+		session.send(new builder.Message(session)
+			.addAttachment(dentalCard));
+	}
+);
+
 // Dialog to display tele consultation card - Facebook
 bot.dialog('displayteleconsultationFB',
 	function (session){
@@ -3002,7 +3036,7 @@ bot.dialog('homehealthcare',[
 });
 
 
-// Dialog to ask for Consultation city
+// Dialog to ask for Home Health Care city
 bot.dialog('askforhomehealthcareCity',[
 	function (session){
 		//Make POST request to MA Server
@@ -3157,6 +3191,241 @@ function processSubmitAction4(session, message){
 										]);
 		session.send(new builder.Message(session)
 			.addAttachment(homehealthcareCard));
+		
+}
+
+
+// Dialog to Book Dental
+bot.dialog('dental',[
+	function (session){
+		session.beginDialog('askfordentalCity');
+	},
+	function(sesison, results){	
+		session.endDialogWithResult(results);		
+	}
+])
+.triggerAction({
+	matches: [/dental/i, /Dental/i, 'Dental'],
+	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
+	
+});
+
+
+// Dialog to ask for Dental city
+bot.dialog('askfordentalCity',[
+	function (session){
+		//Make POST request to MA Server
+		
+			if(session.message && session.message.value){
+				processSubmitAction7(session, session.message.value);
+				session.endConversation();
+				session.beginDialog('askforMore');
+				return;
+			}
+
+			if(session.message.address.channelId === 'facebook'){
+				session.beginDialog('displayhomehealthcareFB');
+				return;
+			}
+				var card = 
+				{
+				  "contentType": "application/vnd.microsoft.card.adaptive",
+				 "content": {
+					 
+					"type": "AdaptiveCard",
+					 "body": [
+						{
+						  "type": "TextBlock",
+						  "text": "Select Filters: Dental",
+						  "weight": "bolder",
+						  "size": "medium"
+						},
+						{
+						  "type": "TextBlock",
+						  "text": "We are one step away. Please choose city and speciality to continue.",
+						  "wrap": true,
+						  "maxLines": 4
+						},
+						{
+						  "type": "TextBlock",
+						  "text": "Choose your City"
+						},
+						{
+						  "type": "Input.ChoiceSet",
+						  "id": "city",
+						  "style":"compact",
+						  "choices": [
+							{
+							  "title": "Bengaluru",
+							  "value": "Bengaluru",
+							  "isSelected": true
+							},
+							{
+								"title": "Chennai",
+								"value": "Chennai"
+							},
+							{
+								"title": "Delhi",
+								"value": "Delhi"
+							},
+							{
+								"title": "Hyderabad",
+								"value": "Hyderabad"
+							},
+							{
+								"title": "Pune",
+								"value": "Pune"
+							},
+							{
+								"title": "Amritsar",
+								"value": "Amritsar"
+							},
+							{
+								"title": "Bhiwadi",
+								"value": "Bhiwadi"
+							},
+							{
+								"title": "Chandigarh",
+								"value": "Chandigarh"
+							},
+							{
+								"title": "Delhi Cantt",
+								"value": "Delhi Cantt"
+							},
+							{
+								"title": "Faridabad",
+								"value": "Faridabad"
+							},
+							{
+								"title": "Ghaziabad",
+								"value": "Ghaziabad"
+							},
+							{
+								"title": "Gurgaon",
+								"value": "Gurgaon"
+							},
+							{
+								"title": "Jaipur",
+								"value": "Jaipur"
+							},
+							{
+								"title": "Jalandhar",
+								"value": "Jalandhar"
+							},
+							{
+								"title": "Kakinada",
+								"value": "Kakinada"
+							},
+							{
+								"title": "Ludhiana",
+								"value": "Ludhiana"
+							},
+							{
+								"title": "Mohali",
+								"value": "Mohali"
+							},
+							{
+								"title": "Noida",
+								"value": "Noida"
+							},
+							{
+								"title": "Secunderabad",
+								"value": "Secunderabad"
+							},
+							{
+								"title": "Vijayawada",
+								"value": "Vijayawada"
+							},
+							{
+								"title": "Visakhapatnam",
+								"value": "Visakhapatnam"
+							},
+							{
+								"title": "Zirakpur",
+								"value": "Zirakpur"
+							}
+							
+						  ]
+						},
+						{
+						  "type": "TextBlock",
+						  "text": "Select your Speciality"
+						},{
+						  "type": "Input.ChoiceSet",
+						  "id": "speciality",
+						  "style":"compact",
+						  "choices": [
+							{
+							  "title": "Dentist",
+							  "value": "Dentist",
+							  "isSelected": true
+							},
+							{
+								"title": "Dental Surgeon",
+								"value": "Dental Surgeon"
+							},
+							{
+								"title": "Periodontist",
+								"value": "Periodontist"
+							},
+							{
+								"title": "Pedodontist",
+								"value": "Pedodontist"
+							},
+							{
+								"title": "Prosthodontist",
+								"value": "Prosthodontist"
+							},
+							{
+								"title": "Orthodontist",
+								"value": "Orthodontist"
+							},
+							{
+								"title": "Oral & Maxillofacial Surgeon",
+								"value": "Oral & Maxillofacial Surgeon"
+							}
+						  ]
+						}
+					  ],
+					  "actions": [
+					  {
+							"type": "Action.Submit",
+							"title": "Search"
+					  }
+					  ]
+				 }
+				};
+				session.send(new builder.Message(session)
+					.addAttachment(card));
+			
+		
+	},
+	function(session, results) {
+		session.endDialogWithResult(results);
+	}
+]);
+
+function processSubmitAction7(session, message){
+		if(session.message.address.channelId === 'facebook'){
+			session.beginDialog('displaydentalFB');
+			return;
+		}	
+		session.userData.dentalCity = message["city"];
+			session.userData.dentalSpeciality = message["speciality"];				
+			dentalCard = new builder.HeroCard(session)
+									.title("Speciality")
+									.subtitle("Click below to view available dental services in "+message["city"]+" for "+message["speciality"])
+									.text("https://www.medibuddy.in")
+									.images([
+										new builder.CardImage(session)
+											.url('https://i.imgur.com/bS1WkAE.png')
+											.alt('Dental')
+									])
+									.buttons([
+										builder.CardAction.openUrl(session, "https://www.medibuddy.in/dental/66d51e1e3d674dddbae81df593392f12//"+session.userData.dentalSpeciality+"/?c="+session.userData.dentalCity, "View Services")
+										]);
+		session.send(new builder.Message(session)
+			.addAttachment(dentalCard));
 		
 }
 
