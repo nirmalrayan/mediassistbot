@@ -1396,7 +1396,7 @@ bot.dialog('help', [
 			session.userData.serviceName = "Information Center";
 			session.beginDialog('askforFeedback');
 			
-			session.endConversation();
+//			session.endConversation();
 	}
 ])
 .triggerAction({
