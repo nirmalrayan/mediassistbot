@@ -1261,7 +1261,7 @@ bot.dialog('help', [
 //			cards.push(howClaimsWorkCard);
 			session.send(new builder.Message(session)
 				.addAttachment(howClaimsWorkCard));
-			howEcashlessWorksCard = new builder.VideoCard(session)
+/*			howEcashlessWorksCard = new builder.VideoCard(session)
 									.title('Plan Cashless Hospitalization')
 									.subtitle('by Medi Assist')
 									.text('And watch this video on how you can plan a cashless hospitalization from the comfort of your home.')
