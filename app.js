@@ -405,7 +405,7 @@ bot.dialog('showMenu',[
 
 			dentalCard = new builder.HeroCard(session)
 									.title("Dental")
-									.subtitle("Your smile is important to us. Schedule appointments and consult with oral health care specialists, at your convenience.")
+									.subtitle("Your smile is important to us. Consult with oral health care specialists, at your convenience.")
 									.images([
 										new builder.CardImage(session)
 											.url('https://i.imgur.com/rbKLQB9.png')
