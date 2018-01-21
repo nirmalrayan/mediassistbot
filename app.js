@@ -2194,6 +2194,7 @@ bot.dialog('askforGeneralQuery',[
 	
 });
 
+
 // Dialog to handle abuse
 bot.dialog('askforAbuse',[
 	function (session){
