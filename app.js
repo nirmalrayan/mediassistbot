@@ -2204,7 +2204,7 @@ bot.dialog('askforAbuse',[
 	}
 ])
 .triggerAction({
-	matches: [/anal/i, /ass/i, /asshole/i ,/balls/i, /bitch/i, /butt/i, /fuck/i, /cum/i, /cunt/i, /cock/i, /retard/i, /psycho/i, /mental/i, /finger/i, /jerk/i, /nudity/i, /milf/i, /piss/i, /shit/i, /rape/i, /tit/i, /vagina/i, /sucker/i, /sex/i, /semen/i, /slut/i, /hump/i, /suck/i, 'Abuse']
+	matches: ['Abuse']
 });
 
 // Get random integer between min (inclusive) and max (inclusive)
