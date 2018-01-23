@@ -1261,8 +1261,8 @@ bot.dialog('help', [
 //			cards.push(howClaimsWorkCard);
 console.log(howClaimsWorkCard);
 			session.send('Video Card');
-			session.send(new builder.Message(session)
-				.addAttachment(howClaimsWorkCard));
+			var msg = new builder.Message(session).addAttachment(howClaimsWorkCard);
+			session.send(msg);
 				console.log('FINISHED FB CHANNEL HELP RESPONSE WITH VIDEO CARD');
 /*			howEcashlessWorksCard = new builder.VideoCard(session)
 									.title('Plan Cashless Hospitalization')
