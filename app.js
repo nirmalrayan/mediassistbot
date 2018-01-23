@@ -1262,7 +1262,7 @@ bot.dialog('help', [
 console.log(howClaimsWorkCard);
 			session.send('Video Card');
 			session.send(new builder.Message(session)
-				.addAttachment(howClaimsWorkCard));
+				.addAttachment({contentType: 'video/mp4', contentUrl: 'http://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4'} as builder.IAttachment));
 				console.log('FINISHED FB CHANNEL HELP RESPONSE WITH VIDEO CARD');
 /*			howEcashlessWorksCard = new builder.VideoCard(session)
 									.title('Plan Cashless Hospitalization')
