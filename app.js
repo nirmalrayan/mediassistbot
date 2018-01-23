@@ -1259,6 +1259,7 @@ bot.dialog('help', [
             builder.CardAction.openUrl(session, 'https://peach.blender.org/', 'Learn More')
         ]);
 //			cards.push(howClaimsWorkCard);
+console.log(howClaimsWorkCard);
 			session.send(new builder.Message(session)
 				.addAttachment(howClaimsWorkCard));
 				console.log('FINISHED FB CHANNEL HELP RESPONSE WITH VIDEO CARD');
