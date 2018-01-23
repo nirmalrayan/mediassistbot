@@ -1247,6 +1247,7 @@ bot.dialog('help', [
 		if(results.response){
 		var cards = [];
 			if(session.message.address.channelId === "facebook"){
+			console.log('INSIDE FB CHANNEL HELP RESPONSE');
 			howClaimsWorkCard = new builder.VideoCard(session)
         .title('Big Buck Bunny')
         .subtitle('by the Blender Institute')
@@ -1261,6 +1262,7 @@ bot.dialog('help', [
 //			cards.push(howClaimsWorkCard);
 			session.send(new builder.Message(session)
 				.addAttachment(howClaimsWorkCard));
+				console.log('FINISHED FB CHANNEL HELP RESPONSE WITH VIDEO CARD');
 /*			howEcashlessWorksCard = new builder.VideoCard(session)
 									.title('Plan Cashless Hospitalization')
 									.subtitle('by Medi Assist')
