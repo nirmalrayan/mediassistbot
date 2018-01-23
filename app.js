@@ -1241,11 +1241,10 @@ bot.dialog('doaHelp', function(session, args, next) {
 bot.dialog('help', [
 	function(session){
 			session.send("⛑️ MediBuddy can help you track your claim, download e-card or search nearby hospitals within Medi Assist Network.");
-			builder.Prompts.confirm(session,"Do you need help understanding how claims work? (yes/no)")
+			builder.Prompts.confirm(session,"Do you need help understanding how claims work? (yes/no)");
 	},
 	function(session, results){
 		if(results.response){
-		var cards = [];
 			if(session.message.address.channelId === "facebook"){
 			console.log('INSIDE FB CHANNEL HELP RESPONSE');
 			howClaimsWorkCard = new builder.VideoCard(session)
@@ -1284,6 +1283,7 @@ bot.dialog('help', [
 			session.send(msg);
 */			
 			}else{
+		var cards = [];
 			howClaimsWorkCard = new builder.VideoCard(session)
 									.title('How Claims Work')
 									.text('Understanding how claims work will help you in making the right decisions at the right time. Watch this video to know more.')
