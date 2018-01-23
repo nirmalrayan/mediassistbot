@@ -488,6 +488,7 @@ bot.dialog('showMenu',[
 			
 			menucards.push(genomeStudyCard);
 
+		if(session.message.address.channelId !== 'facebook'){
 			helpCard = new builder.HeroCard(session)
 									.title("Information Center")
 									.subtitle("I can help you plan your hospitalization, book eCashless or help you understand how claims work.")
@@ -501,7 +502,7 @@ bot.dialog('showMenu',[
 										]);
 			
 			menucards.push(helpCard);
-
+		}
 			var msg = new builder.Message(session)
 			.text("My abilities are still growing. In a nutshell, here's what I can do: ")
 			.attachmentLayout(builder.AttachmentLayout.carousel)
