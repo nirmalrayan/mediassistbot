@@ -102,7 +102,7 @@ var bot = new builder.UniversalBot(connector,
 				.subtitle("I will be your personal healthcare assistant. \n\nℹ️ Type \"show menu\" or \"#\" at any time to see the menu.")
 				.images([
 					new builder.CardImage(session)
-						.url('https://i.imgur.com/8avm83b.png')
+						.url('https://i.imgur.com/k4eN1Bc.png')
 // OLD MASCOT						.url('https://i.imgur.com/HwRgHDI.png')
 						.alt('MediBuddy')
 				])
