@@ -117,7 +117,7 @@ var bot = new builder.UniversalBot(connector,
 				.subtitle("I will be your personal healthcare assistant. \n\n💡 Type \"`show menu`\" or \"`#`\" at any time to see the menu.")
 				.images([
 					new builder.CardImage(session)
-						.url('https://i.imgur.com/8avm83b.png')
+						.url('https://i.imgur.com/sQFiqkI.png')
 						.alt('MediBuddy')
 				])
 				.buttons([
@@ -131,7 +131,7 @@ var bot = new builder.UniversalBot(connector,
 				.subtitle("I will be your personal healthcare assistant. \n\n💡 Type \"`show menu`\" or \"`#`\" at any time to see the menu.")
 				.images([
 					new builder.CardImage(session)
-						.url('https://i.imgur.com/8avm83b.png')
+						.url('https://i.imgur.com/sQFiqkI.png')
 						.alt('MediBuddy')
 				])
 				.buttons([
