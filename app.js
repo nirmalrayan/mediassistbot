@@ -2442,7 +2442,7 @@ bot.dialog('askforhealthcheckCity',[
 			if(session.message && session.message.value){
 				processSubmitAction(session, session.message.value);
 				session.endConversation();
-				session.beginDialog('askforMore');
+//				session.beginDialog('askforMore');
 				return;
 			}
 
