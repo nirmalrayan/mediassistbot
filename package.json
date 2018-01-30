@@ -26,10 +26,10 @@
   "homepage": "https://github.com/nirmalrayan/medibuddy-chatbot#readme",
   "dependencies": {
     "async": "^2.6.0",
-    "botbuilder": "^3.13.0",
+    "botbuilder": "^3.14.0",
     "botbuilder-azure": "^3.0.4",
     "botbuilder-cognitiveservices": "^1.1.0",
-    "botbuilder-location": "^1.0.4",
+    "botbuilder-location": "^1.1.0",
     "env2": "^2.2.0",
     "geolib": "^2.0.23",
     "http": "0.0.0",
