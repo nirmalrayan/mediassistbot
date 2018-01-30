@@ -2612,7 +2612,8 @@ function processSubmitAction(session, message){
 			.addAttachment(healthcheckCard));
 		session.userData.serviceName = "Display health check";
 		session.beginDialog('askforFeedback');
-		
+		session.send('Ask for feedback ended');	
+		session.endConversation();	
 }
 
 
