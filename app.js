@@ -314,7 +314,7 @@ bot.dialog('showMenu',[
 									.subtitle("Tracking your claim can help you understand where you are in the claims process.")
 									.images([
 										new builder.CardImage(session)
-											.url('https://i.imgur.com/EgFg36v.png')
+											.url('https://i.imgur.com/7Fc2dgp.png')
 											.alt('Track Claim')
 									])
 									.buttons([
@@ -328,7 +328,7 @@ bot.dialog('showMenu',[
 									.subtitle("Getting your Medi Assist E-Card is much simpler and at your finger tips. Download your E-Card now.")
 									.images([
 										new builder.CardImage(session)
-											.url('https://i.imgur.com/80FLdwc.png')
+											.url('https://i.imgur.com/01QMBJe.png')
 											.alt('Download E-Card')
 									])
 									.buttons([
@@ -342,7 +342,7 @@ bot.dialog('showMenu',[
 									.subtitle("Search Medi Assist to find the nearest network hospitals and avail e-cashless benefits.")
 									.images([
 										new builder.CardImage(session)
-											.url('https://i.imgur.com/5Rc0b6m.png')
+											.url('https://i.imgur.com/5XFqXU7.png')
 											.alt('Search Network')
 									])
 									.buttons([
@@ -356,7 +356,7 @@ bot.dialog('showMenu',[
 									.subtitle("Booking health check has never been easier. Find the best hospitals with discounts in your city now.")
 									.images([
 										new builder.CardImage(session)
-											.url('https://i.imgur.com/LGKrs5k.png')
+											.url('https://i.imgur.com/iUqVLKv.png')
 											.alt('Health Check')
 									])
 									.buttons([
@@ -370,7 +370,7 @@ bot.dialog('showMenu',[
 									.subtitle("We bring pharmacies to your doorsteps. Click below to know more about ordering medicines.")
 									.images([
 										new builder.CardImage(session)
-											.url('https://i.imgur.com/zdqBW3P.png')
+											.url('https://i.imgur.com/XA85bjM.png')
 											.alt('Medicine')
 									])
 									.buttons([
@@ -384,7 +384,7 @@ bot.dialog('showMenu',[
 									.subtitle("Do you want to book a consultation with a doctor of your choice? Click below to know more.")
 									.images([
 										new builder.CardImage(session)
-											.url('https://i.imgur.com/kulyrgx.png')
+											.url('https://i.imgur.com/3CuCsZS.png')
 											.alt('Consultation')
 									])
 									.buttons([
@@ -398,7 +398,7 @@ bot.dialog('showMenu',[
 									.subtitle("MediBuddy brings `Physiotherapist`, `Attendant` and `Nursing` visit facilities to your home.")
 									.images([
 										new builder.CardImage(session)
-											.url('https://i.imgur.com/FbM1SvH.png')
+											.url('https://i.imgur.com/I7xWgmo.png')
 											.alt('Home Health Care')
 									])
 									.buttons([
@@ -412,7 +412,7 @@ bot.dialog('showMenu',[
 									.subtitle("Your smile is important to us. Consult with oral health care specialists, at your convenience.")
 									.images([
 										new builder.CardImage(session)
-											.url('https://i.imgur.com/rbKLQB9.png')
+											.url('https://i.imgur.com/64tYHFT.png')
 											.alt('Dental')
 									])
 									.buttons([
@@ -426,7 +426,7 @@ bot.dialog('showMenu',[
 									.subtitle("Plan your hospitalization with MediBuddy at a trusted hospital with the benefit of preferred pricing.")
 									.images([
 										new builder.CardImage(session)
-											.url('https://i.imgur.com/f9r4jrZ.png')
+											.url('https://i.imgur.com/SzU76sC.png')
 											.alt('Hospitalization')
 									])
 									.buttons([
@@ -440,7 +440,7 @@ bot.dialog('showMenu',[
 									.subtitle("Book a telephonic consultation with our trusted doctors, specialists and super specialists.")
 									.images([
 										new builder.CardImage(session)
-											.url('https://i.imgur.com/Ps8hw1x.png')
+											.url('https://i.imgur.com/272nXHH.png')
 											.alt('Tele Consultation')
 									])
 									.buttons([
@@ -454,7 +454,7 @@ bot.dialog('showMenu',[
 									.subtitle("Looking for a clinical laboratory for diagnostics? We have you covered.")
 									.images([
 										new builder.CardImage(session)
-											.url('https://i.imgur.com/BL44d2H.png')
+											.url('https://i.imgur.com/Q1stnt3.png')
 											.alt('Lab Test')
 									])
 									.buttons([
@@ -468,7 +468,7 @@ bot.dialog('showMenu',[
 									.subtitle("Access the expertise and clinical guidance of our world class physicians remotely from your home.")
 									.images([
 										new builder.CardImage(session)
-											.url('https://i.imgur.com/RNwn1DK.png')
+											.url('https://i.imgur.com/s58dzcD.png')
 											.alt('Second Opinion')
 									])
 									.buttons([
@@ -482,7 +482,7 @@ bot.dialog('showMenu',[
 									.subtitle("Genome study involves DNA analysis to help predict, prevent and cure diseases.")
 									.images([
 										new builder.CardImage(session)
-											.url('https://i.imgur.com/0LaERtC.png')
+											.url('https://i.imgur.com/Ljc7Zsz.png')
 											.alt('Genome Study')
 									])
 									.buttons([
@@ -497,7 +497,7 @@ bot.dialog('showMenu',[
 									.subtitle("I can help you plan your hospitalization, book eCashless or help you understand how claims work.")
 									.images([
 										new builder.CardImage(session)
-											.url('https://i.imgur.com/mtyutuq.png')
+											.url('https://i.imgur.com/shdopAW.png')
 											.alt('Help')
 									])
 									.buttons([
