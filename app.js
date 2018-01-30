@@ -182,6 +182,9 @@ bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer, qnare
 ])
  //  .matches("Logout", "logout")
     .onDefault((session, args) => {
+		var wasHelpful = 0;
+		session.userData.serviceName = "Not Trained";
+		storeFeedback(JSON.stringify(session.message.user.id).replace(/"/g, "'"), JSON.stringify(session.userData.serviceName).replace(/"/g, "'"), wasHelpful,JSON.stringify(session.message.text).replace(/"/g, "'"), JSON.stringify(session.message.timestamp).replace(/"/g, "'"), JSON.stringify(session.message.source).replace(/"/g, "'"));
         session.endDialog("Sorry, I did not understand \`%s\`.  Try saying `show menu` or `#` to go back to the main menu and `help` if you need assistance.", session.message.text);
     })
 );
@@ -2445,6 +2448,8 @@ bot.dialog('askforhealthcheckCity',[
 
 			if(session.message.address.channelId === 'facebook'){
 				session.beginDialog('displayhealthcheckFB');
+				session.userData.serviceName = "Display Health Check on FB";
+				session.beginDialog('askforFeedback');
 				return;
 			}
 				var card = 
@@ -2565,6 +2570,8 @@ function processSubmitAction(session, message){
 		if(message["city"] !== "Other"){
 			if(session.message.address.channelId === 'facebook'){
 					session.beginDialog('displayhealthcheckFB');
+					session.userData.serviceName = "Display health check on FB";
+					session.beginDialog('askforFeedback');
 					return;
 			}
 			healthcheckCard = new builder.HeroCard(session)
@@ -2584,6 +2591,8 @@ function processSubmitAction(session, message){
 			
 			if(session.message.address.channelId === 'facebook'){
 					session.beginDialog('displayhealthcheckFB');
+					session.userData.serviceName = "Display health check on FB";
+					session.beginDialog('askforFeedback');
 					return;
 			}
 		healthcheckCard = new builder.HeroCard(session)
@@ -2601,6 +2610,8 @@ function processSubmitAction(session, message){
 		}	
 		session.send(new builder.Message(session)
 			.addAttachment(healthcheckCard));
+		session.userData.serviceName = "Display health check";
+		session.beginDialog('askforFeedback');
 		
 }
 
@@ -2637,6 +2648,8 @@ bot.dialog('askformedicineCity',[
 			
 			if(session.message.address.channelId === 'facebook'){
 				session.beginDialog('displaymedicineFB');
+				session.userData.serviceName = "Display medicine on FB";
+				session.beginDialog('askforFeedback');
 				return;
 			}
 
@@ -2757,6 +2770,8 @@ function processSubmitAction2(session, message){
 		session.userData.medicineCity = message["city"];
 		if(session.message.address.channelId === 'facebook'){
 			session.beginDialog('displaymedicineFB');
+			session.userData.serviceName = "Display medicine on FB";
+			session.beginDialog('askforFeedback');
 			return;
 		}		
 		if(message["pincode"].toString().length !== 6){
@@ -2778,6 +2793,8 @@ function processSubmitAction2(session, message){
 										]);
 		session.send(new builder.Message(session)
 			.addAttachment(medicineCard));
+		session.userData.serviceName = "Display medicine";
+		session.beginDialog('askforFeedback');
 		
 }
 
@@ -2813,6 +2830,8 @@ bot.dialog('askforconsultationCity',[
 
 			if(session.message.address.channelId === 'facebook'){
 				session.beginDialog('displayconsultationFB');
+				session.userData.serviceName = "Display consultation on FB";
+				session.beginDialog('askforFeedback');
 				return;
 			}
 				var card = 
@@ -3052,6 +3071,8 @@ bot.dialog('askforconsultationCity',[
 function processSubmitAction3(session, message){
 		if(session.message.address.channelId === 'facebook'){
 			session.beginDialog('displayconsultationFB');
+			session.userData.serviceName = "Display consultation on FB";
+			session.beginDialog('askforFeedback');
 			return;
 		}	
 		session.userData.consultationCity = message["city"];
@@ -3070,6 +3091,9 @@ function processSubmitAction3(session, message){
 										]);
 		session.send(new builder.Message(session)
 			.addAttachment(consultationCard));
+			session.userData.serviceName = "Display consultation";
+			session.beginDialog('askforFeedback');
+			
 		
 }
 
@@ -3105,6 +3129,8 @@ bot.dialog('askforhomehealthcareCity',[
 
 			if(session.message.address.channelId === 'facebook'){
 				session.beginDialog('displayhomehealthcareFB');
+				session.userData.serviceName = "Display home health care on FB";
+				session.beginDialog('askforFeedback');
 				return;
 			}
 				var card = 
@@ -3228,6 +3254,8 @@ bot.dialog('askforhomehealthcareCity',[
 function processSubmitAction4(session, message){
 		if(session.message.address.channelId === 'facebook'){
 			session.beginDialog('displayhomehealthcareFB');
+			session.userData.serviceName = "Display home health care on FB";
+			session.beginDialog('askforFeedback');
 			return;
 		}	
 		session.userData.homehealthcareCity = message["city"];
@@ -3246,6 +3274,8 @@ function processSubmitAction4(session, message){
 										]);
 		session.send(new builder.Message(session)
 			.addAttachment(homehealthcareCard));
+		session.userData.serviceName = "Display home health care";
+		session.beginDialog('askforFeedback');
 		
 }
 
@@ -3463,6 +3493,8 @@ bot.dialog('askfordentalCity',[
 function processSubmitAction7(session, message){
 		if(session.message.address.channelId === 'facebook'){
 			session.beginDialog('displaydentalFB');
+			session.userData.serviceName = "Display dental on FB";
+			session.beginDialog('askforFeedback');
 			return;
 		}	
 		session.userData.dentalCity = message["city"];
@@ -3481,6 +3513,8 @@ function processSubmitAction7(session, message){
 										]);
 		session.send(new builder.Message(session)
 			.addAttachment(dentalCard));
+		session.userData.serviceName = "Display dental";
+		session.beginDialog('askforFeedback');
 		
 }
 
@@ -3512,6 +3546,8 @@ bot.dialog('askforTeleConsultationDetails',[
 			}
 			if(session.message.address.channelId === 'facebook'){
 				session.beginDialog('displayteleconsultationFB');
+				session.userData.serviceName = "Display teleconsultation on FB";
+				session.beginDialog('askforFeedback');
 				return;
 			}
 				var card = 
@@ -3647,6 +3683,8 @@ bot.dialog('askforTeleConsultationDetails',[
 function processSubmitAction5(session, message){
 			if(session.message.address.channelId === 'facebook'){
 				session.beginDialog('displayteleconsultationFB');
+				session.userData.serviceName = "Display teleconsultation on FB";
+				session.beginDialog('askforFeedback');
 				return;
 			}	
 			session.userData.teleconsultationService = message["teleservice"];				
@@ -3664,6 +3702,8 @@ function processSubmitAction5(session, message){
 										]);
 		session.send(new builder.Message(session)
 			.addAttachment(teleconsultCard));
+		session.userData.serviceName = "Display teleconsultation";
+		session.beginDialog('askforFeedback');
 		
 }
 
@@ -3699,6 +3739,8 @@ bot.dialog('askforLabTestDetails',[
 			}
 			if(session.message.address.channelId === 'facebook'){
 				session.beginDialog('displaylabtestFB');
+				session.userData.serviceName = "Display lab test on FB";
+				session.beginDialog('askforFeedback');
 				return;
 			}
 				var card = 
@@ -3951,6 +3993,8 @@ bot.dialog('askforLabTestDetails',[
 function processSubmitAction6(session, message){
 		if(session.message.address.channelId === 'facebook'){
 			session.beginDialog('displaylabtestFB');
+			session.userData.serviceName = "Display lab test on FB";
+			session.beginDialog('askforFeedback');
 			return;
 		}
 		session.userData.labtestCity = message["city"];
@@ -3969,6 +4013,8 @@ function processSubmitAction6(session, message){
 										]);
 		session.send(new builder.Message(session)
 			.addAttachment(labtestCard));
+		session.userData.serviceName = "Display lab test";
+		session.beginDialog('askforFeedback');
 }
 
 
