@@ -523,7 +523,7 @@ bot.dialog('showMenu',[
 // Dialog to start tracking claims
 bot.dialog('trackClaim', [
 	function (session){
-		session.send("Wecome to Claim Tracking System ✨💫🌟");
+		session.send("Welcome to Claim Tracking System ✨💫🌟");
 		session.beginDialog('askforTrackBy');
 	},
 	function(session, results) {
