@@ -165,7 +165,7 @@ var model = process.env.LUISURI
 var recognizer = new builder.LuisRecognizer(model);
 //bot.recognizer(recog);
 
-bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer, qnarecognizer]})
+bot.dialog('/refer', new builder.IntentDialog({ recognizers : [qnarecognizer, recognizer]})
     .matches("SayHello", "hello")
 	.matches("GetName", "setName")
 	.matches("CustomerCare", "askforCallCenter")
