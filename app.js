@@ -314,7 +314,7 @@ bot.dialog('showMenu',[
 									.subtitle("Tracking your claim can help you understand where you are in the claims process.")
 									.images([
 										new builder.CardImage(session)
-											.url('https://i.imgur.com/7Fc2dgp.png')
+											.url('https://i.imgur.com/hdz8CjB.png')
 											.alt('Track Claim')
 									])
 									.buttons([
