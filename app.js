@@ -1333,8 +1333,8 @@ console.log(howClaimsWorkCard);
 			.text("Let's try and ease just some of anxiety by helping you plan the hospitalization.")
 				.attachments(cards);
 			session.send(msg);
-			session.beginDialog('askforFeedback');
 		}
+			session.beginDialog('askforFeedback');
 		}
 	}/*,
 	function(session, results){
