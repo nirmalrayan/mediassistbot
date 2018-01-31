@@ -367,7 +367,7 @@ bot.dialog('showMenu',[
 	
 			medicineCard = new builder.HeroCard(session)
 									.title("Medicine")
-									.subtitle("We bring pharmacies to your doorsteps. Click below to know more about ordering medicines.")
+									.subtitle("We bring pharmacies to your doorsteps. Click below to know more about ordering medicines online.")
 									.images([
 										new builder.CardImage(session)
 											.url('https://i.imgur.com/XA85bjM.png')
@@ -1245,8 +1245,9 @@ bot.dialog('doaHelp', function(session, args, next) {
 // Generic Help dialog for Bot
 bot.dialog('help', [
 	function(session){
-			session.send("⛑️ MediBuddy can help you track your claim, download e-card or search nearby hospitals within Medi Assist Network.");
-			builder.Prompts.confirm(session,"Do you need help understanding how claims work? (yes/no)");
+			session.send("⛑️ Can't find the service you're looking for? Let me take you through some of the areas where you may need help.");
+			session.send("Let's run you through a few main menu options again: ");
+			builder.Prompts.confirm(session,"Do you want to know how claims work? (yes/no)");
 	},
 	function(session, results){
 		if(results.response){
@@ -1293,97 +1294,50 @@ console.log(howClaimsWorkCard);
 		var cards = [];
 			howClaimsWorkCard = new builder.VideoCard(session)
 									.title('How Claims Work')
-									.text('Understanding how claims work will help you in making the right decisions at the right time. Watch this video to know more.')
+									.text('Do you want to know how claims work?')
 									.media([
 										{ url: 'https://medibuddymedia.blob.core.windows.net/asset-72bacdc7-eb1d-4e63-844e-bfc4cb979dae/Introduction to Claims.mp4?sv=2015-07-08&sr=c&si=8905b3dc-886f-4623-ae01-df3ceab17265&sig=CFwEPm9pqJA64LvMgiIj8mV0Svakb%2FdPY9UzWL32PPM%3D&st=2017-11-30T12%3A59%3A39Z&se=2117-11-30T12%3A59%3A39Z' }
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, 'https://goog.gl/mz8uQL', 'Visit MediBuddy')
+										builder.CardAction.openUrl(session, 'https://goo.gl/A1EwSs', 'Visit MediBuddy')
 									]);
 			cards.push(howClaimsWorkCard);
 
 			secondOpinionCard = new builder.HeroCard(session)
 									.title("Second Opinion")
-									.subtitle("An expert opinion allows you to access the expertise and clinical guidance of our world class physicians remotely from your home.\n\n")
+									.subtitle("Do you need a second opinion to help you make up your mind?")
 									.images([
 										new builder.CardImage(session)
 											.url('https://i.imgur.com/RNwn1DK.png')
 											.alt('Second Opinion')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://www.medibuddy.in/gso/259fb4d2abcb480fb4e8778a33b9c9d2", "Get Second Opinion")
+										builder.CardAction.openUrl(session, "https://goo.gl/Qq1UhJ", "Get Second Opinion")
 										]);
 			
 			cards.push(secondOpinionCard);
 
 			howEcashlessWorksCard = new builder.VideoCard(session)
 									.title('Plan Cashless Hospitalization')
-									.text('And watch this video on how you can plan a cashless hospitalization from the comfort of your home.')
+									.text('Watch this video on how you can plan a cashless hospitalization from the comfort of your home.')
 									.media([
 										{ url: 'https://medibuddymedia.blob.core.windows.net/asset-1e65cb49-6769-4559-b7cc-2ae35a1fb682/Plan your Hospitalization with eCashless!.mp4?sv=2015-07-08&sr=c&si=49628a29-025d-404f-84b7-50767b69b4a9&sig=1DAlO0iugFVJ3NBMfX657WqG76%2FvKigyaMCse8YJj0Y%3D&st=2017-12-01T12%3A47%3A08Z&se=2117-12-01T12%3A47%3A08Z' }
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, 'https://www.mediassistindia.com/', 'Visit MediBuddy')
+										builder.CardAction.openUrl(session, 'https://m.medibuddy.in/submitecashless.aspx', 'Book eCashless Hospitalization'),
+										builder.CardAction.openUrl(session, 'https://goo.gl/2dZiF3', 'Read more about eCashless')
 									]);
-			cards.push(howEcashlessWorksCard)
+			cards.push(howEcashlessWorksCard);
 			const msg = new builder.Message(session);
 			msg.attachmentLayout(builder.AttachmentLayout.carousel)
 			.text("Let's try and ease just some of anxiety by helping you plan the hospitalization.")
 				.attachments(cards);
 			session.send(msg);
+			session.beginDialog('askforFeedback');
 		}
 		}
-		builder.Prompts.confirm(session, "Would you like me to help you plan a cashless hospitalization? (yes/no)");
-	},
+	}/*,
 	function(session, results){
-		if(results.response){
-			var cards = [];
-			searchNetworkCard = new builder.HeroCard(session)
-						.title("Search Network")
-						.subtitle("Search Medi Assist to find the nearest network hospitals and avail e-cashless benefits.")
-						.images([
-							new builder.CardImage(session)
-								.url('https://i.imgur.com/5Rc0b6m.png')
-								.alt('Search Network')
-						])
-						.buttons([
-							builder.CardAction.imBack(session, "Search Network", "Search Network")
-							]);
-			cards.push(searchNetworkCard);
-
-			secondOpinionCard = new builder.HeroCard(session)
-									.title("Second Opinion")
-									.subtitle("An expert opinion allows you to access the expertise and clinical guidance of our world class physicians remotely from your home.")
-									.images([
-										new builder.CardImage(session)
-											.url('https://i.imgur.com/RNwn1DK.png')
-											.alt('Second Opinion')
-									])
-									.buttons([
-										builder.CardAction.openUrl(session, "https://www.medibuddy.in/gso/259fb4d2abcb480fb4e8778a33b9c9d2", "Get Second Opinion")
-										]);
-			
-			cards.push(secondOpinionCard);
-
-			bookECashlessCard = new builder.HeroCard(session)
-						.title("Book eCashless from home")
-						.subtitle("You can now plan a cashless hospitalization from the comfort of your home at least 48 hours prior to expected date of admission.")
-						.images([
-							new builder.CardImage(session)
-								.url('https://i.imgur.com/YV8DQ05.png')
-								.alt('Book E-Cashless')
-						])
-						.buttons([
-							builder.CardAction.openUrl(session, "https://m.medibuddy.in/submitecashless.aspx", "Book eCashless Hospitalization"),
-							builder.CardAction.openUrl(session, "https://www.mediassistindia.com/ecashless-paving-the-way-for-digital-transformation/", "Read more about eCashless")						
-							]);
-			cards.push(bookECashlessCard);
-			const msg = new builder.Message(session);
-			msg.attachmentLayout(builder.AttachmentLayout.carousel)
-				.text("Here's what I found to help you with planning your cashless hospitalization: ")
-				.attachments(cards);
-			session.send(msg);
-		}
 		
 		const msg = new builder.Message(session);
 			msg.text("Would any of these topics be of interest to you?")
@@ -1404,7 +1358,7 @@ console.log(howClaimsWorkCard);
 			session.beginDialog('askforFeedback');
 			
 //			session.endConversation();
-	}
+	} */
 ])
 .triggerAction({
 	matches: /^help$/i,
