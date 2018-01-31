@@ -596,13 +596,13 @@ bot.dialog('askforMore2',[
 bot.dialog('askforTrackBy',[
 	function (session){
 		var msg = new builder.Message(session)
-			.text("Alright, let's get started 🚀. There are three ways to track your claim. Please select one of the following options: ")
+			.text("Alright, let's get started 🚀. There are three ways to track your claim. Please select one of the following options. Track with: ")
 			.suggestedActions(
 				builder.SuggestedActions.create(
 					session, [
-						builder.CardAction.imBack(session, "Track with Claim ID", "Track with Claim ID"),
-						builder.CardAction.imBack(session, "Track with Medi Assist ID", "Track with Medi Assist ID"),
-						builder.CardAction.imBack(session, "Track with Employee ID", "Track with Employee ID"),
+						builder.CardAction.imBack(session, "Track with Claim ID", "Claim ID"),
+						builder.CardAction.imBack(session, "Track with Medi Assist ID", "Medi Assist ID"),
+						builder.CardAction.imBack(session, "Track with Employee ID", "Employee ID"),
 					])
 			);
 		session.send(msg);	
@@ -1394,14 +1394,14 @@ bot.dialog('downloadEcard',[
 bot.dialog('askforDownloadBy',[
 	function (session){
 		var msg = new builder.Message(session)
-			.text("Let's get started 🚀. There are four ways to download your e-card. Please select one of the following options: ")
+			.text("Let's get started 🚀. There are four ways to download your e-card. Please select one of the following options. Download with: ")
 			.suggestedActions(
 				builder.SuggestedActions.create(
 					session, [
-						builder.CardAction.imBack(session, "Download with Claim ID", "Download with Claim ID"),
-						builder.CardAction.imBack(session, "Download with Medi Assist ID", "Download with Medi Assist ID"),
-						builder.CardAction.imBack(session, "Download with Employee ID", "Download with Employee ID"),
-						builder.CardAction.imBack(session, "Download with Policy Number", "Download with Policy Number")
+						builder.CardAction.imBack(session, "Download with Claim ID", "Claim ID"),
+						builder.CardAction.imBack(session, "Download with Medi Assist ID", "Medi Assist ID"),
+						builder.CardAction.imBack(session, "Download with Employee ID", "Employee ID"),
+						builder.CardAction.imBack(session, "Download with Policy Number", "Policy Number")
 					])
 			);
 		session.send(msg);	
