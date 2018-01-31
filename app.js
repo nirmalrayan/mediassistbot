@@ -346,7 +346,7 @@ bot.dialog('showMenu',[
 											.alt('Search Network')
 									])
 									.buttons([
-										builder.CardAction.imBack(session, "Search Network", "Search Network")
+										builder.CardAction.imBack(session, "Locate Network Hospital", "Search Network")
 										]);
 			
 			menucards.push(searchNetworkCard);
