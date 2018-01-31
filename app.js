@@ -493,7 +493,7 @@ bot.dialog('showMenu',[
 
 		if(session.message.address.channelId !== 'facebook'){
 			helpCard = new builder.HeroCard(session)
-									.title("MediBuddy Help Desk")
+									.title("Help Desk")
 									.subtitle("I can help you plan your hospitalization, book eCashless or help you understand how claims work.")
 									.images([
 										new builder.CardImage(session)
