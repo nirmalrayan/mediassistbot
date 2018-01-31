@@ -493,8 +493,8 @@ bot.dialog('showMenu',[
 
 		if(session.message.address.channelId !== 'facebook'){
 			helpCard = new builder.HeroCard(session)
-									.title("Information Center")
-									.subtitle("I can help you plan your hospitalization, book eCashless or help you understand how claims work.")
+									.title("MediBuddy Help Desk")
+									.subtitle("Can't find the service you're looking for? Let me take you through some of the areas where you may need help.")
 									.images([
 										new builder.CardImage(session)
 											.url('https://i.imgur.com/shdopAW.png')
@@ -1245,7 +1245,6 @@ bot.dialog('doaHelp', function(session, args, next) {
 // Generic Help dialog for Bot
 bot.dialog('help', [
 	function(session){
-			session.send("⛑️ Can't find the service you're looking for? Let me take you through some of the areas where you may need help.");
 			session.send("Let's run you through a few main menu options again: ");
 			builder.Prompts.confirm(session,"Do you want to know how claims work? (yes/no)");
 	},
