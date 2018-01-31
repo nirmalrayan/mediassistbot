@@ -1336,6 +1336,9 @@ console.log(howClaimsWorkCard);
 		}
 			session.beginDialog('askforFeedback');
 		}
+		else{
+			session.beginDialog('askforMore');
+		}
 	}/*,
 	function(session, results){
 		
