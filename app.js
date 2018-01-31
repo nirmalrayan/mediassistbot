@@ -2398,11 +2398,11 @@ bot.dialog('askforhealthcheckCity',[
 		
 			if(session.message && session.message.value){
 				processSubmitAction(session, session.message.value);
-//				session.endConversation();
-//				session.beginDialog('askforMore');
-				session.userData.serviceName = "Display health check";
-				session.beginDialog('askforFeedback');
 				session.endConversation();
+				session.beginDialog('askforMore');
+//				session.userData.serviceName = "Display health check";
+//				session.beginDialog('askforFeedback');
+//				session.endConversation();
 				return;
 			}
 
