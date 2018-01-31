@@ -346,7 +346,7 @@ bot.dialog('showMenu',[
 											.alt('Search Network')
 									])
 									.buttons([
-										builder.CardAction.imBack(session, "Locate Network Hospital", "Search Network")
+										builder.CardAction.imBack(session, "Locate Network Hospital", "Locate Network Hospital")
 										]);
 			
 			menucards.push(searchNetworkCard);
@@ -1870,7 +1870,7 @@ bot.dialog('searchNetwork',[
 	}
 ])
 .triggerAction({
-	matches: [/search network hospitals/i, /search network/i, /search nearby hospitals/i, /search providers/i, /hospitals around/i, 'searchNetwork'],
+	matches: [/search network hospitals/i, /Locate Network Hospital/i, /search network/i, /search nearby hospitals/i, /search providers/i, /hospitals around/i, 'searchNetwork'],
 	// /^search network hospitals$|^search network$/i,
 	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
 	
