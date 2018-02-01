@@ -145,6 +145,17 @@ var bot = new builder.UniversalBot(connector,
 			session.beginDialog("/refer");
 	}).set('storage', inMemoryStorage); // Register in-memory storage 
 
+bot.on('conversationUpdate', function (message) {
+    if (message.membersAdded) {
+        message.membersAdded.forEach(function (identity) {
+            if (identity.id === message.address.bot.id) {
+                bot.send(new builder.Message()
+                    .address(message.address)
+                    .text("Hello!  I'm a bot. Say Hi if you'd like to chat"));
+            }
+        });
+    }
+});	
 
 //Direct to index.html web page
  server.get('/', restify.plugins.serveStatic({
@@ -519,6 +530,7 @@ bot.dialog('showMenu',[
 .triggerAction({
 	matches: [/^show menu$/i, /#/i, 'showMenu']
 });
+
 
 // Dialog to start tracking claims
 bot.dialog('trackClaim', [
