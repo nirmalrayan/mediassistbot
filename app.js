@@ -1543,7 +1543,7 @@ bot.dialog('askforDownloadBy',[
 // Dialog to ask for Beneficiary Name
 bot.dialog('askforbenefName',[
 	function (session){
-		builder.Prompts.text(session, "Please provide name of the primary beneficiary");		
+		builder.Prompts.text(session, "Please provide beneficiary name");		
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
@@ -2769,7 +2769,7 @@ bot.dialog('consultation',[
 	}
 ])
 .triggerAction({
-	matches: [/consultation/i, /consult/i, /doctor/i, /appointment/i, 'Consultation'],
+	matches: [/consultation/i, /doctor/i, /appointment/i, 'Consultation'],
 	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
 	
 });
