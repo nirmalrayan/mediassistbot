@@ -106,8 +106,6 @@ server.get('/Auth/:Source/:AuthToken', respond);
  default: '/index.html'	
 })); 
 
-server.get('/', respond);
-
 //Direct to index.html web page
  server.get('/Auth', restify.plugins.serveStatic({
  directory: __dirname,
