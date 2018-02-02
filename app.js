@@ -169,8 +169,8 @@ var authToken;
 //var assert = require('assert');
 //Direct to index.html web page
 function respond(req, res, next) {
-    console.log("req.params.Source:" + req.params.UID);
-    console.log("req.params.AuthToken:" + req.params.FacebookID);
+    console.log("req.params.Source:" + req.params.Source);
+    console.log("req.params.AuthToken:" + req.params.AuthToken);
 }
 
 server.get('/Auth/:Source/:AuthToken', respond); 
