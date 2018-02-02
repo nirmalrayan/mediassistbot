@@ -2681,9 +2681,8 @@ bot.dialog('askforhealthcheckCity',[
 		
 			if(session.message && session.message.value){
 				processSubmitAction(session, session.message.value);
-				session.endDialog();
-				session.userData.serviceName = "Health Check";
-				session.beginDialog('askforFeedback');
+				session.endConversation();
+				session.beginDialog('askforMore');
 				return;
 			}
 
