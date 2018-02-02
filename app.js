@@ -95,15 +95,18 @@ function respond(req, res, next) {
 	source = req.params.Source;
 	console.log("req.params.AuthToken:" + req.params.AuthToken);
 	authToken = req.params.authToken;
-	restify.plugins.serveStatic({
-		directory: __dirname,
- 		default: '/index.html'	
-
-	});
 	return next();
 }
 
 server.get('/Auth/:Source/:AuthToken', respond); 
+
+//Direct to index.html web page
+ server.get('/', restify.plugins.serveStatic({
+ directory: __dirname,
+ default: '/index.html'	
+})); 
+
+server.use(restify.plugins.queryParser({ mapParams: false }));
 
 // Create chat bot
 var connector = new builder.ChatConnector
@@ -162,6 +165,7 @@ var bot = new builder.UniversalBot(connector,
 		}	
 			session.send(new builder.Message(session)
 				.addAttachment(welcomeCard));
+			session.send('You have connected from '+req.params.Source);
 			session.beginDialog("/refer");
 	}).set('storage', inMemoryStorage); // Register in-memory storage 
 
@@ -176,12 +180,6 @@ bot.on('conversationUpdate', function (message) {
         });
     }
 });	
-
-//Direct to index.html web page
- server.get('/', restify.plugins.serveStatic({
- directory: __dirname,
- default: '/index.html'	
-})); 
 
 server.post('/api/messages', connector.listen());
 
