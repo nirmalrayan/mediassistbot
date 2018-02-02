@@ -1962,7 +1962,7 @@ bot.dialog('askforLocation',  [
 				url: 'http://track-api-lb.medibuddy.in/GetHospitalsByLocation/.json',
 				method: 'POST',
 				headers: headers,
-				form: {"insuranceCompany":session.userData.insurer,"latitude":session.userData.lat,"longitude":session.userData.lng,"distance":3,"hospSpeciality":session.userData.speciality,"maRating":""}
+				form: {"insuranceCompany":session.userData.insurer,"latitude":session.userData.lat,"longitude":session.userData.lng,"distance":10,"hospSpeciality":session.userData.speciality,"maRating":""}
 			}
 
 			// Start the request
