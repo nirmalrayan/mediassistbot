@@ -111,7 +111,7 @@ server.get('/Auth/:Source/:AuthToken', respond);
  default: '/index.html'	
 })); 
 
-server.use(restify.plugins.queryParser({ mapParams: false }));
+server.use(restify.plugins.queryParser({ mapParams: true }));
 
 // Create chat bot
 var connector = new builder.ChatConnector
