@@ -166,11 +166,11 @@ bot.on('conversationUpdate', function (message) {
 
 var source;
 var authToken;
-var assert = require('assert');
+//var assert = require('assert');
 //Direct to index.html web page
  server.get('/Auth', function(err, req, res, obj) {
-  assert.ifError(err);
-  console.log('%j', obj);
+ // assert.ifError(err);
+  console.log('I RECEIVED THIS FROM AUTH URL %s', obj);
 }); 
 
 server.post('/api/messages', connector.listen());
