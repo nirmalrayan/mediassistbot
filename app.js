@@ -168,9 +168,9 @@ var source;
 var authToken;
 //var assert = require('assert');
 //Direct to index.html web page
- server.get('/Auth', function(err, req, res, obj) {
+ server.get('/Auth', function(err, req, res, data) {
  // assert.ifError(err);
-  console.log('I RECEIVED THIS FROM AUTH URL %j', obj);
+  console.log(JSON.stringify(data));
 }); 
 
 server.post('/api/messages', connector.listen());
