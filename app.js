@@ -105,6 +105,11 @@ server.get('/Auth/:Source/:AuthToken', respond);
  directory: __dirname,
  default: '/index.html'	
 })); 
+//Direct to index.html web page
+ server.get('/Auth', restify.plugins.serveStatic({
+ directory: __dirname,
+ default: '/index.html'	
+})); 
 
 server.use(restify.plugins.queryParser({ mapParams: false }));
 
