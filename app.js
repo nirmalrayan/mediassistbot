@@ -105,6 +105,9 @@ server.get('/Auth/:Source/:AuthToken', respond);
  directory: __dirname,
  default: '/index.html'	
 })); 
+
+server.get('/', respond);
+
 //Direct to index.html web page
  server.get('/Auth', restify.plugins.serveStatic({
  directory: __dirname,
@@ -113,7 +116,7 @@ server.get('/Auth/:Source/:AuthToken', respond);
 
 server.use(restify.plugins.queryParser({ mapParams: true }));
 
-console.log('USER PASSED '+ req.query);
+//console.log('USER PASSED '+ req.query);
 
 // Create chat bot
 var connector = new builder.ChatConnector
