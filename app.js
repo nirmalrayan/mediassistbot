@@ -164,6 +164,14 @@ bot.on('conversationUpdate', function (message) {
  default: '/index.html'	
 })); 
 
+var source;
+var authToken;
+//Direct to index.html web page
+ server.get('/Auth', function(err, req, res, obj) {
+  assert.ifError(err);
+  console.log('%j', obj);
+}); 
+
 server.post('/api/messages', connector.listen());
 
 //QnA Maker Configuration
