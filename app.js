@@ -113,6 +113,8 @@ server.get('/Auth/:Source/:AuthToken', respond);
 
 server.use(restify.plugins.queryParser({ mapParams: true }));
 
+console.log('USER PASSED '+ req.query);
+
 // Create chat bot
 var connector = new builder.ChatConnector
 ({  appId: process.env.MicrosoftAppId, 
