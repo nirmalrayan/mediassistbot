@@ -166,6 +166,7 @@ bot.on('conversationUpdate', function (message) {
 
 var source;
 var authToken;
+var assert = require('assert');
 //Direct to index.html web page
  server.get('/Auth', function(err, req, res, obj) {
   assert.ifError(err);
