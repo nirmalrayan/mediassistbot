@@ -96,7 +96,7 @@ function respond(req, res, next) {
 	console.log("req.params.AuthToken:" + req.params.AuthToken);
 	authToken = req.params.authToken;
 //Direct to index.html web page
- server.get('/', restify.plugins.serveStatic({
+ server.get('/Auth/'+req.params.Source+'/'+req.params.authToken, restify.plugins.serveStatic({
  directory: __dirname,
  default: '/index.html'	
 })); 
