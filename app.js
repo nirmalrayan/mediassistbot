@@ -12,6 +12,7 @@ var cognitiveservices = require('botbuilder-cognitiveservices');
 require('env2')('.env'); // loads all entries into process.env
 var Connection = require('tedious').Connection;
 var Request = require('tedious').Request;
+var NodeGeocoder = require('node-geocoder');
 
 // Create connection to database
 var config = 
@@ -1935,46 +1936,14 @@ bot.dialog('askforLocation',  [
     function (session, results) {
         if (results.response) {
 			session.userData.place = results.response;
-			console.log(results.response);
-			var place = session.userData.place;
-			session.userData.lat = JSON.stringify(place.geo.latitude);
-			session.userData.lng = JSON.stringify(place.geo.longitude);
+			var formattedAddress = getFormattedAddressFromPlace(session, session.userData.place, ", ");
+			session.userData.formattedAddress = formattedAddress;
+			
+		}
 			session.beginDialog('askforInsurer');	
-        }
-		else{
-			session.send("I was not able to fetch your address 😞. Let's retry");
-			session.beginDialog('askforLocation');
-		}
-    },
-	function (session, results) {
-		if (results.response){
-			session.userData.insurer = results.response;
-			const client = new Wit({accessToken: process.env.WIT_ACCESS_TOKEN});
-			client.message(session.userData.insurer, {})
-			.then((data) => {
-			  entities = data['entities'];
-			  for (var entity in entities){
-				session.userData.insurer = data['entities'][entity][0]['value'];
-			  }
-			  })
-			.catch(console.error);
-			session.beginDialog('askforSpeciality');		
-		}
-	},
-	function (session, results) {
-		if (results.response){
-			session.userData.speciality = results.response;	
-			const client = new Wit({accessToken: process.env.WIT_ACCESS_TOKEN});
-			client.message(session.userData.speciality, {})
-			.then((data) => {
-			  entities = data['entities'];
-			  for (var entity in entities){
-				session.userData.speciality = data['entities'][entity][0]['value'];
-			  }
-			  })
-			.catch(console.error);
-	
-			//Make POST request to MA Server
+	},		//Make POST request to MA Server
+	function(session, results){
+		if(results.response){
 			var request = require('request');
 			
 			// Set the headers
@@ -1982,6 +1951,11 @@ bot.dialog('askforLocation',  [
 				'User-Agent':       'Super Agent/0.0.1',
 				'Content-Type':     'application/x-www-form-urlencoded'
 			}
+
+
+	codeLatLng(function(lat, lng){
+			session.userData.lat = lat;
+			session.userData.lng = lng;
 
 			// Configure the request
 			var options = {
@@ -2060,12 +2034,36 @@ bot.dialog('askforLocation',  [
 					}
 					}
 				}
-			});				
+			});	
+			}, session);
+			
 		}
-	}
+},
+function(session, results){
+	session.endDialogWithResult(results);
+}
 ]);
 
-function getFormattedAddressFromPlace(place, separator) {
+function codeLatLng(callback, session){
+			
+	var options = {
+		httpAdapter: 'https',
+		apiKey: process.env.GoogleGeo,
+		formatter: null
+	};
+
+	var geocoder = NodeGeocoder(options);
+
+	geocoder.geocode(session.userData.formattedAddress, function(err, res){
+		session.userData.lat = JSON.stringify(res[0].latitude);
+		session.userData.lng = JSON.stringify(res[0].longitude);
+		callback(session.userData.lat, session.userData.lng);
+	});
+}
+
+
+function getFormattedAddressFromPlace(session, place, separator) {
+	var place = session.userData.place;
     var addressParts = [place.streetAddress, place.locality, place.region, place.postalCode, place.country, place.latitude, place.longitude];
     return addressParts.filter(i => i).join(separator);
 }
@@ -2073,12 +2071,277 @@ function getFormattedAddressFromPlace(place, separator) {
 // Dialog to ask for Insurer Name
 bot.dialog('askforInsurer',[
 	function (session){
-		builder.Prompts.text(session, "Please provide your `Insurer` name");		
+
+		if(session.message && session.message.value){
+			processSubmitAction8(session, session.message.value);
+			session.endDialog();
+//			session.beginDialog('askforMore');
+//				session.userData.serviceName = "Display health check";
+//				session.beginDialog('askforFeedback');
+//				session.endConversation();
+			return;
+		}
+
+		var card = 
+		{
+			"contentType": "application/vnd.microsoft.card.adaptive",
+			"content": {
+				
+			"type": "AdaptiveCard",
+				"body": [
+				{
+					"type": "TextBlock",
+					"text": "Select Filters: Search Network",
+					"weight": "bolder",
+					"size": "medium"
+				},
+				{
+					"type": "TextBlock",
+					"text": "We are one step away. Please choose insurer and speciality from options below.",
+					"wrap": true,
+					"maxLines": 4
+				},
+				{
+					"type": "TextBlock",
+					"text": "Choose your Insurer"
+				},
+				{
+					"type": "Input.ChoiceSet",
+					"id": "insurer",
+					"style":"compact",
+					"choices": [
+					{
+						"title": "Aditya Birla Health Insurance Co. Ltd.",
+						"value": "Aditya Birla Health Insurance Co. Ltd."
+					},
+					{
+						"title": "Apollo Munich Health Insurance Co. Ltd.",
+						"value": "Apollo Munich Health Insurance Co. Ltd."
+					},
+					{
+						"title": "Bajaj Allianz General Insurance Co. Ltd.",
+						"value": "Bajaj Allianz General Insurance Co. Ltd."
+					},
+					{
+						"title": "Bharti AXA General Insurance Co. Ltd.",
+						"value": "Bharti AXA General Insurance Co. Ltd."
+					},
+					{
+						"title": "Cholamandalam MS General Insurance Co. Ltd.",
+						"value": "Cholamandalam MS General Insurance Co. Ltd."
+					},
+					{
+						"title": "Cigna TTK Health Insurance Co. Ltd.",
+						"value": "Cigna TTK Health Insurance Co. Ltd."
+					},
+					{
+						"title": "Future Generali India Insurance Co. Ltd.",
+						"value": "Future Generali India Insurance Co. Ltd."
+					},
+					{
+						"title": "HDFC Ergo General Insurance Co. Ltd.",
+						"value": "HDFC Ergo General Insurance Co. Ltd."
+					},
+					{
+						"title": "ICICI Lombard General Insurance Co. Ltd.",
+						"value": "ICICI Lombard General Insurance Co. Ltd."
+					},
+					{
+						"title": "IFFCO-TOKIO General Insurance Co. Ltd.",
+						"value": "IFFCO-TOKIO General Insurance Co. Ltd."
+					},
+					{
+						"title": "HDFC Ergo General Insurance Co. Ltd.",
+						"value": "HDFC Ergo General Insurance Co. Ltd."
+					},
+					{
+						"title": "IndiaFirst Life Insurance Co. Ltd.",
+						"value": "IndiaFirst Life Insurance Co. Ltd."
+					},
+					{
+						"title": "L&T General Insurance Co. Ltd.",
+						"value": "L&T General Insurance Co. Ltd."
+					},
+					{
+						"title": "Liberty Videocon General Insurance Co. Ltd.",
+						"value": "Liberty Videocon General Insurance Co. Ltd."
+					},
+					{
+						"title": "LIC Of India",
+						"value": "LIC Of India"
+					},
+					{
+						"title": "MaxBupa Health Insurance Co. Ltd.",
+						"value": "MaxBupa Health Insurance Co. Ltd."
+					},
+					{
+						"title": "National Insurance Co. Ltd.",
+						"value": "National Insurance Co. Ltd."
+					},
+					{
+						"title": "Reliance General Insurance Co. Ltd.",
+						"value": "Reliance General Insurance Co. Ltd."
+					},
+					{
+						"title": "Reliance Life Insurance Co. Ltd.",
+						"value": "Reliance Life Insurance Co. Ltd."
+					},
+					{
+						"title": "Religare Health Insurance Co. Ltd.",
+						"value": "Religare Health Insurance Co. Ltd."
+					},
+					{
+						"title": "Royal Sundaram General Insurance Co. Ltd.",
+						"value": "Royal Sundaram General Insurance Co. Ltd."
+					},
+					{
+						"title": "SBI General Insurance Co. Ltd.",
+						"value": "SBI General Insurance Co. Ltd."
+					},
+					{
+						"title": "Star Health and Allied Insurance Co. Ltd.",
+						"value": "Star Health and Allied Insurance Co. Ltd."
+					},
+					{
+						"title": "The New India Assurance Co. Ltd.",
+						"value": "The New India Assurance Co. Ltd.",
+						"isSelected": true
+					},
+					{
+						"title": "The Oriental Insurance Co. Ltd.",
+						"value": "The Oriental Insurance Co. Ltd."
+					},
+					{
+						"title": "United India Insurance Co. Ltd.",
+						"value": "United India Insurance Co. Ltd."
+					},
+					{
+						"title": "Universal Sompo General Insurance Co. Ltd.",
+						"value": "Universal Sompo General Insurance Co. Ltd."
+					}					
+					]
+				},
+				{
+					"type": "TextBlock",
+					"text": "Select your Speciality"
+				},
+				{
+					"type": "Input.ChoiceSet",
+					"id": "speciality",
+					"style":"compact",
+					"choices": [
+					{
+						"title": "Cardiac & Circulatory Disorder",
+						"value": "Cardiac & Circulatory Disorder"
+					},
+					{
+						"title": "Cardiac & Circulatory Disorder (Medicine)",
+						"value": "Cardiac & Circulatory Disorder (Medicine)"
+					},
+					{
+						"title": "Dermatology",
+						"value": "Dermatology"
+					},
+					{
+						"title": "Endocrinology",
+						"value": "Endocrinology"
+					},
+					{
+						"title": "ENT",
+						"value": "ENT"
+					},
+					{
+						"title": "Gastroenterology",
+						"value": "Gastroenterology"
+					},
+					{
+						"title": "Hematology",
+						"value": "Hematology"
+					},
+					{
+						"title": "Infectious and parasitic diseases",
+						"value": "Infectious and parasitic diseases"
+					},
+					{
+						"title": "Kidney",
+						"value": "Kidney"
+					},
+					{
+						"title": "Medicine",
+						"value": "Medicine"
+					},
+					{
+						"title": "Neurology",
+						"value": "Neurology"
+					},
+					{
+						"title": "Obstetrics",
+						"value": "Obstetrics"
+					},
+					{
+						"title": "Oncology",
+						"value": "Oncology"
+					},
+					{
+						"title": "Ophthalomology",
+						"value": "Ophthalomology"
+					},
+					{
+						"title": "Orthopedics",
+						"value": "Orthopedics"
+					},
+					{
+						"title": "Pediatrics",
+						"value": "Pediatrics"
+					},
+					{
+						"title": "Plastic Surgery",
+						"value": "Plastic Surgery"
+					},
+					{
+						"title": "Psychiatric Disorders",
+						"value": "Psychiatric Disorders"
+					},
+					{
+						"title": "Pulmonology",
+						"value": "Pulmonology"
+					},
+					{
+						"title": "Uronephrology",
+						"value": "Uronephrology"
+					}					
+					]
+				}
+				],
+				"actions": [
+				{
+					"type": "Action.Submit",
+					"title": "Search Network Hospital"
+				}
+				]
+			}
+		};
+		session.send(new builder.Message(session)
+			.addAttachment(card));
+
+		
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
 	}
 ]);
+
+
+function processSubmitAction8(session, message){
+		session.userData.insurer = message["insurer"];
+		session.userData.speciality = message["speciality"];	
+		console.log(session.userData.insurer);
+		console.log(session.userData.lat);
+		console.log(session.userData.speciality)
+		return session;		
+}
+
+
 
 // Dialog to ask for Speciality
 bot.dialog('askforSpeciality',[
