@@ -170,7 +170,7 @@ var authToken;
 //Direct to index.html web page
  server.get('/Auth', function(err, req, res, obj) {
  // assert.ifError(err);
-  console.log('I RECEIVED THIS FROM AUTH URL %s', obj);
+  console.log('I RECEIVED THIS FROM AUTH URL %s', req);
 }); 
 
 server.post('/api/messages', connector.listen());
