@@ -168,9 +168,12 @@ var source;
 var authToken;
 //var assert = require('assert');
 //Direct to index.html web page
+
  server.get('/Auth', function(err, req, res, data) {
  // assert.ifError(err);
-  console.log(JSON.stringify(data));
+ 	server.use(restify.plugins.queryParser());
+	console.log(JSON.stringify(data));
+	console.log('Parsed string: '+ req.query);
 }); 
 
 server.post('/api/messages', connector.listen());
