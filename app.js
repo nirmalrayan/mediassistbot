@@ -1911,17 +1911,23 @@ function isEmptyObject(obj) {
   return !Object.keys(obj).length;
 }
 
+var locationDialog = require('botbuilder-location');
+bot.library(locationDialog.createLibrary(process.env.BING_MAPS_API_KEY));
 bot.dialog('askforLocation',  [
     function (session) {
-		var locationDialog = require('botbuilder-location');
-		bot.library(locationDialog.createLibrary(process.env.BING_MAPS_API_KEY));
 		
 		var options = {
-			prompt: 'Where should I search for hospitals? 🏥. Type your city.',
+			prompt: "🏥 Where should I search for hospitals?",
 			useNativeControl: true,
 			reverseGeocode: true,
-			skipFavorites: true,
-			skipConfirmationAsk: true
+					skipFavorites: true,
+					skipConfirmationAsk: true,
+            requiredFields:
+                locationDialog.LocationRequiredFields.streetAddress |
+                locationDialog.LocationRequiredFields.locality |
+                locationDialog.LocationRequiredFields.region |
+                locationDialog.LocationRequiredFields.postalCode |
+                locationDialog.LocationRequiredFields.country
 		};
 		locationDialog.getLocation(session, options);
 
@@ -1929,6 +1935,7 @@ bot.dialog('askforLocation',  [
     function (session, results) {
         if (results.response) {
 			session.userData.place = results.response;
+			console.log(results.response);
 			var place = session.userData.place;
 			session.userData.lat = JSON.stringify(place.geo.latitude);
 			session.userData.lng = JSON.stringify(place.geo.longitude);
@@ -1981,7 +1988,7 @@ bot.dialog('askforLocation',  [
 				url: 'http://track-api-lb.medibuddy.in/GetHospitalsByLocation/.json',
 				method: 'POST',
 				headers: headers,
-				form: {"insuranceCompany":session.userData.insurer,"latitude":session.userData.lat,"longitude":session.userData.lng,"distance":10,"hospSpeciality":session.userData.speciality,"maRating":""}
+				form: {"insuranceCompany":session.userData.insurer,"latitude":session.userData.lat,"longitude":session.userData.lng,"distance":3,"hospSpeciality":session.userData.speciality,"maRating":""}
 			}
 
 			// Start the request
@@ -2090,7 +2097,7 @@ bot.dialog('askforSpeciality',[
 // Dialog to redirect to Call Center
 bot.dialog('askforCallCenter',[
 	function (session){
-		session.send("ℹ️ You can reach our call center at `1800 425 9449` or write to `gethelp@mahs.in` for claim related queries");
+		session.endDialog("ℹ️ You can reach our call center at `1800 425 9449` or write to `gethelp@mahs.in` for claim related queries");
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
@@ -2105,7 +2112,7 @@ bot.dialog('askforCallCenter',[
 // Dialog to redirect to HR
 bot.dialog('askforHR',[
 	function (session){
-		session.send("ℹ️ For recent updates on career opportunities, kindly check out the \"Careers\" tab on our Medi Assist facebook page or mail us at `harish.dasepalli@mahs.in`");
+		session.endDialog("ℹ️ For recent updates on career opportunities, kindly check out the \"Careers\" tab on our Medi Assist facebook page or mail us at `harish.dasepalli@mahs.in`");
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
@@ -2120,7 +2127,7 @@ bot.dialog('askforHR',[
 // Dialog to redirect to Investigation
 bot.dialog('askforInvestigation',[
 	function (session){
-		session.send("ℹ️ Thank you for your valuable feedback. We will notify our investigation team");
+		session.endDialog("ℹ️ Thank you for your valuable feedback. We will notify our investigation team");
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
@@ -2134,7 +2141,7 @@ bot.dialog('askforInvestigation',[
 // Dialog to redirect to Grievance
 bot.dialog('askforGrievance',[
 	function (session){
-		session.send("ℹ️ We sincerely regret for the unpleasant experience! I request you to write to us on `gethelp@mahs.in` or call us on our toll free no `1800 425 9449`. Alternatively, you can also download MediBuddy and track your claim on real time basis");
+		session.endDialog("ℹ️ We sincerely regret for the unpleasant experience! I request you to write to us on `gethelp@mahs.in` or call us on our toll free no `1800 425 9449`. Alternatively, you can also download MediBuddy and track your claim on real time basis");
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
@@ -2148,7 +2155,7 @@ bot.dialog('askforGrievance',[
 // Dialog to redirect to Offshore
 bot.dialog('askforOffshore',[
 	function (session){
-		session.send("ℹ️ For further assistance you can either write to `gethelp@mahs.in` or call on our \"Overseas\" contact number at `91-80-67617555`");
+		session.endDialog("ℹ️ For further assistance you can either write to `gethelp@mahs.in` or call on our \"Overseas\" contact number at `91-80-67617555`");
 	},
 	function(session, results) {i 
 		session.endDialogWithResult(results);
@@ -2177,7 +2184,7 @@ bot.dialog('askforGeneralQuery',[
 // Dialog to handle abuse
 bot.dialog('askforAbuse',[
 	function (session){
-		session.send("🚫 Hey, that language is uncalled for! I request you to write to us on `gethelp@mahs.in` or call us on our toll free no `1800 425 9449`. Alternatively, you can also download MediBuddy and track your claim on real time basis");
+		session.endDialog("🚫 Hey, that language is uncalled for! I request you to write to us on `gethelp@mahs.in` or call us on our toll free no `1800 425 9449`. Alternatively, you can also download MediBuddy and track your claim on real time basis");
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
@@ -2197,7 +2204,7 @@ bot.dialog('sayGoodbye',[
 	function (session){
 		msg = ["See you later 👋, Keep rocking!","See you 👋!","Have a good day.","Later gator!","Talking to you makes my day. Come back soon!", "Ok, bye🙂!", "Till next time!"]
 		x = getRandomInt(0,6);
-		session.send(msg[x]);
+		session.endDialog(msg[x]);
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
@@ -2212,7 +2219,7 @@ bot.dialog('sayThanks',[
 	function (session){
 		msg = ["Welcome, It's nothing","👍","That's all right!","Don't mention it.","😊","😍", "That's very kind of you", "Thank you, I appreciate the compliment.", "Thank you very much. 🙏","All I can say is, Thanks!", "MediBuddy appreciates your gratitude! We wish you good health and smiles 🙂"]
 		x = getRandomInt(0,10);
-		session.send(msg[x]);
+		session.endDialog(msg[x]);
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
