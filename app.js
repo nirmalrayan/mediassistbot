@@ -98,7 +98,8 @@ function respond(req, res, next) {
 	return next();
 }
 
-server.get('/Auth/:Source/:AuthToken', respond); 
+server.get('/', respond); 
+
 
 //Direct to index.html web page
  server.get('/', restify.plugins.serveStatic({
@@ -111,8 +112,6 @@ server.get('/Auth/:Source/:AuthToken', respond);
  directory: __dirname,
  default: '/index.html'	
 })); 
-
-server.use(restify.plugins.queryParser({ mapParams: true }));
 
 //console.log('USER PASSED '+ req.query);
 
@@ -173,7 +172,7 @@ var bot = new builder.UniversalBot(connector,
 		}	
 			session.send(new builder.Message(session)
 				.addAttachment(welcomeCard));
-			session.send('You have connected from '+req.params.Source);
+			session.send('You have connected from '+source);
 			session.beginDialog("/refer");
 	}).set('storage', inMemoryStorage); // Register in-memory storage 
 
