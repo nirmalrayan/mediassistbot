@@ -86,6 +86,25 @@ server.use(restify.plugins.queryParser());
 
 var inMemoryStorage = new builder.MemoryBotStorage(); 
 
+var source;
+var authToken;
+//var assert = require('assert');
+//Direct to index.html web page
+function respond(req, res, next) {
+	console.log("req.params.Source:" + req.params.Source);
+	source = req.params.Source;
+	console.log("req.params.AuthToken:" + req.params.AuthToken);
+	authToken = req.params.authToken;
+//Direct to index.html web page
+ server.get('/', restify.plugins.serveStatic({
+ directory: __dirname,
+ default: '/index.html'	
+})); 
+
+}
+
+server.get('/Auth/:Source/:AuthToken', respond); 
+
 // Create chat bot
 var connector = new builder.ChatConnector
 ({  appId: process.env.MicrosoftAppId, 
@@ -163,17 +182,6 @@ bot.on('conversationUpdate', function (message) {
  directory: __dirname,
  default: '/index.html'	
 })); 
-
-var source;
-var authToken;
-//var assert = require('assert');
-//Direct to index.html web page
-function respond(req, res, next) {
-    console.log("req.params.Source:" + req.params.Source);
-    console.log("req.params.AuthToken:" + req.params.AuthToken);
-}
-
-server.get('/Auth/:Source/:AuthToken', respond); 
 
 server.post('/api/messages', connector.listen());
 
