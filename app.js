@@ -2681,11 +2681,9 @@ bot.dialog('askforhealthcheckCity',[
 		
 			if(session.message && session.message.value){
 				processSubmitAction(session, session.message.value);
-				session.endConversation();
-				session.beginDialog('askforMore');
-//				session.userData.serviceName = "Display health check";
-//				session.beginDialog('askforFeedback');
-//				session.endConversation();
+				session.endDialog();
+				session.userData.serviceName = "Health Check";
+				session.beginDialog('askforFeedback');
 				return;
 			}
 
@@ -2856,7 +2854,7 @@ bot.dialog('medicine',[
 	function (session){
 		session.beginDialog('askformedicineCity');
 	},
-	function(sesison, results){	
+	function(session, results){	
 		session.endDialogWithResult(results);		
 	}
 ])
@@ -3034,7 +3032,7 @@ bot.dialog('consultation',[
 	function (session){
 		session.beginDialog('askforconsultationCity');
 	},
-	function(sesison, results){	
+	function(session, results){	
 		session.endDialogWithResult(results);		
 	}
 ])
@@ -3326,7 +3324,7 @@ bot.dialog('homehealthcare',[
 	function (session){
 		session.beginDialog('askforhomehealthcareCity');
 	},
-	function(sesison, results){	
+	function(session, results){	
 		session.endDialogWithResult(results);		
 	}
 ])
@@ -3501,7 +3499,7 @@ bot.dialog('dental',[
 	function (session){
 		session.beginDialog('askfordentalCity');
 	},
-	function(sesison, results){	
+	function(session, results){	
 		session.endDialogWithResult(results);		
 	}
 ])
@@ -3735,7 +3733,7 @@ bot.dialog('teleconsultation',[
 	function (session){
 		session.beginDialog('askforTeleConsultationDetails');
 	},
-	function(sesison, results){	
+	function(session, results){	
 		session.endDialogWithResult(results);		
 	}
 ])
@@ -3922,7 +3920,7 @@ bot.dialog('labtest',[
 	function (session, results) {
 		session.endConversation();
 	},
-	function(sesison, results){	
+	function(session, results){	
 		session.endDialogWithResult(results);		
 	}
 ])
