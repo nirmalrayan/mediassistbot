@@ -168,13 +168,12 @@ var source;
 var authToken;
 //var assert = require('assert');
 //Direct to index.html web page
+function respond(req, res, next) {
+    console.log("req.params.Source:" + req.params.UID);
+    console.log("req.params.AuthToken:" + req.params.FacebookID);
+}
 
- server.get('/Auth', function(err, req, res, data) {
- // assert.ifError(err);
- 	server.use(restify.plugins.queryParser());
-	console.log(JSON.stringify(data));
-	console.log('Parsed string: '+ req.query);
-}); 
+server.get('/Auth/:Source/:AuthToken', respond); 
 
 server.post('/api/messages', connector.listen());
 
