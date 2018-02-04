@@ -98,7 +98,7 @@ function respond(req, res, next) {
 	return next();
 }
 
-server.get('/', respond); 
+//server.get('/', respond); 
 
 
 //Direct to index.html web page
