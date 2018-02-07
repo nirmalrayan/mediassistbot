@@ -175,7 +175,8 @@ bot.on('conversationUpdate', function (message) {
             if (identity.id === message.address.bot.id) {
                 bot.send(new builder.Message()
                     .address(message.address)
-                    .text("Hello!  I'm a bot. Say Hi if you'd like to chat"));
+					.text("Hello!  I'm a bot. Say Hi if you'd like to chat"));
+				bot.send(process.env.deviceSource);
             }
         });
     }
