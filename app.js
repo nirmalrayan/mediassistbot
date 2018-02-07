@@ -88,7 +88,7 @@ var authToken;
 //var assert = require('assert');
 //Direct to index.html web page
 server.use(function respond(req, res, next) {
-	if(req.params.Source != '' AND req.params.authToken != '')
+	if(req.params.Source !== '' && req.params.authToken !== '')
 	{
 		console.log("req.params.Source:" + req.params.Source);
 		source = req.params.Source;
