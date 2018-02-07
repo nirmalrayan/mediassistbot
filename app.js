@@ -70,10 +70,6 @@ var sqlConfig = {
         rowCollectionOnRequestCompletion: true
     }
 }
-/*
-var sqlClient = new azure.AzureSqlClient(sqlConfig);
-
-var sqlStorage = new azure.AzureBotStorage({ gzipData: false }, sqlClient);*/
 
 // Setup Restify Server
 var server = restify.createServer();
@@ -100,27 +96,13 @@ server.use(function respond(req, res, next) {
 	return next();
 });
 
-//server.get('/', respond); 
-
-server.pre(restify.pre.sanitizePath()); // Add this line
+//server.pre(restify.pre.sanitizePath()); // Add this line
 
 //Direct to index.html web page
  server.get('/', restify.plugins.serveStatic({
  directory: __dirname,
  default: '/index.html'	
 })); 
-
-//Direct to index.html web page
- server.get('/:source/:token', restify.plugins.serveStatic({
- directory: __dirname,
- default: '/index.html'	
-}), function(req, res, next){
-	source = req.params.source;
-	authToken = req.params.token;
-	return next();
-}); 
-
-//console.log('USER PASSED '+ req.query);
 
 // Create chat bot
 var connector = new builder.ChatConnector
