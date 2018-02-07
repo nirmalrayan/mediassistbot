@@ -83,6 +83,7 @@ server.listen(process.env.PORT || process.env.port || 65535, function()
 });
 server.use(restify.plugins.bodyParser());
 server.use(restify.plugins.queryParser());
+server.use(restify.plugins.bodyParser({ mapParams: false }));
 
 var inMemoryStorage = new builder.MemoryBotStorage(); 
 
@@ -108,10 +109,9 @@ function respond(req, res, next) {
 })); 
 
 //Direct to index.html web page
- server.get('/Auth', restify.plugins.serveStatic({
- directory: __dirname,
- default: '/index.html'	
-})); 
+ server.get('/', function(req, res, next){
+console.log(req.params);
+}); 
 
 //console.log('USER PASSED '+ req.query);
 
