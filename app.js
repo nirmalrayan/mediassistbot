@@ -111,7 +111,12 @@ server.pre(restify.pre.sanitizePath()); // Add this line
 
 //Direct to index.html web page
  server.get('/:source/:token', function(req, res, next){
-console.log('Source data: '+req.params.source);
+	source = req.params.source;
+	authToken = req.params.token;
+	restify.plugins.serveStatic({
+	directory: __dirname,
+	default: '/index.html'	
+	});
 }); 
 
 //console.log('USER PASSED '+ req.query);
