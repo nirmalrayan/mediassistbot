@@ -111,7 +111,7 @@ server.pre(restify.pre.sanitizePath()); // Add this line
 
 //Direct to index.html web page
  server.get('/:source/:token', function(req, res, next){
-console.log(req.params);
+console.log('Source data: '+req.params.source);
 }); 
 
 //console.log('USER PASSED '+ req.query);
