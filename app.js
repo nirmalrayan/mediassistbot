@@ -90,10 +90,10 @@ var authToken;
 server.use(function respond(req, res, next) {
 	if(req.params !== {})
 	{
-		console.log("req.params.Source:" + req.params.Source);
 		source = req.params.Source;
-		console.log("req.params.AuthToken:" + req.params.AuthToken);
 		authToken = req.params.authToken;
+		console.log("req.params.Source:" + source);
+		console.log("req.params.AuthToken:" + authToken);
 	}	
 	return next();
 });
