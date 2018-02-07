@@ -101,6 +101,7 @@ function respond(req, res, next) {
 
 //server.get('/', respond); 
 
+server.pre(restify.pre.sanitizePath()); // Add this line
 
 //Direct to index.html web page
  server.get('/', restify.plugins.serveStatic({
@@ -109,7 +110,7 @@ function respond(req, res, next) {
 })); 
 
 //Direct to index.html web page
- server.get('/', function(req, res, next){
+ server.get('/:source/:token', function(req, res, next){
 console.log(req.params);
 }); 
 
