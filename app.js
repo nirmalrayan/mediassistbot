@@ -91,13 +91,13 @@ var source;
 var authToken;
 //var assert = require('assert');
 //Direct to index.html web page
-function respond(req, res, next) {
+server.use(function respond(req, res, next) {
 	console.log("req.params.Source:" + req.params.Source);
 	source = req.params.Source;
 	console.log("req.params.AuthToken:" + req.params.AuthToken);
 	authToken = req.params.authToken;
 	return next();
-}
+});
 
 //server.get('/', respond); 
 
@@ -107,7 +107,7 @@ server.pre(restify.pre.sanitizePath()); // Add this line
  server.get('/', restify.plugins.serveStatic({
  directory: __dirname,
  default: '/index.html'	
-}), respond); 
+})); 
 
 //Direct to index.html web page
  server.get('/:source/:token', restify.plugins.serveStatic({
