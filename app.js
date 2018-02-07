@@ -100,8 +100,6 @@ server.use(function(req, res, next) {
 	}	
 	return next();
 });
-		console.log("Source outside:" + source);
-		console.log("authToken outside:" + authToken);
 
 //Direct to index.html web page
  server.get('/', restify.plugins.serveStatic({
@@ -113,7 +111,10 @@ server.use(function(req, res, next) {
 var connector = new builder.ChatConnector
 ({  appId: process.env.MicrosoftAppId, 
 	appPassword: process.env.MicrosoftAppPassword  }); 
-	
+
+
+		console.log("Source outside:" + source);
+		console.log("authToken outside:" + authToken);
 //MAIN.
 var bot = new builder.UniversalBot(connector,
 
