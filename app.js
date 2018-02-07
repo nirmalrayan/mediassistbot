@@ -83,8 +83,6 @@ server.use(restify.plugins.queryParser({ mapParams: true }));
 
 var inMemoryStorage = new builder.MemoryBotStorage(); 
 
-var source;
-var authToken;
 //var assert = require('assert');
 
 server.pre(restify.pre.sanitizePath()); // Add this line
@@ -94,13 +92,14 @@ server.use(function(req, res, next) {
 	{
 		global.source = req.params.Source;
 		global.authToken = req.params.authToken;
+		process.env.deviceSource = req.params.Source;
 		console.log(req.query);
 		console.log("Source:" + global.source);
 		console.log("authToken:" + global.authToken);
 	}	
 	return next();
 });
-		console.log("Source outside:" + global.source);
+		console.log("Source outside:" + process.env.deviceSource);
 		console.log("authToken outside:" + global.authToken);
 
 //Direct to index.html web page
