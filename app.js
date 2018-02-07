@@ -87,13 +87,7 @@ var source;
 var authToken;
 //var assert = require('assert');
 
-//server.pre(restify.pre.sanitizePath()); // Add this line
-
-//Direct to index.html web page
- server.get('/', restify.plugins.serveStatic({
- directory: __dirname,
- default: '/index.html'	
-}));
+server.pre(restify.pre.sanitizePath()); // Add this line
 
 server.use(function(req, res, next) {
 	if(req.params !== {} || req.params.Source !== 'undefined' || req.params.authToken !== 'undefined')
@@ -106,6 +100,12 @@ server.use(function(req, res, next) {
 	}	
 	return next();
 });
+
+//Direct to index.html web page
+ server.get('/', restify.plugins.serveStatic({
+ directory: __dirname,
+ default: '/index.html'	
+}));
 
 // Create chat bot
 var connector = new builder.ChatConnector
