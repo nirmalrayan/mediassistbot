@@ -89,27 +89,25 @@ var authToken;
 
 server.pre(restify.pre.sanitizePath()); // Add this line
 
+server.use(function(req, res, next) {
+	if(Object.keys(req.query).length !== 0)
+	{
+		global.source = req.params.Source;
+		global.authToken = req.params.authToken;
+		console.log(req.query);
+		console.log("Source:" + global.source);
+		console.log("authToken:" + global.authToken);
+	}	
+	return next();
+});
+		console.log("Source outside:" + global.source);
+		console.log("authToken outside:" + global.authToken);
+
 //Direct to index.html web page
  server.get('/', restify.plugins.serveStatic({
  directory: __dirname,
  default: '/index.html'	
 }));
-
-
-server.use(function(req, res, next) {
-	if(Object.keys(req.query).length !== 0)
-	{
-		source = req.params.Source;
-		authToken = req.params.authToken;
-		console.log(req.query);
-		console.log("Source:" + source);
-		console.log("authToken:" + authToken);
-	}	
-	return next();
-});
-		console.log("Source outside:" + source);
-		console.log("authToken outside:" + authToken);
-
 
 // Create chat bot
 var connector = new builder.ChatConnector
