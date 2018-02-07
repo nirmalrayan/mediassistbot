@@ -78,7 +78,7 @@ server.listen(process.env.PORT || process.env.port || 65535, function()
    console.log('%s listening to %s', server.name, server.url); 
 });
 server.use(restify.plugins.bodyParser());
-server.use(restify.plugins.queryParser());
+//server.use(restify.plugins.queryParser());
 server.use(restify.plugins.queryParser({ mapParams: true }));
 
 var inMemoryStorage = new builder.MemoryBotStorage(); 
@@ -94,7 +94,6 @@ server.use(function respond(req, res, next) {
 		authToken = req.params.authToken;
 		console.log("Source:" + source);
 		console.log("authToken:" + authToken);
-		return next();
 	}	
 	return next();
 });
