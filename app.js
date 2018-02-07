@@ -86,8 +86,16 @@ var inMemoryStorage = new builder.MemoryBotStorage();
 var source;
 var authToken;
 //var assert = require('assert');
+
+//server.pre(restify.pre.sanitizePath()); // Add this line
+
 //Direct to index.html web page
-server.use(function respond(req, res, next) {
+ server.get('/', restify.plugins.serveStatic({
+ directory: __dirname,
+ default: '/index.html'	
+}));
+
+server.use(function(req, res, next) {
 	if(req.params !== {} || req.params.Source !== 'undefined' || req.params.authToken !== 'undefined')
 	{
 		source = req.params.Source;
@@ -98,14 +106,6 @@ server.use(function respond(req, res, next) {
 	}	
 	return next();
 });
-
-//server.pre(restify.pre.sanitizePath()); // Add this line
-
-//Direct to index.html web page
- server.get('/', restify.plugins.serveStatic({
- directory: __dirname,
- default: '/index.html'	
-})); 
 
 // Create chat bot
 var connector = new builder.ChatConnector
