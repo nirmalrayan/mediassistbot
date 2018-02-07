@@ -96,7 +96,7 @@ server.use(function respond(req, res, next) {
 		console.log("Source:" + source);
 		console.log("authToken:" + authToken);
 	}	
-	return next();
+	return;
 });
 
 //server.pre(restify.pre.sanitizePath()); // Add this line
