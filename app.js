@@ -88,7 +88,7 @@ var authToken;
 //var assert = require('assert');
 //Direct to index.html web page
 server.use(function respond(req, res, next) {
-	if(req.params !== {} && req.params.Source !== 'undefined' && req.params.authToken !== 'undefined')
+	if(req.params !== {} || req.params.Source !== 'undefined' || req.params.authToken !== 'undefined')
 	{
 		source = req.params.Source;
 		authToken = req.params.authToken;
