@@ -165,6 +165,7 @@ var bot = new builder.UniversalBot(connector,
 		}	
 			session.send(new builder.Message(session)
 				.addAttachment(welcomeCard));
+				session.send(process.env.deviceSource);
 //			session.send('You have connected from '+source);
 			session.beginDialog("/refer");
 	}).set('storage', inMemoryStorage); // Register in-memory storage 
@@ -176,7 +177,6 @@ bot.on('conversationUpdate', function (message) {
                 bot.send(new builder.Message()
                     .address(message.address)
 					.text("Hello!  I'm a bot. Say Hi if you'd like to chat"));
-				bot.send(process.env.deviceSource);
             }
         });
     }
