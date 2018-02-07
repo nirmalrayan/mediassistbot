@@ -92,6 +92,7 @@ var authToken;
 //var assert = require('assert');
 //Direct to index.html web page
 server.use(function respond(req, res, next) {
+	console.log(req.params);
 	console.log("req.params.Source:" + req.params.Source);
 	source = req.params.Source;
 	console.log("req.params.AuthToken:" + req.params.AuthToken);
