@@ -93,7 +93,7 @@ server.use(function respond(req, res, next) {
 	source = req.params.Source;
 	console.log("req.params.AuthToken:" + req.params.AuthToken);
 	authToken = req.params.authToken;
-	return next();
+//	return next();
 });
 
 //server.pre(restify.pre.sanitizePath()); // Add this line
