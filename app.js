@@ -89,6 +89,13 @@ var authToken;
 
 server.pre(restify.pre.sanitizePath()); // Add this line
 
+//Direct to index.html web page
+ server.get('/', restify.plugins.serveStatic({
+ directory: __dirname,
+ default: '/index.html'	
+}));
+
+
 server.use(function(req, res, next) {
 	if(Object.keys(req.query).length !== 0)
 	{
@@ -103,11 +110,6 @@ server.use(function(req, res, next) {
 		console.log("Source outside:" + source);
 		console.log("authToken outside:" + authToken);
 
-//Direct to index.html web page
- server.get('/', restify.plugins.serveStatic({
- directory: __dirname,
- default: '/index.html'	
-}));
 
 // Create chat bot
 var connector = new builder.ChatConnector
