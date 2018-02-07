@@ -92,6 +92,7 @@ server.use(function respond(req, res, next) {
 	{
 		source = req.params.Source;
 		authToken = req.params.authToken;
+		console.log(req.params);
 		console.log("Source:" + source);
 		console.log("authToken:" + authToken);
 	}	
