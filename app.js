@@ -165,7 +165,7 @@ var bot = new builder.UniversalBot(connector,
 		}	
 			session.send(new builder.Message(session)
 				.addAttachment(welcomeCard));
-			session.send('You have connected from '+process.env.deviceSource);
+//			session.send('You have connected from '+process.env.deviceSource);
 			session.beginDialog("/refer");
 	}).set('storage', inMemoryStorage); // Register in-memory storage 
 
