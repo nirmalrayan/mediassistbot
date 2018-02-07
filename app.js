@@ -89,7 +89,7 @@ var authToken;
 
 server.pre(restify.pre.sanitizePath()); // Add this line
 
-server.use(function(req, res, next) {
+(server.use(function(req, res, next) {
 	if(Object.keys(req.query).length !== 0)
 	{
 		source = req.params.Source;
@@ -99,7 +99,7 @@ server.use(function(req, res, next) {
 		console.log("authToken:" + authToken);
 	}	
 	return next();
-});
+}))(i);
 
 //Direct to index.html web page
  server.get('/', restify.plugins.serveStatic({
@@ -112,9 +112,6 @@ var connector = new builder.ChatConnector
 ({  appId: process.env.MicrosoftAppId, 
 	appPassword: process.env.MicrosoftAppPassword  }); 
 
-
-		console.log("Source outside:" + source);
-		console.log("authToken outside:" + authToken);
 //MAIN.
 var bot = new builder.UniversalBot(connector,
 
