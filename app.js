@@ -90,7 +90,7 @@ var authToken;
 server.pre(restify.pre.sanitizePath()); // Add this line
 
 server.use(function(req, res, next) {
-	if(req.params !== {} || req.params.Source !== null || req.params.authToken !== null)
+	if(Object.keys(req.query).length === 0)
 	{
 		source = req.params.Source;
 		authToken = req.params.authToken;
