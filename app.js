@@ -89,7 +89,7 @@ var authToken;
 
 server.pre(restify.pre.sanitizePath()); // Add this line
 
-(server.use(function(req, res, next) {
+server.use(function(req, res, next) {
 	if(Object.keys(req.query).length !== 0)
 	{
 		source = req.params.Source;
@@ -99,7 +99,7 @@ server.pre(restify.pre.sanitizePath()); // Add this line
 		console.log("authToken:" + authToken);
 	}	
 	return next();
-}))(i);
+});
 		console.log("Source outside:" + source);
 		console.log("authToken outside:" + authToken);
 
