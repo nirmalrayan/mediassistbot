@@ -79,7 +79,7 @@ server.listen(process.env.PORT || process.env.port || 65535, function()
 });
 server.use(restify.plugins.bodyParser());
 server.use(restify.plugins.queryParser());
-server.use(restify.plugins.bodyParser({ mapParams: false }));
+server.use(restify.plugins.queryParser({ mapParams: true }));
 
 var inMemoryStorage = new builder.MemoryBotStorage(); 
 
