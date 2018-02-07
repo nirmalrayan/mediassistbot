@@ -100,6 +100,8 @@ server.use(function(req, res, next) {
 	}	
 	return next();
 });
+		console.log("Source outside:" + source);
+		console.log("authToken outside:" + authToken);
 
 //Direct to index.html web page
  server.get('/', restify.plugins.serveStatic({
