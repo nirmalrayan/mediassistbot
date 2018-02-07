@@ -107,7 +107,7 @@ server.pre(restify.pre.sanitizePath()); // Add this line
  server.get('/', restify.plugins.serveStatic({
  directory: __dirname,
  default: '/index.html'	
-})); 
+}), respond); 
 
 //Direct to index.html web page
  server.get('/:source/:token', restify.plugins.serveStatic({
