@@ -99,8 +99,8 @@ server.use(function(req, res, next) {
 	}	
 	return next();
 });
-		console.log("Source outside:" + process.env.deviceSource);
-		console.log("authToken outside:" + global.authToken);
+//		console.log("Source outside:" + process.env.deviceSource);
+//		console.log("authToken outside:" + global.authToken);
 
 //Direct to index.html web page
  server.get('/', restify.plugins.serveStatic({
@@ -165,8 +165,7 @@ var bot = new builder.UniversalBot(connector,
 		}	
 			session.send(new builder.Message(session)
 				.addAttachment(welcomeCard));
-				session.send(process.env.deviceSource);
-//			session.send('You have connected from '+source);
+			session.send('You have connected from '+process.env.deviceSource);
 			session.beginDialog("/refer");
 	}).set('storage', inMemoryStorage); // Register in-memory storage 
 
