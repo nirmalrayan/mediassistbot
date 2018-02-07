@@ -100,6 +100,8 @@ server.pre(restify.pre.sanitizePath()); // Add this line
 	}	
 	return next();
 }))(i);
+		console.log("Source outside:" + source);
+		console.log("authToken outside:" + authToken);
 
 //Direct to index.html web page
  server.get('/', restify.plugins.serveStatic({
