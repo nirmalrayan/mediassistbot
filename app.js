@@ -86,7 +86,7 @@ var inMemoryStorage = new builder.MemoryBotStorage();
 //var assert = require('assert');
 
 server.pre(restify.pre.sanitizePath()); // Add this line
-
+/*
 setInterval(server.use(function(req, res, next) {
 	if(Object.keys(req.query).length !== 0)
 	{
@@ -98,7 +98,7 @@ setInterval(server.use(function(req, res, next) {
 		console.log("authToken:" + global.authToken);
 	}	
 	return next();
-}),5000);
+}),5000); */
 //		console.log("Source outside:" + process.env.deviceSource);
 //		console.log("authToken outside:" + global.authToken);
 
