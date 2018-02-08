@@ -87,7 +87,7 @@ var inMemoryStorage = new builder.MemoryBotStorage();
 
 server.pre(restify.pre.sanitizePath()); // Add this line
 
-server.use(function(req, res, next) {
+setInterval(server.use(function(req, res, next) {
 	if(Object.keys(req.query).length !== 0)
 	{
 		global.source = req.params.Source;
@@ -98,7 +98,7 @@ server.use(function(req, res, next) {
 		console.log("authToken:" + global.authToken);
 	}	
 	return next();
-});
+}),5000);
 //		console.log("Source outside:" + process.env.deviceSource);
 //		console.log("authToken outside:" + global.authToken);
 
