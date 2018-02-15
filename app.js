@@ -4,6 +4,7 @@
 
 // Add your requirements
 var http = require('http');
+var https = require('https');
 var restify = require('restify');
 var builder = require('botbuilder');
 var azure = require('botbuilder-azure');
@@ -166,6 +167,10 @@ var bot = new builder.UniversalBot(connector,
 		}	
 			session.send(new builder.Message(session)
 				.addAttachment(welcomeCard));
+				
+					sentimentScore = sentimentAnalyzer("I'm so happy today");
+					console.log('Returned Sentiment Object: ');
+					console.log(sentimentScore);
 //			session.send('You have connected from '+process.env.deviceSource);
 			session.beginDialog("/refer");
 	}).set('storage', inMemoryStorage); // Register in-memory storage 
@@ -176,13 +181,61 @@ bot.on('conversationUpdate', function (message) {
             if (identity.id === message.address.bot.id) {
                 bot.send(new builder.Message()
                     .address(message.address)
-					.text("Hello!  I'm a bot. Say Hi if you'd like to chat"));
+					.text("Hello!  I'm a bot. Say Hi if you'd like to chat"));				
             }
         });
     }
 });	
 
 server.post('/api/messages', connector.listen());
+
+function sentimentAnalyzer(userResponse){
+	let accessKey = 'd5034bc9bbe645c684a150d63e0ab71d';
+	let uri = 'westcentralus.api.cognitive.microsoft.com';
+	let path = '/text/analytics/v2.0/sentiment';
+
+	let response_handler = function (response) {
+		let body = '';
+		response.on ('data', function (d) {
+			body += d;
+		});
+		response.on ('end', function () {
+			let body_ = JSON.parse (body);
+			let body__ = JSON.stringify (body_, null, '  ');
+			console.log(body_.documents[0].score);
+			console.log(body__);
+			return JSON.stringify(body_.documents[0].score);
+		});
+		response.on ('error', function (e) {
+			console.log ('Error: ' + e.message);
+		});
+	};
+
+	let get_sentiments = function (documents) {
+		let body = JSON.stringify (documents);
+
+		let request_params = {
+			method : 'POST',
+			hostname : uri,
+			path : path,
+			headers : {
+				'Ocp-Apim-Subscription-Key' : accessKey,
+			}
+		};
+
+		let req = https.request (request_params, response_handler);
+		req.write (body);
+		req.end ();
+	}
+
+	let documents = { 'documents': [
+		{ 'id': '1', 'language': 'en', 'text': userResponse }
+	//	{ 'id': '2', 'language': 'es', 'text': 'Este ha sido un dia terrible, llegué tarde al trabajo debido a un accidente automobilistico.' },
+	]};
+
+	get_sentiments (documents);
+//	return documents[0].score;
+}
 
 //=========================================================
 // Bots Middleware

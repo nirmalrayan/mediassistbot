@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="https://www.medibuddy.in/favicon.ico?v1" type="image/x-icon" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <meta charset="UTF-8">
-    <style>
+<style>
       body, html {font-family: 'Open Sans', sans-serif; -webkit-font-smoothing: antialiased; margin:0; padding:0; background: white; color:#333;height:100%;}
       .wrap {display:table; width:100%; max-width:1024px; margin:15px auto; height:calc(100vh - 30px); box-sizing:border-box; border-radius:4px; box-shadow:0px 0px 9px 0px rgba(50, 50, 50, 0.3); background:#fff; overflow:hidden;}
       header { display:table-cell; background: url('https://i.imgur.com/HA32ERE.png') no-repeat white; background-size:100% 100%; width:300px; color:#4A4A4A!important; text-align:center; padding: 40px 20px 20px 20px; box-sizing: border-box; height: 110%;}
@@ -65,19 +65,6 @@
       select {color: #4A4A4A!important}
       .wc-chatview-panel{position: absolute!important; top: -38px!important;}
 
-      @media (max-width: 1024px){
-        .wrap {max-width:960px;}
-      }
-      @media (max-width: 960px){
-        .wrap {max-width:100%; margin:0 auto; height:calc(100vh); border-radius:0;}
-      }
-      @media (max-width: 760px){
-        .showSearch {display:inline-block;}
-        .social {position:absolute; bottom:15px; text-align:center; left: 0; right: 0;}
-        header {width:100%; position:absolute; z-index:1; top:0; left:0; right:0; bottom:0;}
-        #bot {width:100%}
-      }
-
       .sidebar-online{
         font-size: 8px;
         position:relative;
@@ -102,6 +89,31 @@
           line-height: 1;
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
+      }
+
+      select, input:not([type=checkbox]):not([type=radio]), text-area {border: 1px solid #ced4da; width: 100%; padding: .375rem .75rem;}
+
+      @media (max-width: 1024px){
+        .wrap {max-width:960px;}
+      }
+      @media (max-width: 960px){
+        .wrap {max-width:100%; margin:0 auto; height:calc(100vh); border-radius:0;}
+      }
+      @media (max-width: 760px){
+        .showSearch {display:inline-block;}
+        .social {position:absolute; bottom:15px; text-align:center; left: 0; right: 0;}
+        header {width:100%; position:absolute; z-index:1; top:0; left:0; right:0; bottom:0;}
+        #bot {width:100%}
+      }
+      @media (max-width: 490px){
+        .wc-message-group-content {padding: 20px 30px;}
+        .wc-message-group-content {padding-right:0;}
+        .wc-message-from-bot {margin-left:0;}
+        .wc-message-from-me:before {display:none;}
+        .wc-card.wc-adaptive-card.hero .ac-image {max-width:100px}
+        .wc-message-from-bot:before {width:24px; height:24px; left:-30px;}
+        .wc-message-from-bot .wc-message-content {padding:10px;}
+        .wc-adaptive-card {width:100%}
       }
     </style>
 	 <title>MediBuddy - Conversation Bot</title>
