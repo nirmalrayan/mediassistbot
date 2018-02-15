@@ -7,6 +7,8 @@ var http = require('http');
 var restify = require('restify');
 var builder = require('botbuilder');
 var azure = require('botbuilder-azure');
+var handoff = require('botbuilder-handoff');
+
 const {Wit, log} = require('node-wit');
 var cognitiveservices = require('botbuilder-cognitiveservices');
 require('env2')('.env'); // loads all entries into process.env
@@ -126,7 +128,6 @@ var bot = new builder.UniversalBot(connector,
 				.images([
 					new builder.CardImage(session)
 						.url('https://i.imgur.com/k4eN1Bc.png')
-// OLD MASCOT						.url('https://i.imgur.com/HwRgHDI.png')
 						.alt('MediBuddy')
 				])
 				.buttons([
@@ -183,6 +184,23 @@ bot.on('conversationUpdate', function (message) {
 
 server.post('/api/messages', connector.listen());
 
+//=========================================================
+// Bots Middleware
+//=========================================================
+
+// Anytime the major version is incremented any existing conversations will be restarted.
+bot.use(builder.Middleware.dialogVersion({ version: 1.0, resetCommand: /^reset/i }));
+
+/*
+handoff.setup(bot, server, isAgent, {
+    mongodbProvider: process.env.MONGODB_PROVIDER,
+    directlineSecret: process.env.MICROSOFT_DIRECTLINE_SECRET,
+    textAnalyticsKey: process.env.CG_SENTIMENT_KEY,
+    appInsightsInstrumentationKey: process.env.APPINSIGHTS_INSTRUMENTATIONKEY,
+    retainData: process.env.RETAIN_DATA,
+    customerStartHandoffCommand: process.env.CUSTOMER_START_HANDOFF_COMMAND
+});*/
+
 //QnA Maker Configuration
 var qnarecognizer  = new cognitiveservices.QnAMakerRecognizer({
 	knowledgeBaseId: process.env.QnAknowledgeBaseId, 
@@ -224,6 +242,19 @@ bot.dialog("hello", (session, args) => {
 }).triggerAction({
     matches: 'SayHello'
 });
+
+// Create endpoint for agent / call center
+//server.use('/webchat', restify.static('public'));
+
+// Replace this functions with custom login/verification for agents
+//const isAgent = (session) => session.message.user.name.startsWith("Agent");
+/*
+bot.dialog('/connectToHuman', (session)=>{
+    session.send("Hold on, buddy! Connecting you to the next available agent!");
+    handoff.triggerHandoff(session);
+}).triggerAction({
+    matches:  /^agent/i,
+});*/
 
 bot.dialog("idontknow", (session, args) => {
 		session.endDialog("I'm sorry. I'm not yet trained to respond to this query but I'm getting smarter everyday!");
@@ -546,7 +577,7 @@ bot.dialog('showMenu',[
 	}
 ])
 .triggerAction({
-	matches: [/^show menu$/i, /#/i, 'showMenu']
+	matches: [/^show menu$/i, /#/i, /^Show Menu$/i, 'showMenu']
 });
 
 
