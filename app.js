@@ -960,7 +960,7 @@ bot.dialog('askforFeedbackReason',[
           "value": "Help Desk"
         },
         {
-          "title": "Other",
+          "title": "Other (please specify)",
           "value": "Other"
         }
       ]
