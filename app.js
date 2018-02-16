@@ -14,7 +14,7 @@ const {Wit, log} = require('node-wit');
 var cognitiveservices = require('botbuilder-cognitiveservices');
 require('env2')('.env'); // loads all entries into process.env
 var Connection = require('tedious').Connection;
-var Request = require('tedious').Request;
+//var Request = require('tedious').Request;
 var NodeGeocoder = require('node-geocoder');
 
 // Create connection to database
@@ -38,6 +38,7 @@ function storeFeedback(userid, servicename, helpful, feedback, timestamp, source
 	   var requestString = "INSERT INTO ["+process.env.AzureSQLDatabase+"].[dbo].[Feedback] (UserID, ServiceName, Helpful, Feedback, FeedbackDate, FeedbackSource) values ("+userid+","+servicename+","+helpful+","+feedback+","+timestamp+","+source+")";
 	   // Read all rows from table
 	   console.log(requestString);
+	var Request = require('tedious').Request;
      request = new Request(
           requestString,
              function(err, rowCount, rows) 
@@ -51,7 +52,38 @@ function storeFeedback(userid, servicename, helpful, feedback, timestamp, source
             console.log("%s\t%s", column.metadata.colName, column.value);
          });
              });*/
-     connection.execSql(request);
+	 connection.execSql(request);
+	 return;
+   }
+
+
+function storeFB(userid, servicename, helpful, feedback, timestamp, source, userName, userEmail, userPhone, convSource)
+   { console.log('Inserting feedback into Table..');
+	   console.log("Returned userName, useremail and userphone number are: ");
+	   console.log(userName);
+	   console.log(userEmail);
+	   console.log(userPhone);
+   		console.log("Feedback value" + feedback);
+	   var requestString = "INSERT INTO ["+process.env.AzureSQLDatabase+"].[dbo].[Feedback] (UserID, ServiceName, Helpful, Feedback, FeedbackDate, FeedbackSource, UserName, UserEmail, UserPhone, ConversationSource) values ("+userid+","+servicename+","+helpful+","+feedback+","+timestamp+","+source+","+userName+","+userEmail+","+userPhone+","+convSource  +")";
+	   // Read all rows from table
+	   console.log(requestString);
+		
+	var Request = require('tedious').Request;
+     request = new Request(
+          requestString,
+             function(err, rowCount, rows) 
+                {
+                    console.log(rowCount + ' row(s) inserted successfully!');
+                }
+            );
+
+/*     request.on('row', function(columns) {
+        columns.forEach(function(column) {
+            console.log("%s\t%s", column.metadata.colName, column.value);
+         });
+             });*/
+	 connection.execSql(request);
+	 return;
    }
 //const botauth = require("botauth");
 
@@ -772,12 +804,216 @@ bot.dialog('askforTrackClaimwIDConfirmation',[
 // Dialog to ask for Claim Number
 bot.dialog('askforFeedbackReason',[
 	function (session){
-		builder.Prompts.text(session, "Please share your thoughts about me or your experience in general and I'll forward them to my masters");		
+		
+		if(session.message && session.message.value){
+			processSubmitAction9(session, session.message.value);
+			session.endDialog();
+//			session.beginDialog('askforMore');
+//				session.userData.serviceName = "Display health check";
+//				session.beginDialog('askforFeedback');
+//				session.endConversation();
+			return;
+		}
+
+		var card = 
+		{
+			"contentType": "application/vnd.microsoft.card.adaptive",
+			"content": {
+				
+			"type": "AdaptiveCard",
+			"body": [
+				{
+				"type": "TextBlock",
+				"size": "medium",
+				"weight": "bolder",
+				"text": "Feedback Form",
+				"horizontalAlignment": "left"
+				},
+				{
+				"type": "TextBlock",
+				"text": "Please share your thoughts about me or your experience in general and I'll forward them to my masters.",
+				"isSubtle": true,
+				"wrap": true
+				},
+				{
+					"type": "TextBlock",
+					"text": "Name"
+				},				
+				{
+				"type": "Input.Text",
+				"placeholder": "Enter your name",
+				"style": "text",
+				"maxLength": 0,
+				"id": "UserName"
+				},
+				{
+					"type": "TextBlock",
+					"text": "E-mail Address"
+				},
+				{
+				"type": "Input.Text",
+				"placeholder": "Enter your e-mail address",
+				"style": "email",
+				"maxLength": 0,
+				"id": "UserEmail"
+				},
+				{
+					"type": "TextBlock",
+					"text": "Contact Number"
+				},
+				{
+				"type": "Input.Text",
+				"placeholder": "Enter your phone number",
+				"style": "tel",
+				"maxLength": 0,
+				"id": "UserPhone"
+				},
+    {
+      "type": "TextBlock",
+      "text": "Category"
+    },
+    {
+      "type": "Input.ChoiceSet",
+      "id": "UserService",
+      "style": "compact",
+      "value": "General Feedback",
+      "choices": [
+        {
+          "title": "General Feedback",
+          "value": "General Feedback"
+        },
+        {
+          "title": "Track Claim",
+          "value": "Track Claim"
+        },
+        {
+          "title": "Download E-Card",
+          "value": "Download E-Card"
+        },
+        {
+          "title": "Search Network",
+          "value": "Search Network"
+        },
+        {
+          "title": "Health Check",
+          "value": "Health Check"
+        },
+        {
+          "title": "Medicine",
+          "value": "Medicine"
+        },
+        {
+          "title": "Consultation",
+          "value": "Consultation"
+        },
+        {
+          "title": "Home Health Care",
+          "value": "Home Health Care"
+        },
+        {
+          "title": "Dental",
+          "value": "Dental"
+        },
+        {
+          "title": "Hospitalization",
+          "value": "Hospitalization"
+        },
+        {
+          "title": "Tele Consultation",
+          "value": "Tele Consultation"
+        },
+        {
+          "title": "Lab Test",
+          "value": "Lab Test"
+        },
+        {
+          "title": "Second Opinion",
+          "value": "Second Opinion"
+        },
+        {
+          "title": "Genome Study",
+          "value": "Genome Study"
+        },
+        {
+          "title": "Help Desk",
+          "value": "Help Desk"
+        },
+        {
+          "title": "Other",
+          "value": "Other"
+        }
+      ]
+	},
+	{
+      "type": "TextBlock",
+      "text": "Comments"
+    },
+	{
+	"type": "Input.Text",
+	"placeholder": "Enter your comments",
+	"style": "text",
+	"isMultiline": true,
+	"maxLength": 0,
+	"id": "UserComment"
+	}
+			],
+			"actions": [
+				{
+				"type": "Action.Submit",
+				"title": "Submit Feedback"
+				}
+			]
+			}
+		};
+		session.send(new builder.Message(session)
+			.addAttachment(card));
+
+
+	//	builder.Prompts.text(session, "Please share your thoughts about me or your experience in general and I'll forward them to my masters");		
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
 	}
 ]);
+
+
+function processSubmitAction9(session, message){
+		session.userData.userName = message["UserName"];
+		session.userData.userEmail = message["UserEmail"];	
+		session.userData.userPhone = message["UserPhone"];
+		if(session.userData.serviceName){
+			session.userData.conversationSource = session.userData.serviceName;
+		}else{
+			session.userData.conversationSource = "Generic";
+		}
+		session.userData.serviceName = message["UserService"];
+		console.log('Modified Service Trigger Area: '+session.userData.serviceName);
+		session.userData.FeedbackResponse = message["UserComment"];
+
+		
+//		session.userData.FeedbackResponse = results.response;
+		var wasHelpful = 0;
+		var connection = new Connection(config);
+		// Attempt to connect and execute queries if connection goes through
+		connection.on('connect', function(err) 
+		{
+			if (err) 
+			{
+				console.log(err);
+				return;
+			}
+			else
+			{
+				console.log('This is session.message data' + JSON.stringify(session.message));
+				storeFB(JSON.stringify(session.message.user.id).replace(/"/g, "'"), JSON.stringify(session.userData.serviceName).replace(/"/g, "'"), wasHelpful,JSON.stringify(session.userData.FeedbackResponse).replace(/"/g, "'"), JSON.stringify(session.message.timestamp).replace(/"/g, "'"), JSON.stringify(session.message.source).replace(/"/g, "'"), JSON.stringify(session.userData.userName).replace(/"/g, "'"), JSON.stringify(session.userData.userEmail).replace(/"/g, "'"), JSON.stringify(session.userData.userPhone).replace(/"/g, "'"),JSON.stringify(session.userData.FeedbackResponse).replace(/"/g, "'"), JSON.stringify(session.message.timestamp).replace(/"/g, "'"), JSON.stringify(session.message.source).replace(/"/g, "'"), JSON.stringify(session.userData.userName).replace(/"/g, "'"), JSON.stringify(session.userData.userEmail).replace(/"/g, "'"), JSON.stringify(session.userData.conversationSource).replace(/"/g, "'"));
+			}
+		}
+		);
+		session.beginDialog('askforMore2');
+		session.endDialog();
+		
+}
+
 
 // Dialog to ask for Feedback
 bot.dialog('askforFeedback',[
@@ -794,6 +1030,7 @@ bot.dialog('askforFeedback',[
 				if (err) 
 				{
 					console.log(err);
+					return;
 				}
 				else
 				{
@@ -809,9 +1046,9 @@ bot.dialog('askforFeedback',[
 			session.beginDialog('askforFeedbackReason');
 		}
 		
-	},
+	}/*,
 	function (session, results) {
-		session.userData.FeedbackResponse = results.response;
+//		session.userData.FeedbackResponse = results.response;
 		var wasHelpful = 0;
 		var connection = new Connection(config);
 		// Attempt to connect and execute queries if connection goes through
@@ -830,7 +1067,7 @@ bot.dialog('askforFeedback',[
 		);
 		session.beginDialog('askforMore2');
 		session.endDialog();
-	},
+	}*/,
 	function(session, results) {
 		session.endDialogWithResult(results);
 	}
