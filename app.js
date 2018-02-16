@@ -685,11 +685,20 @@ bot.dialog('trackClaim', [
 // Dialog for displaying menu after completing requested tasks
 bot.dialog('askforMore',[
 	function (session){
-		
-		session.send("How else can I help you?");
 		session.sendTyping();
 		setTimeout(function () {
-			session.beginDialog('showMenu');
+			
+		var msg = new builder.Message(session)
+			.text("How else can I help you?")
+			.suggestedActions(
+				builder.SuggestedActions.create(
+					session, [
+						builder.CardAction.imBack(session, "Show Menu", "Show Menu"),
+						builder.CardAction.imBack(session, "Help", "Help Desk"),
+						builder.CardAction.imBack(session, "End Conversation", "End Conversation"),
+					])
+			);
+		session.send(msg);	
 		}, 5000);		
 		/*
 		builder.Prompts.choice(session, "How else can I help you?", mainMenu, builder.ListStyle.button);		
@@ -714,10 +723,22 @@ bot.dialog('askforMore',[
 bot.dialog('askforMore2',[
 	function (session){
 		session.send('Thanks, a lot!');
-		session.send("How else can I help you?");
+		session.send("");
 		session.sendTyping();
 		setTimeout(function () {
-			session.beginDialog('showMenu');
+			
+		var msg = new builder.Message(session)
+			.text("How else can I help you?")
+			.suggestedActions(
+				builder.SuggestedActions.create(
+					session, [
+						builder.CardAction.imBack(session, "Show Menu", "Show Menu"),
+						builder.CardAction.imBack(session, "Help", "Help Desk"),
+						builder.CardAction.imBack(session, "End Conversation", "End Conversation"),
+					])
+			);
+		session.send(msg);	
+///			session.beginDialog('showMenu');
 		}, 5000);		
 		/*
 		builder.Prompts.choice(session, "How else can I help you?", mainMenu, builder.ListStyle.button);		
@@ -2812,7 +2833,7 @@ bot.dialog('sayGoodbye',[
 	}
 ])
 .triggerAction({
-	matches: [/bye/i, /see you/i, /cu/i ,/ciao/i, /ta ta/i, /cheerio/i, /cheers/i, /gtg/i, /got to go/i,/bai/i, /c u/i, /l8r/i, /exit/i, /quit/i, /take care/i, /cya/i, /shalom/i, /sayonara/i, /farewell/i, /so long/i, /peace out/i, /see you/i]
+	matches: [/bye/i, /see you/i, /cu/i ,/ciao/i, /ta ta/i, /cheerio/i, /cheers/i, /gtg/i, /got to go/i,/bai/i, /c u/i, /l8r/i, /exit/i, /quit/i, /take care/i, /cya/i, /shalom/i, /sayonara/i, /farewell/i, /so long/i, /peace out/i, /see you/i, /end conversation/i]
 });
 
 // Dialog to handle Compliment
