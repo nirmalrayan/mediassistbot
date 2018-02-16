@@ -1117,8 +1117,8 @@ bot.dialog('trackClaimwID', [
 					session.dialogData.hospitalizationDate = builder.EntityRecognizer.resolveTime([results.response]);
 
 					// Process request and display reservation details
-					session.send("Tracking claim with details 🕵️ <br/>Claim Number: %s<br/>Date/Time: %s. <br/><br/>Please wait ⏳",
-						session.dialogData.claimNumber, session.dialogData.hospitalizationDate);
+					session.send("Tracking claim with details 🕵️ <br/>Claim Number: %s<br/>Date: %s <br/><br/>Please wait ⏳",
+						session.dialogData.claimNumber, session.dialogData.hospitalizationDate.toString().substring(0,15));
 					
 					//Make POST request to MA Server
 					var request = require('request');	
