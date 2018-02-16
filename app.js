@@ -2462,11 +2462,12 @@ bot.dialog('askforInsurer',[
 				},
 				{
 					"type": "TextBlock",
-					"text": "Choose your Insurer"
+					"text": "Insurer"
 				},
 				{
 					"type": "Input.ChoiceSet",
 					"id": "insurer",
+					"placeholder": "Select your insurer",	
 					"style":"compact",
 					"choices": [
 					{
@@ -2582,11 +2583,12 @@ bot.dialog('askforInsurer',[
 				},
 				{
 					"type": "TextBlock",
-					"text": "Select your Speciality"
+					"text": "Speciality"
 				},
 				{
 					"type": "Input.ChoiceSet",
 					"id": "speciality",
+					"placeholder": "Select your speciality",
 					"style":"compact",
 					"choices": [
 					{
@@ -3070,11 +3072,12 @@ bot.dialog('askforhealthcheckCity',[
 						},
 						{
 						  "type": "TextBlock",
-						  "text": "Choose your City"
+						  "text": "City"
 						},
 						{
 						  "type": "Input.ChoiceSet",
 						  "id": "city",
+						  "placeholder": "Select your city",
 						  "style":"compact",
 						  "choices": [
 							{
@@ -3120,6 +3123,7 @@ bot.dialog('askforhealthcheckCity',[
 						{
 						  "type": "Input.ChoiceSet",
 						  "id": "category",
+						  "placeholder": "Select your category",
 						  "style":"expanded",
 						  "isMultiSelect": false,
 						  "choices": [
@@ -3263,11 +3267,12 @@ bot.dialog('askformedicineCity',[
 						},
 						{
 						  "type": "TextBlock",
-						  "text": "Choose your City"
+						  "text": "City"
 						},
 						{
 						  "type": "Input.ChoiceSet",
 						  "id": "city",
+						  "placeholder": "Select your city",
 						  "style":"compact",
 						  "choices": [
 							{
@@ -3328,12 +3333,12 @@ bot.dialog('askformedicineCity',[
 						},
 						{
 						  "type": "TextBlock",
-						  "text": "Enter your pincode"
+						  "text": "Pincode"
 						},
 						{
 						  "type": "Input.Number",
 						  "id": "pincode",
-						  "placeholder": "Enter pincode, let's check if we operate in your area!",
+						  "placeholder": "Enter your pincode, let's check if we operate in your area!",
 						  "speak": "What is your pincode?"
 						}
 					  ],
@@ -3438,11 +3443,12 @@ bot.dialog('askforconsultationCity',[
 						},
 						{
 						  "type": "TextBlock",
-						  "text": "Choose your City"
+						  "text": "City"
 						},
 						{
 						  "type": "Input.ChoiceSet",
 						  "id": "city",
+						  "placeholder": "Select your city",
 						  "style":"compact",
 						  "choices": [
 							{
@@ -3575,10 +3581,11 @@ bot.dialog('askforconsultationCity',[
 						},
 						{
 						  "type": "TextBlock",
-						  "text": "Select your Speciality"
+						  "text": "Speciality"
 						},{
 						  "type": "Input.ChoiceSet",
 						  "id": "speciality",
+					      "placeholder": "Select your speciality",
 						  "style":"compact",
 						  "choices": [
 							{
@@ -3730,11 +3737,12 @@ bot.dialog('askforhomehealthcareCity',[
 						},
 						{
 						  "type": "TextBlock",
-						  "text": "Choose your City"
+						  "text": "City"
 						},
 						{
 						  "type": "Input.ChoiceSet",
 						  "id": "city",
+						  "placeholder": "Select your city",
 						  "style":"compact",
 						  "choices": [
 							{
@@ -3787,10 +3795,11 @@ bot.dialog('askforhomehealthcareCity',[
 						},
 						{
 						  "type": "TextBlock",
-						  "text": "Select your Service"
+						  "text": "Service"
 						},{
 						  "type": "Input.ChoiceSet",
 						  "id": "service",
+						  "placeholder": "Select your service",
 						  "style":"compact",
 						  "choices": [
 							{
@@ -3905,11 +3914,12 @@ bot.dialog('askfordentalCity',[
 						},
 						{
 						  "type": "TextBlock",
-						  "text": "Choose your City"
+						  "text": "City"
 						},
 						{
 						  "type": "Input.ChoiceSet",
 						  "id": "city",
+						  "placeholder": "Select your city",
 						  "style":"compact",
 						  "choices": [
 							{
@@ -4006,10 +4016,11 @@ bot.dialog('askfordentalCity',[
 						},
 						{
 						  "type": "TextBlock",
-						  "text": "Select your Speciality"
+						  "text": "Speciality"
 						},{
 						  "type": "Input.ChoiceSet",
 						  "id": "speciality",
+						  "placeholder": "Select your speciality",
 						  "style":"compact",
 						  "choices": [
 							{
@@ -4137,11 +4148,12 @@ bot.dialog('askforTeleConsultationDetails',[
 						},
 						{
 						  "type": "TextBlock",
-						  "text": "Select your Service"
+						  "text": "Service"
 						},
 						{
 						  "type": "Input.ChoiceSet",
 						  "id": "teleservice",
+						  "placeholder": "Select your service",
 						  "style":"compact",
 						  "choices": [
 							{
@@ -4324,11 +4336,12 @@ bot.dialog('askforLabTestDetails',[
 						},
 						{
 						  "type": "TextBlock",
-						  "text": "Choose your City"
+						  "text": "City"
 						},
 						{
 						  "type": "Input.ChoiceSet",
 						  "id": "city",
+						  "placeholder": "Select your city",
 						  "style":"compact",
 						  "choices": [
 							{
@@ -4481,11 +4494,12 @@ bot.dialog('askforLabTestDetails',[
 						},
 						{
 						  "type": "TextBlock",
-						  "text": "Select your Test"
+						  "text": "Test Name"
 						},
 						{
 						  "type": "Input.ChoiceSet",
 						  "id": "labtest",
+						  "placeholder": "Select your test",
 						  "style":"compact",
 						  "choices": [
 							{
