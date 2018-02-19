@@ -200,9 +200,9 @@ var bot = new builder.UniversalBot(connector,
 			session.send(new builder.Message(session)
 				.addAttachment(welcomeCard));
 				
-					sentimentScore = sentimentAnalyzer("I'm so happy today");
-					console.log('Returned Sentiment Object: ');
-					console.log(sentimentScore);
+//					sentimentScore = sentimentAnalyzer("I'm so happy today");
+//					console.log('Returned Sentiment Object: ');
+//					console.log(sentimentScore);
 //			session.send('You have connected from '+process.env.deviceSource);
 			session.beginDialog("/refer");
 	}).set('storage', inMemoryStorage); // Register in-memory storage 
