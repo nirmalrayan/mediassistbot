@@ -113,12 +113,9 @@ server.listen(process.env.PORT || process.env.port || 65535, function()
    console.log('%s listening to %s', server.name, server.url); 
 });
 server.use(restify.plugins.bodyParser());
-//server.use(restify.plugins.queryParser());
 server.use(restify.plugins.queryParser({ mapParams: true }));
 
 var inMemoryStorage = new builder.MemoryBotStorage(); 
-
-//var assert = require('assert');
 
 server.pre(restify.pre.sanitizePath()); // Add this line
 /*
@@ -204,7 +201,7 @@ var bot = new builder.UniversalBot(connector,
 //					console.log('Returned Sentiment Object: ');
 //					console.log(sentimentScore);
 //			session.send('You have connected from '+process.env.deviceSource);
-			session.beginDialog("/refer");
+			session.beginDialog("refer");
 	}).set('storage', inMemoryStorage); // Register in-memory storage 
 
 bot.on('conversationUpdate', function (message) {
@@ -293,11 +290,12 @@ var qnarecognizer  = new cognitiveservices.QnAMakerRecognizer({
 	top: 4});
 
 //LUIS Configuration
-var model = process.env.LUISURI
+var model = process.env.LUISURI;
 var recognizer = new builder.LuisRecognizer(model);
+console.log(recognizer);
 //bot.recognizer(recog);
 
-bot.dialog('/refer', new builder.IntentDialog({ recognizers : [qnarecognizer, recognizer]})
+bot.dialog('refer', new builder.IntentDialog({ recognizers : [recognizer, qnarecognizer]})
     .matches("SayHello", "hello")
 	.matches("GetName", "setName")
 	.matches("CustomerCare", "askforCallCenter")
