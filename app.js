@@ -197,7 +197,7 @@ var bot = new builder.UniversalBot(connector,
 			session.send(new builder.Message(session)
 				.addAttachment(welcomeCard));
 				
-//					sentimentScore = sentimentAnalyzer("I'm so happy today");
+//					sentimentScore = sentimentAnalyzer("I'm so depressed today");
 //					console.log('Returned Sentiment Object: ');
 //					console.log(sentimentScore);
 //			session.send('You have connected from '+process.env.deviceSource);
@@ -830,7 +830,7 @@ bot.dialog('askforFeedbackReason',[
 //			session.beginDialog('askforMore');
 //				session.userData.serviceName = "Display health check";
 //				session.beginDialog('askforFeedback');
-//				session.endConversation();
+				session.endConversation();
 			return;
 		}
 
@@ -996,7 +996,32 @@ bot.dialog('askforFeedbackReason',[
 ]);
 
 
+// Dialog to ask for Confirmation - Feedback
+bot.dialog('askforFeedbackConfirmation',[
+	function (session){
+		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)")
+	},
+	function (session, results) {
+		if (results.response){
+			
+		session.beginDialog('askforFeedbackReason');
+		}
+			else {	
+		session.beginDialog('askforMore2');
+		session.endConversation();
+		}
+		
+	},
+	function(session, results) {
+		session.endDialogWithResult(results);
+	}
+]);
+
+
 function processSubmitAction9(session, message){
+		var defaultErrorMessage = 'Please fill all the parameters';
+//		 if (validateFeedback(message)) {
+			
 		session.userData.userName = message["UserName"];
 		session.userData.userEmail = message["UserEmail"];	
 		session.userData.userPhone = message["UserPhone"];
@@ -1028,9 +1053,35 @@ function processSubmitAction9(session, message){
 			}
 		}
 		);
-		session.beginDialog('askforMore2');
-		session.endDialog();
+	
+			// proceed to compliment
+			session.beginDialog('askforMore2');
+			session.endDialog();
+ /*       } else {
+			session.send(defaultErrorMessage);
+			session.beginDialog('askforFeedbackConfirmation');
+//			session.endConversation();
+//			session.beginDialog('askforFeedbackReason2');
+//			session.endDialog();
+		}*/
+//		session.beginDialog('askforMore2');
 		
+}
+
+//Validate User Feedback
+function validateFeedback(feedback) {
+    if (!feedback) {
+        return false;
+    }
+	console.log(feedback);
+	var hasName = typeof feedback["UserName"] === 'string' && feedback["UserName"].length > 3;
+	
+	var validEmail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(feedback["UserEmail"]);
+
+	var validPhone = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im.test(feedback["userPhone"]);
+
+	var hasComments = typeof feedback["UserName"] === 'string' && feedback["UserName"].length > 3;
+    return hasName && validEmail && validPhone && hasComments;
 }
 
 
@@ -1538,7 +1589,7 @@ function createReceiptCard(session) {
 			'#### Approved Amount : &#x20B9; ' + formatNumber(session.userData.trackClmApprovedAmt) + '/- \r\r' 
 		)
         .images([
-            builder.CardImage.create(session, 'https://i.imgur.com/j6md6yB.png')
+            builder.CardImage.create(session, 'https://i.imgur.com/S5aclut.png')
         ])
         .buttons([
             builder.CardAction.openUrl(session, 'https://www.medibuddy.in/claim', 'More Information')
@@ -2224,7 +2275,7 @@ function createHeroCard(session) {
         .subtitle('ℹ️ Flash this E-Card upon request at the insurance desk in the hospital at the time of admission')
         .text('')
         .images([
-            builder.CardImage.create(session, 'https://i.imgur.com/RKYzoRi.png')
+            builder.CardImage.create(session, 'https://i.imgur.com/FzwvV2m.png')
         ])
         .buttons([
             builder.CardAction.openUrl(session, session.userData.downloadURL, 'Download E-Card 📥')
@@ -2362,7 +2413,7 @@ bot.dialog('askforLocation',  [
 									.text(nwHospAddress + ', ' + data.hospitals[item].city + ', ' + data.hospitals[item].state + ', ' + data.hospitals[item].pinCode)
 									.images([
 										new builder.CardImage(session)
-											.url('https://i.imgur.com/OaMnJ52.png')
+											.url('https://i.imgur.com/d6EtCMR.png')
 											.alt(data.hospitals[item].name)
 									])
 									.buttons([
@@ -2824,7 +2875,7 @@ function getRandomInt(min, max) {
 // Dialog to handle goodbye
 bot.dialog('sayGoodbye',[
 	function (session){
-		msg = ["See you later 👋, Keep rocking!","See you 👋!","Have a good day.","Later gator!","Talking to you makes my day. Come back soon!", "Ok, bye🙂!", "Till next time!"]
+		msg = ["See you later 👋, Keep rocking!","Stay healthy, always! Bye for now!","See you 👋!","Have a good day.","Later gator!","Talking to you makes my day. Come back soon!", "Ok, bye🙂!", "Till next time!"]
 		x = getRandomInt(0,6);
 		session.endDialog(msg[x]);
 	},
@@ -3177,7 +3228,7 @@ function processSubmitAction(session, message){
 									.text("https://www.medibuddy.in")
 									.images([
 										new builder.CardImage(session)
-											.url('https://i.imgur.com/UZXZjqO.png')
+											.url('https://i.imgur.com/lOo7jfK.png')
 											.alt('Health Check Packages')
 									])
 									.buttons([
@@ -3196,7 +3247,7 @@ function processSubmitAction(session, message){
 									.text("https://www.medibuddy.in")
 									.images([
 										new builder.CardImage(session)
-											.url('https://i.imgur.com/UZXZjqO.png')
+											.url('https://i.imgur.com/lOo7jfK.png')
 											.alt('Health Check Packages')
 									])
 									.buttons([
@@ -3375,7 +3426,7 @@ function processSubmitAction2(session, message){
 									.text("https://infiniti.medibuddy.in")
 									.images([
 										new builder.CardImage(session)
-											.url('https://i.imgur.com/oCmpQ56.png')
+											.url('https://i.imgur.com/rMoInYH.png')
 											.alt('Health Check Packages')
 									])
 									.buttons([
@@ -3669,7 +3720,7 @@ function processSubmitAction3(session, message){
 									.text("https://www.medibuddy.in")
 									.images([
 										new builder.CardImage(session)
-											.url('https://i.imgur.com/E8kTRGq.png')
+											.url('https://i.imgur.com/x040ZAU.png')
 											.alt('Consultations')
 									])
 									.buttons([
@@ -3847,7 +3898,7 @@ function processSubmitAction4(session, message){
 									.text("https://www.medibuddy.in")
 									.images([
 										new builder.CardImage(session)
-											.url('https://i.imgur.com/NOVSZ7T.png')
+											.url('https://i.imgur.com/HNoeNI2.png')
 											.alt('Home Health Care')
 									])
 									.buttons([
@@ -4084,7 +4135,7 @@ function processSubmitAction7(session, message){
 									.text("https://www.medibuddy.in")
 									.images([
 										new builder.CardImage(session)
-											.url('https://i.imgur.com/bS1WkAE.png')
+											.url('https://i.imgur.com/Ubq7ENU.png')
 											.alt('Dental')
 									])
 									.buttons([
@@ -4268,7 +4319,7 @@ function processSubmitAction5(session, message){
 									.text("https://www.medibuddy.in")
 									.images([
 										new builder.CardImage(session)
-											.url('https://i.imgur.com/RpZGGSt.png')
+											.url('https://i.imgur.com/ZG3FfQf.png')
 											.alt('Tele Consultation')
 									])
 									.buttons([
@@ -4575,7 +4626,7 @@ function processSubmitAction6(session, message){
 									.text("https://www.medibuddy.in")
 									.images([
 										new builder.CardImage(session)
-											.url('https://i.imgur.com/Y3DtlFx.png')
+											.url('https://i.imgur.com/fFtS5bL.png')
 											.alt('Lab Test')
 									])
 									.buttons([
