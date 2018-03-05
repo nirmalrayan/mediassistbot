@@ -1091,14 +1091,14 @@ bot.dialog('askforFeedbackReasonFB',[
 	function (session){
 		session.userData.userName = session.message.address.user.name;
 		console.log('FACEBOOK ID IS: '+session.message.address.user.name);
-		session.send("Your feedback is valuable to us! Please enter your `E-mail address`:");		
+		builder.Prompts.text("Your feedback is valuable to us! Please enter your `E-mail address`:");		
 	},
 	function(session, results) {
 		if(results.response){
 			session.userData.userEmail = results.response;
 			console.log('USER ENTERED EMAIL ID: '+ results.response);
 		}
-		session.send("Please enter your `Phone number`: ");
+		builder.Prompts.text("Please enter your `Phone number`: ");
 	/*	if(results.response){
 			var validEmail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(results.response);
 			if(validEmail){
@@ -1119,13 +1119,13 @@ bot.dialog('askforFeedbackReasonFB',[
 				session.userData.conversationSource = "Generic";
 			}
 		}
-		session.send("Please enter the `Service name` where you're having issues:");
+		builder.Prompts.text("Please enter the `Service name` where you're having issues:");
 	},
 	function(session, results){
 		if(results.response){
 			session.userData.serviceName = results.response;
 		}
-		session.send("Please enter your `Feedback` or `Comments`:");
+		builder.Prompts.text("Please enter your `Feedback` or `Comments`:");
 	},
 	function(session, results){
 		if(results.response){
