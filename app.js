@@ -1764,8 +1764,8 @@ bot.dialog('help', [
             builder.CardAction.openUrl(session, 'https://goo.gl/A1EwSs', 'Visit MediBuddy')
         ]);
 //			cards.push(howClaimsWorkCard);
-console.log(howClaimsWorkCard);
-			session.send('Video Card');
+//console.log(howClaimsWorkCard);
+//			session.send('Video Card');
 			var msg = new builder.Message(session).addAttachment(howClaimsWorkCard);
 			session.send(msg);
 				console.log('FINISHED FB CHANNEL HELP RESPONSE WITH VIDEO CARD');
