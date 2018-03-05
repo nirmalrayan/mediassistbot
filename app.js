@@ -1119,12 +1119,7 @@ bot.dialog('askforFeedbackReasonFB',[
 				session.userData.conversationSource = "Generic";
 			}
 		}
-		builder.Prompts.text(session, "Please enter the `Service name` where you're having issues:");
-	},
-	function(session, results){
-		if(results.response){
-			session.userData.serviceName = results.response;
-		}
+		session.userData.serviceName = "Not Taken";
 		builder.Prompts.text(session, "Please enter your `Feedback` or `Comments`:");
 	},
 	function(session, results){
