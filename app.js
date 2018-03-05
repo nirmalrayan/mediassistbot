@@ -1090,10 +1090,14 @@ function validateFeedback(feedback) {
 bot.dialog('askforFeedbackReasonFB',[
 	function (session){
 		session.userData.userName = session.message.address.user.name;
+		console.log('FACEBOOK ID IS: '+session.message.address.user.name);
 		session.send("Your feedback is valuable to us! Please enter your `E-mail address`:");		
 	},
 	function(session, results) {
-		session.userData.userEmail = results.response;
+		if(results.response){
+			session.userData.userEmail = results.response;
+			console.log('USER ENTERED EMAIL ID: '+ results.response);
+		}
 		session.send("Please enter your `Phone number`: ");
 	/*	if(results.response){
 			var validEmail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(results.response);
