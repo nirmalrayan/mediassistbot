@@ -1139,7 +1139,7 @@ bot.dialog('askforFeedbackReasonFB',[
 // Dialog to ask for Feedback
 bot.dialog('askforFeedback',[
 	function (session){
-		builder.Prompts.confirm(session, "💡 Did you find this helpful? (yes/no)");
+		builder.Prompts.confirm(session, "💡 Did you find this helpful? (yes/no)",{listStyle: builder.ListStyle["button"]});
 	},
 	function (session, results) {
 		if (results.response){
