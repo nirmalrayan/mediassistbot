@@ -1753,15 +1753,15 @@ bot.dialog('help', [
 			if(session.message.address.channelId === "facebook"){
 			console.log('INSIDE FB CHANNEL HELP RESPONSE');
 			howClaimsWorkCard = new builder.VideoCard(session)
-        .title('Big Buck Bunny')
-        .subtitle('by the Blender Institute')
-        .text('Big Buck Bunny (code-named Peach) is a short computer-animated comedy film by the Blender Institute, part of the Blender Foundation. Like the foundation\'s previous film Elephants Dream, the film was made using Blender, a free software application for animation made by the same foundation. It was released as an open-source film under Creative Commons License Attribution 3.0.')
-        .image(builder.CardImage.create(session, 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Big_buck_bunny_poster_big.jpg/220px-Big_buck_bunny_poster_big.jpg'))
+        .title('How Claims Work')
+        .subtitle('Do you want to know how claims work?')
+  //      .text('Big Buck Bunny (code-named Peach) is a short computer-animated comedy film by the Blender Institute, part of the Blender Foundation. Like the foundation\'s previous film Elephants Dream, the film was made using Blender, a free software application for animation made by the same foundation. It was released as an open-source film under Creative Commons License Attribution 3.0.')
+  //      .image(builder.CardImage.create(session, 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Big_buck_bunny_poster_big.jpg/220px-Big_buck_bunny_poster_big.jpg'))
         .media([
-            { url: 'http://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4' }
+            { url: 'https://medibuddymedia.blob.core.windows.net/asset-cfe7afcc-61cc-4545-9cdb-c5d056073a2d/Why Health Benefits.mp4?sv=2015-07-08&sr=c&si=c2d359cb-5a73-43c8-aed2-ece7d71de640&sig=um%2FsskYdZ9eNEDVHDFQuC5sUhdJO9EarUWecyYctQNw%3D&st=2018-02-14T06%3A50%3A42Z&se=2118-02-14T06%3A50%3A42Z' }
         ])
         .buttons([
-            builder.CardAction.openUrl(session, 'https://peach.blender.org/', 'Learn More')
+            builder.CardAction.openUrl(session, 'https://goo.gl/A1EwSs', 'Visit MediBuddy')
         ]);
 //			cards.push(howClaimsWorkCard);
 console.log(howClaimsWorkCard);
