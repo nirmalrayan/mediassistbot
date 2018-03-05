@@ -1125,6 +1125,27 @@ bot.dialog('askforFeedbackReasonFB',[
 	function(session, results){
 		if(results.response){
 			session.userData.FeedbackResponse = results.response;
+			var wasHelpful = 0;
+			var connection = new Connection(config);
+			// Attempt to connect and execute queries if connection goes through
+			connection.on('connect', function(err) 
+			{
+				if (err) 
+				{
+					console.log(err);
+					return;
+				}
+				else
+				{
+					console.log('This is session.message data' + JSON.stringify(session.message));
+					storeFB(JSON.stringify(session.message.user.id).replace(/"/g, "'"), JSON.stringify(session.userData.serviceName).replace(/"/g, "'"), wasHelpful,JSON.stringify(session.userData.FeedbackResponse).replace(/"/g, "'"), JSON.stringify(session.message.timestamp).replace(/"/g, "'"), JSON.stringify(session.message.source).replace(/"/g, "'"), JSON.stringify(session.userData.userName).replace(/"/g, "'"), JSON.stringify(session.userData.userEmail).replace(/"/g, "'"), JSON.stringify(session.userData.userPhone).replace(/"/g, "'"), JSON.stringify(session.userData.conversationSource).replace(/"/g, "'"));
+				}
+			}
+			);
+		
+				// proceed to compliment
+				session.beginDialog('askforMore2');
+				session.endDialog();
 		}
 	},
 	function(session, results){
