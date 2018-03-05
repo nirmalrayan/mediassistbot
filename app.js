@@ -1093,17 +1093,18 @@ bot.dialog('askforFeedbackReasonFB',[
 		session.send("Your feedback is valuable to us! Please enter your `E-mail address`:");		
 	},
 	function(session, results) {
-		if(results.response){
+		session.userData.userEmail = results.response;
+		session.send("Please enter your `Phone number`: ");
+	/*	if(results.response){
 			var validEmail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(results.response);
 			if(validEmail){
 				session.userData.userEmail = results.response;
 				session.send("Please enter your `Phone number`: ");
 			}else{
-				session.send("The Email address you have entered is incorrect. Let's retry.");
-				session.beginDialog('askforFeedbackReasonFB');
-				session.endDialog();
+				session.send("The Email address you have entered is invalid.");
+				session.send("Please enter your `Phone number`: ");
 			}
-		}
+		}*/
 	},
 	function(session, results){
 		if(results.response){
