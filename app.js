@@ -1100,7 +1100,8 @@ bot.dialog('askforFeedbackReasonFB',[
 				session.send("Please enter your `Phone number`: ");
 			}else{
 				session.send("The Email address you have entered is incorrect. Let's retry.");
-				session.replaceDialog('askforFeedbackReasonFB');
+				session.beginDialog('askforFeedbackReasonFB');
+				session.endDialog();
 			}
 		}
 	},
