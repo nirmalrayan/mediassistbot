@@ -1082,7 +1082,57 @@ function validateFeedback(feedback) {
 
 	var hasComments = typeof feedback["UserName"] === 'string' && feedback["UserName"].length > 3;
     return hasName && validEmail && validPhone && hasComments;
+
 }
+
+
+// Dialog to ask for Claim Number
+bot.dialog('askforFeedbackReasonFB',[
+	function (session){
+		session.userData.userName = session.message.address.user.name;
+		session.send("Your feedback is valuable to us! Please enter your `E-mail address`:");		
+	},
+	function(session, results) {
+		if(results.response){
+			var validEmail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(results.response);
+			if(validEmail){
+				session.userData.userEmail = results.response;
+				session.send("Please enter your `Phone number`: ");
+			}else{
+				session.send("The Email address you have entered is incorrect. Let's retry.");
+				session.replaceDialog('askforFeedbackReasonFB');
+			}
+		}
+	},
+	function(session, results){
+		if(results.response){
+			session.userData.userPhone = results.response;	
+			if(session.userData.serviceName){
+				session.userData.conversationSource = session.userData.serviceName;
+			}else{
+				session.userData.conversationSource = "Generic";
+			}
+		}
+		session.send("Please enter the `Service name` where you're having issues:");
+	},
+	function(session, results){
+		if(results.response){
+			session.userData.serviceName = results.response;
+		}
+		session.send("Please enter your `Feedback` or `Comments`:");
+	},
+	function(session, results){
+		if(results.response){
+			session.userData.FeedbackResponse = results.response;
+		}
+		session.send("Please enter the `Service name` where you're having issues:");
+	},
+	function(session, results){
+		session.endDialogWithResult(results);
+	}
+]);
+
+
 
 
 // Dialog to ask for Feedback
@@ -1113,7 +1163,11 @@ bot.dialog('askforFeedback',[
 		session.endConversation();
 		}
 		else {	
-			session.beginDialog('askforFeedbackReason');
+			if(session.message.address.channelId === 'facebook'){
+				session.beginDialog('askforFeedbackReasonFB');
+			}else{
+				session.beginDialog('askforFeedbackReason');
+			}
 		}
 		
 	}/*,
@@ -1142,6 +1196,8 @@ bot.dialog('askforFeedback',[
 		session.endDialogWithResult(results);
 	}
 ]);
+
+
 
 // Dialog to Track with Claim Number
 bot.dialog('trackClaimwID', [
@@ -2348,7 +2404,14 @@ bot.dialog('askforLocation',  [
 			session.userData.formattedAddress = formattedAddress;
 			
 		}
+		
+		if(session.message.address.channelId === 'facebook'){
+			session.beginDialog('askforInsurerFB');
+			return;
+		}else{
 			session.beginDialog('askforInsurer');	
+		}
+		
 	},		//Make POST request to MA Server
 	function(session, results){
 		if(results.response){
@@ -2752,6 +2815,52 @@ function processSubmitAction8(session, message){
 }
 
 
+// Dialog to ask for Insurer Name on Facebook
+bot.dialog('askforInsurerFB',[
+	function (session){
+		session.beginDialog('askforInsurerName');
+	},
+	function(session, results){
+		if(results.repsonse){
+			session.userData.insurer = results.response;
+			const client = new Wit({accessToken: process.env.WIT_ACCESS_TOKEN});
+			client.message(session.userData.insurer, {})
+			.then((data) => {
+				entities = data['entities'];
+				for (var entity in entities){
+				session.userData.insurer = data['entities'][entity][0]['value'];
+				}
+				})
+			.catch(console.error);
+			session.beginDialog('askforSpeciality');
+		}
+	},
+	function(session, results) {
+		if(results.response){
+			session.userData.speciality = results.response;
+			const client = new Wit({accessToken: process.env.WIT_ACCESS_TOKEN});
+			client.message(session.userData.speciality, {})
+			.then((data) => {
+			  entities = data['entities'];
+			  for (var entity in entities){
+				session.userData.speciality = data['entities'][entity][0]['value'];
+			  }
+			  })
+			.catch(console.error);
+			session.endDialogWithResult(results);
+		}
+	}
+]);
+
+// Dialog to ask for Insurer Name
+bot.dialog('askforInsurerName',[
+	function (session){
+		builder.Prompts.text(session, "Please provide your `Insurer` name");		
+	},
+	function(session, results) {
+		session.endDialogWithResult(results);
+	}
+]);
 
 // Dialog to ask for Speciality
 bot.dialog('askforSpeciality',[
