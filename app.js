@@ -2842,7 +2842,7 @@ bot.dialog('askforInsurerFB',[
 		session.beginDialog('askforInsurerName');
 	},
 	function(session, results){
-		if(results.repsonse){
+		if(results.response){
 			session.userData.insurer = results.response;
 			const client = new Wit({accessToken: process.env.WIT_ACCESS_TOKEN});
 			client.message(session.userData.insurer, {})
