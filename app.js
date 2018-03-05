@@ -806,7 +806,7 @@ bot.customAction({
 // Dialog to ask for Confirmation - Track with Claim Number
 bot.dialog('askforTrackClaimwIDConfirmation',[
 	function (session){
-		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)")
+		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",{listStyle: builder.ListStyle["button"]})
 	},
 	function (session, results) {
 		if (results.response){
@@ -999,7 +999,7 @@ bot.dialog('askforFeedbackReason',[
 // Dialog to ask for Confirmation - Feedback
 bot.dialog('askforFeedbackConfirmation',[
 	function (session){
-		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)")
+		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",{listStyle: builder.ListStyle["button"]})
 	},
 	function (session, results) {
 		if (results.response){
@@ -1091,14 +1091,14 @@ bot.dialog('askforFeedbackReasonFB',[
 	function (session){
 		session.userData.userName = session.message.address.user.name;
 		console.log('FACEBOOK ID IS: '+session.message.address.user.name);
-		builder.Prompts.text("Your feedback is valuable to us! Please enter your `E-mail address`:");		
+		builder.Prompts.text(session, "Your feedback is valuable to us! Please enter your `E-mail address`:");		
 	},
 	function(session, results) {
 		if(results.response){
 			session.userData.userEmail = results.response;
 			console.log('USER ENTERED EMAIL ID: '+ results.response);
 		}
-		builder.Prompts.text("Please enter your `Phone number`: ");
+		builder.Prompts.text(session, "Please enter your `Phone number`: ");
 	/*	if(results.response){
 			var validEmail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(results.response);
 			if(validEmail){
@@ -1119,19 +1119,18 @@ bot.dialog('askforFeedbackReasonFB',[
 				session.userData.conversationSource = "Generic";
 			}
 		}
-		builder.Prompts.text("Please enter the `Service name` where you're having issues:");
+		builder.Prompts.text(session, "Please enter the `Service name` where you're having issues:");
 	},
 	function(session, results){
 		if(results.response){
 			session.userData.serviceName = results.response;
 		}
-		builder.Prompts.text("Please enter your `Feedback` or `Comments`:");
+		builder.Prompts.text(session, "Please enter your `Feedback` or `Comments`:");
 	},
 	function(session, results){
 		if(results.response){
 			session.userData.FeedbackResponse = results.response;
 		}
-		session.send("Please enter the `Service name` where you're having issues:");
 	},
 	function(session, results){
 		session.endDialogWithResult(results);
@@ -1326,7 +1325,7 @@ bot.dialog('trackClaimwID', [
 // Dialog to ask for Confirmation - Track with MAID
 bot.dialog('askforTrackClaimwMAIDConfirmation',[
 	function (session){
-		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)")
+		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",{listStyle: builder.ListStyle["button"]})
 	},
 	function (session, results) {
 		if (results.response){
@@ -1469,7 +1468,7 @@ bot.dialog('trackClaimwMAID', [
 // Dialog to ask for Confirmation - Track with Employee Details
 bot.dialog('askforTrackClaimwEmpIDConfirmation',[
 	function (session){
-		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)")
+		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",{listStyle: builder.ListStyle["button"]})
 	},
 	function (session, results) {
 		if (results.response){
@@ -1731,7 +1730,7 @@ bot.dialog('help', [
 	function(session){
 			session.send("⛑️ Can't find the service you're looking for? Let me take you through some of the areas where you may need help.");
 			session.send("Let's run you through a few main menu options again: ");
-			builder.Prompts.confirm(session,"Do you want to know how claims work? (yes/no)");
+			builder.Prompts.confirm(session,"Do you want to know how claims work? (yes/no)",{listStyle: builder.ListStyle["button"]});
 	},
 	function(session, results){
 		if(results.response){
@@ -1935,7 +1934,7 @@ bot.customAction({
 // Dialog to ask for Confirmation - Download with Claim Number
 bot.dialog('askforDownloadwIDConfirmation',[
 	function (session){
-		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)")
+		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",{listStyle: builder.ListStyle["button"]})
 	},
 	function (session, results) {
 		if (results.response){
@@ -1952,7 +1951,7 @@ bot.dialog('askforDownloadwIDConfirmation',[
 // Dialog to ask for Confirmation - Download with Medi Assist ID
 bot.dialog('askforDownloadwMAIDConfirmation',[
 	function (session){
-		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)")
+		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",{listStyle: builder.ListStyle["button"]})
 	},
 	function (session, results) {
 		if (results.response){
@@ -1969,7 +1968,7 @@ bot.dialog('askforDownloadwMAIDConfirmation',[
 // Dialog to ask for Confirmation - Download with Employee ID
 bot.dialog('askforDownloadwEmpIDConfirmation',[
 	function (session){
-		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)")
+		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",{listStyle: builder.ListStyle["button"]})
 	},
 	function (session, results) {
 		if (results.response){
@@ -1986,7 +1985,7 @@ bot.dialog('askforDownloadwEmpIDConfirmation',[
 // Dialog to ask for Confirmation - Download with Policy Number
 bot.dialog('askforDownloadwPolNoConfirmation',[
 	function (session){
-		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)")
+		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",{listStyle: builder.ListStyle["button"]})
 	},
 	function (session, results) {
 		if (results.response){
@@ -2363,7 +2362,7 @@ bot.dialog('searchNetwork',[
 // Dialog to ask for Confirmation - Download with Medi Assist ID
 bot.dialog('askforLocationConfirmation',[
 	function (session){
-		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)")
+		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",{listStyle: builder.ListStyle["button"]})
 	},
 	function (session, results) {
 		if (results.response){
