@@ -196,6 +196,7 @@ var bot = new builder.UniversalBot(connector,
 		}	
 			session.send(new builder.Message(session)
 				.addAttachment(welcomeCard));
+		
 				
 //					sentimentScore = sentimentAnalyzer("I'm so depressed today");
 //					console.log('Returned Sentiment Object: ');
