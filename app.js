@@ -146,7 +146,7 @@ var connector = new builder.ChatConnector
 	appPassword: process.env.MicrosoftAppPassword  }); 
 
 //MAIN.
-var bot = new builder.UniversalBot(connector,
+var bot = new builder.UniversalBot(connector,[
 
     function (session) {
 		session.userData.userID = session.message.user.id;
@@ -202,8 +202,12 @@ var bot = new builder.UniversalBot(connector,
 //					console.log('Returned Sentiment Object: ');
 //					console.log(sentimentScore);
 //			session.send('You have connected from '+process.env.deviceSource);
-			session.beginDialog("refer");
-	}).set('storage', inMemoryStorage); // Register in-memory storage 
+	},
+	function(session, results){
+		
+		session.beginDialog("/refer");
+	}
+]).set('storage', inMemoryStorage); // Register in-memory storage 
 
 bot.on('conversationUpdate', function (message) {
     if (message.membersAdded) {
@@ -296,7 +300,8 @@ var recognizer = new builder.LuisRecognizer(model);
 console.log(recognizer);
 //bot.recognizer(recog);
 
-bot.dialog('refer', new builder.IntentDialog({ recognizers : [recognizer, qnarecognizer]})
+bot.dialog('/refer', new builder.IntentDialog({ recognizers : [qnarecognizer, recognizer]})
+	.matches("showMenu","showMenu")
     .matches("SayHello", "hello")
 	.matches("GetName", "setName")
 	.matches("CustomerCare", "askforCallCenter")
