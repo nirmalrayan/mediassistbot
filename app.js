@@ -4889,9 +4889,9 @@ bot.dialog('hospitalization',[
 	}
 ])
 .triggerAction({
-	matches: [/hospitalization/i, /hospitalisation/i, 'hospitalization'],
+	matches: [/hospitalization/i, /hospitalisation/i, 'hospitalization']
 	// /^search network hospitals$|^search network$/i,
-	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
+//	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
 	
 });
 
@@ -4925,9 +4925,9 @@ bot.dialog('secondOpinion',[
 	}
 ])
 .triggerAction({
-	matches: [/second opinion/i, /Second Opinion/i, /Medical Opinion/i, 'secondOpinion'],
+	matches: [/second opinion/i, /Second Opinion/i, /Medical Opinion/i, 'secondOpinion']
 	// /^search network hospitals$|^search network$/i,
-	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
+//	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
 	
 });
 
@@ -4961,8 +4961,8 @@ bot.dialog('genomeStudy',[
 	}
 ])
 .triggerAction({
-	matches: [/Genome Study/i, /genome study/i, 'genomeStudy'],
+	matches: [/Genome Study/i, /genome study/i, 'genomeStudy']
 	// /^search network hospitals$|^search network$/i,
-	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
+//	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
 	
 });
