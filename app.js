@@ -33,11 +33,11 @@ var config =
 var connection = new Connection(config);
 
 function storeFeedback(userid, servicename, helpful, feedback, timestamp, source)
-   { console.log('Inserting feedback into Table..');
-   		console.log("Feedback value" + feedback);
+   {// console.log('Inserting feedback into Table..');
+   	//	console.log("Feedback value" + feedback);
 	   var requestString = "INSERT INTO ["+process.env.AzureSQLDatabase+"].[dbo].[Feedback] (UserID, ServiceName, Helpful, Feedback, FeedbackDate, FeedbackSource) values ("+userid+","+servicename+","+helpful+","+feedback+","+timestamp+","+source+")";
 	   // Read all rows from table
-	   console.log(requestString);
+//	   console.log(requestString);
 	var Request = require('tedious').Request;
      request = new Request(
           requestString,
@@ -58,15 +58,15 @@ function storeFeedback(userid, servicename, helpful, feedback, timestamp, source
 
 
 function storeFB(userid, servicename, helpful, feedback, timestamp, source, userName, userEmail, userPhone, convSource)
-   { console.log('Inserting feedback into Table..');
-	   console.log("Returned userName, useremail and userphone number are: ");
-	   console.log(userName);
-	   console.log(userEmail);
-	   console.log(userPhone);
-   		console.log("Feedback value" + feedback);
+   { //console.log('Inserting feedback into Table..');
+//	   console.log("Returned userName, useremail and userphone number are: ");
+//	   console.log(userName);
+//	   console.log(userEmail);
+//	   console.log(userPhone);
+//   		console.log("Feedback value" + feedback);
 	   var requestString = "INSERT INTO ["+process.env.AzureSQLDatabase+"].[dbo].[Feedback] (UserID, ServiceName, Helpful, Feedback, FeedbackDate, FeedbackSource, UserName, UserEmail, UserPhone, ConversationSource) values ("+userid+","+servicename+","+helpful+","+feedback+","+timestamp+","+source+","+userName+","+userEmail+","+userPhone+","+convSource  +")";
 	   // Read all rows from table
-	   console.log(requestString);
+//	   console.log(requestString);
 		
 	var Request = require('tedious').Request;
      request = new Request(
@@ -149,7 +149,7 @@ var connector = new builder.ChatConnector
 var bot = new builder.UniversalBot(connector,[
 
     function (session) {
-		session.userData.userID = session.message.user.id;
+		session.userData.userID = session.message.address.id;
 		session.userData.userName = session.message.user.name;
 		if(session.message.address.channelId === 'facebook'){
  			var welcomeCard = new builder.HeroCard(session)
@@ -276,7 +276,23 @@ function sentimentAnalyzer(userResponse){
 //=========================================================
 
 // Anytime the major version is incremented any existing conversations will be restarted.
-bot.use(builder.Middleware.dialogVersion({ version: 1.0, resetCommand: /^reset/i }));
+
+const logUserConversation = (event) => {
+	console.log('Event data: '+ JSON.stringify(event));
+    console.log('message: ' + event.text + ', user: ' + event.address.user.name);
+};
+
+// Middleware for logging
+bot.use({
+    receive: function (event, next) {
+        logUserConversation(event);
+        next();
+    },
+    send: function (event, next) {
+        logUserConversation(event);
+        next();
+    }
+});
 
 /*
 handoff.setup(bot, server, isAgent, {
@@ -297,7 +313,7 @@ var qnarecognizer  = new cognitiveservices.QnAMakerRecognizer({
 //LUIS Configuration
 var model = process.env.LUISURI;
 var recognizer = new builder.LuisRecognizer(model);
-console.log(recognizer);
+//console.log(recognizer);
 //bot.recognizer(recog);
 
 bot.dialog('/refer', new builder.IntentDialog({ recognizers : [qnarecognizer, recognizer]})
@@ -320,7 +336,7 @@ bot.dialog('/refer', new builder.IntentDialog({ recognizers : [qnarecognizer, re
     .onDefault((session, args) => {
 		var wasHelpful = 0;
 		session.userData.serviceName = "Not Trained";
-		storeFeedback(JSON.stringify(session.message.user.id).replace(/"/g, "'"), JSON.stringify(session.userData.serviceName).replace(/"/g, "'"), wasHelpful,JSON.stringify(session.message.text).replace(/"/g, "'"), JSON.stringify(session.message.timestamp).replace(/"/g, "'"), JSON.stringify(session.message.source).replace(/"/g, "'"));
+		storeFeedback(JSON.stringify(session.message.address.id).replace(/"/g, "'"), JSON.stringify(session.userData.serviceName).replace(/"/g, "'"), wasHelpful,JSON.stringify(session.message.text).replace(/"/g, "'"), JSON.stringify(session.message.timestamp).replace(/"/g, "'"), JSON.stringify(session.message.source).replace(/"/g, "'"));
         session.endDialog("Sorry, I did not understand \"\`%s\`\".  Try saying `show menu` or `#` to go back to the main menu or `help` if you need assistance.", session.message.text);
     })
 );
@@ -635,7 +651,7 @@ bot.dialog('showMenu',[
 											.alt('Genome Study')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://infiniti.medibuddy.in/genome/1b1fbfb833ea4e8d96c0a0325da21d69", "Book Genome Study Package")
+										builder.CardAction.openUrl(session, "https://www.medibuddy.in/genome/1b1fbfb833ea4e8d96c0a0325da21d69", "Book Genome Study Package")
 										]);
 			
 			menucards.push(genomeStudyCard);
@@ -673,7 +689,7 @@ bot.dialog('showMenu',[
 // Dialog to start tracking claims
 bot.dialog('trackClaim', [
 	function (session){
-		session.send("Welcome to Claim Tracking System ✨💫🌟");
+//		session.send("Welcome to Claim Tracking System ✨💫🌟");
 		session.beginDialog('askforTrackBy');
 	},
 	function(session, results) {
@@ -767,7 +783,7 @@ bot.dialog('askforMore2',[
 bot.dialog('askforTrackBy',[
 	function (session){
 		var msg = new builder.Message(session)
-			.text("Alright, let's get started 🚀. There are three ways to track your claim. Please select one of the following options. Track with: ")
+			.text("Alright, let's get started 🚀. Choose from any of these three ways to track your claim: ")
 			.suggestedActions(
 				builder.SuggestedActions.create(
 					session, [
@@ -830,7 +846,8 @@ bot.dialog('askforTrackClaimwIDConfirmation',[
 bot.dialog('askforFeedbackReason',[
 	function (session){
 		
-		if(session.message && session.message.value){
+		if(session.message && session.message.value && session.userData.feedbackReceived !== 1){
+			session.userData.feedbackReceived = 1;
 			processSubmitAction9(session, session.message.value);
 			session.endDialog();
 //			session.beginDialog('askforMore');
@@ -1025,19 +1042,24 @@ bot.dialog('askforFeedbackConfirmation',[
 
 
 function processSubmitAction9(session, message){
-		var defaultErrorMessage = 'Please fill all the parameters';
+		var defaultErrorMessage = 'Please fill all the parameters. ';
 //		 if (validateFeedback(message)) {
 			
 		session.userData.userName = message["UserName"];
 		session.userData.userEmail = message["UserEmail"];	
-		session.userData.userPhone = message["UserPhone"];
+		const PhoneRegex = new RegExp(/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/);
+		if(PhoneRegex.test(message["UserPhone"])){
+			session.userData.userPhone = message["UserPhone"];
+		}else{
+			defaultErrorMessage += "Invalid Phone Number. ";
+		}
 		if(session.userData.serviceName){
 			session.userData.conversationSource = session.userData.serviceName;
 		}else{
 			session.userData.conversationSource = "Generic";
 		}
 		session.userData.serviceName = message["UserService"];
-		console.log('Modified Service Trigger Area: '+session.userData.serviceName);
+//		console.log('Modified Service Trigger Area: '+session.userData.serviceName);
 		session.userData.FeedbackResponse = message["UserComment"];
 
 		
@@ -1054,8 +1076,15 @@ function processSubmitAction9(session, message){
 			}
 			else
 			{
-				console.log('This is session.message data' + JSON.stringify(session.message));
-				storeFB(JSON.stringify(session.message.user.id).replace(/"/g, "'"), JSON.stringify(session.userData.serviceName).replace(/"/g, "'"), wasHelpful,JSON.stringify(session.userData.FeedbackResponse).replace(/"/g, "'"), JSON.stringify(session.message.timestamp).replace(/"/g, "'"), JSON.stringify(session.message.source).replace(/"/g, "'"), JSON.stringify(session.userData.userName).replace(/"/g, "'"), JSON.stringify(session.userData.userEmail).replace(/"/g, "'"), JSON.stringify(session.userData.userPhone).replace(/"/g, "'"), JSON.stringify(session.userData.conversationSource).replace(/"/g, "'"));
+				console.log('session.userData.serviceName: '+ session.userData.serviceName);
+				console.log('session.userData.FeedbackResponse: '+ session.userData.FeedbackResponse);
+				console.log('session.message.timestamp: '+ session.message.timestamp);
+				console.log('session.message.source: '+ session.message.source);
+				console.log('session.userData.userName: '+ session.userData.userName);
+				console.log('session.userData.userEmail: '+ session.userData.userEmail);
+				console.log('session.userData.userPhone: '+ session.userData.userPhone);
+				console.log('session.userData.conversationSource: '+ session.userData.conversationSource);
+				storeFB(JSON.stringify(session.message.address.id).replace(/"/g, "'"), JSON.stringify(session.userData.serviceName).replace(/"/g, "'"), wasHelpful,JSON.stringify(session.userData.FeedbackResponse).replace(/"/g, "'"), JSON.stringify(session.message.timestamp).replace(/"/g, "'"), JSON.stringify(session.message.source).replace(/"/g, "'"), JSON.stringify(session.userData.userName).replace(/"/g, "'"), JSON.stringify(session.userData.userEmail).replace(/"/g, "'"), JSON.stringify(session.userData.userPhone).replace(/"/g, "'"), JSON.stringify(session.userData.conversationSource).replace(/"/g, "'"));
 			}
 		}
 		);
@@ -1079,7 +1108,7 @@ function validateFeedback(feedback) {
     if (!feedback) {
         return false;
     }
-	console.log(feedback);
+//	console.log(feedback);
 	var hasName = typeof feedback["UserName"] === 'string' && feedback["UserName"].length > 3;
 	
 	var validEmail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(feedback["UserEmail"]);
@@ -1096,13 +1125,13 @@ function validateFeedback(feedback) {
 bot.dialog('askforFeedbackReasonFB',[
 	function (session){
 		session.userData.userName = session.message.address.user.name;
-		console.log('FACEBOOK ID IS: '+session.message.address.user.name);
+//		console.log('FACEBOOK ID IS: '+session.message.address.user.name);
 		builder.Prompts.text(session, "Your feedback is valuable to us! Please enter your `E-mail address`:");		
 	},
 	function(session, results) {
 		if(results.response){
 			session.userData.userEmail = results.response;
-			console.log('USER ENTERED EMAIL ID: '+ results.response);
+//			console.log('USER ENTERED EMAIL ID: '+ results.response);
 		}
 		builder.Prompts.text(session, "Please enter your `Phone number`: ");
 	/*	if(results.response){
@@ -1143,8 +1172,8 @@ bot.dialog('askforFeedbackReasonFB',[
 				}
 				else
 				{
-					console.log('This is session.message data' + JSON.stringify(session.message));
-					storeFB(JSON.stringify(session.message.user.id).replace(/"/g, "'"), JSON.stringify(session.userData.serviceName).replace(/"/g, "'"), wasHelpful,JSON.stringify(session.userData.FeedbackResponse).replace(/"/g, "'"), JSON.stringify(session.message.timestamp).replace(/"/g, "'"), JSON.stringify(session.message.source).replace(/"/g, "'"), JSON.stringify(session.userData.userName).replace(/"/g, "'"), JSON.stringify(session.userData.userEmail).replace(/"/g, "'"), JSON.stringify(session.userData.userPhone).replace(/"/g, "'"), JSON.stringify(session.userData.conversationSource).replace(/"/g, "'"));
+//					console.log('This is session.message data' + JSON.stringify(session.message));
+					storeFB(JSON.stringify(session.message.address.id).replace(/"/g, "'"), JSON.stringify(session.userData.serviceName).replace(/"/g, "'"), wasHelpful,JSON.stringify(session.userData.FeedbackResponse).replace(/"/g, "'"), JSON.stringify(session.message.timestamp).replace(/"/g, "'"), JSON.stringify(session.message.source).replace(/"/g, "'"), JSON.stringify(session.userData.userName).replace(/"/g, "'"), JSON.stringify(session.userData.userEmail).replace(/"/g, "'"), JSON.stringify(session.userData.userPhone).replace(/"/g, "'"), JSON.stringify(session.userData.conversationSource).replace(/"/g, "'"));
 				}
 			}
 			);
@@ -1180,9 +1209,8 @@ bot.dialog('askforFeedback',[
 					return;
 				}
 				else
-				{
-					console.log('This is session.message data' + JSON.stringify(session.message));
-					storeFeedback(JSON.stringify(session.message.user.id).replace(/"/g, "'"), JSON.stringify(session.userData.serviceName).replace(/"/g, "'"), wasHelpful,JSON.stringify('No Feedback Taken').replace(/"/g, "'"), JSON.stringify(session.message.timestamp).replace(/"/g, "'"), JSON.stringify(session.message.source).replace(/"/g, "'"));
+				{x
+					storeFeedback(JSON.stringify(session.message.address.id).replace(/"/g, "'"), JSON.stringify(session.userData.serviceName).replace(/"/g, "'"), wasHelpful,JSON.stringify('No Feedback Taken').replace(/"/g, "'"), JSON.stringify(session.message.timestamp).replace(/"/g, "'"), JSON.stringify(session.message.source).replace(/"/g, "'"));
 				}
 			}
 			);
@@ -1409,10 +1437,9 @@ bot.dialog('trackClaimwMAID', [
 						if (!error && response.statusCode == 200) {	
 							// Print out the response body
 							data = JSON.parse(body);
-							console.log(data);
 							
 							if(JSON.stringify(data.isSuccess) === "true"){
-						    	console.log(JSON.stringify(data.isSuccess));
+//						    	console.log(JSON.stringify(data.isSuccess));
 
 								var claimdata = data.claimDetails;
 							
@@ -1470,7 +1497,7 @@ bot.dialog('trackClaimwMAID', [
 								}, 5000);		*/
   							}
 							else if(JSON.stringify(data.isSuccess) === "false"){
-								console.log("Error message is "+ data.errorMessage);
+//								console.log("Error message is "+ data.errorMessage);
 								if(data.errorMessage == "Please enter valid Medi Assist ID."){
 									session.send('⚠️ The Medi Assist ID you have entered is incorrect.');
 									session.beginDialog('askforTrackClaimwMAIDConfirmation');
@@ -1546,7 +1573,7 @@ bot.dialog('trackClaimwEmpID', [
 						if (!error && response.statusCode == 200) {	
 							// Print out the response body
 							data = JSON.parse(body);
-							console.log(data);
+//							console.log(data);
 							
 							if(JSON.stringify(data.isSuccess) === "true"){
 
@@ -1693,7 +1720,7 @@ bot.dialog('askforClaimNumber',[
 //Dialog to ask for DOA
 bot.dialog('askforDOA',[
 	function (session){
-		builder.Prompts.time(session, "Please provide any date between hospitalization and discharge");		
+		builder.Prompts.time(session, "Please provide any date between admission and discharge for hospitalization");		
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
@@ -1724,7 +1751,7 @@ bot.dialog('askforEmpID',[
 // Dialog to ask for Corporate Name
 bot.dialog('askforCorporate',[
 	function (session){
-		builder.Prompts.text(session, "Please provide your Corporate Name");		
+		builder.Prompts.text(session, "Please provide Corporate's Name");		
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
@@ -1757,7 +1784,7 @@ bot.dialog('help', [
 	function(session, results){
 		if(results.response){
 			if(session.message.address.channelId === "facebook"){
-			console.log('INSIDE FB CHANNEL HELP RESPONSE');
+//			console.log('INSIDE FB CHANNEL HELP RESPONSE');
 			howClaimsWorkCard = new builder.VideoCard(session)
         .title('How Claims Work')
         .subtitle('Do you want to know how claims work?')
@@ -1774,7 +1801,7 @@ bot.dialog('help', [
 //			session.send('Video Card');
 			var msg = new builder.Message(session).addAttachment(howClaimsWorkCard);
 			session.send(msg);
-				console.log('FINISHED FB CHANNEL HELP RESPONSE WITH VIDEO CARD');
+//				console.log('FINISHED FB CHANNEL HELP RESPONSE WITH VIDEO CARD');
 /*			howEcashlessWorksCard = new builder.VideoCard(session)
 									.title('Plan Cashless Hospitalization')
 									.subtitle('by Medi Assist')
@@ -1839,6 +1866,7 @@ bot.dialog('help', [
 				.attachments(cards);
 			session.send(msg);
 		}
+			session.userData.serviceName = "Help";
 			session.beginDialog('askforFeedback');
 		}
 		else{
@@ -1881,7 +1909,7 @@ bot.dialog('help', [
 // Dialog to Download E-Card
 bot.dialog('downloadEcard',[
 	function (session){
-		session.send("Welcome to E-Card Download Center️ 🎊️️🎈🎉");
+//		session.send("Welcome to E-Card Download Center️ 🎊️️🎈🎉");
 		session.beginDialog('askforDownloadBy');
 	},
 	function(session, results) {
@@ -2090,7 +2118,7 @@ bot.dialog('downloadwID', [
 					response = request(options, function (error, response, body) {
 						if (!error && response.statusCode == 200) {	
 							var sizeof = require('object-sizeof');
-							console.log(sizeof(body));
+//							console.log(sizeof(body));
 							
 							if(sizeof(body) > 0){
 								session.userData.downloadURL = downloadlink;
@@ -2171,7 +2199,7 @@ bot.dialog('downloadwMAID', [
 					response = request(options, function (error, response, body) {
 						if (!error && response.statusCode == 200) {	
 							var sizeof = require('object-sizeof');
-							console.log(sizeof(body));
+//							console.log(sizeof(body));
 							
 							if(sizeof(body) > 0){
 								session.userData.downloadURL = downloadlink;
@@ -2248,7 +2276,7 @@ bot.dialog('downloadwEmpID', [
 					response = request(options, function (error, response, body) {
 						if (!error && response.statusCode == 200) {	
 							var sizeof = require('object-sizeof');
-							console.log(sizeof(body));
+//							console.log(sizeof(body));
 							
 							if(sizeof(body) > 0){
 								session.userData.downloadURL = downloadlink;
@@ -2296,7 +2324,7 @@ bot.dialog('downloadwPolNo', [
 						session.dialogData.PolNo, session.dialogData.benefName);
 					
 					var PolNo = (session.dialogData.PolNo).replace(/\//g, "");
-					console.log(PolNo);
+//					console.log(PolNo);
 					var benefName = session.dialogData.benefName;
 					
 					var downloadlink = 'http://track-api-lb.medibuddy.in/getecard/PolicyNo/'+PolNo+'/'+benefName;
@@ -2321,7 +2349,7 @@ bot.dialog('downloadwPolNo', [
 					response = request(options, function (error, response, body) {
 						if (!error && response.statusCode == 200) {	
 							var sizeof = require('object-sizeof');
-							console.log(sizeof(body));
+//							console.log(sizeof(body));
 							
 							if(sizeof(body) > 0){
 								session.userData.downloadURL = downloadlink;
@@ -2375,7 +2403,7 @@ bot.dialog('searchNetwork',[
 	}
 ])
 .triggerAction({
-	matches: [/search network hospitals/i, /Locate Network Hospital/i, /search network/i, /search nearby hospitals/i, /search providers/i, /hospitals around/i, 'searchNetwork'],
+	matches: [/search network hospitals/i, /Locate Network Hospital/i, /search network/i, /search nearby hospitals/i, /search providers/i, /hospitals around/i, /network hospital/i, 'searchNetwork'],
 	// /^search network hospitals$|^search network$/i,
 	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
 	
@@ -2468,7 +2496,7 @@ bot.dialog('askforLocation',  [
 				if (!error && response.statusCode == 200) {	
 					// Print out the response body
 					data = JSON.parse(body);
-					console.log(data);
+//					console.log(data);
 					if(JSON.stringify(data.isSuccess) === "true"){				
 						var cards = [];
 						
@@ -2509,7 +2537,8 @@ bot.dialog('askforLocation',  [
 									.buttons([
 										builder.CardAction.openUrl(session, "tel:"+nwHospPhNo, "Call Hospital"),
 										builder.CardAction.openUrl(session, "http://maps.google.com/maps?q="+data.hospitals[item].latitude+","+data.hospitals[item].longitude, "View Hospital"),
-										builder.CardAction.openUrl(session, "https://m.medibuddy.in/PlannedHospitalization.aspx?hospid="+data.hospitals[item].id+"&hospname="+data.hospitals[item].name, "Submit eCashless")
+										builder.CardAction.openUrl(session, "https://me.medibuddy.in/", "Request for eCashless")
+//										builder.CardAction.openUrl(session, "https://m.medibuddy.in/PlannedHospitalization.aspx?hospid="+data.hospitals[item].id+"&hospname="+data.hospitals[item].name, "Request for eCashless")
 									])
 								);
 							}else{ break;}
@@ -2595,7 +2624,7 @@ bot.dialog('askforInsurer',[
 				},
 				{
 					"type": "TextBlock",
-					"text": "We are one step away. Please choose insurer and speciality from options below.",
+					"text": "Please choose insurer and speciality from options below.",
 					"wrap": true,
 					"maxLines": 4
 				},
@@ -2835,9 +2864,9 @@ bot.dialog('askforInsurer',[
 function processSubmitAction8(session, message){
 		session.userData.insurer = message["insurer"];
 		session.userData.speciality = message["speciality"];	
-		console.log(session.userData.insurer);
-		console.log(session.userData.lat);
-		console.log(session.userData.speciality)
+//		console.log(session.userData.insurer);
+//		console.log(session.userData.lat);
+//		console.log(session.userData.speciality)
 		return session;		
 }
 
@@ -3251,7 +3280,7 @@ bot.dialog('askforhealthcheckCity',[
 						},
 						{
 						  "type": "TextBlock",
-						  "text": "We are one step away. Please choose city and category from options below.",
+						  "text": "Please choose city and category from options below.",
 						  "wrap": true,
 						  "maxLines": 4
 						},
@@ -3446,7 +3475,7 @@ bot.dialog('askformedicineCity',[
 						},
 						{
 						  "type": "TextBlock",
-						  "text": "We are one step away. Please choose city and enter your pincode below.",
+						  "text": "Please choose city and enter your pincode below.",
 						  "wrap": true,
 						  "maxLines": 4
 						},
@@ -3622,7 +3651,7 @@ bot.dialog('askforconsultationCity',[
 						},
 						{
 						  "type": "TextBlock",
-						  "text": "We are one step away. Please choose city and speciality to continue.",
+						  "text": "Please choose city and speciality to continue.",
 						  "wrap": true,
 						  "maxLines": 4
 						},
@@ -3916,7 +3945,7 @@ bot.dialog('askforhomehealthcareCity',[
 						},
 						{
 						  "type": "TextBlock",
-						  "text": "We are one step away. Please choose city and service to continue.",
+						  "text": "Please choose city and service to continue.",
 						  "wrap": true,
 						  "maxLines": 4
 						},
@@ -4093,7 +4122,7 @@ bot.dialog('askfordentalCity',[
 						},
 						{
 						  "type": "TextBlock",
-						  "text": "We are one step away. Please choose city and speciality to continue.",
+						  "text": "Please choose city and speciality to continue.",
 						  "wrap": true,
 						  "maxLines": 4
 						},
@@ -4327,7 +4356,7 @@ bot.dialog('askforTeleConsultationDetails',[
 						},
 						{
 						  "type": "TextBlock",
-						  "text": "We are one step away. Please select your preferred `speciality` to continue.",
+						  "text": "Please select your preferred `speciality` to continue.",
 						  "wrap": true,
 						  "maxLines": 4
 						},
@@ -4515,7 +4544,7 @@ bot.dialog('askforLabTestDetails',[
 						},
 						{
 						  "type": "TextBlock",
-						  "text": "We are one step away. Please choose city and type of test to continue.",
+						  "text": "Please choose city and type of test to continue.",
 						  "wrap": true,
 						  "maxLines": 4
 						},
@@ -4829,3 +4858,111 @@ ncu.run({
 }).then((upgraded) => {
     console.log('dependencies to upgrade:', upgraded);
 });*/
+
+//Stand-alone Infiniti Services
+// Dialog to trigger Hospitalization 
+bot.dialog('hospitalization',[
+	function (session){
+		var menucard = [];
+		hospitalizationCard = new builder.HeroCard(session)
+		.title("Hospitalization")
+		.subtitle("Plan your hospitalization with MediBuddy at a trusted hospital with the benefit of preferred pricing.")
+		.images([
+			new builder.CardImage(session)
+				.url('https://i.imgur.com/SzU76sC.png')
+				.alt('Hospitalization')
+		])
+		.buttons([
+			builder.CardAction.openUrl(session, "https://www.medibuddy.in/hospitalization", "Hospitalization")
+			]);
+
+		menucard.push(hospitalizationCard);
+
+		var msg = new builder.Message(session)
+//		.text("My abilities are still growing. In a nutshell, here's what I can do: ")
+		.attachmentLayout(builder.AttachmentLayout.carousel)
+		.attachments(menucard);
+		session.send(msg);
+	},
+	function(session, results){	
+		session.endDialogWithResult(results);		
+	}
+])
+.triggerAction({
+	matches: [/hospitalization/i, /hospitalisation/i, 'hospitalization'],
+	// /^search network hospitals$|^search network$/i,
+	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
+	
+});
+
+
+// Dialog to trigger Second Opinion 
+bot.dialog('secondOpinion',[
+	function (session){
+		var menucard = [];
+		secondOpinionCard = new builder.HeroCard(session)
+		.title("Second Opinion")
+		.subtitle("Access the expertise and clinical guidance of our world class physicians remotely from your home.")
+		.images([
+			new builder.CardImage(session)
+				.url('https://i.imgur.com/s58dzcD.png')
+				.alt('Second Opinion')
+		])
+		.buttons([
+			builder.CardAction.openUrl(session, "https://www.medibuddy.in/gso/259fb4d2abcb480fb4e8778a33b9c9d2", "Get Second Opinion")
+			]);
+
+		menucard.push(secondOpinionCard);
+
+		var msg = new builder.Message(session)
+//		.text("My abilities are still growing. In a nutshell, here's what I can do: ")
+		.attachmentLayout(builder.AttachmentLayout.carousel)
+		.attachments(menucard);
+		session.send(msg);
+	},
+	function(session, results){	
+		session.endDialogWithResult(results);		
+	}
+])
+.triggerAction({
+	matches: [/second opinion/i, /Second Opinion/i, /Medical Opinion/i, 'secondOpinion'],
+	// /^search network hospitals$|^search network$/i,
+	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
+	
+});
+
+
+// Dialog to trigger Genome Study 
+bot.dialog('genomeStudy',[
+	function (session){
+		var menucard = [];
+		genomeStudyCard = new builder.HeroCard(session)
+		.title("Genome Study")
+		.subtitle("Genome study involves DNA analysis to help predict, prevent and cure diseases.")
+		.images([
+			new builder.CardImage(session)
+				.url('https://i.imgur.com/Ljc7Zsz.png')
+				.alt('Genome Study')
+		])
+		.buttons([
+			builder.CardAction.openUrl(session, "https://www.medibuddy.in/genome/1b1fbfb833ea4e8d96c0a0325da21d69", "Book Genome Study Package")
+			]);
+
+		menucard.push(genomeStudyCard);
+
+		var msg = new builder.Message(session)
+//		.text("My abilities are still growing. In a nutshell, here's what I can do: ")
+		.attachmentLayout(builder.AttachmentLayout.carousel)
+		.attachments(menucard);
+		session.send(msg);
+	},
+	function(session, results){	
+		session.endDialogWithResult(results);		
+	}
+])
+.triggerAction({
+	matches: [/Genome Study/i, /genome study/i, 'genomeStudy'],
+	// /^search network hospitals$|^search network$/i,
+	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
+	
+});
