@@ -1209,7 +1209,7 @@ bot.dialog('askforFeedback',[
 					return;
 				}
 				else
-				{x
+				{
 					storeFeedback(JSON.stringify(session.message.address.id).replace(/"/g, "'"), JSON.stringify(session.userData.serviceName).replace(/"/g, "'"), wasHelpful,JSON.stringify('No Feedback Taken').replace(/"/g, "'"), JSON.stringify(session.message.timestamp).replace(/"/g, "'"), JSON.stringify(session.message.source).replace(/"/g, "'"));
 				}
 			}
@@ -2403,7 +2403,7 @@ bot.dialog('searchNetwork',[
 	}
 ])
 .triggerAction({
-	matches: [/search network hospitals/i, /Locate Network Hospital/i, /search network/i, /search nearby hospitals/i, /search providers/i, /hospitals around/i, /network hospital/i, 'searchNetwork'],
+	matches: [/search network hospitals/i, /Locate Network Hospital/i, /search network/i, /search nearby hospitals/i, /search providers/i, /hospitals around/i, /network hospital/i, /network hospitals/i, 'searchNetwork'],
 	// /^search network hospitals$|^search network$/i,
 	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
 	
