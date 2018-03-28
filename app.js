@@ -22,11 +22,11 @@ var config =
    {
      userName: process.env.AzureSQLUserName, 
      password: process.env.AzureSQLPassword, 
-     server: process.env.AzureSQLServer, 
+     server: process.env.AzureSQLServer,
      options: 
         {
            database: process.env.AzureSQLDatabase 
-           , encrypt: true
+		   , encrypt: true
         }
    }
 
@@ -149,6 +149,20 @@ var connector = new builder.ChatConnector
 var bot = new builder.UniversalBot(connector,[
 
     function (session) {
+
+		if(hasAudioAttachment(session)){
+			var stream = getAudioStreamFromMessage(session.message);
+			speechService.getTextFromAudioStream(stream)
+				.then(function (text){
+					session.send([processText(text)]);
+				})
+				.catch(function (text){
+					session.send('Oops! Something went wrong. Try again later.');
+					console.error(error);
+				});
+		}else{
+		
+
 		session.userData.userID = session.message.address.id;
 		session.userData.userName = session.message.user.name;
 		if(session.message.address.channelId === 'facebook'){
@@ -193,7 +207,7 @@ var bot = new builder.UniversalBot(connector,[
 				]);
 			
 			}
-		}	
+		}	}
 			session.send(new builder.Message(session)
 				.addAttachment(welcomeCard));
 		
@@ -277,9 +291,52 @@ function sentimentAnalyzer(userResponse){
 
 // Anytime the major version is incremented any existing conversations will be restarted.
 
+// Create connection to database
+var config2 = 
+   {
+     userName: process.env.AzureSQLUserName, 
+     password: process.env.AzureSQLPassword, 
+     server: process.env.AzureSQLServer,
+     options: 
+        {
+           database: process.env.AzureSQLDatabase 
+		   , encrypt: true,
+		   port: 80,
+		   method: 'POST',
+		   headers: {
+			   'Content-Type': 'application/json',
+		   }
+        }
+   }
+
+var post_connection = new Connection(config2);
+
 const logUserConversation = (event) => {
 	console.log('Event data: '+ JSON.stringify(event));
-    console.log('message: ' + event.text + ', user: ' + event.address.user.name);
+	console.log('message: ' + event.text + ', user: ' + event.address.user.name);
+	
+	var loggerString = "INSERT INTO ["+process.env.AzureSQLDatabase+"].[dbo].[ChatLogger] (UserId, ConversationId, ChatMessage, UserName, logData, LogTime) values ("+JSON.stringify(event.user.id)+","+JSON.stringify(event.address.conversation.id)+","+JSON.stringify(event.text)+","+JSON.stringify(event.address.user.name)+","+"\""+JSON.stringify(event).replace(/"/g, "'")+"\""+","+JSON.stringify(event.timestamp)+")";
+	console.log("Logger String: "+ loggerString);
+	// Read all rows from table
+	//	   console.log(requestString);
+	var Request = require('tedious').Request;
+	request = new Request(
+		loggerString,
+			function(err, rowCount, rows) 
+				{
+					console.log(err);
+					console.log(rowCount + ' row(s) inserted successfully!');
+				}
+			);
+
+	/*     request.on('row', function(columns) {
+		columns.forEach(function(column) {
+			console.log("%s\t%s", column.metadata.colName, column.value);
+		});
+			});*/
+	post_connection.execSql(request);
+//	connection.close();
+//	return;
 };
 
 // Middleware for logging
