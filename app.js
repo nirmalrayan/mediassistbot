@@ -10,6 +10,11 @@ var builder = require('botbuilder');
 var azure = require('botbuilder-azure');
 var handoff = require('botbuilder-handoff');
 
+//Speech Recognition
+var fs = require('fs');
+var needle = require('needle');
+var speechService = require('./speech-service.js');
+
 const {Wit, log} = require('node-wit');
 var cognitiveservices = require('botbuilder-cognitiveservices');
 require('env2')('.env'); // loads all entries into process.env
@@ -227,7 +232,7 @@ bot.on('conversationUpdate', function (message) {
     if (message.membersAdded) {
         message.membersAdded.forEach(function (identity) {
             if (identity.id === message.address.bot.id) {
-                bot.send(new builder.Message()
+				bot.send(new builder.Message()
                     .address(message.address)
 					.text("Hello!  I'm a bot. Say Hi if you'd like to chat"));				
             }
@@ -300,12 +305,6 @@ var config2 =
      options: 
         {
            database: process.env.AzureSQLDatabase 
-		   , encrypt: true,
-		   port: 80,
-		   method: 'POST',
-		   headers: {
-			   'Content-Type': 'application/json',
-		   }
         }
    }
 
@@ -340,6 +339,7 @@ const logUserConversation = (event) => {
 };
 
 // Middleware for logging
+/*
 bot.use({
     receive: function (event, next) {
         logUserConversation(event);
@@ -350,6 +350,61 @@ bot.use({
         next();
     }
 });
+*/
+
+//=========================================================
+// Utilities
+//=========================================================
+function hasAudioAttachment(session) {
+    return session.message.attachments.length > 0 &&
+        (session.message.attachments[0].contentType === 'audio/wav' ||
+            session.message.attachments[0].contentType === 'application/octet-stream');
+}
+
+function getAudioStreamFromMessage(message) {
+    var headers = {};
+    var attachment = message.attachments[0];
+    if (checkRequiresToken(message)) {
+        // The Skype attachment URLs are secured by JwtToken,
+        // you should set the JwtToken of your bot as the authorization header for the GET request your bot initiates to fetch the image.
+        // https://github.com/Microsoft/BotBuilder/issues/662
+        connector.getAccessToken(function (error, token) {
+            var tok = token;
+            headers['Authorization'] = 'Bearer ' + token;
+            headers['Content-Type'] = 'application/octet-stream';
+
+            return needle.get(attachment.contentUrl, { headers: headers });
+        });
+    }
+
+    headers['Content-Type'] = attachment.contentType;
+    return needle.get(attachment.contentUrl, { headers: headers });
+}
+
+function checkRequiresToken(message) {
+    return message.source === 'skype' || message.source === 'msteams';
+}
+
+function processText(text) {
+    var result = 'You said: ' + text + '.';
+
+    if (text && text.length > 0) {
+        var wordCount = text.split(' ').filter(function (x) { return x; }).length;
+        result += '\n\nWord Count: ' + wordCount;
+
+        var characterCount = text.replace(/ /g, '').length;
+        result += '\n\nCharacter Count: ' + characterCount;
+
+        var spaceCount = text.split(' ').length - 1;
+        result += '\n\nSpace Count: ' + spaceCount;
+
+        var m = text.match(/[aeiou]/gi);
+        var vowelCount = m === null ? 0 : m.length;
+        result += '\n\nVowel Count: ' + vowelCount;
+    }
+
+    return result;
+}
 
 /*
 handoff.setup(bot, server, isAgent, {
