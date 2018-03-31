@@ -145,6 +145,8 @@ setInterval(server.use(function(req, res, next) {
  default: '/index.html'	
 }));
 
+var audioAttachment = 0;
+
 // Create chat bot
 var connector = new builder.ChatConnector
 ({  appId: process.env.MicrosoftAppId, 
@@ -157,9 +159,11 @@ var bot = new builder.UniversalBot(connector,[
 
 		if(hasAudioAttachment(session)){
 			var stream = getAudioStreamFromMessage(session.message);
+			var audioAttachment = 1;
 			speechService.getTextFromAudioStream(stream)
 				.then(function (text){
 					session.send([processText(text)]);
+					session.beginDialog("/refer");
 				})
 				.catch(function (text){
 					session.send('Oops! Something went wrong. Try again later.');
@@ -953,20 +957,46 @@ bot.dialog('askforTrackClaimwIDConfirmation',[
 	}
 ]);
 
+// Dialog to ask for Confirmation - Feedback
+bot.dialog('askforFeedbackConfirmation',[
+	function (session){
+		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",{listStyle: builder.ListStyle["button"]})
+	},
+	function (session, results) {
+		if (results.response){
+//			session.endDialog();
+//			session.beginDialog('askforFeedbackReason');
+			session.replaceDialog('askforFeedbackReason', {reprompt: true});
+			return;
+		}
+		else {
+			session.beginDialog('askforMore');
+			return;
+		}
+	}
+]);
+
 
 // Dialog to ask for Claim Number
 bot.dialog('askforFeedbackReason',[
 	function (session){
 		
-		if(session.message && session.message.value && session.userData.feedbackReceived !== 1){
-			session.userData.feedbackReceived = 1;
+		if(session.message && session.message.value){
+
 			processSubmitAction9(session, session.message.value);
+			if(session.userData.resetFeedback === 1){
+				session.userData.resetFeedback = 0;
+				session.beginDialog('askforFeedbackConfirmation');
+//				session.endConversation();
+				return;
+			}else{
 			session.endDialog();
 //			session.beginDialog('askforMore');
 //				session.userData.serviceName = "Display health check";
 //				session.beginDialog('askforFeedback');
 				session.endConversation();
 			return;
+			}
 		}
 
 		var card = 
@@ -991,7 +1021,8 @@ bot.dialog('askforFeedbackReason',[
 				},
 				{
 					"type": "TextBlock",
-					"text": "Name"
+					"text": "Name",
+					"weight": "bolder"
 				},				
 				{
 				"type": "Input.Text",
@@ -1002,7 +1033,8 @@ bot.dialog('askforFeedbackReason',[
 				},
 				{
 					"type": "TextBlock",
-					"text": "E-mail Address"
+					"text": "E-mail Address",
+					"weight": "bolder"
 				},
 				{
 				"type": "Input.Text",
@@ -1013,7 +1045,8 @@ bot.dialog('askforFeedbackReason',[
 				},
 				{
 					"type": "TextBlock",
-					"text": "Contact Number"
+					"text": "Contact Number",
+					"weight": "bolder"
 				},
 				{
 				"type": "Input.Text",
@@ -1024,7 +1057,8 @@ bot.dialog('askforFeedbackReason',[
 				},
     {
       "type": "TextBlock",
-      "text": "Category"
+      "text": "Category",
+	  "weight": "bolder"
     },
     {
       "type": "Input.ChoiceSet",
@@ -1100,7 +1134,8 @@ bot.dialog('askforFeedbackReason',[
 	},
 	{
       "type": "TextBlock",
-      "text": "Comments"
+      "text": "Comments",
+	  "weight": "bolder"
     },
 	{
 	"type": "Input.Text",
@@ -1130,41 +1165,39 @@ bot.dialog('askforFeedbackReason',[
 	}
 ]);
 
-
-// Dialog to ask for Confirmation - Feedback
-bot.dialog('askforFeedbackConfirmation',[
-	function (session){
-		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",{listStyle: builder.ListStyle["button"]})
-	},
-	function (session, results) {
-		if (results.response){
-			
-		session.beginDialog('askforFeedbackReason');
-		}
-			else {	
-		session.beginDialog('askforMore2');
-		session.endConversation();
-		}
-		
-	},
-	function(session, results) {
-		session.endDialogWithResult(results);
-	}
-]);
-
-
 function processSubmitAction9(session, message){
-		var defaultErrorMessage = 'Please fill all the parameters. ';
+		var defaultErrorMessage = '**Please fill all the parameters:** \r\r\r\r';
 //		 if (validateFeedback(message)) {
-			
-		session.userData.userName = message["UserName"];
-		session.userData.userEmail = message["UserEmail"];	
-		const PhoneRegex = new RegExp(/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/);
+		session.userData.resetFeedback = 0;
+		var PhoneRegex = new RegExp(/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/);
+		var EmailRegex = new RegExp(/[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/);
+
+		//Name Validation
+		if(!message["UserName"]){
+			defaultErrorMessage += "* Name field cannot be empty. \r\r";
+			session.userData.resetFeedback = 1;
+		}else{
+			session.userData.userName = message["UserName"];
+		}
+
+		//Email Validation
+		if(EmailRegex.test(message["UserEmail"])){
+			session.userData.userEmail = message["UserEmail"];
+		}else{
+			defaultErrorMessage += "* Invalid Email Address. \r\r";
+			session.userData.resetFeedback = 1;
+//			return false;
+		}
+
+		//Phone Validation
 		if(PhoneRegex.test(message["UserPhone"])){
 			session.userData.userPhone = message["UserPhone"];
 		}else{
-			defaultErrorMessage += "Invalid Phone Number. ";
+			defaultErrorMessage += "* Invalid Phone Number. \r\r";
+			session.userData.resetFeedback = 1;
+//			return false;
 		}
+
 		if(session.userData.serviceName){
 			session.userData.conversationSource = session.userData.serviceName;
 		}else{
@@ -1174,6 +1207,11 @@ function processSubmitAction9(session, message){
 //		console.log('Modified Service Trigger Area: '+session.userData.serviceName);
 		session.userData.FeedbackResponse = message["UserComment"];
 
+		if(session.userData.resetFeedback === 1){
+			session.send(defaultErrorMessage);
+			return false;
+		}else{
+			
 		
 //		session.userData.FeedbackResponse = results.response;
 		var wasHelpful = 0;
@@ -1200,7 +1238,7 @@ function processSubmitAction9(session, message){
 			}
 		}
 		);
-	
+	}
 			// proceed to compliment
 			session.beginDialog('askforMore2');
 			session.endDialog();
