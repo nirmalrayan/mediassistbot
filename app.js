@@ -18,8 +18,10 @@ var speechService = require('./speech-service.js');
 const {Wit, log} = require('node-wit');
 var cognitiveservices = require('botbuilder-cognitiveservices');
 require('env2')('.env'); // loads all entries into process.env
+
+//Azure SQL Server
+var Request = require('tedious').Request;
 var Connection = require('tedious').Connection;
-//var Request = require('tedious').Request;
 var NodeGeocoder = require('node-geocoder');
 
 // Create connection to database
@@ -315,20 +317,26 @@ var config2 =
 var post_connection = new Connection(config2);
 
 const logUserConversation = (event) => {
-	console.log('Event data: '+ JSON.stringify(event));
+//	console.log('Event data: '+ JSON.stringify(event));
+	if(event.text == ''){
+		event.text = "No Input";
+	}
 	console.log('message: ' + event.text + ', user: ' + event.address.user.name);
 	
-	var loggerString = "INSERT INTO ["+process.env.AzureSQLDatabase+"].[dbo].[ChatLogger] (UserId, ConversationId, ChatMessage, UserName, logData, LogTime) values ("+JSON.stringify(event.user.id)+","+JSON.stringify(event.address.conversation.id)+","+JSON.stringify(event.text)+","+JSON.stringify(event.address.user.name)+","+"\""+JSON.stringify(event).replace(/"/g, "'")+"\""+","+JSON.stringify(event.timestamp)+")";
+	var loggerString = "INSERT INTO ["+process.env.AzureSQLDatabase+"].[dbo].[ChatLogger] (UserId, ConversationId, ChatMessage, UserName, LogTime) values ("+JSON.stringify(event.user.id).replace(/"/g, "'")+","+JSON.stringify(event.address.conversation.id).replace(/"/g, "'")+","+JSON.stringify(event.text).replace(/"/g, "'")+","+JSON.stringify(event.address.user.name).replace(/"/g, "'")+","+JSON.stringify(event.timestamp).replace(/"/g, "'")+")";
+//	var loggerString = "INSERT INTO ["+process.env.AzureSQLDatabase+"].[dbo].[ChatLogger] (UserId, ConversationId, ChatMessage, UserName, logData, LogTime) values ("+JSON.stringify(event.user.id)+","+JSON.stringify(event.address.conversation.id)+","+JSON.stringify(event.text)+","+JSON.stringify(event.address.user.name)+","+"\""+JSON.stringify(event).replace(/"/g, "'")+"\""+","+JSON.stringify(event.timestamp)+")";
 	console.log("Logger String: "+ loggerString);
 	// Read all rows from table
 	//	   console.log(requestString);
-	var Request = require('tedious').Request;
 	request = new Request(
 		loggerString,
 			function(err, rowCount, rows) 
 				{
-					console.log(err);
-					console.log(rowCount + ' row(s) inserted successfully!');
+					if(err){
+						console.log(err);
+					}else{
+						console.log(rowCount + ' row(s) inserted successfully!');
+					}
 				}
 			);
 
@@ -337,13 +345,13 @@ const logUserConversation = (event) => {
 			console.log("%s\t%s", column.metadata.colName, column.value);
 		});
 			});*/
-	post_connection.execSql(request);
+	connection.execSql(request);
 //	connection.close();
 //	return;
 };
 
 // Middleware for logging
-/*
+
 bot.use({
     receive: function (event, next) {
         logUserConversation(event);
@@ -354,7 +362,7 @@ bot.use({
         next();
     }
 });
-*/
+
 
 //=========================================================
 // Utilities
