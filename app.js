@@ -322,7 +322,7 @@ const logUserConversation = (event) => {
 		event.text = "No Input";
 	}
 	console.log('message: ' + event.text + ', user: ' + event.user.name);
-	
+/*	
 	var loggerString = "INSERT INTO ["+process.env.AzureSQLDatabase+"].[dbo].[ChatLogger] (UserId, ConversationId, ChatMessage, UserName, LogTime) values ("+JSON.stringify(event.user.id).replace(/"/g, "'")+","+JSON.stringify(event.address.conversation.id).replace(/"/g, "'")+","+JSON.stringify(event.text).replace(/"/g, "'")+","+JSON.stringify(event.user.name).replace(/"/g, "'")+","+JSON.stringify(event.timestamp).replace(/"/g, "'")+")";
 //	var loggerString = "INSERT INTO ["+process.env.AzureSQLDatabase+"].[dbo].[ChatLogger] (UserId, ConversationId, ChatMessage, UserName, logData, LogTime) values ("+JSON.stringify(event.user.id)+","+JSON.stringify(event.address.conversation.id)+","+JSON.stringify(event.text)+","+JSON.stringify(event.address.user.name)+","+"\""+JSON.stringify(event).replace(/"/g, "'")+"\""+","+JSON.stringify(event.timestamp)+")";
 	console.log("Logger String: "+ loggerString);
@@ -338,20 +338,20 @@ const logUserConversation = (event) => {
 						console.log(rowCount + ' row(s) inserted successfully!');
 					}
 				}
-			);
+	);*/
 
 	/*     request.on('row', function(columns) {
 		columns.forEach(function(column) {
 			console.log("%s\t%s", column.metadata.colName, column.value);
 		});
 			});*/
-	connection.execSql(request);
+//	connection.execSql(request);
 //	connection.close();
 //	return;
 };
 
 // Middleware for logging
-/*
+
 bot.use({
     receive: function (event, next) {
         logUserConversation(event);
@@ -362,7 +362,7 @@ bot.use({
         next();
     }
 });
-*/
+
 
 //=========================================================
 // Utilities
