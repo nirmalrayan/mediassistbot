@@ -1438,6 +1438,7 @@ bot.dialog('trackClaimwID', [
 					session.dialogData.hospitalizationDate = builder.EntityRecognizer.resolveTime([results.response]);
 
 					// Process request and display reservation details
+					//TO-DO: CHECK FOR UNDEFINED HOSPITALIZATIONDATE BEFORE CONVERTING TOSTRING()
 					session.send("Tracking claim with details 🕵️ <br/>Claim Number: %s<br/>Date: %s <br/><br/>Please wait ⏳",
 						session.dialogData.claimNumber, session.dialogData.hospitalizationDate.toString().substring(0,15));
 					
