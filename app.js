@@ -454,7 +454,8 @@ bot.dialog('/refer', new builder.IntentDialog({ recognizers : [qnarecognizer, re
 	.matches("NotTrained","idontknow")
 	.matches("qna", [
     function (session, args, next) {
-        var answerEntity = builder.EntityRecognizer.findEntity(args.entities, 'answer');
+		var answerEntity = builder.EntityRecognizer.findEntity(args.entities, 'answer');
+		console.log(JSON.stringify(answerEntity));
         session.send(answerEntity.entity);
     }
 ])
@@ -466,7 +467,6 @@ bot.dialog('/refer', new builder.IntentDialog({ recognizers : [qnarecognizer, re
         session.endDialog("Sorry, I did not understand \"\`%s\`\".  Try saying `show menu` or `#` to go back to the main menu or `help` if you need assistance.", session.message.text);
     })
 );
-
 
 bot.dialog("hello", (session, args) => {
 		session.endDialog("Hello. You can type `\"show menu\"` or `\"#\"` at any time of the conversation to go back to the main menu.");
