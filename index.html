@@ -160,23 +160,11 @@
 
     </div>
     <script src="https://cdn.botframework.com/botframework-webchat/latest/botchat.js"></script>
-    
-    <script src="https://cdn.botframework.com/botframework-webchat/latest/CognitiveServices.js"></script> 
     <script>
-
-//      window.botchatDebug = params['debug'] && params['debug'] === 'true';
-
-      const speechOptions = {
-        speechRecognizer: new CognitiveServices.SpeechRecognizer(),
-        speechSynthesizer: new CognitiveServices.SpeechSynthesizer()
-      };
-
       BotChat.App({
-        directLine: { secret: '0TjVVFscnUY.cwA.GWM.iCDsLb1adwGX2WxyjAy9L1Bku3YN2xGnW8TIBm31dSw', 
-                      webSocket: 'true' },
+        directLine: { secret: '0TjVVFscnUY.cwA.GWM.iCDsLb1adwGX2WxyjAy9L1Bku3YN2xGnW8TIBm31dSw' },
         user: { id: '31db772c-9761-4b25-b568-f1e140b26b4a' },
         bot: { id: 'medibot_4ttx4fdwLSX' },
-        speechOptions: speechOptions,
         resize: 'detect'
       }, document.getElementById("bot"));
       
