@@ -141,6 +141,7 @@ setInterval(server.use(function(req, res, next) {
 //		console.log("Source outside:" + process.env.deviceSource);
 //		console.log("authToken outside:" + global.authToken);
 
+
 //Direct to index.html web page
  server.get('/', restify.plugins.serveStatic({
  directory: __dirname,
