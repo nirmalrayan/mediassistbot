@@ -164,8 +164,9 @@ var bot = new builder.UniversalBot(connector,[
 			var audioAttachment = 1;
 			speechService.getTextFromAudioStream(stream)
 				.then(function (text){
+					var speechtotext = processText(text);
 					session.send([processText(text)]);
-					session.beginDialog("/refer");
+					session.beginDialog("/refer", speechtotext);
 				})
 				.catch(function (text){
 					session.send('Oops! Something went wrong. Try again later.');

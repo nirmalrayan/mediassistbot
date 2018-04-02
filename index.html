@@ -161,10 +161,24 @@
     </div>
     <script src="https://cdn.botframework.com/botframework-webchat/latest/botchat.js"></script>
     <script>
+
+      const speechOptions = {
+        speechRecognizer: new CognitiveServices.Speech({ subscriptionKey: 'b588383b9fee4dbfb3fe685576b674b8'}),
+        speechSynthesizer: new CognitiveServices.speechSynthesizer({
+          gender: CognitiveServices.SynthesisGender.Female,
+          subscriptionKey: 'b588383b9fee4dbfb3fe685576b674b8',
+          voiceName: 'MediBuddy Server Speech Text to Speech Voice (en-US, JessaRUS)'
+        })
+      };
+
       BotChat.App({
-        directLine: { secret: '0TjVVFscnUY.cwA.GWM.iCDsLb1adwGX2WxyjAy9L1Bku3YN2xGnW8TIBm31dSw' },
+        directLine: { secret: '0TjVVFscnUY.cwA.GWM.iCDsLb1adwGX2WxyjAy9L1Bku3YN2xGnW8TIBm31dSw',
+        webSocket: params['webSocket'] && params['webSocket'] === 'true' // defaults to true
+      },
         user: { id: '31db772c-9761-4b25-b568-f1e140b26b4a' },
         bot: { id: 'medibot_4ttx4fdwLSX' },
+        locale: params['locale'],
+        speechOptions: speechOptions,
         resize: 'detect'
       }, document.getElementById("bot"));
       
@@ -177,6 +191,7 @@
         document.getElementById("hdr").classList.remove("hide");
         document.getElementById("hdrSm").classList.remove("show");
       }
+
     </script>
   </body>
 </html>
