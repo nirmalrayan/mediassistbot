@@ -454,12 +454,12 @@ bot.dialog('/refer', new builder.IntentDialog({ recognizers : [qnarecognizer, re
 	.matches("HR", "askforHR")
 	.matches("Grievance", "askforGrievance")
 	.matches("GeneralQuery", "askforGeneralQuery")
-	.matches("compliment", "sayThanks")
 	.matches("Investigation","askforInvestigation")
 	.matches("track claim","trackClaim")
 	.matches("HomeHealthCare","homehealthcare")
 	.matches("healthCheck","healthCheck")
 	.matches("searchNetwork","searchNetwork")
+	.matches("sayThanks", "getCompliment")
 	.matches("sayGoodbye","sayGoodbye")
 	.matches("Medicine","medicine")
 	.matches("TeleConsultation","teleconsultation")
@@ -3221,7 +3221,7 @@ function getRandomInt(min, max) {
 bot.dialog('sayGoodbye',[
 	function (session){
 		msg = ["See you later 👋, Keep rocking!","Stay healthy, always! Bye for now!","See you 👋!","Have a good day.","Later gator!","Talking to you makes my day. Come back soon!", "Ok, bye🙂!", "Till next time!"]
-		x = getRandomInt(0,6);
+		x = getRandomInt(0,7);
 		session.endDialog(msg[x]);
 	},
 	function(session, results) {
@@ -3233,9 +3233,9 @@ bot.dialog('sayGoodbye',[
 });
 
 // Dialog to handle Compliment
-bot.dialog('sayThanks',[
+bot.dialog('getCompliment',[
 	function (session){
-		msg = ["Welcome, It's nothing","👍","That's all right!","Don't mention it.","😊","😍", "That's very kind of you", "Thank you, I appreciate the compliment.", "Thank you very much. 🙏","All I can say is, Thanks!", "MediBuddy appreciates your gratitude! We wish you good health and smiles 🙂"]
+		msg = ["Welcome! It's nothing","👍","That's all right!","Don't mention it.","😊","😍", "That is very kind of you", "Thank you, I appreciate the compliment.", "Thank you very much. 🙏","All I can say is, Thanks!", "MediBuddy appreciates your gratitude! We wish you good health and smiles 🙂"]
 		x = getRandomInt(0,10);
 		session.endDialog(msg[x]);
 	},
@@ -3244,7 +3244,7 @@ bot.dialog('sayThanks',[
 	}
 ])
 .triggerAction({
-	matches: [/thanks/i, /thank you/i, /awesome/i, /great/i, /brilliant/i, /i love you/i, /excellent/i, /fantastic/i, /amazing/i, /cute/i, /youre great/i]
+	matches: [/thanks/i, /thank you/i, /awesome/i, /great/i, /brilliant/i, /i love you/i, /excellent/i, /fantastic/i, /amazing/i, /cute/i, /youre great/i, 'sayThanks']
 });
 
 //-------------------------------------------------------------------------------------------------------------------------------------
