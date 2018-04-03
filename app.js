@@ -441,7 +441,6 @@ var model = process.env.LUISURI;
 var recognizer = new builder.LuisRecognizer(model);
 //console.log(recognizer);
 //bot.recognizer(recog);
-
 bot.dialog('/refer', new builder.IntentDialog({ recognizers : [qnarecognizer, recognizer]})
 	.matches("showMenu","showMenu")
     .matches("SayHello", "hello")
@@ -451,6 +450,21 @@ bot.dialog('/refer', new builder.IntentDialog({ recognizers : [qnarecognizer, re
 	.matches("Grievance", "askforGrievance")
 	.matches("GeneralQuery", "askforGeneralQuery")
 //	.matches("Abuse","askforAbuse")
+	.matches("compliment", "sayThanks")
+	.matches("Investigation","askforInvestigation")
+	.matches("track claim","trackClaim")
+	.matches("HomeHealthCare","homehealthcare")
+//	.matches("TechIssue",)
+	.matches("healthCheck","healthCheck")
+	.matches("searchNetwork","searchNetwork")
+	.matches("sayGoodbye","sayGoodbye")
+	.matches("Medicine","medicine")
+	.matches("GeneralQuery","askforGeneralQuery")
+	.matches("TeleConsultation","teleconsultation")
+	.matches("Consultation","consultation")
+	.matches("downloadECard","downloadEcard")
+	.matches("Offshore","askforOffshore")
+	.matches("labTest","labtest")
 	.matches("NotTrained","idontknow")
 	.matches("qna", [
     function (session, args, next) {
@@ -467,6 +481,7 @@ bot.dialog('/refer', new builder.IntentDialog({ recognizers : [qnarecognizer, re
         session.endDialog("Sorry, I did not understand \"\`%s\`\".  Try saying `show menu` or `#` to go back to the main menu or `help` if you need assistance.", session.message.text);
     })
 );
+
 
 bot.dialog("hello", (session, args) => {
 		session.endDialog("Hello. You can type `\"show menu\"` or `\"#\"` at any time of the conversation to go back to the main menu.");
@@ -2080,7 +2095,7 @@ bot.dialog('downloadEcard',[
 	}
 ])
 .triggerAction({
-	matches: [/download e-card/i, /download ecard/i, /ecard/i, /tpa card/i, /insurance card/i, /card/i, /download card/i, /^download e-card$/i, 'downloadECard'],
+	matches: [/download e-card/i, /download ecard/i,/download e card/i, /ecard/i, /tpa card/i, /insurance card/i, /card/i, /download card/i, /^download e-card$/i, 'downloadECard'],
 	// /^download e-card$/i,
 	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
 	
@@ -3227,8 +3242,7 @@ bot.dialog('sayThanks',[
 	}
 ])
 .triggerAction({
-	matches: 'compliment'
-	
+	matches: [/thanks/i, /thank you/i, /awesome/i, /great/i, /brilliant/i, /i love you/i, /excellent/i, /fantastic/i, /amazing/i, /cute/i, /you're great/i,'compliment']
 });
 
 //-------------------------------------------------------------------------------------------------------------------------------------
