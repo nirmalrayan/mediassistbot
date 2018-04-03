@@ -459,7 +459,6 @@ bot.dialog('/refer', new builder.IntentDialog({ recognizers : [qnarecognizer, re
 	.matches("searchNetwork","searchNetwork")
 	.matches("sayGoodbye","sayGoodbye")
 	.matches("Medicine","medicine")
-	.matches("GeneralQuery","askforGeneralQuery")
 	.matches("TeleConsultation","teleconsultation")
 	.matches("Consultation","consultation")
 	.matches("downloadECard","downloadEcard")
