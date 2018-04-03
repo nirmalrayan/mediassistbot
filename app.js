@@ -440,6 +440,11 @@ var qnarecognizer  = new cognitiveservices.QnAMakerRecognizer({
 var model = process.env.LUISURI;
 var recognizer = new builder.LuisRecognizer(model);
 //console.log(recognizer);
+
+
+//	.matches("Abuse","askforAbuse")
+//	.matches("TechIssue",)
+
 //bot.recognizer(recog);
 bot.dialog('/refer', new builder.IntentDialog({ recognizers : [qnarecognizer, recognizer]})
 	.matches("showMenu","showMenu")
@@ -449,12 +454,10 @@ bot.dialog('/refer', new builder.IntentDialog({ recognizers : [qnarecognizer, re
 	.matches("HR", "askforHR")
 	.matches("Grievance", "askforGrievance")
 	.matches("GeneralQuery", "askforGeneralQuery")
-//	.matches("Abuse","askforAbuse")
 	.matches("compliment", "sayThanks")
 	.matches("Investigation","askforInvestigation")
 	.matches("track claim","trackClaim")
 	.matches("HomeHealthCare","homehealthcare")
-//	.matches("TechIssue",)
 	.matches("healthCheck","healthCheck")
 	.matches("searchNetwork","searchNetwork")
 	.matches("sayGoodbye","sayGoodbye")
@@ -3241,7 +3244,7 @@ bot.dialog('sayThanks',[
 	}
 ])
 .triggerAction({
-	matches: [/thanks/i, /thank you/i, /awesome/i, /great/i, /brilliant/i, /i love you/i, /excellent/i, /fantastic/i, /amazing/i, /cute/i, /you're great/i,'compliment']
+	matches: [/thanks/i, /thank you/i, /awesome/i, /great/i, /brilliant/i, /i love you/i, /excellent/i, /fantastic/i, /amazing/i, /cute/i, /youre great/i]
 });
 
 //-------------------------------------------------------------------------------------------------------------------------------------
