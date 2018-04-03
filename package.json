@@ -35,6 +35,7 @@
     "env2": "^2.2.0",
     "geolib": "^2.0.23",
     "http": "0.0.0",
+    "http-server": "^0.11.1",
     "https": "^1.0.0",
     "microsoft-adaptivecards": "^0.6.1",
     "needle": "^2.2.0",
