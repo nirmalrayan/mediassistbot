@@ -224,8 +224,7 @@ var bot = new builder.UniversalBot(connector,[
 			session.send(new builder.Message(session)
 				.speak("Greetings! I'm MediBuddy. I will be your healthcare assistant. Type Show Menu or # at any time to see the menu.")
 				.addAttachment(welcomeCard));
-		
-				
+						
 //		session.beginDialog('/localePicker');
 //					sentimentScore = sentimentAnalyzer("I'm so depressed today");
 //					console.log('Returned Sentiment Object: ');
