@@ -195,7 +195,7 @@ var bot = new builder.UniversalBot(connector,[
 			if(session.userData.masterName){
 				var welcomeCard = new builder.ThumbnailCard(session)
 				.title("Hi " + session.userData.masterName + "! Nice to see you again")
-				.subtitle("I will be your personal healthcare assistant. \n\n💡 Type \"`show menu`\" or \"`#`\" at any time to see the menu.")
+				.subtitle("I will be your personal healthcare assistant. \n\nType \"`show menu`\" or \"`#`\" at any time to see the menu.")
 				.images([
 					new builder.CardImage(session)
 						.url('https://i.imgur.com/sQFiqkI.png')
@@ -209,7 +209,7 @@ var bot = new builder.UniversalBot(connector,[
 			else{
 				var welcomeCard = new builder.ThumbnailCard(session)
 				.title("Greetings! I'm MediBuddy")
-				.subtitle("I will be your personal healthcare assistant. \n\n💡 Type \"`show menu`\" or \"`#`\" at any time to see the menu.")
+				.subtitle("I will be your personal healthcare assistant. \n\nType \"`show menu`\" or \"`#`\" at any time to see the menu.")
 				.images([
 					new builder.CardImage(session)
 						.url('https://i.imgur.com/sQFiqkI.png')
@@ -1048,7 +1048,7 @@ bot.dialog('askforTrackBy',[
 	function (session){
 		var msg = new builder.Message(session)
 			.speak("Alright, let's get started. Choose from any of these three ways to track your claim. You can track with your Claim ID, MediAssist ID or Employee ID")
-			.text("Alright, let's get started 🚀. Choose from any of these three ways to track your claim: ")
+			.text("Alright, let's get started. Choose from any of these three ways to track your claim: ")
 			.suggestedActions(
 				builder.SuggestedActions.create(
 					session, [
@@ -1093,7 +1093,7 @@ bot.customAction({
 // Dialog to ask for Confirmation - Track with Claim Number
 bot.dialog('askforTrackClaimwIDConfirmation',[
 	function (session){
-		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",
+		builder.Prompts.confirm(session, "Let's try again? (yes/no)",
 		{	speak: "Let's try again? yes or no?",
 			listStyle: builder.ListStyle["button"]})
 	},
@@ -1111,7 +1111,7 @@ bot.dialog('askforTrackClaimwIDConfirmation',[
 // Dialog to ask for Confirmation - Feedback
 bot.dialog('askforFeedbackConfirmation',[
 	function (session){
-		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",
+		builder.Prompts.confirm(session, "Let's try again? (yes/no)",
 			{
 				speak: "Let's try again? yes or no",
 				listStyle: builder.ListStyle["button"]})
@@ -1499,7 +1499,7 @@ bot.dialog('askforFeedbackReasonFB',[
 // Dialog to ask for Feedback
 bot.dialog('askforFeedback',[
 	function (session){
-		builder.Prompts.confirm(session, "💡 Did you find this helpful? (yes/no)",{speak: "Did you find this helpful? yes or no?", listStyle: builder.ListStyle["button"]});
+		builder.Prompts.confirm(session, "Did you find this helpful? (yes/no)",{speak: "Did you find this helpful? yes or no?", listStyle: builder.ListStyle["button"]});
 	},
 	function (session, results) {
 		if (results.response){
@@ -1583,7 +1583,7 @@ bot.dialog('trackClaimwID', [
 
 					// Process request and display reservation details
 					//TO-DO: CHECK FOR UNDEFINED HOSPITALIZATIONDATE BEFORE CONVERTING TOSTRING()
-					session.send("Tracking claim with details 🕵️ <br/>Claim Number: %s<br/>Date: %s <br/><br/>Please wait ⏳",
+					session.send("Tracking claim with details <br/>Claim Number: %s<br/>Date: %s <br/><br/>Please wait ⏳",
 						session.dialogData.claimNumber, session.dialogData.hospitalizationDate.toString().substring(0,15));
 					
 					//Make POST request to MA Server
@@ -1683,7 +1683,7 @@ bot.dialog('trackClaimwID', [
 // Dialog to ask for Confirmation - Track with MAID
 bot.dialog('askforTrackClaimwMAIDConfirmation',[
 	function (session){
-		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",
+		builder.Prompts.confirm(session, "Let's try again? (yes/no)",
 		{	speak: "Let's try again? yes or no?",
 			listStyle: builder.ListStyle["button"]})
 	},
@@ -1722,7 +1722,7 @@ bot.dialog('trackClaimwMAID', [
 					session.dialogData.hospitalizationDate = builder.EntityRecognizer.resolveTime([results.response]);
 
 					// Process request and display reservation details
-					session.send("Tracking claim with details 🕵️ <br/>Medi Assist ID: %s<br/>Date/Time: %s. <br/><br/>Please wait ⏳",
+					session.send("Tracking claim with details <br/>Medi Assist ID: %s<br/>Date/Time: %s. <br/><br/>Please wait...",
 						session.dialogData.MAID, session.dialogData.hospitalizationDate);
 					
 					//Make POST request to MA Server
@@ -1862,7 +1862,7 @@ bot.dialog('trackClaimwEmpID', [
 					session.dialogData.hospitalizationDate = builder.EntityRecognizer.resolveTime([results.response]);
 
 					// Process request and display reservation details
-					session.send("Tracking claim with details 🕵️ <br/>Employee ID: %s<br/>Corporate: %s<br/>Date/Time: %s. <br/><br/>Please wait ⏳",
+					session.send("Tracking claim with details 🕵️ <br/>Employee ID: %s<br/>Corporate: %s<br/>Date/Time: %s. <br/><br/>Please wait...",
 						session.dialogData.EmpID, session.dialogData.Corporate, session.dialogData.hospitalizationDate);
 					
 					//Make POST request to MA Server
@@ -2245,7 +2245,7 @@ bot.dialog('askforDownloadBy',[
 	function (session){
 		var msg = new builder.Message(session)
 			.speak("Alright, let's get started. There are four ways to download your e-card. You can download with your Claim ID, MediAssist ID, Employee ID or Policy Number")
-			.text("Let's get started 🚀. There are four ways to download your e-card. Please select one of the following options. Download with: ")
+			.text("Let's get started. There are four ways to download your e-card. Please select one of the following options. Download with: ")
 			.suggestedActions(
 				builder.SuggestedActions.create(
 					session, [
@@ -2302,7 +2302,7 @@ bot.customAction({
 // Dialog to ask for Confirmation - Download with Claim Number
 bot.dialog('askforDownloadwIDConfirmation',[
 	function (session){
-		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",
+		builder.Prompts.confirm(session, "Let's try again? (yes/no)",
 		{	speak: "Let's try again? yes or no?",
 			listStyle: builder.ListStyle["button"]})
 	},
@@ -2321,7 +2321,7 @@ bot.dialog('askforDownloadwIDConfirmation',[
 // Dialog to ask for Confirmation - Download with Medi Assist ID
 bot.dialog('askforDownloadwMAIDConfirmation',[
 	function (session){
-		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",
+		builder.Prompts.confirm(session, "Let's try again? (yes/no)",
 		{	speak: "Let's try again? yes or no?",
 			listStyle: builder.ListStyle["button"]})
 	},
@@ -2340,7 +2340,7 @@ bot.dialog('askforDownloadwMAIDConfirmation',[
 // Dialog to ask for Confirmation - Download with Employee ID
 bot.dialog('askforDownloadwEmpIDConfirmation',[
 	function (session){
-		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",
+		builder.Prompts.confirm(session, "Let's try again? (yes/no)",
 		{	speak: "Let's try again? yes or no?",
 			listStyle: builder.ListStyle["button"]})
 	},
@@ -2359,7 +2359,7 @@ bot.dialog('askforDownloadwEmpIDConfirmation',[
 // Dialog to ask for Confirmation - Download with Policy Number
 bot.dialog('askforDownloadwPolNoConfirmation',[
 	function (session){
-		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",
+		builder.Prompts.confirm(session, "Let's try again? (yes/no)",
 		{	speak: "Let's try again? yes or no?",
 			listStyle: builder.ListStyle["button"]})
 	},
@@ -2416,7 +2416,7 @@ bot.dialog('downloadwID', [
 					session.dialogData.benefName = results.response;
 
 					// Process request and display reservation details
-					session.send("Finding Medi Assist E-Card with details 🔎 <br/>Claim Number: %s<br/>Beneficiary Name: %s",
+					session.send("Finding Medi Assist E-Card with details <br/>Claim Number: %s<br/>Beneficiary Name: %s",
 						session.dialogData.claimNumber, session.dialogData.benefName);
 					
 					var clmId = session.dialogData.claimNumber;
@@ -2746,7 +2746,7 @@ bot.dialog('searchNetwork',[
 // Dialog to ask for Confirmation - Download with Medi Assist ID
 bot.dialog('askforLocationConfirmation',[
 	function (session){
-		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",
+		builder.Prompts.confirm(session, "Let's try again? (yes/no)",
 		{	speak: "Let's try again? yes or no?",
 			listStyle: builder.ListStyle["button"]})
 	},
