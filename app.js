@@ -222,9 +222,11 @@ var bot = new builder.UniversalBot(connector,[
 			}
 		}	}
 			session.send(new builder.Message(session)
+				.speak("Greetings! I'm MediBuddy. I will be your healthcare assistant. Type Show Menu or # at any time to see the menu.")
 				.addAttachment(welcomeCard));
 		
 				
+//		session.beginDialog('/localePicker');
 //					sentimentScore = sentimentAnalyzer("I'm so depressed today");
 //					console.log('Returned Sentiment Object: ');
 //					console.log(sentimentScore);
@@ -352,16 +354,130 @@ const logUserConversation = (event) => {
 //	return;
 };
 
+// Localization Support
+bot.dialog('/localePicker', [
+    function (session) {
+        // Prompt the user to select their preferred locale
+        builder.Prompts.choice(session, "What's your preferred language?", 'English|Hindi|Tamil|Bengali|Urdu');
+    },
+    function (session, results) {
+        // Update preferred locale
+        var locale;
+        switch (results.response.entity) {
+            case 'English':
+                locale = 'en';
+                break;
+            case 'Hindi':
+                locale = 'hi';
+                break;
+            case 'Tamil':
+                locale = 'ta';
+                break;
+			case 'Bengali':
+				locale = 'bn';
+				break;
+            case 'Urdu':
+                locale = 'ur';
+                break;
+        }
+        session.preferredLocale(locale, function (err) {
+            if (!err) {
+                // Locale files loaded
+                session.endDialog(`Your preferred language is now ${results.response.entity}`);
+            } else {
+                // Problem loading the selected locale
+                session.error(err);
+            }
+        });
+    }
+]);
+/*
 // Middleware for logging
-
 bot.use({
     receive: function (event, next) {
-        logUserConversation(event);
-        next();
+//		next();
+		if (event.text && !event.textLocale) {
+			var options = {
+				method: 'POST',
+				url: 'https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/languages?numberOfLanguagesToDetect=1',
+				body: { documents: [{ id: 'message', text: event.text }]},
+				json: true,
+				headers: {
+					'Ocp-Apim-Subscription-Key': 'dc57c9b10c794db483138af459f36a66'
+				}
+			};
+			request(options, function (error, response, body) {
+				if (!error && body) {
+					if (body.documents && body.documents.length > 0) {
+						var languages = body.documents[0].detectedLanguages;
+						if (languages && languages.length > 0) {
+							event.textLocale = languages[0].iso6391Name;
+						}
+					}
+				}
+				logUserConversation(event);
+				next();
+			});
+		} else {
+			logUserConversation(event);
+			next();
+		}
+
     },
     send: function (event, next) {
         logUserConversation(event);
         next();
+    }
+});
+*/
+
+
+//=========================================================
+// Bot Translation Middleware
+//=========================================================
+
+var tokenHandler = require('./tokenHandler');
+// Start generating tokens needed to use the translator API
+tokenHandler.init();
+
+// Can hardcode if you know that the language coming in will be hindi/english for sure
+// Otherwise can use the code for locale detection provided here: https://docs.botframework.com/en-us/node/builder/chat/localization/#navtitle
+var FROMLOCALE = 'hi'; // Simplified Hindi locale
+var TOLOCALE = 'en';
+
+// Documentation for text translation API here: http://docs.microsofttranslator.com/text-translate.html
+bot.use({
+    receive: function (event, next) {
+        var token = tokenHandler.token();
+        if (token && token !== ""){ //not null or empty string
+            var urlencodedtext = urlencode(event.text); // convert foreign characters to utf8
+            var options = {
+                method: 'GET',
+                url: 'http://api.microsofttranslator.com/v2/Http.svc/Translate'+'?text=' + urlencodedtext + '&from=' + FROMLOCALE +'&to=' + TOLOCALE,
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            };
+            request(options, function (error, response, body){
+                //Check for error
+                if(error){
+                    return console.log('Error:', error);
+                } else if(response.statusCode !== 200){
+                    return console.log('Invalid Status Code Returned:', response.statusCode);
+                } else {
+                    // Returns in xml format, no json option :(
+                    parseString(body, function (err, result) {
+                        console.log(result.string._);
+                        event.text = result.string._;
+                        next();
+                    });
+                    
+                }
+            });
+        } else {
+            console.log("No token");
+            next();
+        }
     }
 });
 
@@ -435,7 +551,7 @@ var qnarecognizer  = new cognitiveservices.QnAMakerRecognizer({
 	knowledgeBaseId: process.env.QnAknowledgeBaseId, 
 	subscriptionKey: process.env.QnASubscriptionKey,
 	top: 4});
-
+	
 //LUIS Configuration
 var model = process.env.LUISURI;
 var recognizer = new builder.LuisRecognizer(model);
@@ -446,7 +562,7 @@ var recognizer = new builder.LuisRecognizer(model);
 //	.matches("TechIssue",)
 
 //bot.recognizer(recog);
-bot.dialog('/refer', new builder.IntentDialog({ recognizers : [qnarecognizer, recognizer]})
+bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer/*, qnarecognizer*/]})
 	.matches("showMenu","showMenu")
     .matches("SayHello", "hello")
 	.matches("GetName", "setName")
@@ -458,8 +574,8 @@ bot.dialog('/refer', new builder.IntentDialog({ recognizers : [qnarecognizer, re
 	.matches("track claim","trackClaim")
 	.matches("HomeHealthCare","homehealthcare")
 	.matches("healthCheck","healthCheck")
+	.matches("sayThanks","getCompliment")
 	.matches("searchNetwork","searchNetwork")
-	.matches("sayThanks", "getCompliment")
 	.matches("sayGoodbye","sayGoodbye")
 	.matches("Medicine","medicine")
 	.matches("TeleConsultation","teleconsultation")
@@ -816,6 +932,7 @@ bot.dialog('showMenu',[
 			menucards.push(helpCard);
 		}
 			var msg = new builder.Message(session)
+			.speak("My abilities are still growing. In a nutshell, here's what I can do: ")
 			.text("My abilities are still growing. In a nutshell, here's what I can do: ")
 			.attachmentLayout(builder.AttachmentLayout.carousel)
 			.attachments(menucards);
@@ -842,7 +959,8 @@ bot.dialog('trackClaim', [
 ])
 .triggerAction({
 	matches: [/track claim/i, /track/i, /tracking/i, /claim tracking/i, /claim status/i, /pending claim/i, /claim details/i, 'track claim'], 
-	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
+	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)",
+	listStyle: builder.ListStyle["button"]
 	
 });
 
@@ -853,6 +971,7 @@ bot.dialog('askforMore',[
 		setTimeout(function () {
 			
 		var msg = new builder.Message(session)
+			.speak("How else can I help you? To go back to the main menu, say <emphasis level=\"moderate\">Show Menu</emphasis>. To go to help desk, say <emphasis level=\"moderate\">Help</emphasis>. You can choose to end this conversation by saying <emphasis level=\"moderate\">End Conversation</emphasis>.")
 			.text("How else can I help you?")
 			.suggestedActions(
 				builder.SuggestedActions.create(
@@ -892,6 +1011,7 @@ bot.dialog('askforMore2',[
 		setTimeout(function () {
 			
 		var msg = new builder.Message(session)
+			.speak("How else can I help you? To go back to the main menu, say <emphasis level=\"moderate\">Show Menu</emphasis>. To go to help desk, say <emphasis level=\"moderate\">Help</emphasis>. You can choose to end this conversation by saying <emphasis level=\"moderate\">End Conversation</emphasis>.")
 			.text("How else can I help you?")
 			.suggestedActions(
 				builder.SuggestedActions.create(
@@ -927,6 +1047,7 @@ bot.dialog('askforMore2',[
 bot.dialog('askforTrackBy',[
 	function (session){
 		var msg = new builder.Message(session)
+			.speak("Alright, let's get started. Choose from any of these three ways to track your claim. You can track with your Claim ID, MediAssist ID or Employee ID")
 			.text("Alright, let's get started 🚀. Choose from any of these three ways to track your claim: ")
 			.suggestedActions(
 				builder.SuggestedActions.create(
@@ -972,7 +1093,9 @@ bot.customAction({
 // Dialog to ask for Confirmation - Track with Claim Number
 bot.dialog('askforTrackClaimwIDConfirmation',[
 	function (session){
-		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",{listStyle: builder.ListStyle["button"]})
+		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",
+		{	speak: "Let's try again? yes or no?",
+			listStyle: builder.ListStyle["button"]})
 	},
 	function (session, results) {
 		if (results.response){
@@ -988,7 +1111,10 @@ bot.dialog('askforTrackClaimwIDConfirmation',[
 // Dialog to ask for Confirmation - Feedback
 bot.dialog('askforFeedbackConfirmation',[
 	function (session){
-		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",{listStyle: builder.ListStyle["button"]})
+		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",
+			{
+				speak: "Let's try again? yes or no",
+				listStyle: builder.ListStyle["button"]})
 	},
 	function (session, results) {
 		if (results.response){
@@ -1183,6 +1309,7 @@ bot.dialog('askforFeedbackReason',[
 			}
 		};
 		session.send(new builder.Message(session)
+			.speak("Your feedback is valuable to us! Please share your thoughts about me or your experience in general and I'll forward them to my masters.")
 			.addAttachment(card));
 
 
@@ -1372,7 +1499,7 @@ bot.dialog('askforFeedbackReasonFB',[
 // Dialog to ask for Feedback
 bot.dialog('askforFeedback',[
 	function (session){
-		builder.Prompts.confirm(session, "💡 Did you find this helpful? (yes/no)",{listStyle: builder.ListStyle["button"]});
+		builder.Prompts.confirm(session, "💡 Did you find this helpful? (yes/no)",{speak: "Did you find this helpful? yes or no?", listStyle: builder.ListStyle["button"]});
 	},
 	function (session, results) {
 		if (results.response){
@@ -1525,7 +1652,9 @@ bot.dialog('trackClaimwID', [
 */								
 								
 								var card = createReceiptCard(session);
-								var msg = new builder.Message(session).addAttachment(card);
+								var msg = new builder.Message(session)
+								.speak("I was able to get real time status on your claim. Here it is:")
+								.addAttachment(card);
 								session.send(msg);
 								session.userData.serviceName = "Track with Claim ID";
 								session.beginDialog('askforFeedback');
@@ -1554,7 +1683,9 @@ bot.dialog('trackClaimwID', [
 // Dialog to ask for Confirmation - Track with MAID
 bot.dialog('askforTrackClaimwMAIDConfirmation',[
 	function (session){
-		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",{listStyle: builder.ListStyle["button"]})
+		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",
+		{	speak: "Let's try again? yes or no?",
+			listStyle: builder.ListStyle["button"]})
 	},
 	function (session, results) {
 		if (results.response){
@@ -1664,7 +1795,9 @@ bot.dialog('trackClaimwMAID', [
 */								
 								
 								var card = createReceiptCard(session);
-								var msg = new builder.Message(session).addAttachment(card);
+								var msg = new builder.Message(session)
+								.speak("I was able to get real time status on your claim. Here it is:")
+								.addAttachment(card);
 								session.send("Here are your latest claim details:");
 								session.send(msg);
 								session.userData.serviceName = "Track with Medi Assist ID";
@@ -1696,7 +1829,9 @@ bot.dialog('trackClaimwMAID', [
 // Dialog to ask for Confirmation - Track with Employee Details
 bot.dialog('askforTrackClaimwEmpIDConfirmation',[
 	function (session){
-		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",{listStyle: builder.ListStyle["button"]})
+		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",
+		{	speak: "Let's try again? yes or no?",
+			listStyle: builder.ListStyle["button"]})
 	},
 	function (session, results) {
 		if (results.response){
@@ -1800,7 +1935,9 @@ bot.dialog('trackClaimwEmpID', [
 */								
 								
 								var card = createReceiptCard(session);
-								var msg = new builder.Message(session).addAttachment(card);
+								var msg = new builder.Message(session)
+								.speak("I was able to get real time status on your claim. Here it is:")
+								.addAttachment(card);
 								session.send("Here are your latest claim details:");
 								session.send(msg);
 								session.userData.serviceName = "Track with Employee ID";
@@ -1950,14 +2087,14 @@ bot.dialog('askforPolNo',[
 
 // Context Help dialog for Hospitalization date 
 bot.dialog('doaHelp', function(session, args, next) {
-    var msg = "⛑️ You can enter the date in any format. Eg. if date of admission is 01-Jan-2017 and discharge is 05-Jan-2017, you can enter any date from 1st Jan,2017 to 5th Jan, 2017";
+    var msg = "You can enter the date in any format. Eg. if date of admission is 01-Jan-2017 and discharge is 05-Jan-2017, you can enter any date from 1st Jan,2017 to 5th Jan, 2017";
     session.endDialog(msg);
 });
 
 // Generic Help dialog for Bot
 bot.dialog('help', [
 	function(session){
-			session.send("⛑️ Can't find the service you're looking for? Let me take you through some of the areas where you may need help.");
+			session.send("Can't find the service you're looking for? Let me take you through some of the areas where you may need help.");
 			session.send("Let's run you through a few main menu options again: ");
 			builder.Prompts.confirm(session,"Do you want to know how claims work? (yes/no)",{listStyle: builder.ListStyle["button"]});
 	},
@@ -2107,6 +2244,7 @@ bot.dialog('downloadEcard',[
 bot.dialog('askforDownloadBy',[
 	function (session){
 		var msg = new builder.Message(session)
+			.speak("Alright, let's get started. There are four ways to download your e-card. You can download with your Claim ID, MediAssist ID, Employee ID or Policy Number")
 			.text("Let's get started 🚀. There are four ways to download your e-card. Please select one of the following options. Download with: ")
 			.suggestedActions(
 				builder.SuggestedActions.create(
@@ -2164,7 +2302,9 @@ bot.customAction({
 // Dialog to ask for Confirmation - Download with Claim Number
 bot.dialog('askforDownloadwIDConfirmation',[
 	function (session){
-		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",{listStyle: builder.ListStyle["button"]})
+		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",
+		{	speak: "Let's try again? yes or no?",
+			listStyle: builder.ListStyle["button"]})
 	},
 	function (session, results) {
 		if (results.response){
@@ -2181,7 +2321,9 @@ bot.dialog('askforDownloadwIDConfirmation',[
 // Dialog to ask for Confirmation - Download with Medi Assist ID
 bot.dialog('askforDownloadwMAIDConfirmation',[
 	function (session){
-		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",{listStyle: builder.ListStyle["button"]})
+		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",
+		{	speak: "Let's try again? yes or no?",
+			listStyle: builder.ListStyle["button"]})
 	},
 	function (session, results) {
 		if (results.response){
@@ -2198,7 +2340,9 @@ bot.dialog('askforDownloadwMAIDConfirmation',[
 // Dialog to ask for Confirmation - Download with Employee ID
 bot.dialog('askforDownloadwEmpIDConfirmation',[
 	function (session){
-		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",{listStyle: builder.ListStyle["button"]})
+		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",
+		{	speak: "Let's try again? yes or no?",
+			listStyle: builder.ListStyle["button"]})
 	},
 	function (session, results) {
 		if (results.response){
@@ -2215,7 +2359,9 @@ bot.dialog('askforDownloadwEmpIDConfirmation',[
 // Dialog to ask for Confirmation - Download with Policy Number
 bot.dialog('askforDownloadwPolNoConfirmation',[
 	function (session){
-		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",{listStyle: builder.ListStyle["button"]})
+		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",
+		{	speak: "Let's try again? yes or no?",
+			listStyle: builder.ListStyle["button"]})
 	},
 	function (session, results) {
 		if (results.response){
@@ -2303,7 +2449,9 @@ bot.dialog('downloadwID', [
 							if(sizeof(body) > 0){
 								session.userData.downloadURL = downloadlink;
 								var ecard = createHeroCard(session);
-								var msg = new builder.Message(session).addAttachment(ecard);
+								var msg = new builder.Message(session)
+								.speak("Click below to download your <emphasis level=\"moderate\">Medi Assist E-Card</emphasis>")
+								.addAttachment(ecard);
 								session.send(msg);
 								session.userData.serviceName = "Download with Claim ID";
 								session.beginDialog('askforFeedback');
@@ -2384,7 +2532,9 @@ bot.dialog('downloadwMAID', [
 							if(sizeof(body) > 0){
 								session.userData.downloadURL = downloadlink;
 								var ecard = createHeroCard(session);
-								var msg = new builder.Message(session).addAttachment(ecard);
+								var msg = new builder.Message(session)
+								.speak("Click below to download your <emphasis level=\"moderate\">Medi Assist E-Card</emphasis>")
+								.addAttachment(ecard);
 								session.send(msg);
 								session.userData.serviceName = "Download with Medi Assist ID";
 								session.beginDialog('askforFeedback');
@@ -2461,7 +2611,9 @@ bot.dialog('downloadwEmpID', [
 							if(sizeof(body) > 0){
 								session.userData.downloadURL = downloadlink;
 								var ecard = createHeroCard(session);
-								var msg = new builder.Message(session).addAttachment(ecard);
+								var msg = new builder.Message(session)
+								.speak("Click below to download your <emphasis level=\"moderate\">Medi Assist E-Card</emphasis>")
+								.addAttachment(ecard);
 								session.send(msg);
 								session.userData.serviceName = "Download with Employee ID";
 								session.beginDialog('askforFeedback');
@@ -2534,7 +2686,9 @@ bot.dialog('downloadwPolNo', [
 							if(sizeof(body) > 0){
 								session.userData.downloadURL = downloadlink;
 								var ecard = createHeroCard(session);
-								var msg = new builder.Message(session).addAttachment(ecard);
+								var msg = new builder.Message(session)
+								.speak("Click below to download your <emphasis level=\"moderate\">Medi Assist E-Card</emphasis>")
+								.addAttachment(ecard);
 								session.send(msg);
 								session.userData.serviceName = "Download with Policy Number";
 								session.beginDialog('askforFeedback');
@@ -2592,7 +2746,9 @@ bot.dialog('searchNetwork',[
 // Dialog to ask for Confirmation - Download with Medi Assist ID
 bot.dialog('askforLocationConfirmation',[
 	function (session){
-		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",{listStyle: builder.ListStyle["button"]})
+		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",
+		{	speak: "Let's try again? yes or no?",
+			listStyle: builder.ListStyle["button"]})
 	},
 	function (session, results) {
 		if (results.response){
@@ -2617,7 +2773,7 @@ bot.dialog('askforLocation',  [
     function (session) {
 		
 		var options = {
-			prompt: "🏥 Where should I search for hospitals?",
+			prompt: "Where should I search for hospitals?",
 			useNativeControl: true,
 			reverseGeocode: true,
 					skipFavorites: true,
@@ -2725,7 +2881,7 @@ bot.dialog('askforLocation',  [
 							
 						}
 
-						session.send("Trying to find hospitals near you 🏥. Please wait ⏳");
+						session.send("Trying to find hospitals near you. Please wait...");
 						session.sendTyping();
 						var msg = new builder.Message(session);
 							msg.attachmentLayout(builder.AttachmentLayout.carousel)
@@ -3031,6 +3187,7 @@ bot.dialog('askforInsurer',[
 			}
 		};
 		session.send(new builder.Message(session)
+			.speak("Please choose insurer and speciality from options below.")
 			.addAttachment(card));
 
 		
@@ -3220,9 +3377,10 @@ function getRandomInt(min, max) {
 // Dialog to handle goodbye
 bot.dialog('sayGoodbye',[
 	function (session){
-		msg = ["See you later 👋, Keep rocking!","Stay healthy, always! Bye for now!","See you 👋!","Have a good day.","Later gator!","Talking to you makes my day. Come back soon!", "Ok, bye🙂!", "Till next time!"]
+//		msg = ["See you later 👋, Keep rocking!","Stay healthy, always! Bye for now!","See you 👋!","Have a good day.","Later gator!","Talking to you makes my day. Come back soon!", "Ok, bye🙂!", "Till next time!"]
 		x = getRandomInt(0,7);
-		session.endDialog(msg[x]);
+//		session.endDialog(msg[x]);
+		session.endDialog("goodbyeMsg");
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
@@ -3235,8 +3393,9 @@ bot.dialog('sayGoodbye',[
 // Dialog to handle Compliment
 bot.dialog('getCompliment',[
 	function (session){
-		msg = ["Welcome! It's nothing","👍","That's all right!","Don't mention it.","😊","😍", "That is very kind of you", "Thank you, I appreciate the compliment.", "Thank you very much. 🙏","All I can say is, Thanks!", "MediBuddy appreciates your gratitude! We wish you good health and smiles 🙂"]
-		x = getRandomInt(0,10);
+		msg = ["Welcome! It's nothing","👍","That's all right!","Don't mention it.","😍", "That is very kind of you", "Thank you, I appreciate the compliment.", "Thank you very much. 🙏","All I can say is, Thanks!", "MediBuddy appreciates your gratitude! We wish you good health and smiles 🙂"]
+		x = getRandomInt(0,9);
+//		session.endDialog("Bye!");
 		session.endDialog(msg[x]);
 	},
 	function(session, results) {
@@ -3244,7 +3403,7 @@ bot.dialog('getCompliment',[
 	}
 ])
 .triggerAction({
-	matches: [/thanks/i, /thank you/i, /awesome/i, /great/i, /brilliant/i, /i love you/i, /excellent/i, /fantastic/i, /amazing/i, /cute/i, /youre great/i, 'sayThanks']
+	matches: [/thanks/i, /thank you/i, /awesome/i, /great/i, /brilliant/i, /i love you/i, /excellent/i, /fantastic/i, /amazing/i, /cute/i, /you're great/i, 'sayThanks']
 });
 
 //-------------------------------------------------------------------------------------------------------------------------------------
@@ -3549,6 +3708,7 @@ bot.dialog('askforhealthcheckCity',[
 				 }
 				};
 				session.send(new builder.Message(session)
+					.speak("Please choose city and category from options below.")
 					.addAttachment(card));
 			
 		
@@ -3599,6 +3759,7 @@ function processSubmitAction(session, message){
 										]);
 		}	
 		session.send(new builder.Message(session)
+			.speak("Click below to view health check packages from hospitals in your city")
 			.addAttachment(healthcheckCard));
 		
 }
@@ -3744,6 +3905,7 @@ bot.dialog('askformedicineCity',[
 				 }
 				};
 				session.send(new builder.Message(session)
+					.speak("Please choose city and enter your pincode below.")
 					.addAttachment(card));
 			
 		
@@ -3777,6 +3939,7 @@ function processSubmitAction2(session, message){
 										builder.CardAction.openUrl(session, "https://www.medibuddy.in/medicines/467117a029f0e511aa80002219349965/"+session.userData.medicinePincode+"/?c="+session.userData.medicineCity, "Upload Prescription")
 										]);
 		session.send(new builder.Message(session)
+			.speak("I still need your prescription to process the order. Click below to upload your prescription.")
 			.addAttachment(medicineCard));
 		
 }
@@ -4042,6 +4205,7 @@ bot.dialog('askforconsultationCity',[
 				 }
 				};
 				session.send(new builder.Message(session)
+					.speak("Please choose city and speciality to continue.")
 					.addAttachment(card));
 			
 		
@@ -4071,6 +4235,7 @@ function processSubmitAction3(session, message){
 										builder.CardAction.openUrl(session, "https://www.medibuddy.in/consultation/ad131e35ffb9e51184af002219349965//"+session.userData.consultationSpeciality+"/?c="+session.userData.consultationCity, "View Consultations")
 										]);
 		session.send(new builder.Message(session)
+			.speak("I've curated a list of doctors in your city. Click below to know more")
 			.addAttachment(consultationCard));			
 		
 }
@@ -4220,6 +4385,7 @@ bot.dialog('askforhomehealthcareCity',[
 				 }
 				};
 				session.send(new builder.Message(session)
+					.speak("Please choose city and service to continue.")
 					.addAttachment(card));
 			
 		
@@ -4249,6 +4415,7 @@ function processSubmitAction4(session, message){
 										builder.CardAction.openUrl(session, "https://www.medibuddy.in/homehealthcare/ba678c34a85141299c0b43ac3b1ee8ca//"+session.userData.homehealthcareService+"/?c="+session.userData.homehealthcareCity, "View Services")
 										]);
 		session.send(new builder.Message(session)
+			.speak("Click below to view available home health care services in "+session.userData.homehealthcareCity+" for "+session.userData.homehealthcareService)
 			.addAttachment(homehealthcareCard));
 		
 }
@@ -4457,6 +4624,7 @@ bot.dialog('askfordentalCity',[
 				 }
 				};
 				session.send(new builder.Message(session)
+					.speak("Please choose city and speciality to continue.")
 					.addAttachment(card));
 			
 		
@@ -4486,6 +4654,7 @@ function processSubmitAction7(session, message){
 										builder.CardAction.openUrl(session, "https://www.medibuddy.in/dental/66d51e1e3d674dddbae81df593392f12//"+session.userData.dentalSpeciality+"/?c="+session.userData.dentalCity, "View Services")
 										]);
 		session.send(new builder.Message(session)
+			.speak("Click below to view available dental services in "+message["city"]+" for "+message["speciality"])
 			.addAttachment(dentalCard));
 		
 }
@@ -4642,6 +4811,7 @@ bot.dialog('askforTeleConsultationDetails',[
 				 }
 				};
 				session.send(new builder.Message(session)
+					.speak("Please select your preferred speciality to continue.")
 					.addAttachment(card));
 			
 		
@@ -4670,6 +4840,7 @@ function processSubmitAction5(session, message){
 										builder.CardAction.openUrl(session, "https://www.medibuddy.in/onlineservice/4f81d4702c8242009081cfde6301dd38//"+session.userData.teleconsultationService, "View Services")
 										]);
 		session.send(new builder.Message(session)
+			.speak("Click below to view available telephonic consultations for "+message["teleservice"])
 			.addAttachment(teleconsultCard));
 		
 }
@@ -4948,6 +5119,7 @@ bot.dialog('askforLabTestDetails',[
 				 }
 				};
 				session.send(new builder.Message(session)
+					.speak("Please choose city and type of test to continue.")
 					.addAttachment(card));
 			
 		
@@ -4977,6 +5149,7 @@ function processSubmitAction6(session, message){
 										builder.CardAction.openUrl(session, "https://www.medibuddy.in/labtest/f4a83a18cec74f1786b8fd2b9aff4c0c//"+session.userData.labtest+"/?c="+session.userData.labtestCity, "View Lab Tests")
 										]);
 		session.send(new builder.Message(session)
+			.speak("Click below to view "+message["labtest"]+" tests in "+message["city"])
 			.addAttachment(labtestCard));
 }
 
@@ -5058,6 +5231,7 @@ bot.dialog('hospitalization',[
 		menucard.push(hospitalizationCard);
 
 		var msg = new builder.Message(session)
+		.speak("Plan your hospitalization with MediBuddy at a trusted hospital with the benefit of preferred pricing.")
 //		.text("My abilities are still growing. In a nutshell, here's what I can do: ")
 		.attachmentLayout(builder.AttachmentLayout.carousel)
 		.attachments(menucard);
@@ -5094,6 +5268,7 @@ bot.dialog('secondOpinion',[
 		menucard.push(secondOpinionCard);
 
 		var msg = new builder.Message(session)
+		.speak("Access the expertise and clinical guidance of our world class physicians remotely from your home.")
 //		.text("My abilities are still growing. In a nutshell, here's what I can do: ")
 		.attachmentLayout(builder.AttachmentLayout.carousel)
 		.attachments(menucard);
@@ -5130,6 +5305,7 @@ bot.dialog('genomeStudy',[
 		menucard.push(genomeStudyCard);
 
 		var msg = new builder.Message(session)
+		.speak("Genome study involves DNA analysis to help predict, prevent and cure diseases.")
 //		.text("My abilities are still growing. In a nutshell, here's what I can do: ")
 		.attachmentLayout(builder.AttachmentLayout.carousel)
 		.attachments(menucard);
