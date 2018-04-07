@@ -2411,7 +2411,7 @@ bot.dialog('downloadwID', [
 						session.beginDialog('askforbenefName');
 					}
 					else{
-						session.say("⚠️ The claim number should only be numeric and eight digits long.");
+						session.say("⚠️ The claim number should only be `numeric` and `eight digits` long.","Warning: The claim number should only be numeric and eight digits long.");
 						session.beginDialog('askforDownloadwIDConfirmation');
 					}
 				},
