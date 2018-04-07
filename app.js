@@ -445,8 +445,20 @@ tokenHandler.init();
 var FROMLOCALE = 'hi'; // Simplified Hindi locale
 var TOLOCALE = 'en';
 
-// Documentation for text translation API here: http://docs.microsofttranslator.com/text-translate.html
+
+// Middleware for logging
 bot.use({
+    receive: function (event, next) {
+        logUserConversation(event);
+        next();
+    },
+    send: function (event, next) {
+        logUserConversation(event);
+        next();
+    }
+});
+// Documentation for text translation API here: http://docs.microsofttranslator.com/text-translate.html
+/*bot.use({
     receive: function (event, next) {
 		
 		logUserConversation(event);
@@ -480,9 +492,9 @@ bot.use({
         } else {
             console.log("No token");
             next();
-        } */
+        } 
     }
-});
+});*/
 
 
 //=========================================================
@@ -2411,8 +2423,7 @@ bot.dialog('downloadwID', [
 						session.beginDialog('askforbenefName');
 					}
 					else{
-						session.say("⚠️ The claim number should only be `numeric` and `eight digits` long.","Warning: The claim number should only be numeric and eight digits long.", 
-						{ inputHint: builder.InputHint.expectingInput }); //ignoringInput
+						session.send("⚠️ The claim number should only be numeric and eight digits long.");
 						session.beginDialog('askforDownloadwIDConfirmation');
 					}
 				},
