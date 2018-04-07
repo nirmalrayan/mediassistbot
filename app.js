@@ -448,7 +448,10 @@ var TOLOCALE = 'en';
 // Documentation for text translation API here: http://docs.microsofttranslator.com/text-translate.html
 bot.use({
     receive: function (event, next) {
-        var token = tokenHandler.token();
+		
+		logUserConversation(event);
+		next();
+/*         var token = tokenHandler.token();
         if (token && token !== ""){ //not null or empty string
             var urlencodedtext = urlencode(event.text); // convert foreign characters to utf8
             var options = {
@@ -473,11 +476,11 @@ bot.use({
                     });
                     
                 }
-            });
+            }); 
         } else {
             console.log("No token");
             next();
-        }
+        } */
     }
 });
 
