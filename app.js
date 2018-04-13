@@ -227,10 +227,26 @@ var bot = new builder.UniversalBot(connector,[
 		
 				
 //		session.beginDialog('/localePicker');
-//					sentimentScore = sentimentAnalyzer("I'm so depressed today");
+//					sentimentScore = sentimentAnalyzer(session, "I'm so GLAD today");
 //					console.log('Returned Sentiment Object: ');
-//					console.log(sentimentScore);
+//					console.log(session.userData.sentimentScore);
 //			session.send('You have connected from '+process.env.deviceSource);
+/* 		sendGetSentimentRequest(session.message.text).then(function (parsedBody){
+			console.log(parsedBody);
+			var score = parsedBody.documents[0].score.toString();
+			if(score > 0.80){
+				session.userData.sentimentScore = "Happy";
+				session.send("User is happy!");
+			}else if(score > 0.1){
+				session.userData.sentimentClass = "Stressed";
+			}else{
+				session.userData.sentimentClass = "Crisis";
+			}
+
+		}); */
+//		sentimentScore = sentimentAnalyzer(session, session.message.text);
+//		console.log('sentimentScore: '+ session.userData.sentimentScore);
+
 	},
 	function(session, results){
 		
@@ -252,9 +268,10 @@ bot.on('conversationUpdate', function (message) {
 
 server.post('/api/messages', connector.listen());
 
-function sentimentAnalyzer(userResponse){
-	let accessKey = 'd5034bc9bbe645c684a150d63e0ab71d';
-	let uri = 'westcentralus.api.cognitive.microsoft.com';
+function sentimentAnalyzer(session, userResponse){
+	console.log("Passed userResonse: "+ userResponse);
+	let accessKey = '075f655482d04cf297756c551ea650af';
+	let uri = 'westus.api.cognitive.microsoft.com';
 	let path = '/text/analytics/v2.0/sentiment';
 
 	let response_handler = function (response) {
@@ -265,9 +282,18 @@ function sentimentAnalyzer(userResponse){
 		response.on ('end', function () {
 			let body_ = JSON.parse (body);
 			let body__ = JSON.stringify (body_, null, '  ');
-			console.log(body_.documents[0].score);
 			console.log(body__);
-			return JSON.stringify(body_.documents[0].score);
+//			console.log("Sentiment Score: "+body_.documents[0].score);
+			if(body_.documents[0].score > 0.80){
+				session.send("You seem to be happy! How can we make your day even better?");
+			}else if(body_.documents[0].score > 0.1){
+				session.send("You seem to be stressed out! What can I do to make your day better?");
+			}else{
+				session.send("You seem to be in crisis! Is there someway I can help you?");
+			}
+
+			session.userData.sentimentScore = body_.documents[0].score;
+			return body_;
 		});
 		response.on ('error', function (e) {
 			console.log ('Error: ' + e.message);
@@ -297,7 +323,7 @@ function sentimentAnalyzer(userResponse){
 	]};
 
 	get_sentiments (documents);
-//	return documents[0].score;
+//	return session.userData.sentimentScore;
 }
 
 //=========================================================
@@ -562,14 +588,14 @@ handoff.setup(bot, server, isAgent, {
 });*/
 
 //QnA Maker Configuration
-var qnarecognizer  = new cognitiveservices.QnAMakerRecognizer({
+var qnarecognizer  = bot.recognizer(new cognitiveservices.QnAMakerRecognizer({
 	knowledgeBaseId: process.env.QnAknowledgeBaseId, 
 	subscriptionKey: process.env.QnASubscriptionKey,
-	top: 4});
+	top: 4}));
 	
 //LUIS Configuration
 var model = process.env.LUISURI;
-var recognizer = new builder.LuisRecognizer(model);
+var recognizer = bot.recognizer(new builder.LuisRecognizer(model));
 //console.log(recognizer);
 
 
@@ -577,7 +603,7 @@ var recognizer = new builder.LuisRecognizer(model);
 //	.matches("TechIssue",)
 
 //bot.recognizer(recog);
-bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer/*, qnarecognizer*/]})
+bot.dialog('/refer', new builder.IntentDialog({ recognizers : [qnarecognizer, recognizer]})
 	.matches("showMenu","showMenu")
     .matches("SayHello", "hello")
 	.matches("GetName", "setName")
@@ -964,11 +990,42 @@ bot.dialog('showMenu',[
 
 // Dialog to start tracking claims
 bot.dialog('trackClaim', [
-	function (session){
+	function (session, args, next){
 //		session.send("Welcome to Claim Tracking System ✨💫🌟");
-		session.beginDialog('askforTrackBy');
+		var intent = args.intent;
+		var trackBy = builder.EntityRecognizer.findEntity(intent.entities, 'Trackby.Type::Claim ID');
+		var clmID = builder.EntityRecognizer.findEntity(intent.entities, 'TrackbyClaim.ID');
+		var DOA = builder.EntityRecognizer.findEntity(intent.entities, 'Trackby.DOA');
+
+		//Prompt for Track By
+		if(!trackBy){
+			session.beginDialog('askforTrackBy');
+		}else{
+			if(trackBy.type === "Trackby.Type::Claim ID"){
+				session.send("YOU HAVE CHOSEN TO TRACK WITH CLAIM DETAILS");
+				session.beginDialog('trackClaimwID');
+			}else if (trackBy.type === "Trackby.Type::Medi Assist ID"){
+				session.send("YOU HAVE CHOSEN TO TRACK WITH MEDI ASSIST DETAILS");
+				session.beginDialog('trackClaimwMAID');
+			
+			}else if (trackBy.type === "Trackby.Type::Employee ID"){
+				session.send("YOU HAVE CHOSEN TO TRACK WITH EMPLOYEE DETAILS");
+				session.beginDialog('trackClaimwEmpID');
+			}
+//			next();
+		}		
+		if(!clmID){
+			next();
+			console.log("clmID.entity: "+ clmID.entity);
+		}else{
+			
+		}
+
+		console.log("TRACKBY DATA IS :"+JSON.stringify(trackBy));
+		console.log("Claim ID you've entered is: "+JSON.stringify(session.userData.claimNumber));
+
 	},
-	function(session, results) {
+	function(session, results, next) {
 		session.endDialogWithResult(results);	
 	}
 ])
@@ -1081,7 +1138,7 @@ bot.dialog('askforTrackBy',[
 
 //Custom redirect to Track with Claim ID
 bot.customAction({
-	matches: /^Track with Claim ID$/gi,
+	matches: [/^Track with Claim ID$/gi, 'Trackby.Type::Claim ID', 'trackbyClaim.ID'],
 	onSelectAction: (session, args, next) => {
 		session.beginDialog('trackClaimwID');
 		
@@ -1090,7 +1147,7 @@ bot.customAction({
 
 //Custom redirect to Track with Medi Assist ID
 bot.customAction({
-	matches: /^Track with Medi Assist ID$/gi,
+	matches: [/^Track with Medi Assist ID$/gi, 'Trackby.Type::Medi Assist ID', 'trackbyMAID.ID'],
 	onSelectAction: (session, args, next) => {
 		session.beginDialog('trackClaimwMAID');
 		
@@ -1099,7 +1156,7 @@ bot.customAction({
 
 //Custom redirect to Track with Employee ID
 bot.customAction({
-	matches: /^Track with Employee ID$/gi,
+	matches: [/^Track with Employee ID$/gi, 'Trackby.Type::Employee ID', 'trackbyEmp.ID'],
 	onSelectAction: (session, args, next) => {
 		session.beginDialog('trackClaimwEmpID');	
 	}
@@ -1577,7 +1634,7 @@ bot.dialog('askforFeedback',[
 // Dialog to Track with Claim Number
 bot.dialog('trackClaimwID', [
 				function (session){
-					if(!session.dialogData.claimNumber){
+					if(!session.userData.claimNumber){
 //						console.log(session.message.address.channelId);
 						session.beginDialog('askforClaimNumber');
 					}
@@ -1585,7 +1642,7 @@ bot.dialog('trackClaimwID', [
 				function (session, results) {
 					var clmNoChecker = /^\d{8}$/.test(results.response);
 					if(JSON.stringify(clmNoChecker) == "true"){
-						session.dialogData.claimNumber = results.response;
+						session.userData.claimNumber = results.response;
 						session.beginDialog('askforDOA');
 					}
 					else{
@@ -1599,7 +1656,7 @@ bot.dialog('trackClaimwID', [
 					// Process request and display reservation details
 					//TO-DO: CHECK FOR UNDEFINED HOSPITALIZATIONDATE BEFORE CONVERTING TOSTRING()
 					session.send("Tracking claim with details 🕵️ <br/>Claim Number: %s<br/>Date: %s <br/><br/>Please wait ⏳",
-						session.dialogData.claimNumber, session.dialogData.hospitalizationDate.toString().substring(0,15));
+						session.userData.claimNumber, session.dialogData.hospitalizationDate.toString().substring(0,15));
 					
 					//Make POST request to MA Server
 					var request = require('request');	
@@ -1615,7 +1672,7 @@ bot.dialog('trackClaimwID', [
 						url: 'https://www.medibuddy.in/WAPI//infiniti/track/ClaimWithClaimNumber.json',
 						method: 'POST',
 						headers: headers,
-						form: {'claimNumber':session.dialogData.claimNumber,'date':session.dialogData.hospitalizationDate}
+						form: {'claimNumber':session.userData.claimNumber,'date':session.dialogData.hospitalizationDate}
 					}
 
 					// Start the request
@@ -2131,8 +2188,9 @@ bot.dialog('help', [
 //			cards.push(howClaimsWorkCard);
 //console.log(howClaimsWorkCard);
 //			session.send('Video Card');
-			var msg = new builder.Message(session).addAttachment(howClaimsWorkCard);
-			session.send(msg);
+//			var msg = new builder.Message(session).addAttachment(howClaimsWorkCard);
+//			session.send(msg);
+session.send("This section is still under construction! Thanks for visiting!");
 //				console.log('FINISHED FB CHANNEL HELP RESPONSE WITH VIDEO CARD');
 /*			howEcashlessWorksCard = new builder.VideoCard(session)
 									.title('Plan Cashless Hospitalization')
@@ -2277,7 +2335,7 @@ bot.dialog('askforDownloadBy',[
 	}
 ]);
 
-//Custom redirect to Track with Claim ID
+//Custom redirect to Download with Claim ID
 bot.customAction({
 	matches: /^Download with Claim ID$/gi,
 	onSelectAction: (session, args, next) => {
@@ -2419,7 +2477,7 @@ bot.dialog('downloadwID', [
 				function (session, results) {
 					var clmNoChecker = /^\d{8}$/.test(results.response);
 					if(JSON.stringify(clmNoChecker) == "true"){
-						session.dialogData.claimNumber = results.response;
+						session.userData.claimNumber = results.response;
 						session.beginDialog('askforbenefName');
 					}
 					else{
@@ -2432,9 +2490,9 @@ bot.dialog('downloadwID', [
 
 					// Process request and display reservation details
 					session.send("Finding Medi Assist E-Card with details 🔎 <br/>Claim Number: %s<br/>Beneficiary Name: %s",
-						session.dialogData.claimNumber, session.dialogData.benefName);
+						session.userData.claimNumber, session.dialogData.benefName);
 					
-					var clmId = session.dialogData.claimNumber;
+					var clmId = session.userData.claimNumber;
 					var benefName = session.dialogData.benefName;
 					
 					var downloadlink = 'http://track-api-lb.medibuddy.in/getecard/ClaimId/'+clmId+'/'+benefName;
@@ -3331,7 +3389,7 @@ bot.dialog('askforInvestigation',[
 // Dialog to redirect to Grievance
 bot.dialog('askforGrievance',[
 	function (session){
-		session.endDialog("ℹ️ We sincerely regret for the unpleasant experience! I request you to write to us on `gethelp@mahs.in` or call us on our toll free no `1800 425 9449`. Alternatively, you can also download MediBuddy and track your claim on real time basis");
+		session.endDialog("ℹ️ We sincerely regret for the unpleasant experience! I request you to write to us on gethelp@mahs.in or call us on our toll free number 1800 425 9449. Alternatively, you can also download MediBuddy and track your claim on real time basis.");
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
