@@ -991,8 +991,9 @@ bot.dialog('showMenu',[
 // Dialog to start tracking claims
 bot.dialog('trackClaim', [
 	function (session, args, next){
+		session.beginDialog('askforTrackBy');
 //		session.send("Welcome to Claim Tracking System ✨💫🌟");
-		var intent = args.intent;
+/*		var intent = args.intent;
 		var trackBy = builder.EntityRecognizer.findEntity(intent.entities, 'Trackby.Type::Claim ID');
 		var clmID = builder.EntityRecognizer.findEntity(intent.entities, 'TrackbyClaim.ID');
 		var DOA = builder.EntityRecognizer.findEntity(intent.entities, 'Trackby.DOA');
@@ -1022,7 +1023,7 @@ bot.dialog('trackClaim', [
 		}
 
 		console.log("TRACKBY DATA IS :"+JSON.stringify(trackBy));
-		console.log("Claim ID you've entered is: "+JSON.stringify(session.userData.claimNumber));
+		console.log("Claim ID you've entered is: "+JSON.stringify(session.userData.claimNumber));*/
 
 	},
 	function(session, results, next) {
