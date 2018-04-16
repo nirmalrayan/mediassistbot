@@ -643,9 +643,9 @@ bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer,qnarec
 
 
 bot.dialog("hello", (session, args) => {
-		session.endDialog("Hello. You can type `\"show menu\"` or `\"#\"` at any time of the conversation to go back to the main menu.");
+		session.endDialog("Hello. I'm MediBuddy. I will be your healthcare assistant. You can type `\"show menu\"` or `\"#\"` at any time of the conversation to go back to the main menu.");
 }).triggerAction({
-    matches: 'SayHello'
+    matches: ['SayHello', '👍']
 });
 
 
@@ -3477,7 +3477,7 @@ bot.dialog('getCompliment',[
 	}
 ])
 .triggerAction({
-	matches: [/thanks/i, /👍/i, /thank you/i, /awesome/i, /great/i, /brilliant/i, /i love you/i, /excellent/i, /fantastic/i, /amazing/i, /cute/i, /you're great/i, 'sayThanks']
+	matches: [/thanks/i, /thank you/i, /awesome/i, /great/i, /brilliant/i, /i love you/i, /excellent/i, /fantastic/i, /amazing/i, /cute/i, /you're great/i, 'sayThanks']
 });
 
 //-------------------------------------------------------------------------------------------------------------------------------------
