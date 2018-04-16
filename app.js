@@ -601,9 +601,10 @@ var recognizer = bot.recognizer(new builder.LuisRecognizer(model));
 
 //	.matches("Abuse","askforAbuse")
 //	.matches("TechIssue",)
+ //  .matches("Logout", "logout")
 
 //bot.recognizer(recog);
-bot.dialog('/refer', new builder.IntentDialog({ recognizers : [qnarecognizer, recognizer]})
+bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer,qnarecognizer]})
 	.matches("showMenu","showMenu")
     .matches("SayHello", "hello")
 	.matches("GetName", "setName")
@@ -632,7 +633,6 @@ bot.dialog('/refer', new builder.IntentDialog({ recognizers : [qnarecognizer, re
         session.send(answerEntity.entity);
     }
 ])
- //  .matches("Logout", "logout")
     .onDefault((session, args) => {
 		var wasHelpful = 0;
 		session.userData.serviceName = "Not Trained";
@@ -3477,7 +3477,7 @@ bot.dialog('getCompliment',[
 	}
 ])
 .triggerAction({
-	matches: [/thanks/i, /thank you/i, /awesome/i, /great/i, /brilliant/i, /i love you/i, /excellent/i, /fantastic/i, /amazing/i, /cute/i, /you're great/i, 'sayThanks']
+	matches: [/thanks/i, /👍/i, /thank you/i, /awesome/i, /great/i, /brilliant/i, /i love you/i, /excellent/i, /fantastic/i, /amazing/i, /cute/i, /you're great/i, 'sayThanks']
 });
 
 //-------------------------------------------------------------------------------------------------------------------------------------
