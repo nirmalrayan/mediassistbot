@@ -610,7 +610,7 @@ bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer,qnarec
 	.matches("GetName", "setName")
 	.matches("CustomerCare", "askforCallCenter")
 	.matches("HR", "askforHR")
-	.matches("Grievance", "askforGrievance")
+//	.matches("Grievance", "askforGrievance")
 	.matches("GeneralQuery", "askforGeneralQuery")
 	.matches("Investigation","askforInvestigation")
 	.matches("track claim","trackClaim")
@@ -3388,6 +3388,7 @@ bot.dialog('askforInvestigation',[
 });
 
 // Dialog to redirect to Grievance
+/*
 bot.dialog('askforGrievance',[
 	function (session){
 		session.endDialog("ℹ️ We sincerely regret for the unpleasant experience! I request you to write to us on gethelp@mahs.in or call us on our toll free number 1800 425 9449. Alternatively, you can also download MediBuddy and track your claim on real time basis.");
@@ -3399,7 +3400,7 @@ bot.dialog('askforGrievance',[
 .triggerAction({
 	matches: [/grievance/i, /disappoint/i, /angry/i ,/disappointed/i, /dissatisfied/i, /unhappy/i, /horrible/i, /worst/i, /bad/i, /poor/i, /not settled/i, /not paid/i, /not received/i, /very poor/i, /very bad/i, /terrible/i, /not received any amount/i, /not intimated the hospital/i, /not working/i, /support is slow/i, /I did not get/i, /bad service/i, /I did not receive/i, /bad service/i, /bad tpa/i, /bad/i, /worst/i, /complaint/i, 'Grievance'],
 	
-});
+});*/
 
 // Dialog to redirect to Offshore
 bot.dialog('askforOffshore',[
@@ -3429,7 +3430,7 @@ bot.dialog('askforGeneralQuery',[
 	
 });
 
-
+/*
 // Dialog to handle abuse
 bot.dialog('askforAbuse',[
 	function (session){
@@ -3441,7 +3442,7 @@ bot.dialog('askforAbuse',[
 ])
 .triggerAction({
 	matches: ['Abuse']
-});
+});*/
 
 // Get random integer between min (inclusive) and max (inclusive)
 function getRandomInt(min, max) {
