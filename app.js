@@ -588,14 +588,16 @@ handoff.setup(bot, server, isAgent, {
 });*/
 
 //QnA Maker Configuration
-var qnarecognizer  = bot.recognizer(new cognitiveservices.QnAMakerRecognizer({
+var qnarecognizer  = new cognitiveservices.QnAMakerRecognizer({
 	knowledgeBaseId: process.env.QnAknowledgeBaseId, 
 	subscriptionKey: process.env.QnASubscriptionKey,
-	top: 4}));
-	
+	top: 4});
+
+console.log(JSON.stringify(qnarecognizer));
+
 //LUIS Configuration
 var model = process.env.LUISURI;
-var recognizer = bot.recognizer(new builder.LuisRecognizer(model));
+var recognizer = new builder.LuisRecognizer(model);
 //console.log(recognizer);
 
 
@@ -604,32 +606,10 @@ var recognizer = bot.recognizer(new builder.LuisRecognizer(model));
  //  .matches("Logout", "logout")
 
 //bot.recognizer(recog);
-bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer,qnarecognizer]})
-	.matches("showMenu","showMenu")
-    .matches("SayHello", "hello")
-	.matches("GetName", "setName")
-	.matches("CustomerCare", "askforCallCenter")
-	.matches("HR", "askforHR")
-//	.matches("Grievance", "askforGrievance")
-	.matches("GeneralQuery", "askforGeneralQuery")
-	.matches("Investigation","askforInvestigation")
-	.matches("track claim","trackClaim")
-	.matches("HomeHealthCare","homehealthcare")
-	.matches("healthCheck","healthCheck")
-	.matches("sayThanks","getCompliment")
-	.matches("searchNetwork","searchNetwork")
-	.matches("sayGoodbye","sayGoodbye")
-	.matches("Medicine","medicine")
-	.matches("TeleConsultation","teleconsultation")
-	.matches("Consultation","consultation")
-	.matches("downloadECard","downloadEcard")
-	.matches("Offshore","askforOffshore")
-	.matches("labTest","labtest")
-	.matches("NotTrained","idontknow")
+bot.dialog('/refer', new builder.IntentDialog({ recognizers : [qnarecognizer, recognizer]})
 	.matches("qna", [
     function (session, args, next) {
 		var answerEntity = builder.EntityRecognizer.findEntity(args.entities, 'answer');
-		console.log(JSON.stringify(answerEntity));
         session.send(answerEntity.entity);
     }
 ])
@@ -1679,7 +1659,9 @@ bot.dialog('trackClaimwID', [
 					// Start the request
 					response = request(options, function (error, response, body) {
 						if (!error && response.statusCode == 200) {	
+							console.log('BODY: '+JSON.parse(body));
 							data = JSON.parse(body);
+							console.log('DATA: '+data);
 							if(JSON.stringify(data.isSuccess) === "true"){
 								
 								var claimdata = data.claimDetails;
@@ -3448,7 +3430,7 @@ bot.dialog('askforAbuse',[
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-
+/*
 // Dialog to handle goodbye
 bot.dialog('sayGoodbye',[
 	function (session){
@@ -3463,7 +3445,7 @@ bot.dialog('sayGoodbye',[
 ])
 .triggerAction({
 	matches: [/bye/i, /see you/i, /cu/i ,/ciao/i, /ta ta/i, /cheerio/i, /cheers/i, /gtg/i, /got to go/i,/bai/i, /c u/i, /l8r/i, /exit/i, /quit/i, /take care/i, /cya/i, /shalom/i, /sayonara/i, /farewell/i, /so long/i, /peace out/i, /see you/i, /end conversation/i]
-});
+});*/
 
 // Dialog to handle Compliment
 bot.dialog('getCompliment',[
