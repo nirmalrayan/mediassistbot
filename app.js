@@ -607,9 +607,31 @@ var recognizer = new builder.LuisRecognizer(model);
 
 //bot.recognizer(recog);
 bot.dialog('/refer', new builder.IntentDialog({ recognizers : [qnarecognizer, recognizer]})
+	.matches("showMenu","showMenu")
+	.matches("SayHello", "hello")
+	.matches("GetName", "setName")
+	.matches("CustomerCare", "askforCallCenter")
+	.matches("HR", "askforHR")
+	.matches("Grievance", "askforGrievance")
+	.matches("GeneralQuery", "askforGeneralQuery")
+	.matches("Investigation","askforInvestigation")
+	.matches("track claim","trackClaim")
+	.matches("HomeHealthCare","homehealthcare")
+	.matches("healthCheck","healthCheck")
+	.matches("sayThanks","getCompliment")
+	.matches("searchNetwork","searchNetwork")
+	.matches("sayGoodbye","sayGoodbye")
+	.matches("Medicine","medicine")
+	.matches("TeleConsultation","teleconsultation")
+	.matches("Consultation","consultation")
+	.matches("downloadECard","downloadEcard")
+	.matches("Offshore","askforOffshore")
+	.matches("labTest","labtest")
+	.matches("NotTrained","idontknow")
 	.matches("qna", [
     function (session, args, next) {
 		var answerEntity = builder.EntityRecognizer.findEntity(args.entities, 'answer');
+		console.log(JSON.stringify(answerEntity));
         session.send(answerEntity.entity);
     }
 ])
