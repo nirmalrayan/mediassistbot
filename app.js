@@ -8,6 +8,7 @@ var https = require('https');
 var restify = require('restify');
 var builder = require('botbuilder');
 var azure = require('botbuilder-azure');
+var cognitiveservices = require('botbuilder-cognitiveservices');
 var handoff = require('botbuilder-handoff');
 
 //Speech Recognition
@@ -16,7 +17,6 @@ var needle = require('needle');
 var speechService = require('./speech-service.js');
 
 const {Wit, log} = require('node-wit');
-var cognitiveservices = require('botbuilder-cognitiveservices');
 require('env2')('.env'); // loads all entries into process.env
 
 //Azure SQL Server
@@ -590,10 +590,9 @@ handoff.setup(bot, server, isAgent, {
 //QnA Maker Configuration
 var qnarecognizer  = new cognitiveservices.QnAMakerRecognizer({
 	knowledgeBaseId: process.env.QnAknowledgeBaseId, 
-	subscriptionKey: process.env.QnASubscriptionKey,
+	authKey: process.env.QnAAuthKey,
 	top: 4});
 
-console.log(JSON.stringify(qnarecognizer));
 
 //LUIS Configuration
 var model = process.env.LUISURI;
@@ -606,7 +605,7 @@ var recognizer = new builder.LuisRecognizer(model);
  //  .matches("Logout", "logout")
 
 //bot.recognizer(recog);
-bot.dialog('/refer', new builder.IntentDialog({ recognizers : [qnarecognizer, recognizer]})
+bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer, qnarecognizer]})
 	.matches("showMenu","showMenu")
 	.matches("SayHello", "hello")
 	.matches("GetName", "setName")
