@@ -1575,9 +1575,9 @@ bot.dialog('askforFeedback',[
 	function (session){
 		builder.Prompts.confirm(session, "💡 Did you find this helpful? (yes/no)",{speak: "Did you find this helpful? yes or no?", listStyle: builder.ListStyle["button"]});
 	},
-	function (session, results) {
-		if (results.response){
-			var wasHelpful = 1;
+	function (session, results){
+		if(results.response){
+			var wasHelpful = 1;	
 			var connection = new Connection(config);
 			// Attempt to connect and execute queries if connection goes through
 			connection.on('connect', function(err) 
@@ -1595,13 +1595,22 @@ bot.dialog('askforFeedback',[
 			);
 		session.beginDialog('askforMore2');
 		session.endConversation();
+		}else{
+			var wasHelpful = 0;
+			builder.Prompts.confirm(session, "💡 Would you like to leave a feedback? (yes/no)",{speak: "Do you want to leave a feedback? yes or no?", listStyle: builder.ListStyle["button"]});
 		}
-		else {	
+	},
+	function (session, results) {
+		if (results.response){
 			if(session.message.address.channelId === 'facebook'){
 				session.beginDialog('askforFeedbackReasonFB');
 			}else{
 				session.beginDialog('askforFeedbackReason');
 			}
+		}
+		else {	
+			session.beginDialog('askforMore');
+			session.endConversation();
 		}
 		
 	}/*,
