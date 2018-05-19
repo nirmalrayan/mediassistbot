@@ -1636,10 +1636,8 @@ bot.dialog('askforFeedback',[
 // Dialog to Track with Claim Number
 bot.dialog('trackClaimwID', [
 				function (session){
-					if(!session.userData.claimNumber){
-//						console.log(session.message.address.channelId);
 						session.beginDialog('askforClaimNumber');
-					}
+
 				},	
 				function (session, results) {
 					var clmNoChecker = /^\d{8}$/.test(results.response);
