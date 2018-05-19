@@ -47,6 +47,7 @@
     "object-sizeof": "^1.2.0",
     "passport": "^0.4.0",
     "passport-facebook": "^2.1.1",
+    "pretty-print": "^1.1.0",
     "request": "^2.83.0",
     "restify": "^5.2.1",
     "restify-clients": "^1.5.2",

@@ -165,14 +165,23 @@
     <script>
       
       window.botchatDebug = 'true';
+      var speechOptions = {
+      speechRecognizer: new CognitiveServices.SpeechRecognizer( { subscriptionKey: '50a0cdc9654c4c71b47a0cf5c2c2e2be' } ),
 
-      const speechOptions = {
+      speechSynthesizer: new CognitiveServices.SpeechSynthesizer(
+          {
+              subscriptionKey: '50a0cdc9654c4c71b47a0cf5c2c2e2be',
+              gender: CognitiveServices.SynthesisGender.Female,
+              voiceName: 'Microsoft Server Speech Text to Speech Voice (en-US, BenjaminRUS)'
+          })
+     }
+ /*     const speechOptions = {
         speechRecognizer: new BotChat.Speech.BrowserSpeechRecognizer(),
         speechSynthesizer: new BotChat.Speech.BrowserSpeechSynthesizer()
-      };
+      };*/
 
       BotChat.App({
-        directLine: { secret: '0qGcHQmHvPw.cwA.a28.CzPF7I-ipezHeJXAvwY2K8iMToP9OMn7vI9YdLD49aY' },
+        directLine: { secret: '4CVOO_rtieM.cwA.qSE.voNdxldVCAc--yo0xaUX-_GM8pC98gv0aJW0NMz1bZU' },
         user: { id: '31db772c-9761-4b25-b568-f1e140b26b4a' },
         bot: { id: 'MediBuddyWebAppBot' },
         speechOptions: speechOptions,
