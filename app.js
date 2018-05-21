@@ -1,5 +1,5 @@
 //Author: Nirmal Rayan
-//Version: 1.0
+//Version: 1.1
 //Application: MediBuddy (Microsoft Bot Framework)
 
 // Add your requirements
@@ -40,13 +40,12 @@ var config =
 var connection = new Connection(config);
 
 function storeFeedback(userid, servicename, helpful, feedback, timestamp, source)
-   {// console.log('Inserting feedback into Table..');
-   	//	console.log("Feedback value" + feedback);
+   {
 	   var requestString = "INSERT INTO ["+process.env.AzureSQLDatabase+"].[dbo].[Feedback] (UserID, ServiceName, Helpful, Feedback, FeedbackDate, FeedbackSource) values ("+userid+","+servicename+","+helpful+","+feedback+","+timestamp+","+source+")";
 	   // Read all rows from table
-//	   console.log(requestString);
-	var Request = require('tedious').Request;
-     request = new Request(
+
+		var Request = require('tedious').Request;
+    	request = new Request(
           requestString,
              function(err, rowCount, rows) 
                 {
@@ -54,26 +53,16 @@ function storeFeedback(userid, servicename, helpful, feedback, timestamp, source
                 }
             );
 
-/*     request.on('row', function(columns) {
-        columns.forEach(function(column) {
-            console.log("%s\t%s", column.metadata.colName, column.value);
-         });
-             });*/
-	 connection.execSql(request);
+	 	connection.execSql(request);
 	 return;
    }
 
 
 function storeFB(userid, servicename, helpful, feedback, timestamp, source, userName, userEmail, userPhone, convSource)
-   { //console.log('Inserting feedback into Table..');
-//	   console.log("Returned userName, useremail and userphone number are: ");
-//	   console.log(userName);
-//	   console.log(userEmail);
-//	   console.log(userPhone);
-//   		console.log("Feedback value" + feedback);
-	   var requestString = "INSERT INTO ["+process.env.AzureSQLDatabase+"].[dbo].[Feedback] (UserID, ServiceName, Helpful, Feedback, FeedbackDate, FeedbackSource, UserName, UserEmail, UserPhone, ConversationSource) values ("+userid+","+servicename+","+helpful+","+feedback+","+timestamp+","+source+","+userName+","+userEmail+","+userPhone+","+convSource  +")";
-	   // Read all rows from table
-//	   console.log(requestString);
+   { 
+	
+	var requestString = "INSERT INTO ["+process.env.AzureSQLDatabase+"].[dbo].[Feedback] (UserID, ServiceName, Helpful, Feedback, FeedbackDate, FeedbackSource, UserName, UserEmail, UserPhone, ConversationSource) values ("+userid+","+servicename+","+helpful+","+feedback+","+timestamp+","+source+","+userName+","+userEmail+","+userPhone+","+convSource  +")";
+	// Read all rows from table
 		
 	var Request = require('tedious').Request;
      request = new Request(
@@ -84,21 +73,9 @@ function storeFB(userid, servicename, helpful, feedback, timestamp, source, user
                 }
             );
 
-/*     request.on('row', function(columns) {
-        columns.forEach(function(column) {
-            console.log("%s\t%s", column.metadata.colName, column.value);
-         });
-             });*/
 	 connection.execSql(request);
 	 return;
    }
-//const botauth = require("botauth");
-
-//const passport = require("passport");
-//const FacebookStrategy = require("passport-facebook").Strategy;
-
-//encryption key for saved state
-//const BOTAUTH_SECRET = "TESTBOT";  
 
 var sqlConfig = {
     userName: process.env.AzureSQLUserName,
@@ -125,30 +102,12 @@ server.use(restify.plugins.queryParser({ mapParams: true }));
 var inMemoryStorage = new builder.MemoryBotStorage(); 
 
 server.pre(restify.pre.sanitizePath()); // Add this line
-/*
-setInterval(server.use(function(req, res, next) {
-	if(Object.keys(req.query).length !== 0)
-	{
-		global.source = req.params.Source;
-		global.authToken = req.params.authToken;
-		process.env.deviceSource = req.params.Source;
-		console.log(req.query);
-		console.log("Source:" + global.source);
-		console.log("authToken:" + global.authToken);
-	}	
-	return next();
-}),5000); */
-//		console.log("Source outside:" + process.env.deviceSource);
-//		console.log("authToken outside:" + global.authToken);
-
 
 //Direct to index.html web page
  server.get('/', restify.plugins.serveStatic({
  directory: __dirname,
  default: '/index.html'	
 }));
-
-var audioAttachment = 0;
 
 // Create chat bot
 var connector = new builder.ChatConnector
@@ -207,28 +166,6 @@ var bot = new builder.UniversalBot(connector,[
 			session.send(new builder.Message(session)
 				.speak("Greetings! I'm MediBuddy. I will be your healthcare assistant. Type Show Menu or # at any time to see the menu.")
 				.addAttachment(welcomeCard));
-		
-				
-//		session.beginDialog('/localePicker');
-//					sentimentScore = sentimentAnalyzer(session, "I'm so GLAD today");
-//					console.log('Returned Sentiment Object: ');
-//					console.log(session.userData.sentimentScore);
-//			session.send('You have connected from '+process.env.deviceSource);
-/* 		sendGetSentimentRequest(session.message.text).then(function (parsedBody){
-			console.log(parsedBody);
-			var score = parsedBody.documents[0].score.toString();
-			if(score > 0.80){
-				session.userData.sentimentScore = "Happy";
-				session.send("User is happy!");
-			}else if(score > 0.1){
-				session.userData.sentimentClass = "Stressed";
-			}else{
-				session.userData.sentimentClass = "Crisis";
-			}
-
-		}); */
-//		sentimentScore = sentimentAnalyzer(session, session.message.text);
-//		console.log('sentimentScore: '+ session.userData.sentimentScore);
 
 session.beginDialog("/refer");
 	}
@@ -327,37 +264,11 @@ var config2 =
 var post_connection = new Connection(config2);
 
 const logUserConversation = (event) => {
-//	console.log('Event data: '+ JSON.stringify(event));
 	if(event.text == ''){
 		event.text = "No Input";
 	}
 	console.log('message: ' + event.text + ', user: ' + event.user.name);
-/*	
-	var loggerString = "INSERT INTO ["+process.env.AzureSQLDatabase+"].[dbo].[ChatLogger] (UserId, ConversationId, ChatMessage, UserName, LogTime) values ("+JSON.stringify(event.user.id).replace(/"/g, "'")+","+JSON.stringify(event.address.conversation.id).replace(/"/g, "'")+","+JSON.stringify(event.text).replace(/"/g, "'")+","+JSON.stringify(event.user.name).replace(/"/g, "'")+","+JSON.stringify(event.timestamp).replace(/"/g, "'")+")";
-//	var loggerString = "INSERT INTO ["+process.env.AzureSQLDatabase+"].[dbo].[ChatLogger] (UserId, ConversationId, ChatMessage, UserName, logData, LogTime) values ("+JSON.stringify(event.user.id)+","+JSON.stringify(event.address.conversation.id)+","+JSON.stringify(event.text)+","+JSON.stringify(event.address.user.name)+","+"\""+JSON.stringify(event).replace(/"/g, "'")+"\""+","+JSON.stringify(event.timestamp)+")";
-	console.log("Logger String: "+ loggerString);
-	// Read all rows from table
-	//	   console.log(requestString);
-	request = new Request(
-		loggerString,
-			function(err, rowCount, rows) 
-				{
-					if(err){
-						console.log(err);
-					}else{
-						console.log(rowCount + ' row(s) inserted successfully!');
-					}
-				}
-	);*/
 
-	/*     request.on('row', function(columns) {
-		columns.forEach(function(column) {
-			console.log("%s\t%s", column.metadata.colName, column.value);
-		});
-			});*/
-//	connection.execSql(request);
-//	connection.close();
-//	return;
 };
 
 // Localization Support
@@ -397,61 +308,11 @@ bot.dialog('/localePicker', [
         });
     }
 ]);
-/*
-// Middleware for logging
-bot.use({
-    receive: function (event, next) {
-//		next();
-		if (event.text && !event.textLocale) {
-			var options = {
-				method: 'POST',
-				url: 'https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/languages?numberOfLanguagesToDetect=1',
-				body: { documents: [{ id: 'message', text: event.text }]},
-				json: true,
-				headers: {
-					'Ocp-Apim-Subscription-Key': 'dc57c9b10c794db483138af459f36a66'
-				}
-			};
-			request(options, function (error, response, body) {
-				if (!error && body) {
-					if (body.documents && body.documents.length > 0) {
-						var languages = body.documents[0].detectedLanguages;
-						if (languages && languages.length > 0) {
-							event.textLocale = languages[0].iso6391Name;
-						}
-					}
-				}
-				logUserConversation(event);
-				next();
-			});
-		} else {
-			logUserConversation(event);
-			next();
-		}
-
-    },
-    send: function (event, next) {
-        logUserConversation(event);
-        next();
-    }
-});
-*/
-
 
 //=========================================================
 // Bot Translation Middleware
 //=========================================================
 
-var tokenHandler = require('./tokenHandler');
-// Start generating tokens needed to use the translator API
-tokenHandler.init();
-
-// Can hardcode if you know that the language coming in will be hindi/english for sure
-// Otherwise can use the code for locale detection provided here: https://docs.botframework.com/en-us/node/builder/chat/localization/#navtitle
-var FROMLOCALE = 'hi'; // Simplified Hindi locale
-var TOLOCALE = 'en';
-
-
 // Middleware for logging
 bot.use({
     receive: function (event, next) {
@@ -463,109 +324,6 @@ bot.use({
         next();
     }
 });
-// Documentation for text translation API here: http://docs.microsofttranslator.com/text-translate.html
-/*bot.use({
-    receive: function (event, next) {
-		
-		logUserConversation(event);
-		next();
-/*         var token = tokenHandler.token();
-        if (token && token !== ""){ //not null or empty string
-            var urlencodedtext = urlencode(event.text); // convert foreign characters to utf8
-            var options = {
-                method: 'GET',
-                url: 'http://api.microsofttranslator.com/v2/Http.svc/Translate'+'?text=' + urlencodedtext + '&from=' + FROMLOCALE +'&to=' + TOLOCALE,
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                }
-            };
-            request(options, function (error, response, body){
-                //Check for error
-                if(error){
-                    return console.log('Error:', error);
-                } else if(response.statusCode !== 200){
-                    return console.log('Invalid Status Code Returned:', response.statusCode);
-                } else {
-                    // Returns in xml format, no json option :(
-                    parseString(body, function (err, result) {
-                        console.log(result.string._);
-                        event.text = result.string._;
-                        next();
-                    });
-                    
-                }
-            }); 
-        } else {
-            console.log("No token");
-            next();
-        } 
-    }
-});*/
-
-
-//=========================================================
-// Utilities
-//=========================================================
-function hasAudioAttachment(session) {
-    return session.message.attachments.length > 0 &&
-        (session.message.attachments[0].contentType === 'audio/wav' ||
-            session.message.attachments[0].contentType === 'application/octet-stream');
-}
-
-function getAudioStreamFromMessage(message) {
-    var headers = {};
-    var attachment = message.attachments[0];
-    if (checkRequiresToken(message)) {
-        // The Skype attachment URLs are secured by JwtToken,
-        // you should set the JwtToken of your bot as the authorization header for the GET request your bot initiates to fetch the image.
-        // https://github.com/Microsoft/BotBuilder/issues/662
-        connector.getAccessToken(function (error, token) {
-            var tok = token;
-            headers['Authorization'] = 'Bearer ' + token;
-            headers['Content-Type'] = 'application/octet-stream';
-
-            return needle.get(attachment.contentUrl, { headers: headers });
-        });
-    }
-
-    headers['Content-Type'] = attachment.contentType;
-    return needle.get(attachment.contentUrl, { headers: headers });
-}
-
-function checkRequiresToken(message) {
-    return message.source === 'skype' || message.source === 'msteams';
-}
-
-function processText(text) {
-    var result = 'You said: ' + text + '.';
-
-    if (text && text.length > 0) {
-        var wordCount = text.split(' ').filter(function (x) { return x; }).length;
-        result += '\n\nWord Count: ' + wordCount;
-
-        var characterCount = text.replace(/ /g, '').length;
-        result += '\n\nCharacter Count: ' + characterCount;
-
-        var spaceCount = text.split(' ').length - 1;
-        result += '\n\nSpace Count: ' + spaceCount;
-
-        var m = text.match(/[aeiou]/gi);
-        var vowelCount = m === null ? 0 : m.length;
-        result += '\n\nVowel Count: ' + vowelCount;
-    }
-
-    return result;
-}
-
-/*
-handoff.setup(bot, server, isAgent, {
-    mongodbProvider: process.env.MONGODB_PROVIDER,
-    directlineSecret: process.env.MICROSOFT_DIRECTLINE_SECRET,
-    textAnalyticsKey: process.env.CG_SENTIMENT_KEY,
-    appInsightsInstrumentationKey: process.env.APPINSIGHTS_INSTRUMENTATIONKEY,
-    retainData: process.env.RETAIN_DATA,
-    customerStartHandoffCommand: process.env.CUSTOMER_START_HANDOFF_COMMAND
-});*/
 
 //QnA Maker Configuration
 var qnarecognizer  = new cognitiveservices.QnAMakerRecognizer({
@@ -575,18 +333,13 @@ var qnarecognizer  = new cognitiveservices.QnAMakerRecognizer({
 	endpointHostName: process.env.QnAEndpointHostName
 });
 
-
 //LUIS Configuration
 var model = process.env.LUISURI;
 var recognizer = new builder.LuisRecognizer(model);
-//console.log(recognizer);
-
 
 //	.matches("Abuse","askforAbuse")
 //	.matches("TechIssue",)
  //  .matches("Logout", "logout")
-
-//bot.recognizer(recog);
 bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer, qnarecognizer]})
 	.matches("showMenu","showMenu")
 	.matches("SayHello", "hello")
@@ -612,7 +365,6 @@ bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer, qnare
 	.matches("qna", [
     function (session, args, next) {
 		var answerEntity = builder.EntityRecognizer.findEntity(args.entities, 'answer');
-		console.log(JSON.stringify(answerEntity));
         session.send(answerEntity.entity);
     }
 ])
@@ -632,101 +384,11 @@ bot.dialog("hello", (session, args) => {
 });
 
 
-// Create endpoint for agent / call center
-//server.use('/webchat', restify.static('public'));
-
-// Replace this functions with custom login/verification for agents
-//const isAgent = (session) => session.message.user.name.startsWith("Agent");
-/*
-bot.dialog('/connectToHuman', (session)=>{
-    session.send("Hold on, buddy! Connecting you to the next available agent!");
-    handoff.triggerHandoff(session);
-}).triggerAction({
-    matches:  /^agent/i,
-});*/
-
 bot.dialog("idontknow", (session, args) => {
 		session.endDialog("I'm sorry. I'm not yet trained to respond to this query but I'm getting smarter everyday!");
 }).triggerAction({
     matches: 'NotTrained'
 });
-/*
-// Initialize with the strategies we want to use
-var ba = new botauth.BotAuthenticator(server, bot, { baseUrl : "https://medibot.azurewebsites.net", secret : BOTAUTH_SECRET })
-    .provider("facebook", (options) => { 
-        return new FacebookStrategy({
-            clientID : "237966616730835",
-            clientSecret : "fbbb50fedbbf667de389668d9abb1a5b",
-            callbackURL : options.callbackURL
-        }, (accessToken, refreshToken, profile, done) => {
-            profile = profile || {};
-            profile.accessToken = accessToken;
-            profile.refreshToken = refreshToken;
-            
-            return done(null, profile);
-        });
-	});
-
-*/
-/*
-bot.dialog("profile", [].concat( 
-    ba.authenticate("facebook"),
-    function(session, results) {
-        //get the facebook profile
-		var user = ba.profile(session, "facebook");
-		var restifyclnt = require('restify-clients');
-		console.log('Facebook profile response: '+user);
-        //var user = results.response;
-
-        //call facebook and get something using user.accessToken 
-        var client = restifyclnt.createJsonClient({
-            url: 'https://graph.facebook.com',
-            accept : 'application/json',
-            headers : {
-                "Authorization" : `OAuth ${ user.accessToken }`
-            }
-        });
-
-        client.get(`/v2.8/me/picture?redirect=0`, (err, req, res, obj) => {
-            if(!err) {
-                console.log(obj);
-                var msg = new builder.Message()
-                    .attachments([
-						new builder.HeroCard(session)
-							.title('Facebook Authentication - Successful')
-							.subtitle('Type `\"logout\"` at anytime to sign out of facebook.')
-                            .text("You have logged in as "+user.displayName)
-                            .images([
-                                new builder.CardImage(session).url(obj.data.url)
-                                ]
-                            )
-                        ]
-					);
-				session.userData.masterName = user.displayName;
-				session.userData.fbLogin = "true";
-                session.endDialog(msg);
-            } else {
-                console.log(err);
-                session.endDialog("error getting profile");
-            }
-        });
-    }
-));
-
-bot.dialog("logout", [
-    (session, args, next) => {
-        builder.Prompts.confirm(session, "are you sure you want to logout")      
-    }, (session, args) => {
-        if(args.response) {
-            ba.logout(session, "facebook");
-            session.endDialog("you've been logged out.");
-        } else {
-            session.endDialog("you're still logged in");
-        }
-    }
-]); 
-
-*/
 	
 // Dialog to ask for Master Name
 bot.dialog('setName',[
@@ -751,7 +413,6 @@ bot.dialog('setName',[
 ]).triggerAction({
     matches: 'GetName'
 });;
-
 	
 // Dialog to show main menu
 bot.dialog('showMenu',[
@@ -1039,22 +700,6 @@ bot.dialog('askforMore',[
 			);
 		session.send(msg);	
 		}, 5000);		
-		/*
-		builder.Prompts.choice(session, "How else can I help you?", mainMenu, builder.ListStyle.button);		
-	},
-	function (session, results) {
-		if(results.response.entity == 'Track Claim'){
-			session.beginDialog('trackClaim');
-		}
-		else if(results.response.entity == 'Download E-Card'){
-			session.beginDialog('downloadEcard');
-		}
-		else if(results.response.entity == 'Search Network Hospitals'){
-			session.beginDialog('searchNetwork');
-		}
-	},
-	function(session, results) {
-		session.endDialogWithResult(results);	*/
 	}
 ]);
 
@@ -1078,24 +723,8 @@ bot.dialog('askforMore2',[
 					])
 			);
 		session.send(msg);	
-///			session.beginDialog('showMenu');
 		}, 5000);		
-		/*
-		builder.Prompts.choice(session, "How else can I help you?", mainMenu, builder.ListStyle.button);		
-	},
-	function (session, results) {
-		if(results.response.entity == 'Track Claim'){
-			session.beginDialog('trackClaim');
-		}
-		else if(results.response.entity == 'Download E-Card'){
-			session.beginDialog('downloadEcard');
-		}
-		else if(results.response.entity == 'Search Network Hospitals'){
-			session.beginDialog('searchNetwork');
-		}
-	},
-	function(session, results) {
-		session.endDialogWithResult(results);	*/
+
 	}
 ]);
 
@@ -1174,8 +803,6 @@ bot.dialog('askforFeedbackConfirmation',[
 	},
 	function (session, results) {
 		if (results.response){
-//			session.endDialog();
-//			session.beginDialog('askforFeedbackReason');
 			session.replaceDialog('askforFeedbackReason', {reprompt: true});
 			return;
 		}
@@ -1185,7 +812,6 @@ bot.dialog('askforFeedbackConfirmation',[
 		}
 	}
 ]);
-
 
 // Dialog to ask for Claim Number
 bot.dialog('askforFeedbackReason',[
@@ -1197,13 +823,9 @@ bot.dialog('askforFeedbackReason',[
 			if(session.userData.resetFeedback === 1){
 				session.userData.resetFeedback = 0;
 				session.beginDialog('askforFeedbackConfirmation');
-//				session.endConversation();
 				return;
 			}else{
 			session.endDialog();
-//			session.beginDialog('askforMore');
-//				session.userData.serviceName = "Display health check";
-//				session.beginDialog('askforFeedback');
 				session.endConversation();
 			return;
 			}
@@ -1368,8 +990,6 @@ bot.dialog('askforFeedbackReason',[
 			.speak("Your feedback is valuable to us! Please share your thoughts about me or your experience in general and I'll forward them to my masters.")
 			.addAttachment(card));
 
-
-	//	builder.Prompts.text(session, "Please share your thoughts about me or your experience in general and I'll forward them to my masters");		
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
@@ -1378,7 +998,6 @@ bot.dialog('askforFeedbackReason',[
 
 function processSubmitAction9(session, message){
 		var defaultErrorMessage = '**Please fill all the parameters:** \r\r\r\r';
-//		 if (validateFeedback(message)) {
 		session.userData.resetFeedback = 0;
 		var PhoneRegex = new RegExp(/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/);
 		var EmailRegex = new RegExp(/[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/);
@@ -1415,7 +1034,6 @@ function processSubmitAction9(session, message){
 			session.userData.conversationSource = "Generic";
 		}
 		session.userData.serviceName = message["UserService"];
-//		console.log('Modified Service Trigger Area: '+session.userData.serviceName);
 		session.userData.FeedbackResponse = message["UserComment"];
 
 		if(session.userData.resetFeedback === 1){
@@ -1424,7 +1042,6 @@ function processSubmitAction9(session, message){
 		}else{
 			
 		
-//		session.userData.FeedbackResponse = results.response;
 		var wasHelpful = 0;
 		var connection = new Connection(config);
 		// Attempt to connect and execute queries if connection goes through
@@ -1453,14 +1070,6 @@ function processSubmitAction9(session, message){
 			// proceed to compliment
 			session.beginDialog('askforMore2');
 			session.endDialog();
- /*       } else {
-			session.send(defaultErrorMessage);
-			session.beginDialog('askforFeedbackConfirmation');
-//			session.endConversation();
-//			session.beginDialog('askforFeedbackReason2');
-//			session.endDialog();
-		}*/
-//		session.beginDialog('askforMore2');
 		
 }
 
@@ -1480,7 +1089,6 @@ function validateFeedback(feedback) {
     return hasName && validEmail && validPhone && hasComments;
 
 }
-
 
 // Dialog to ask for Claim Number
 bot.dialog('askforFeedbackReasonFB',[
@@ -1548,9 +1156,6 @@ bot.dialog('askforFeedbackReasonFB',[
 		session.endDialogWithResult(results);
 	}
 ]);
-
-
-
 
 // Dialog to ask for Feedback
 bot.dialog('askforFeedback',[
@@ -1681,40 +1286,21 @@ bot.dialog('trackClaimwID', [
 								//Claim Details
 								session.userData.trackClaimId = JSON.stringify(claimdata[0].claimDetails.claimId);
 								session.userData.trackClaimType = claimdata[0].claimDetails.claimType;
-//								session.userData.trackClaimReceivedDate = claimdata[0].claimDetails.claimReceivedDate;
 								session.userData.trackClmAmount = JSON.stringify(claimdata[0].claimDetails.clmAmount);
 								session.userData.trackClmApprovedAmt = JSON.stringify(claimdata[0].claimDetails.clmApprovedAmt);
 								session.userData.trackclmPreAuthAmt = JSON.stringify(claimdata[0].claimDetails.clmPreAuthAmt);
 								session.userData.trackClaimStatus = claimdata[0].claimDetails.claimStatus;
 								session.userData.trackDoa = claimdata[0].claimDetails.doa;
 								session.userData.trackDod = claimdata[0].claimDetails.dod;
-//								session.userData.trackClaimApprovedDate = claimdata[0].claimDetails.claimApprovedDate;
-//								if(claimdata[0].claimDetails.claimDeniedDate === "01-Jan-0001" ){
-//									session.userData.trackClaimDeniedDate = "-";
-//								}else{
-//									session.userData.trackClaimDeniedDate = claimdata[0].claimDetails.claimDeniedDate;
-//								}
 								session.userData.trackHospitalName = claimdata[0].claimDetails.hospitalName;
 								session.userData.trackIsClmNMI = JSON.stringify(claimdata[0].claimDetails.isClmNMI);
 								session.userData.trackIsClmDenied = JSON.stringify(claimdata[0].claimDetails.isClmDenied);
-//								session.userData.trackDenialReasons = claimdata[0].claimDetails.denialReasons;
 								
 								//Policy Details
 								session.userData.trackPolicyNo = claimdata[0].beneficiaryDetails.policyNo;
 								session.userData.trackBenefMAID = JSON.stringify(claimdata[0].beneficiaryDetails.benefMAId);
 								session.userData.trackBenefName = claimdata[0].beneficiaryDetails.benefName;
-								session.userData.trackBenefRelation = claimdata[0].beneficiaryDetails.benefRelation;
-								
-								//Discharge Summary
-//								session.userData.trackNonPayableAmount = JSON.stringify(claimdata[0].dischargeSummary.nonPayableAmount);
-//								session.userData.trackNonPayReason =claimdata[0].dischargeSummary.nonPayReason;
-/*								session.userData.trackAmountPaidByPatient = JSON.stringify(claimdata[0].dischargeSummary.amountPaidByPatient);
-								session.userData.trackAmountPaidByCorporate = JSON.stringify(claimdata[0].dischargeSummary.amountPaidByCorporate);
-								session.userData.trackPolicyExcessAmount = JSON.stringify(claimdata[0].dischargeSummary.policyExcessAmount);
-								session.userData.trackHospitalDiscount = JSON.stringify(claimdata[0].dischargeSummary.hospitalDiscount);
-								session.userData.trackAdvancePaidByPatient = JSON.stringify(claimdata[0].dischargeSummary.advancePaidByPatient);
-								session.userData.trackDeductionReason = claimdata[0].dischargeSummary.deductionReason;
-*/								
+								session.userData.trackBenefRelation = claimdata[0].beneficiaryDetails.benefRelation;							
 								
 								var card = createReceiptCard(session);
 								var msg = new builder.Message(session)
@@ -1814,7 +1400,6 @@ bot.dialog('trackClaimwMAID', [
 							data = JSON.parse(body);
 							
 							if(JSON.stringify(data.isSuccess) === "true"){
-//						    	console.log(JSON.stringify(data.isSuccess));
 
 								var claimdata = data.claimDetails;
 							
@@ -1847,17 +1432,6 @@ bot.dialog('trackClaimwMAID', [
 								session.userData.trackBenefMAID = JSON.stringify(claimdata[0].beneficiaryDetails.benefMAId);
 								session.userData.trackBenefName = claimdata[0].beneficiaryDetails.benefName;
 								session.userData.trackBenefRelation = claimdata[0].beneficiaryDetails.benefRelation;
-								
-								//Discharge Summary
-/*								session.userData.trackNonPayableAmount = JSON.stringify(claimdata[0].dischargeSummary.nonPayableAmount);
-								session.userData.trackNonPayReason =claimdata[0].dischargeSummary.nonPayReason;
-								session.userData.trackAmountPaidByPatient = JSON.stringify(claimdata[0].dischargeSummary.amountPaidByPatient);
-								session.userData.trackAmountPaidByCorporate = JSON.stringify(claimdata[0].dischargeSummary.amountPaidByCorporate);
-								session.userData.trackPolicyExcessAmount = JSON.stringify(claimdata[0].dischargeSummary.policyExcessAmount);
-								session.userData.trackHospitalDiscount = JSON.stringify(claimdata[0].dischargeSummary.hospitalDiscount);
-								session.userData.trackAdvancePaidByPatient = JSON.stringify(claimdata[0].dischargeSummary.advancePaidByPatient);
-								session.userData.trackDeductionReason = claimdata[0].dischargeSummary.deductionReason;
-*/								
 								
 								var card = createReceiptCard(session);
 								var msg = new builder.Message(session)
@@ -1952,7 +1526,6 @@ bot.dialog('trackClaimwEmpID', [
 						if (!error && response.statusCode == 200) {	
 							// Print out the response body
 							data = JSON.parse(body);
-//							console.log(data);
 							
 							if(JSON.stringify(data.isSuccess) === "true"){
 
@@ -1987,18 +1560,7 @@ bot.dialog('trackClaimwEmpID', [
 								session.userData.trackBenefMAID = JSON.stringify(claimdata[0].beneficiaryDetails.benefMAId);
 								session.userData.trackBenefName = claimdata[0].beneficiaryDetails.benefName;
 								session.userData.trackBenefRelation = claimdata[0].beneficiaryDetails.benefRelation;
-								
-								//Discharge Summary
-/*								session.userData.trackNonPayableAmount = JSON.stringify(claimdata[0].dischargeSummary.nonPayableAmount);
-								session.userData.trackNonPayReason =claimdata[0].dischargeSummary.nonPayReason;
-								session.userData.trackAmountPaidByPatient = JSON.stringify(claimdata[0].dischargeSummary.amountPaidByPatient);
-								session.userData.trackAmountPaidByCorporate = JSON.stringify(claimdata[0].dischargeSummary.amountPaidByCorporate);
-								session.userData.trackPolicyExcessAmount = JSON.stringify(claimdata[0].dischargeSummary.policyExcessAmount);
-								session.userData.trackHospitalDiscount = JSON.stringify(claimdata[0].dischargeSummary.hospitalDiscount);
-								session.userData.trackAdvancePaidByPatient = JSON.stringify(claimdata[0].dischargeSummary.advancePaidByPatient);
-								session.userData.trackDeductionReason = claimdata[0].dischargeSummary.deductionReason;
-*/								
-								
+							
 								var card = createReceiptCard(session);
 								var msg = new builder.Message(session)
 								.speak("I was able to get real time status on your claim. Here it is:")
@@ -2049,12 +1611,8 @@ function createReceiptCard(session) {
 	if (session.message.address.channelId === 'facebook'){
 		return session.send('📝 Beneficiary: '+ session.userData.trackBenefName+' | Medi Assist ID: '+ session.userData.trackBenefMAID+' | Hospital: '+ session.userData.trackHospitalName+ ' | Claim Number: '+ session.userData.trackClaimId+' | '
 		+ ' | Claim Type: '+ session.userData.trackClaimType + ' | Date of Hospitalization: '+ session.userData.trackDoa+ ' | Date of Discharge: ' + session.userData.trackDod 
-		+ ' | Relation to Beneficiary: ' + session.userData.trackBenefRelation+ /*' | Claim Received Date: ' + session.userData.trackClaimReceivedDate + ' | Claim Approved Date: '+ 
-		session.userData.trackClaimApprovedDate + ' | Claim Denied Date: ' + session.userData.trackClaimDeniedDate+ */' | Policy Number: ' + session.userData.trackPolicyNo + 
-		' | Claimed Amount: Rs. '+ formatNumber(session.userData.trackClmAmount) + /*' | Hospital Discount : Rs. '+ formatNumber(session.userData.trackHospitalDiscount) + 
-		' | Amount Paid by Beneficiary: Rs. '+ formatNumber(session.userData.trackAmountPaidByPatient) + ' | Amount Paid by Corporate : Rs. '+ formatNumber(session.userData.trackAmountPaidByCorporate) + 
-		' | Non Payable Amount : Rs. ' + formatNumber(session.userData.trackNonPayableAmount) + ' | Policy Excess Amount : Rs. '+ formatNumber(session.userData.trackPolicyExcessAmount) +
-		' | Advance Paid by Beneficiary : Rs. '+formatNumber(session.userData.trackAdvancePaidByPatient)+ */' | Approved Amount : Rs. '+ formatNumber(session.userData.trackClmApprovedAmt)
+		+ ' | Relation to Beneficiary: ' + session.userData.trackBenefRelation+ ' | Policy Number: ' + session.userData.trackPolicyNo + 
+		' | Claimed Amount: Rs. '+ formatNumber(session.userData.trackClmAmount) + ' | Approved Amount : Rs. '+ formatNumber(session.userData.trackClmApprovedAmt)
 		);
 	}
 	else{
@@ -2066,17 +1624,8 @@ function createReceiptCard(session) {
 			'#### Date of Hospitalization : ' + session.userData.trackDoa + '\r\r' +
 			'#### Date of Discharge: ' + session.userData.trackDod + '\r\r' +
 			'#### Relation to Beneficiary : ' + session.userData.trackBenefRelation + '\r\r' +
-//			'#### Claim Received Date : ' + session.userData.trackClaimReceivedDate + '\r\r' +
-//			'#### Claim Approved Date : ' + session.userData.trackClaimApprovedDate + '\r\r' +
-//			'#### Claim Denied Date : ' + session.userData.trackClaimDeniedDate + '\r\r' +
 			'#### Policy Number : ' + session.userData.trackPolicyNo + '\r\r' +
 			'#### Claimed Amount : &#x20B9; ' + formatNumber(session.userData.trackClmAmount) + '/- \r\r' +
-/*			'#### Hospital Discount : &#x20B9; ' + formatNumber(session.userData.trackHospitalDiscount) + '/- \r\r' +
-			'#### Amount Paid by Beneficiary : &#x20B9; ' + formatNumber(session.userData.trackAmountPaidByPatient) + '/- \r\r' +
-			'#### Amount Paid by Corporate : &#x20B9; ' + formatNumber(session.userData.trackAmountPaidByCorporate) + '/- \r\r' +
-			'#### Non Payable Amount : &#x20B9; ' + formatNumber(session.userData.trackNonPayableAmount) + '/- \r\r' +
-			'#### Policy Excess Amount : &#x20B9; ' + formatNumber(session.userData.trackPolicyExcessAmount) + '/- \r\r' +
-			'#### Advance Paid by Beneficiary : &#x20B9; ' + formatNumber(session.userData.trackAdvancePaidByPatient) + '/- \r\r' +*/
 			'#### Approved Amount : &#x20B9; ' + formatNumber(session.userData.trackClmApprovedAmt) + '/- \r\r' 
 		)
         .images([
@@ -2166,7 +1715,6 @@ bot.dialog('help', [
 	function(session, results){
 		if(results.response){
 			if(session.message.address.channelId === "facebook"){
-//			console.log('INSIDE FB CHANNEL HELP RESPONSE');
 			howClaimsWorkCard = new builder.VideoCard(session)
         .title('How Claims Work')
         .subtitle('Do you want to know how claims work?')
@@ -2441,17 +1989,6 @@ bot.dialog('askforDownloadwPolNoConfirmation',[
 	}
 ]);
 
-/* 
-bot.dialog('askforDownloadBy',[
-	function (session){
-		builder.Prompts.choice(session, "There are four ways to track your claim:", downloadMenu, builder.ListStyle.button);		
-	},
-	function(session, results) {
-		session.endDialogWithResult(results);
-	}
-]);
-
- */
 // Dialog to ask for Beneficiary Name
 bot.dialog('askforbenefName',[
 	function (session){
@@ -2510,7 +2047,6 @@ bot.dialog('downloadwID', [
 					response = request(options, function (error, response, body) {
 						if (!error && response.statusCode == 200) {	
 							var sizeof = require('object-sizeof');
-//							console.log(sizeof(body));
 							
 							if(sizeof(body) > 0){
 								session.userData.downloadURL = downloadlink;
@@ -2593,7 +2129,6 @@ bot.dialog('downloadwMAID', [
 					response = request(options, function (error, response, body) {
 						if (!error && response.statusCode == 200) {	
 							var sizeof = require('object-sizeof');
-//							console.log(sizeof(body));
 							
 							if(sizeof(body) > 0){
 								session.userData.downloadURL = downloadlink;
@@ -2672,7 +2207,6 @@ bot.dialog('downloadwEmpID', [
 					response = request(options, function (error, response, body) {
 						if (!error && response.statusCode == 200) {	
 							var sizeof = require('object-sizeof');
-//							console.log(sizeof(body));
 							
 							if(sizeof(body) > 0){
 								session.userData.downloadURL = downloadlink;
@@ -2722,7 +2256,6 @@ bot.dialog('downloadwPolNo', [
 						session.dialogData.PolNo, session.dialogData.benefName);
 					
 					var PolNo = (session.dialogData.PolNo).replace(/\//g, "");
-//					console.log(PolNo);
 					var benefName = session.dialogData.benefName;
 					
 					var downloadlink = 'http://track-api-lb.medibuddy.in/getecard/PolicyNo/'+PolNo+'/'+benefName;
@@ -2747,7 +2280,6 @@ bot.dialog('downloadwPolNo', [
 					response = request(options, function (error, response, body) {
 						if (!error && response.statusCode == 200) {	
 							var sizeof = require('object-sizeof');
-//							console.log(sizeof(body));
 							
 							if(sizeof(body) > 0){
 								session.userData.downloadURL = downloadlink;
@@ -2898,7 +2430,6 @@ bot.dialog('askforLocation',  [
 				if (!error && response.statusCode == 200) {	
 					// Print out the response body
 					data = JSON.parse(body);
-//					console.log(data);
 					if(JSON.stringify(data.isSuccess) === "true"){				
 						var cards = [];
 						
@@ -2940,7 +2471,6 @@ bot.dialog('askforLocation',  [
 										builder.CardAction.openUrl(session, "tel:"+nwHospPhNo, "Call Hospital"),
 										builder.CardAction.openUrl(session, "http://maps.google.com/maps?q="+data.hospitals[item].latitude+","+data.hospitals[item].longitude, "View Hospital"),
 										builder.CardAction.openUrl(session, "https://me.medibuddy.in/", "Request for eCashless")
-//										builder.CardAction.openUrl(session, "https://m.medibuddy.in/PlannedHospitalization.aspx?hospid="+data.hospitals[item].id+"&hospname="+data.hospitals[item].name, "Request for eCashless")
 									])
 								);
 							}else{ break;}
@@ -3004,10 +2534,6 @@ bot.dialog('askforInsurer',[
 		if(session.message && session.message.value){
 			processSubmitAction8(session, session.message.value);
 			session.endDialog();
-//			session.beginDialog('askforMore');
-//				session.userData.serviceName = "Display health check";
-//				session.beginDialog('askforFeedback');
-//				session.endConversation();
 			return;
 		}
 
@@ -3267,9 +2793,6 @@ bot.dialog('askforInsurer',[
 function processSubmitAction8(session, message){
 		session.userData.insurer = message["insurer"];
 		session.userData.speciality = message["speciality"];	
-//		console.log(session.userData.insurer);
-//		console.log(session.userData.lat);
-//		console.log(session.userData.speciality)
 		return session;		
 }
 
@@ -5220,64 +4743,6 @@ function processSubmitAction6(session, message){
 			.addAttachment(labtestCard));
 }
 
-
-
-// Initialize with the strategies we want to use
-/*var ba = new botauth.BotAuthenticator(server, bot, { baseUrl : "https://medibotmb.azurewebsites.net", secret : BOTAUTH_SECRET })
-    .provider("facebook", (options) => { 
-        return new FacebookStrategy({
-            clientID : "1893719730892870",
-            clientSecret : "98e0e4ebdbfd51b8691640b0fe2d574c",
-            callbackURL : options.callbackURL
-        }, (accessToken, refreshToken, profile, done) => {
-            profile = profile || {};
-            profile.accessToken = accessToken;
-            profile.refreshToken = refreshToken;
-            
-            return done(null, profile);
-        });
-	});
-	
-	/**
- * Just a page to make sure the server is running
- */
-/*
-server.get("/facebook", (req, res) => {
-    res.send("facebook");
-});*/
-
-
-//=========================================================
-// Bot Dialogs
-//=========================================================
-/*
-bot.dialog('facebook', new builder.IntentDialog({ recognizers : [ recog ]})
-    .matches("SayHello", "hello")
-    .matches("GetProfile", "/profile")
-    .matches("Logout", "/logout")
-    .onDefault((session, args) => {
-        session.endDialog("I didn't understand that.  Try saying 'show my profile'.");
-    })
-);*/
-
-/*
-server.post('/fbloginbutton', (req, res, session) => {
-    session.beginDialog('profile');
-});*/
-/*
-const ncu = require('npm-check-updates');
- 
-ncu.run({
-    // Always specify the path to the package file
-    packageFile: 'package.json',
-    // Any command-line option can be specified here.
-    // These are set by default:
-    silent: true,
-    jsonUpgraded: true
-}).then((upgraded) => {
-    console.log('dependencies to upgrade:', upgraded);
-});*/
-
 //Stand-alone Infiniti Services
 // Dialog to trigger Hospitalization 
 bot.dialog('hospitalization',[
@@ -5309,7 +4774,7 @@ bot.dialog('hospitalization',[
 	}
 ])
 .triggerAction({
-	matches: [/hospitalization/i, /hospitalisation/i, 'hospitalization']
+	matches: ['hospitalization']
 	// /^search network hospitals$|^search network$/i,
 //	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
 	
