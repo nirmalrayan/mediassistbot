@@ -1251,8 +1251,13 @@ bot.dialog('trackClaimwID', [
 
 					// Process request and display reservation details
 					//TO-DO: CHECK FOR UNDEFINED HOSPITALIZATIONDATE BEFORE CONVERTING TOSTRING()
-					session.send("Tracking claim with details 🕵️ <br/>Claim Number: %s<br/>Date: %s <br/><br/>Please wait ⏳",
-						session.userData.claimNumber, session.dialogData.hospitalizationDate.toString().substring(0,15));
+					var msg = new builder.Message(session)
+					.speak("Tracking claim with details... Claim Number: %s and Date: %s. Please wait...", 
+					session.userData.claimNumber, session.dialogData.hospitalizationDate.toString().substring(0,15))
+					.text("Tracking claim with details 🕵️ <br/>Claim Number: %s<br/>Date: %s <br/><br/>Please wait ⏳",
+					session.userData.claimNumber, session.dialogData.hospitalizationDate.toString().substring(0,15))
+					session.send(msg);
+	//				session.send("Tracking claim with details 🕵️ <br/>Claim Number: %s<br/>Date: %s <br/><br/>Please wait ⏳");
 					
 					//Make POST request to MA Server
 					var request = require('request');	
@@ -1373,8 +1378,12 @@ bot.dialog('trackClaimwMAID', [
 					session.dialogData.hospitalizationDate = builder.EntityRecognizer.resolveTime([results.response]);
 
 					// Process request and display reservation details
-					session.send("Tracking claim with details 🕵️ <br/>Medi Assist ID: %s<br/>Date/Time: %s. <br/><br/>Please wait ⏳",
-						session.dialogData.MAID, session.dialogData.hospitalizationDate);
+					var msg = new builder.Message(session)
+					.speak("Tracking claim with details... Medi Assist ID: %s and Date: %s. Please wait...", 
+					session.userData.MAID, session.dialogData.hospitalizationDate.toString().substring(0,15))
+					.text("Tracking claim with details 🕵️ <br/>Medi Assist ID: %s<br/>Date: %s. <br/><br/>Please wait ⏳",
+					session.userData.MAID, session.dialogData.hospitalizationDate.toString().substring(0,15))
+					session.send(msg);
 					
 					//Make POST request to MA Server
 					var request = require('request');
@@ -1501,8 +1510,12 @@ bot.dialog('trackClaimwEmpID', [
 					session.dialogData.hospitalizationDate = builder.EntityRecognizer.resolveTime([results.response]);
 
 					// Process request and display reservation details
-					session.send("Tracking claim with details 🕵️ <br/>Employee ID: %s<br/>Corporate: %s<br/>Date/Time: %s. <br/><br/>Please wait ⏳",
-						session.dialogData.EmpID, session.dialogData.Corporate, session.dialogData.hospitalizationDate);
+					var msg = new builder.Message(session)
+					.speak("Tracking claim with details... Employee ID: %s, Corporate: %s and Date: %s. Please wait...", 
+					session.dialogData.EmpID, session.dialogData.Corporate, session.dialogData.hospitalizationDate.toString().substring(0,15))
+					.text("Tracking claim with details 🕵️ <br/>Employee ID: %s<br/>Corporate: %s<br/>Date: %s. <br/><br/>Please wait ⏳",
+					session.dialogData.EmpID, session.dialogData.Corporate, session.dialogData.hospitalizationDate.toString().substring(0,15))
+					session.send(msg);
 					
 					//Make POST request to MA Server
 					var request = require('request');
@@ -2019,8 +2032,12 @@ bot.dialog('downloadwID', [
 					session.dialogData.benefName = results.response;
 
 					// Process request and display reservation details
-					session.send("Finding Medi Assist E-Card with details 🔎 <br/>Claim Number: %s<br/>Beneficiary Name: %s",
-						session.userData.claimNumber, session.dialogData.benefName);
+					var msg = new builder.Message(session)
+					.speak("Finding Medi Assist E-Card with details... Claim Number: %s and Beneficiary Name: %s. Please wait...", 
+					session.userData.claimNumber, session.dialogData.benefName)
+					.text("Finding Medi Assist E-Card with details 🔎 <br/>Claim Number: %s<br/>Beneficiary Name: %s",
+					session.userData.claimNumber, session.dialogData.benefName)
+					session.send(msg);
 					
 					var clmId = session.userData.claimNumber;
 					var benefName = session.dialogData.benefName;
@@ -2101,8 +2118,12 @@ bot.dialog('downloadwMAID', [
 					session.dialogData.benefName = results.response;
 
 					// Process request and display reservation details
-					session.send("Finding Medi Assist E-Card with details 🔎 <br/>Medi Assist ID: %s<br/>Beneficiary Name: %s",
-						session.dialogData.MAID, session.dialogData.benefName);
+					var msg = new builder.Message(session)
+					.speak("Finding Medi Assist E-Card with details... Medi Assist ID: %s and Beneficiary Name: %s. Please wait...", 
+					session.dialogData.MAID, session.dialogData.benefName)
+					.text("Finding Medi Assist E-Card with details 🔎 <br/>Medi Assist ID: %s<br/>Beneficiary Name: %s",
+					session.dialogData.MAID, session.dialogData.benefName)
+					session.send(msg);
 					
 					var MAID = session.dialogData.MAID;
 					var benefName = session.dialogData.benefName;
@@ -2178,8 +2199,12 @@ bot.dialog('downloadwEmpID', [
 					session.dialogData.benefName = results.response;
 
 					// Process request and display reservation details
-					session.send("Finding Medi Assist E-Card with details 🔎<br/>Employee ID: %s<br/>Corporate: %s<br/>Beneficiary Name: %s",
-						session.dialogData.EmpID, session.dialogData.Corporate, session.dialogData.benefName);
+					var msg = new builder.Message(session)
+					.speak("Finding Medi Assist E-Card with details... Employee ID: %s, Corporate: %s and Beneficiary Name: %s. Please wait...", 
+					session.dialogData.EmpID, session.dialogData.Corporate, session.dialogData.benefName)
+					.text("Finding Medi Assist E-Card with details 🔎<br/>Employee ID: %s<br/>Corporate: %s<br/>Beneficiary Name: %s",
+					session.dialogData.EmpID, session.dialogData.Corporate, session.dialogData.benefName)
+					session.send(msg);
 					
 					var EmpID = session.dialogData.EmpID;
 					var Corporate = session.dialogData.Corporate;
@@ -2252,8 +2277,12 @@ bot.dialog('downloadwPolNo', [
 					session.dialogData.benefName = results.response;
 
 					// Process request and display reservation details
-					session.send("Finding Medi Assist E-Card with details 🔎 <br/>Policy Number: %s<br/>Beneficiary Name: %s",
-						session.dialogData.PolNo, session.dialogData.benefName);
+					var msg = new builder.Message(session)
+					.speak("Finding Medi Assist E-Card with details... Policy Number: %s and Beneficiary Name: %s. Please wait...", 
+					session.dialogData.PolNo, session.dialogData.benefName)
+					.text("Finding Medi Assist E-Card with details 🔎 <br/>Policy Number: %s<br/>Beneficiary Name: %s",
+					session.dialogData.PolNo, session.dialogData.benefName)
+					session.send(msg);
 					
 					var PolNo = (session.dialogData.PolNo).replace(/\//g, "");
 					var benefName = session.dialogData.benefName;
