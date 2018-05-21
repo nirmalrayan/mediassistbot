@@ -159,23 +159,6 @@ var connector = new builder.ChatConnector
 var bot = new builder.UniversalBot(connector,[
 
     function (session) {
-
-		if(hasAudioAttachment(session)){
-			var stream = getAudioStreamFromMessage(session.message);
-			var audioAttachment = 1;
-			speechService.getTextFromAudioStream(stream)
-				.then(function (text){
-					var speechtotext = processText(text);
-					session.send([processText(text)]);
-					session.beginDialog("/refer", speechtotext);
-				})
-				.catch(function (text){
-					session.send('Oops! Something went wrong. Try again later.');
-					console.error(error);
-				});
-		}else{
-		
-
 		session.userData.userID = session.message.address.id;
 		session.userData.userName = session.message.user.name;
 		if(session.message.address.channelId === 'facebook'){
@@ -220,7 +203,7 @@ var bot = new builder.UniversalBot(connector,[
 				]);
 			
 			}
-		}	}
+		}	
 			session.send(new builder.Message(session)
 				.speak("Greetings! I'm MediBuddy. I will be your healthcare assistant. Type Show Menu or # at any time to see the menu.")
 				.addAttachment(welcomeCard));
@@ -247,10 +230,7 @@ var bot = new builder.UniversalBot(connector,[
 //		sentimentScore = sentimentAnalyzer(session, session.message.text);
 //		console.log('sentimentScore: '+ session.userData.sentimentScore);
 
-	},
-	function(session, results){
-		
-		session.beginDialog("/refer");
+session.beginDialog("/refer");
 	}
 ]).set('storage', inMemoryStorage); // Register in-memory storage 
 
@@ -591,7 +571,9 @@ handoff.setup(bot, server, isAgent, {
 var qnarecognizer  = new cognitiveservices.QnAMakerRecognizer({
 	knowledgeBaseId: process.env.QnAknowledgeBaseId, 
 	authKey: process.env.QnAAuthKey,
-	top: 4});
+	top: 4,
+	endpointHostName: process.env.QnAEndpointHostName
+});
 
 
 //LUIS Configuration
