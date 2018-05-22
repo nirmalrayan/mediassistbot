@@ -688,7 +688,7 @@ bot.dialog('askforMore',[
 		setTimeout(function () {
 			
 		var msg = new builder.Message(session)
-			.speak("How else can I help you? To go back to the main menu, say <emphasis level=\"moderate\">Show Menu</emphasis>. To go to help desk, say <emphasis level=\"moderate\">Help</emphasis>. You can choose to end this conversation by saying <emphasis level=\"moderate\">End Conversation</emphasis>.")
+			.speak("How else can I help you? To go back to the main menu, say Show Menu. To go to help desk, say Help. You can choose to end this conversation by saying End Conversation.")
 			.text("How else can I help you?")
 			.suggestedActions(
 				builder.SuggestedActions.create(
@@ -712,7 +712,7 @@ bot.dialog('askforMore2',[
 		setTimeout(function () {
 			
 		var msg = new builder.Message(session)
-			.speak("How else can I help you? To go back to the main menu, say <emphasis level=\"moderate\">Show Menu</emphasis>. To go to help desk, say <emphasis level=\"moderate\">Help</emphasis>. You can choose to end this conversation by saying <emphasis level=\"moderate\">End Conversation</emphasis>.")
+			.speak("How else can I help you? To go back to the main menu, say Show Menu. To go to help desk, say Help. You can choose to end this conversation by saying End Conversation.")
 			.text("How else can I help you?")
 			.suggestedActions(
 				builder.SuggestedActions.create(
@@ -2069,7 +2069,7 @@ bot.dialog('downloadwID', [
 								session.userData.downloadURL = downloadlink;
 								var ecard = createHeroCard(session);
 								var msg = new builder.Message(session)
-								.speak("Click below to download your <emphasis level=\"moderate\">Medi Assist E-Card</emphasis>")
+								.speak("Click below to download your Medi Assist E-Card")
 								.addAttachment(ecard);
 								session.send(msg);
 								session.userData.serviceName = "Download with Claim ID";
@@ -2155,7 +2155,7 @@ bot.dialog('downloadwMAID', [
 								session.userData.downloadURL = downloadlink;
 								var ecard = createHeroCard(session);
 								var msg = new builder.Message(session)
-								.speak("Click below to download your <emphasis level=\"moderate\">Medi Assist E-Card</emphasis>")
+								.speak("Click below to download your Medi Assist E-Card")
 								.addAttachment(ecard);
 								session.send(msg);
 								session.userData.serviceName = "Download with Medi Assist ID";
@@ -2237,7 +2237,7 @@ bot.dialog('downloadwEmpID', [
 								session.userData.downloadURL = downloadlink;
 								var ecard = createHeroCard(session);
 								var msg = new builder.Message(session)
-								.speak("Click below to download your <emphasis level=\"moderate\">Medi Assist E-Card</emphasis>")
+								.speak("Click below to download your Medi Assist E-Card")
 								.addAttachment(ecard);
 								session.send(msg);
 								session.userData.serviceName = "Download with Employee ID";
@@ -2314,7 +2314,7 @@ bot.dialog('downloadwPolNo', [
 								session.userData.downloadURL = downloadlink;
 								var ecard = createHeroCard(session);
 								var msg = new builder.Message(session)
-								.speak("Click below to download your <emphasis level=\"moderate\">Medi Assist E-Card</emphasis>")
+								.speak("Click below to download your Medi Assist E-Card")
 								.addAttachment(ecard);
 								session.send(msg);
 								session.userData.serviceName = "Download with Policy Number";
@@ -2935,7 +2935,7 @@ bot.dialog('askforInvestigation',[
 /*
 bot.dialog('askforGrievance',[
 	function (session){
-		session.endDialog("ℹ️ We sincerely regret for the unpleasant experience! I request you to write to us on gethelp@mahs.in or call us on our toll free number 1800 425 9449. Alternatively, you can also download MediBuddy and track your claim on real time basis.");
+		session.endDialog("ℹ️ We sincerely regret for the unpleasant experience! For expeditious handling of grievance we have a well laid down procedures as per Quality norms. There is a seperate Grievance Team to ensure grievance disposal within 7 working days. You may send your grievances, if any, to: The Grievance Cell, Medi Assist Insurance TPA Private Limited, Tower 'D', 4th Floor, IBC Knowledge Park, 4/1, Bannerghatta Road, Bengaluru - 560029. Email: grievance@mediassistindia.com");
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
