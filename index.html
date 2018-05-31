@@ -148,6 +148,19 @@
       <div class="logo"><img src="https://i.imgur.com/mM4QU5G.gif" alt=""><!--<img src="https://i.imgur.com/UWTYAae.png" alt="">--><span class="medibuddy">Medi<span>Buddy</span></span></div>
     </div>
     <div class="wrap">
+
+        <section class="example">
+            <h2>Click to change the background color of the Web Chat!</h2>
+            <button onclick="postButtonMessage('BLUE')" style="height: 60px; margin-left: 80px; margin-top: 20px; padding: 20px; width: 120px; color: blue;">BLUE</button>
+          <button onclick="postButtonMessage('RED')" style="height: 60px; margin-left: 80px; margin-top: 20px; padding: 20px; width: 120px; color: red;">RED</button>
+          <button onclick="postButtonMessage('YELLOW')" style="height: 60px; margin-left: 80px; margin-top: 20px; padding: 20px; width: 120px; color: yellow;">YELLOW</button>
+          <button onclick="postButtonMessage('GREEN')" style="height: 60px; margin-left: 80px; margin-top: 20px; padding: 20px; width: 120px; color: green;">GREEN</button>
+          <button onclick="postButtonMessage('WHITE')" style="height: 60px; margin-left: 80px; margin-top: 20px; padding: 20px; width: 120px; color: white;">WHITE</button>
+          <button onclick="postButtonMessage('GREY')" style="height: 60px; margin-left: 80px; margin-top: 20px; padding: 20px; width: 120px; color: GREY;">GREY</button>
+          <button onclick="postButtonMessage('BLACK')" style="height: 60px; margin-left: 80px; margin-top: 20px; padding: 20px; width: 120px; color: black;">BLACK</button>
+          </section>
+
+
       <div id="bot"></div>
       <header id="hdr">
         <div class="logo"><img src="https://i.imgur.com/mM4QU5G.gif" alt=""><!--<img src="https://i.imgur.com/Nsxo4EK.png" alt="">--><span class="medibuddy">Medi<span>Buddy</span></span></div>
@@ -165,6 +178,19 @@
     <script>
       
       window.botchatDebug = 'true';
+
+      const params = BotChat.queryParams(location.search);
+      const user = {
+        id: params['userid'] || 'userid',
+        name: params['username'] || 'username'
+      };
+      const bot = {
+        id: params['botid'] || 'botid',
+        name: params['botname'] || 'botname'
+      };
+      window['botchatDebug'] = params['debug'] && params['debug'] === 'true';
+
+
       var speechOptions = {
       speechRecognizer: new CognitiveServices.SpeechRecognizer( { subscriptionKey: '50a0cdc9654c4c71b47a0cf5c2c2e2be' } ),
 
@@ -197,6 +223,38 @@
         document.getElementById("hdr").classList.remove("hide");
         document.getElementById("hdrSm").classList.remove("show");
       }
+
+      const postButtonMessage = () => {
+        botConnection
+          .postActivity({type: "event", value: "", from: {id: "me" }, name: "buttonClicked"})
+          .subscribe(id => console.log("success"));
+    }
+
+
+      botConnection.activity$
+        .filter(function (activity) {
+          return activity.type === 'event' && activity.name === 'changeBackgroundColor';
+        })
+        .subscribe(function (activity) {
+          console.log('"changeBackground" received with value: ' + activity.value);
+          changeBackgroundColor(activity.value);
+        });
+      function changeBackgroundColor(newColor) {
+        document.getElementsByClassName('wc-message-groups')[0].style.backgroundColor = newColor;
+      }
+      function postButtonMessage(color) {
+        botConnection
+          .postActivity({
+            from: { id: 'me' },
+            name: 'changeBackgroundColor',
+            type: 'event',
+            value: color
+          })
+          .subscribe(function (id) {
+            console.log('"changeBackgroundColor" sent');
+          });
+      };
+
     </script>
   </body>
 </html>

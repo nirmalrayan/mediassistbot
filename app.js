@@ -582,7 +582,7 @@ bot.dialog('showMenu',[
 											.alt('Second Opinion')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://www.medibuddy.in/gso/259fb4d2abcb480fb4e8778a33b9c9d2", "Get Second Opinion")
+										builder.CardAction.openUrl(session, "https://www.medibuddy.in/gso/", "Get Second Opinion")
 										]);
 			
 			menucards.push(secondOpinionCard);
@@ -596,7 +596,7 @@ bot.dialog('showMenu',[
 											.alt('Genome Study')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://www.medibuddy.in/genome/1b1fbfb833ea4e8d96c0a0325da21d69", "Book Genome Study Package")
+										builder.CardAction.openUrl(session, "https://www.medibuddy.in/Genome/", "Book Genome Study Package")
 										]);
 			
 			menucards.push(genomeStudyCard);
@@ -3355,7 +3355,7 @@ function processSubmitAction(session, message){
 											.alt('Health Check Packages')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://www.medibuddy.in/result/package/c920aa2144b9e51184af002219349965/"+session.userData.healthcheckCategory+"//"+"/?c="+session.userData.healthcheckCity, "Show Packages")
+										builder.CardAction.openUrl(session, "https://www.medibuddy.in/Health-checks/"+session.userData.healthcheckCategory+"/"+session.userData.healthcheckCity, "Show Packages")
 										]);
 		}
 		else{
@@ -3555,7 +3555,7 @@ function processSubmitAction2(session, message){
 											.alt('Health Check Packages')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://www.medibuddy.in/medicines/467117a029f0e511aa80002219349965/"+session.userData.medicinePincode+"/?c="+session.userData.medicineCity, "Upload Prescription")
+										builder.CardAction.openUrl(session, "https://www.medibuddy.in/Medicines/"+session.userData.medicineCity+"/?pincode="+session.userData.medicinePincode, "Upload Prescription")
 										]);
 		session.send(new builder.Message(session)
 			.speak("I still need your prescription to process the order. Click below to upload your prescription.")
@@ -4031,7 +4031,7 @@ function processSubmitAction4(session, message){
 											.alt('Home Health Care')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://www.medibuddy.in/homehealthcare/ba678c34a85141299c0b43ac3b1ee8ca//"+session.userData.homehealthcareService+"/?c="+session.userData.homehealthcareCity, "View Services")
+										builder.CardAction.openUrl(session, "https://www.medibuddy.in/Home-Health-Care/"+session.userData.homehealthcareService+"/"+session.userData.homehealthcareCity, "View Services")
 										]);
 		session.send(new builder.Message(session)
 			.speak("Click below to view available home health care services in "+session.userData.homehealthcareCity+" for "+session.userData.homehealthcareService)
@@ -4270,7 +4270,7 @@ function processSubmitAction7(session, message){
 											.alt('Dental')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://www.medibuddy.in/dental/66d51e1e3d674dddbae81df593392f12//"+session.userData.dentalSpeciality+"/?c="+session.userData.dentalCity, "View Services")
+										builder.CardAction.openUrl(session, "https://www.medibuddy.in/Dental/"+session.userData.dentalSpeciality+"/"+session.userData.dentalCity, "View Services")
 										]);
 		session.send(new builder.Message(session)
 			.speak("Click below to view available dental services in "+message["city"]+" for "+message["speciality"])
@@ -4456,7 +4456,7 @@ function processSubmitAction5(session, message){
 											.alt('Tele Consultation')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://www.medibuddy.in/onlineservice/4f81d4702c8242009081cfde6301dd38//"+session.userData.teleconsultationService, "View Services")
+										builder.CardAction.openUrl(session, "https://www.medibuddy.in/onlineservice/"+session.userData.teleconsultationService, "View Services")
 										]);
 		session.send(new builder.Message(session)
 			.speak("Click below to view available telephonic consultations for "+message["teleservice"])
@@ -4765,7 +4765,7 @@ function processSubmitAction6(session, message){
 											.alt('Lab Test')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://www.medibuddy.in/labtest/f4a83a18cec74f1786b8fd2b9aff4c0c//"+session.userData.labtest+"/?c="+session.userData.labtestCity, "View Lab Tests")
+										builder.CardAction.openUrl(session, "https://www.medibuddy.in/labtest/"+session.userData.labtest+"/"+session.userData.labtestCity, "View Lab Tests")
 										]);
 		session.send(new builder.Message(session)
 			.speak("Click below to view "+message["labtest"]+" tests in "+message["city"])
@@ -4823,7 +4823,7 @@ bot.dialog('secondOpinion',[
 				.alt('Second Opinion')
 		])
 		.buttons([
-			builder.CardAction.openUrl(session, "https://www.medibuddy.in/gso/259fb4d2abcb480fb4e8778a33b9c9d2", "Get Second Opinion")
+			builder.CardAction.openUrl(session, "https://www.medibuddy.in/gso/", "Get Second Opinion")
 			]);
 
 		menucard.push(secondOpinionCard);
@@ -4860,7 +4860,7 @@ bot.dialog('genomeStudy',[
 				.alt('Genome Study')
 		])
 		.buttons([
-			builder.CardAction.openUrl(session, "https://www.medibuddy.in/genome/1b1fbfb833ea4e8d96c0a0325da21d69", "Book Genome Study Package")
+			builder.CardAction.openUrl(session, "https://www.medibuddy.in/Genome/", "Book Genome Study Package")
 			]);
 
 		menucard.push(genomeStudyCard);
