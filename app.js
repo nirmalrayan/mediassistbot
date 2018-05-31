@@ -3851,7 +3851,7 @@ function processSubmitAction3(session, message){
 											.alt('Consultations')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://www.medibuddy.in/consultation/ad131e35ffb9e51184af002219349965//"+session.userData.consultationSpeciality+"/?c="+session.userData.consultationCity, "View Consultations")
+										builder.CardAction.openUrl(session, "https://www.medibuddy.in/Consultation/"+session.userData.consultationSpeciality+"/"+session.userData.consultationCity, "View Consultations")
 										]);
 		session.send(new builder.Message(session)
 			.speak("I've curated a list of doctors in your city. Click below to know more")
