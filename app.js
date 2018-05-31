@@ -3555,7 +3555,7 @@ function processSubmitAction2(session, message){
 											.alt('Health Check Packages')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://www.medibuddy.in/Medicines/"+session.userData.medicineCity+"/?pincode="+session.userData.medicinePincode, "Upload Prescription")
+										builder.CardAction.openUrl(session, "https://www.medibuddy.in/Medicine/"+session.userData.medicineCity+"/?pincode="+session.userData.medicinePincode, "Upload Prescription")
 										]);
 		session.send(new builder.Message(session)
 			.speak("I still need your prescription to process the order. Click below to upload your prescription.")
@@ -3851,7 +3851,7 @@ function processSubmitAction3(session, message){
 											.alt('Consultations')
 									])
 									.buttons([
-										builder.CardAction.openUrl(session, "https://www.medibuddy.in/Consultation/"+session.userData.consultationSpeciality+"/"+session.userData.consultationCity, "View Consultations")
+										builder.CardAction.openUrl(session, "https://www.medibuddy.in/Consultation/"+session.userData.consultationSpeciality+"/"+session.userData.consultationCity+"/", "View Consultations")
 										]);
 		session.send(new builder.Message(session)
 			.speak("I've curated a list of doctors in your city. Click below to know more")
@@ -4860,7 +4860,7 @@ bot.dialog('genomeStudy',[
 				.alt('Genome Study')
 		])
 		.buttons([
-			builder.CardAction.openUrl(session, "https://www.medibuddy.in/Genome/", "Book Genome Study Package")
+			builder.CardAction.openUrl(session, "https://www.medibuddy.in/Genome", "Book Genome Study Package")
 			]);
 
 		menucard.push(genomeStudyCard);
