@@ -1181,6 +1181,7 @@ bot.dialog('askforFeedback',[
 			}
 			);
 		session.beginDialog('askforMore2');
+	//	session.endDialog();
 		session.endConversation();
 		}else{
 			var wasHelpful = 0;
@@ -1721,102 +1722,108 @@ bot.dialog('doaHelp', function(session, args, next) {
 // Generic Help dialog for Bot
 bot.dialog('help', [
 	function(session){
-			session.send("Can't find the service you're looking for? Let me take you through some of the areas where you may need help.");
-			session.send("Let's run you through a few main menu options again: ");
-			builder.Prompts.confirm(session,"Do you want to know how claims work? (yes/no)",{listStyle: builder.ListStyle["button"]});
+			builder.Prompts.text(session,"Type in your query, and I'll try my best to resolve it");
 	},
 	function(session, results){
 		if(results.response){
-			if(session.message.address.channelId === "facebook"){
-			howClaimsWorkCard = new builder.VideoCard(session)
-        .title('How Claims Work')
-        .subtitle('Do you want to know how claims work?')
-        .text('')
-        .image(builder.CardImage.create(session, 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Big_buck_bunny_poster_big.jpg/220px-Big_buck_bunny_poster_big.jpg'))
-        .media([
-            { url: 'https://medibuddymedia.blob.core.windows.net/asset-cfe7afcc-61cc-4545-9cdb-c5d056073a2d/Why Health Benefits.mp4?sv=2015-07-08&sr=c&si=c2d359cb-5a73-43c8-aed2-ece7d71de640&sig=um%2FsskYdZ9eNEDVHDFQuC5sUhdJO9EarUWecyYctQNw%3D&st=2018-02-14T06%3A50%3A42Z&se=2118-02-14T06%3A50%3A42Z' }
-        ])
-        .buttons([
-            builder.CardAction.openUrl(session, 'https://goo.gl/A1EwSs', 'Visit MediBuddy')
-        ]);
-//			cards.push(howClaimsWorkCard);
-//console.log(howClaimsWorkCard);
-//			session.send('Video Card');
-//			var msg = new builder.Message(session).addAttachment(howClaimsWorkCard);
-//			session.send(msg);
-session.send("This section is still under construction! Thanks for visiting!");
-//				console.log('FINISHED FB CHANNEL HELP RESPONSE WITH VIDEO CARD');
-/*			howEcashlessWorksCard = new builder.VideoCard(session)
-									.title('Plan Cashless Hospitalization')
-									.subtitle('by Medi Assist')
-									.text('And watch this video on how you can plan a cashless hospitalization from the comfort of your home.')
-									.image(builder.CardImage.create(session, 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Big_buck_bunny_poster_big.jpg/220px-Big_buck_bunny_poster_big.jpg'))
-									.media([
-										{ url: 'https://medibuddymedia.blob.core.windows.net/asset-1e65cb49-6769-4559-b7cc-2ae35a1fb682/Plan your Hospitalization with eCashless!.mp4?sv=2015-07-08&sr=c&si=49628a29-025d-404f-84b7-50767b69b4a9&sig=1DAlO0iugFVJ3NBMfX657WqG76%2FvKigyaMCse8YJj0Y%3D&st=2017-12-01T12%3A47%3A08Z&se=2117-12-01T12%3A47%3A08Z' }
-									])
-									.buttons([
-										builder.CardAction.openUrl(session, 'https://www.mediassistindia.com/', 'Visit Medi Assist')
-									]);
-//			cards.push(howEcashlessWorksCard)
-			session.send(new builder.Message(session)
-				.addAttachment(howEcashlessWorksCard));
-/*			const msg = new builder.Message(session);
-			msg.attachmentLayout(builder.AttachmentLayout.carousel)
-			.text("Let's try and ease just some of anxiety by helping you plan the hospitalization.")
-				.attachments(cards);
-			session.send(msg);
-*/			
-			}else{
-		var cards = [];
-			howClaimsWorkCard = new builder.VideoCard(session)
-									.title('How Claims Work')
-									.text('Do you want to know how claims work?')
-									.media([
-										{ url: 'https://medibuddymedia.blob.core.windows.net/asset-cfe7afcc-61cc-4545-9cdb-c5d056073a2d/Why Health Benefits.mp4?sv=2015-07-08&sr=c&si=c2d359cb-5a73-43c8-aed2-ece7d71de640&sig=um%2FsskYdZ9eNEDVHDFQuC5sUhdJO9EarUWecyYctQNw%3D&st=2018-02-14T06%3A50%3A42Z&se=2118-02-14T06%3A50%3A42Z' }
-									])
-									.buttons([
-										builder.CardAction.openUrl(session, 'https://goo.gl/A1EwSs', 'Visit MediBuddy')
-									]);
-			cards.push(howClaimsWorkCard);
+			/* Start of QNA */
+			let host = process.env.QnAHostName;
 
-			secondOpinionCard = new builder.HeroCard(session)
-									.title("Second Opinion")
-									.subtitle("Do you need a second opinion to help you make up your mind?")
-									.images([
-										new builder.CardImage(session)
-											.url('https://i.imgur.com/RNwn1DK.png')
-											.alt('Second Opinion')
-									])
-									.buttons([
-										builder.CardAction.openUrl(session, "https://goo.gl/Qq1UhJ", "Get Second Opinion")
-										]);
-			
-			cards.push(secondOpinionCard);
+			// NOTE: Replace this with a valid endpoint key.
+			// This is not your subscription key.
+			// To get your endpoint keys, call the GET /endpointkeys method.
+			let endpoint_key = process.env.QnAAuthKey;
 
-			howEcashlessWorksCard = new builder.VideoCard(session)
-									.title('Plan Cashless Hospitalization')
-									.text('Watch this video on how you can plan a cashless hospitalization from the comfort of your home.')
-									.media([
-										{ url: 'https://medibuddymedia.blob.core.windows.net/asset-1e65cb49-6769-4559-b7cc-2ae35a1fb682/Plan your Hospitalization with eCashless!.mp4?sv=2015-07-08&sr=c&si=49628a29-025d-404f-84b7-50767b69b4a9&sig=1DAlO0iugFVJ3NBMfX657WqG76%2FvKigyaMCse8YJj0Y%3D&st=2017-12-01T12%3A47%3A08Z&se=2117-12-01T12%3A47%3A08Z' }
-									])
-									.buttons([
-										builder.CardAction.openUrl(session, 'https://m.medibuddy.in/submitecashless.aspx', 'Book eCashless Hospitalization'),
-										builder.CardAction.openUrl(session, 'https://goo.gl/2dZiF3', 'Read more about eCashless')
-									]);
-			cards.push(howEcashlessWorksCard);
-			const msg = new builder.Message(session);
-			msg.attachmentLayout(builder.AttachmentLayout.carousel)
-			.text("Let's try and ease just some of anxiety by helping you plan the hospitalization.")
-				.attachments(cards);
-			session.send(msg);
-		}
+			// NOTE: Replace this with a valid knowledge base ID.
+			// Make sure you have published the knowledge base with the
+			// POST /knowledgebases/{knowledge base ID} method.
+			let kb = process.env.QnAknowledgeBaseId;
+
+			let method = "/qnamaker/knowledgebases/" + kb + "/generateAnswer";
+
+			let question = {
+				'question': JSON.stringify(results.response),
+				'top': 3
+			};
+
+			let pretty_print = function (s) {
+				return JSON.stringify(JSON.parse(s), null, 4);
+			}
+
+			// callback is the function to call when we have the entire response.
+			let response_handler = function (callback, response) {
+				let body = '';
+				response.on ('data', function (d) {
+					body += d;
+				});
+				response.on ('end', function () {
+			// Call the callback function with the status code, headers, and body of the response.
+					callback ({ status : response.statusCode, headers : response.headers, body : body });
+				});
+				response.on ('error', function (e) {
+					console.log ('Error: ' + e.message);
+					session.send("Looks like I still have to learn some more! Sorry, but I can't help you with your query right now.");
+					session.send("While I attend my classes, please write to info@mediassistindia.com for help.");
+					
+				session.beginDialog('askforMore');
+				});
+			};
+
+			// Get an HTTP response handler that calls the specified callback function when we have the entire response.
+			let get_response_handler = function (callback) {
+			// Return a function that takes an HTTP response, and is closed over the specified callback.
+			// This function signature is required by https.request, hence the need for the closure.
+				return function (response) {
+					response_handler (callback, response);
+				}
+			}
+
+			// callback is the function to call when we have the entire response from the POST request.
+			let post = function (path, content, callback) {
+				let request_params = {
+					method : 'POST',
+					hostname : host,
+					path : path,
+					headers : {
+						'Content-Type' : 'application/json',
+						'Content-Length' : content.length,
+						'Authorization' : 'EndpointKey ' + endpoint_key,
+					}
+				};
+
+			// Pass the callback function to the response handler.
+				let req = https.request (request_params, get_response_handler (callback));
+				req.write (content);
+				req.end ();
+			}
+
+			// callback is the function to call when we have the response from the /knowledgebases POST method.
+			let get_answers = function (path, req, callback) {
+				console.log ('Calling ' + host + path + '.');
+			// Send the POST request.
+				post (path, req, function (response) {
+					callback (response.body);
+				});
+			}
+
+			// Convert the request to a string.
+			let content = JSON.stringify(question);
+			get_answers (method, content, function (result) {
+			// Write out the response from the /knowledgebases/create method.
+				result = JSON.parse(result);
+				result2 = JSON.parse(JSON.stringify(result.answers[0].answer));
+				var customMsg = new builder.Message(session).text(result2);
+				session.send(customMsg);
+				
 			session.userData.serviceName = "Help";
 			session.beginDialog('askforFeedback');
+//				console.log (pretty_print(JSON.stringify(result.answers[0].answer)));
+			});
+
+			/*End of QNA */
 		}
-		else{
-			session.beginDialog('askforMore');
-		}
-	}/*,
+	}
+	/*,
 	function(session, results){
 		
 		const msg = new builder.Message(session);
