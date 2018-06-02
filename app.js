@@ -1812,11 +1812,26 @@ bot.dialog('help', [
 			// Write out the response from the /knowledgebases/create method.
 				result = JSON.parse(result);
 				result2 = JSON.parse(JSON.stringify(result.answers[0].answer));
-				var customMsg = new builder.Message(session).text(result2);
-				session.send(customMsg);
+				if(result2 == "No good match found in KB."){
+					var wasHelpful = 0;
+					session.userData.serviceName = "Not Trained - Help";
+					console.log(JSON.stringify(session.message.address.id));
+					console.log(JSON.stringify('Content: '+JSON.parse(question.question)));
+					console.log(JSON.stringify(session.message.timestamp));
+					console.log(JSON.stringify(session.message.source));
+					var userQuery = JSON.parse(question.question);
+					storeFeedback(JSON.stringify(session.message.address.id).replace(/"/g, "'"), JSON.stringify(session.userData.serviceName).replace(/"/g, "'"), wasHelpful,JSON.stringify(userQuery).replace(/"/g, "'"), JSON.stringify(session.message.timestamp).replace(/"/g, "'"), JSON.stringify(session.message.source).replace(/"/g, "'"));
+			
+					session.send("Looks like I still have to learn some more! Sorry, but I can't help you with your query right now.");
+					session.send("While I attend my classes, please write to info@mediassistindia.com for help.");
+					session.endDialog("Stay healthy, always! Bye for now!");
+				}else{
+					var customMsg = new builder.Message(session).text(result2);
+					session.send(customMsg);
+					session.userData.serviceName = "Help";
+					session.beginDialog('askforFeedback');
+				}
 				
-			session.userData.serviceName = "Help";
-			session.beginDialog('askforFeedback');
 //				console.log (pretty_print(JSON.stringify(result.answers[0].answer)));
 			});
 
