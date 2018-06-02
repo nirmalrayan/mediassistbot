@@ -1815,16 +1815,13 @@ bot.dialog('help', [
 				if(result2 == "No good match found in KB."){
 					var wasHelpful = 0;
 					session.userData.serviceName = "Not Trained - Help";
-					console.log(JSON.stringify(session.message.address.id));
-					console.log(JSON.stringify('Content: '+JSON.parse(question.question)));
-					console.log(JSON.stringify(session.message.timestamp));
-					console.log(JSON.stringify(session.message.source));
 					var userQuery = JSON.parse(question.question);
 					storeFeedback(JSON.stringify(session.message.address.id).replace(/"/g, "'"), JSON.stringify(session.userData.serviceName).replace(/"/g, "'"), wasHelpful,JSON.stringify(userQuery).replace(/"/g, "'"), JSON.stringify(session.message.timestamp).replace(/"/g, "'"), JSON.stringify(session.message.source).replace(/"/g, "'"));
 			
 					session.send("Looks like I still have to learn some more! Sorry, but I can't help you with your query right now.");
 					session.send("While I attend my classes, please write to info@mediassistindia.com for help.");
-					session.endDialog("Stay healthy, always! Bye for now!");
+					session.beginDialog('askforMore');
+					session.endConversation();
 				}else{
 					var customMsg = new builder.Message(session).text(result2);
 					session.send(customMsg);
@@ -3014,22 +3011,22 @@ bot.dialog('askforAbuse',[
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-/*
+
 // Dialog to handle goodbye
 bot.dialog('sayGoodbye',[
 	function (session){
-//		msg = ["See you later 👋, Keep rocking!","Stay healthy, always! Bye for now!","See you 👋!","Have a good day.","Later gator!","Talking to you makes my day. Come back soon!", "Ok, bye🙂!", "Till next time!"]
+		msg = ["See you later 👋, Keep rocking!","Stay healthy, always! Bye for now!","See you 👋!","Have a good day.","Later gator!","Talking to you makes my day. Come back soon!", "Ok, bye🙂!", "Till next time!"]
 		x = getRandomInt(0,7);
-//		session.endDialog(msg[x]);
-		session.endDialog("goodbyeMsg");
+		session.endDialog(msg[x]);
+//		session.endDialog("goodbyeMsg");
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
 	}
 ])
 .triggerAction({
-	matches: [/bye/i, /see you/i, /cu/i ,/ciao/i, /ta ta/i, /cheerio/i, /cheers/i, /gtg/i, /got to go/i,/bai/i, /c u/i, /l8r/i, /exit/i, /quit/i, /take care/i, /cya/i, /shalom/i, /sayonara/i, /farewell/i, /so long/i, /peace out/i, /see you/i, /end conversation/i]
-});*/
+	matches: ['sayGoodbye', /end conversation/i]
+});
 
 // Dialog to handle Compliment
 bot.dialog('getCompliment',[
