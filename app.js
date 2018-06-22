@@ -355,6 +355,7 @@ bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer, qnare
 	.matches("sayThanks","getCompliment")
 	.matches("searchNetwork","searchNetwork")
 	.matches("sayGoodbye","sayGoodbye")
+	.matches("TechIssue","techIssue")
 	.matches("Medicine","medicine")
 	.matches("TeleConsultation","teleconsultation")
 	.matches("Consultation","consultation")
@@ -2062,7 +2063,7 @@ bot.dialog('downloadwID', [
 					var benefName = session.dialogData.benefName;
 					
 					var downloadlink = 'http://track-api-lb.medibuddy.in/getecard/ClaimId/'+clmId+'/'+benefName;
-					
+					var downloadlink2 = 'http://track-api-lb.medibuddy.in/getEcardWithClaimId'
 					//Make POST request to MA Server
 					var request = require('request');	
 					
@@ -2076,6 +2077,13 @@ bot.dialog('downloadwID', [
 					var options = {
 						url: downloadlink,
 						method: 'GET',
+						headers: headers
+					}
+
+					// Configure the request
+					var options2 = {
+						url: downloadlink2,
+						method: 'POST',
 						headers: headers
 					}
 
@@ -2110,6 +2118,17 @@ bot.dialog('downloadwID', [
 								session.beginDialog('askforDownloadwIDConfirmation');
 						}
 					});
+
+					response2 = request(options2, function (error, response, body) {
+						if (!error && response.statusCode == 200) {	
+							console.log(JSON.stringify(response));
+						}
+						else{
+								session.send('⚠️ I was unable to find your e-card with the details you provided. ');
+								session.beginDialog('askforDownloadwIDConfirmation');
+						}
+					});
+
 					session.endDialog();
 				}
 ]);
@@ -3026,6 +3045,20 @@ bot.dialog('sayGoodbye',[
 ])
 .triggerAction({
 	matches: ['sayGoodbye', /end conversation/i]
+});
+
+// Dialog to handle Technology Issue
+bot.dialog('techIssue',[
+	function (session){
+		session.endConversation("ℹ️ Thanks for your feedback. Kindly write to mbsupport@mahs.in (Android) or mb_isupport@mahs.in (iOS) with more details to help us resolve. We are extremely sorry for the inconvenience.");
+//		session.endDialog("goodbyeMsg");
+	},
+	function(session, results) {
+		session.endDialogWithResult(results);
+	}
+])
+.triggerAction({
+	matches: ['TechIssue']
 });
 
 // Dialog to handle Compliment
