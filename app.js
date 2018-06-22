@@ -3050,7 +3050,21 @@ bot.dialog('sayGoodbye',[
 // Dialog to handle Technology Issue
 bot.dialog('techIssue',[
 	function (session){
-		session.endConversation("ℹ️ Thanks for your feedback. Kindly write to mbsupport@mahs.in (Android) or mb_isupport@mahs.in (iOS) with more details to help us resolve. We are extremely sorry for the inconvenience.");
+		session.send("ℹ️ Thanks for your feedback. Kindly write to mbsupport@mahs.in (Android) or mb_isupport@mahs.in (iOS) with more details to help us resolve. We are extremely sorry for the inconvenience.");
+		loginIssues = new builder.HeroCard(session)
+									.title("Login issues on MediBuddy? Read on... ")
+									.subtitle("This blog article provides ways to troubleshoot issues faced while logging into MediBuddy.")
+									.text("https://www.medibuddy.in/")
+									.images([
+										new builder.CardImage(session)
+											.url('http://blogs.medibuddy.in/wp-content/uploads/2017/10/login-issues.png')
+											.alt('Login Issues')
+									])
+									.buttons([
+										builder.CardAction.openUrl(session, "http://blogs.medibuddy.in/login-issues-medibuddy-read/", "Read Article")
+										]);
+		session.endConversation(new builder.Message(session)
+			.addAttachment(loginIssues));		
 //		session.endDialog("goodbyeMsg");
 	},
 	function(session, results) {
