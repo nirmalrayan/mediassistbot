@@ -363,6 +363,7 @@ bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer, qnare
 	.matches("Offshore","askforOffshore")
 	.matches("labTest","labtest")
 	.matches("NotTrained","idontknow")
+	.matches("Abuse","askforAbuse")
 	.matches("qna", [
     function (session, args, next) {
 		var answerEntity = builder.EntityRecognizer.findEntity(args.entities, 'answer');
@@ -2970,7 +2971,6 @@ bot.dialog('askforInvestigation',[
 });
 
 // Dialog to redirect to Grievance
-/*
 bot.dialog('askforGrievance',[
 	function (session){
 		session.endDialog("ℹ️ We sincerely regret for the unpleasant experience! For expeditious handling of grievance we have a well laid down procedures as per Quality norms. There is a seperate Grievance Team to ensure grievance disposal within 7 working days. You may send your grievances, if any, to: The Grievance Cell, Medi Assist Insurance TPA Private Limited, Tower 'D', 4th Floor, IBC Knowledge Park, 4/1, Bannerghatta Road, Bengaluru - 560029. Email: grievance@mediassistindia.com");
@@ -2982,7 +2982,7 @@ bot.dialog('askforGrievance',[
 .triggerAction({
 	matches: [/grievance/i, /disappoint/i, /angry/i ,/disappointed/i, /dissatisfied/i, /unhappy/i, /horrible/i, /worst/i, /bad/i, /poor/i, /not settled/i, /not paid/i, /not received/i, /very poor/i, /very bad/i, /terrible/i, /not received any amount/i, /not intimated the hospital/i, /not working/i, /support is slow/i, /I did not get/i, /bad service/i, /I did not receive/i, /bad service/i, /bad tpa/i, /bad/i, /worst/i, /complaint/i, 'Grievance'],
 	
-});*/
+});
 
 // Dialog to redirect to Offshore
 bot.dialog('askforOffshore',[
@@ -3012,7 +3012,7 @@ bot.dialog('askforGeneralQuery',[
 	
 });
 
-/*
+
 // Dialog to handle abuse
 bot.dialog('askforAbuse',[
 	function (session){
@@ -3024,7 +3024,7 @@ bot.dialog('askforAbuse',[
 ])
 .triggerAction({
 	matches: ['Abuse']
-});*/
+});
 
 // Get random integer between min (inclusive) and max (inclusive)
 function getRandomInt(min, max) {
