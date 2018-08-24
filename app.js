@@ -177,7 +177,16 @@ bot.on('conversationUpdate', function (message) {
             if (identity.id === message.address.bot.id) {
 				bot.send(new builder.Message()
                     .address(message.address)
-					.text("Hello!  I'm a bot. Say Hi if you'd like to chat"));				
+					.text("Greetings!"));	
+
+				bot.send(new builder.Message()
+						.address(message.address)
+						.text("I answer all your healthcare queries related to claims (and their status), health checks, medicines, consultations, lab tests and even genome study!"));
+
+				bot.send(new builder.Message()
+                    .address(message.address)
+					.text("Example questions are \"Show menu\" or \"Show me network hospitals in Mumbai\" or \"What is my claim status?\""));
+											
             }
         });
     }
