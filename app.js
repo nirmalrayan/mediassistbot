@@ -342,7 +342,6 @@ bot.use({
 var qnarecognizer  = new cognitiveservices.QnAMakerRecognizer({
 	knowledgeBaseId: process.env.QnAknowledgeBaseId, 
 	authKey: process.env.QnAAuthKey,
-	top: 4,
 	endpointHostName: process.env.QnAEndpointHostName
 });
 
