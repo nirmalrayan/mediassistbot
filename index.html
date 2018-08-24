@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -10,11 +11,11 @@
 <style>
 * {box-sizing:border-box;}
       body, html {margin:0; padding:0; height:100%;}
-      body {font-family: 'Open Sans', sans-serif; -webkit-font-smoothing: antialiased; margin:0; padding:0; background: white; color:#333;height:100%; padding:15px;}
+      body {font-family: 'Open Sans', sans-serif; -webkit-font-smoothing: antialiased; margin:0; padding:0;  background:#eaeaea; color:#333;height:100%; padding:15px;}
 
       select, input:not([type=checkbox]):not([type=radio]), text-area {border: 1px solid #ced4da; width: 100%; padding: .375rem .75rem;}
-      .wrap {width:100%; max-width:1024px; margin:0 auto; height:calc(100vh - 30px); box-sizing:border-box; border-radius:4px; box-shadow:0px 0px 9px 0px rgba(50, 50, 50, 0.3); background:#fff; overflow:hidden;}
-      header {background: url('https://i.imgur.com/HA32ERE.png') no-repeat white; background-size:100% 100%; width:300px; color:#4A4A4A!important; text-align:center; padding: 40px 20px 20px 20px; box-sizing: border-box; height:calc(100vh - 30px); position:relative; float:right; z-index:1;}
+      .wrap {width:100%; max-width:1024px; margin:0 auto; height:calc(100vh - 30px); box-sizing:border-box; border-radius:4px; box-shadow:0px 0px 9px 0px rgba(50, 50, 50, 0.3); background:#fff; overflow:hidden; position:relative;}
+      header {background: url('https://i.imgur.com/HA32ERE.png') no-repeat white; background-size:100% 100%; width:300px; color:#4A4A4A!important; text-align:center; padding: 40px 20px 20px 20px; box-sizing: border-box; height:calc(100vh - 30px); position:relative; float:right; z-index:1; border-left:4px solid #ddd;}
       #bot {height:100%; position:relative; margin-right:300px;}
       .logo img {width:200px;}
       .medibuddy { background:white; vertical-align: sub; min-width: 135px; text-align: center; border-radius: 4px; display: block; color: #068bc7; margin-left: 5px; height: 32px; line-height: 30px; font-size: 22px;}
@@ -28,18 +29,18 @@
       .wc-header, .wc-upload {display:none!important;} 
       .wc-message-from-me.wc-message-from, .wc-message-from {display:none!important;}
       .wc-console .wc-textbox {left:0;} 
-      .wc-console {border:0; border-top:2px solid #ddd;border-right: 8px solid #ddd;}
+      .wc-console {border:0; border-top:2px solid #ddd;}
       .wc-console .wc-textbox input {padding-left:15px; color: #4A4A4A!important;}
 
       .showSearch {display:none; background:#eaeaea; color:#068bc7; text-decoration:none; padding:8px 20px; border-radius:2px;}
       .showSearch:hover{background-color: #0078d7; border-color: #0078d7; color: white;}
 
-      .head-sm {position:absolute; top:0; right:0; left:0; background:white; padding:10px; display:none; z-index:1;}
+      .head-sm {position:absolute; background:white; padding:10px; z-index:1; left:0; right:300px; border-bottom:4px solid #ddd;}
       .head-sm .logo img {width:40px; vertical-align:middle;}
       .head-sm.show {display:block;}
       .head-sm .medibuddy {display:inline-block;}
       header.hide {margin-top:-310vh; transition:margin .5s ease;}
-      .wc-message-groups{background: rgb(249,249,249); }
+      .wc-message-groups{background: rgb(249,249,249); top:98px;}
 
 
       .wc-list{overflow-x: scroll; overflow-y: hidden!important;}
@@ -125,6 +126,7 @@
         .social {position:absolute; bottom:15px; text-align:center; left: 0; right: 0;}
         header {width:100%;}
         #bot {margin-right:0;}
+        .head-sm {display:none; right:0;}
       }
       @media (max-width: 490px){
         .wc-message-group-content {padding: 20px 30px;}
@@ -157,9 +159,6 @@
    <title>MediBuddy - Conversation Bot</title>
   </head>
   <body>
-    <div class="head-sm" id="hdrSm" onClick="showHdr()">
-      <div class="logo"><img src="https://i.imgur.com/mM4QU5G.gif" alt=""><!--<img src="https://i.imgur.com/UWTYAae.png" alt="">--><span class="medibuddy">Medi<span>Buddy</span></span></div>
-    </div>
     <div class="wrap">
       <header id="hdr">
         <div class="logo"><img src="https://i.imgur.com/mM4QU5G.gif" alt=""><!--<img src="https://i.imgur.com/Nsxo4EK.png" alt="">--><span class="medibuddy">Medi<span>Buddy</span></span></div>
@@ -170,7 +169,11 @@
           <a href="https://www.facebook.com/MediBuddy/" target="_blank" uib-tooltip="Facebook" class="facebook"><svg xmlns="http://www.w3.org/2000/svg" viewBox="1759 -421 16.1 32"><defs><style>.facebook{fill:#385c8e;}</style></defs><path class="facebook" d="M.5,17H4V31.4a.562.562,0,0,0,.5.6h5.9a.472.472,0,0,0,.5-.5V17.1h4a.472.472,0,0,0,.5-.5l.6-5.3a.6.6,0,0,0-.1-.4.52.52,0,0,0-.4-.2H11V7.4c0-1,.5-1.5,1.6-1.5h3a.472.472,0,0,0,.5-.5V.5a.472.472,0,0,0-.5-.5H11.2A7.681,7.681,0,0,0,6,2,5.351,5.351,0,0,0,4.2,6.9v3.9H.5a.472.472,0,0,0-.5.5v5.2A.472.472,0,0,0,.5,17Z" transform="translate(1759 -421)"></path></svg></a><a href="https://www.linkedin.com/company/medibuddy/" target="_blank" uib-tooltip="LinkedIn" class="linkedin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="1826 -424 31.906 31.9"><defs><style>.linkedin{fill:#5082f6;}</style></defs><g transform="translate(1826 -424)"><path class="a" d="M7.4,10.3H1a.472.472,0,0,0-.5.5V31.4a.472.472,0,0,0,.5.5H7.4a.472.472,0,0,0,.5-.5V10.8C8,10.5,7.7,10.3,7.4,10.3Z"></path><path class="linkedin" d="M4.2,0A4.225,4.225,0,0,0,0,4.2,4.225,4.225,0,0,0,4.2,8.4,4.225,4.225,0,0,0,8.4,4.2,4.1,4.1,0,0,0,4.2,0Z"></path><path class="linkedin" d="M23.8,9.7a7.192,7.192,0,0,0-5.6,2.4V10.8a.472.472,0,0,0-.5-.5H11.5a.472.472,0,0,0-.5.5V31.4a.472.472,0,0,0,.5.5h6.4a.472.472,0,0,0,.5-.5V21.2c0-3.4.9-4.8,3.3-4.8,2.6,0,2.8,2.1,2.8,5v10a.472.472,0,0,0,.5.5h6.4a.472.472,0,0,0,.5-.5V20.1C32,15,31,9.7,23.8,9.7Z"></path></g></svg></a><a href="https://twitter.com/MediBuddyAbhi" target="_blank" uib-tooltip="Twitter" class="twitter"><svg xmlns="http://www.w3.org/2000/svg" viewBox="1909 -418 32.014 26.2"><defs><style>.twitter{fill:#73a1fb;}</style></defs><path class="twitter" d="M31.3,3l-1.5.6a7.217,7.217,0,0,0,1.4-2.4c.1-.2,0-.4-.2-.6a.638.638,0,0,0-.6,0A17.832,17.832,0,0,1,26.8,2,7.177,7.177,0,0,0,22,0a6.914,6.914,0,0,0-6.9,6.9,2.769,2.769,0,0,0,.1.9A18.107,18.107,0,0,1,3.1,1.4c-.1-.2-.3-.2-.5-.2s-.3.1-.4.3A6.756,6.756,0,0,0,1.3,5,7.266,7.266,0,0,0,2.9,9.5,4.7,4.7,0,0,0,2,8.9a.446.446,0,0,0-.5,0,.55.55,0,0,0-.3.5v.1a6.724,6.724,0,0,0,3.4,5.9.9.9,0,0,1-.5-.1c-.2,0-.4,0-.5.2a.44.44,0,0,0-.1.5,7.013,7.013,0,0,0,5,4.6A12.33,12.33,0,0,1,2,22.5a7.569,7.569,0,0,1-1.5-.1c-.2,0-.5.1-.5.3a.481.481,0,0,0,.2.6,18.767,18.767,0,0,0,10,2.9A17.631,17.631,0,0,0,24,20.1,19.3,19.3,0,0,0,28.8,7.6V7a13.964,13.964,0,0,0,3.1-3.3.637.637,0,0,0,0-.6A.661.661,0,0,0,31.3,3Z" transform="translate(1909.039 -418)"></path></svg></a><a href="http://blogs.medibuddy.in/" target="_blank" uib-tooltip="Blog"><svg id="Capa_1" data-name="Capa 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><defs><style>.blog1{fill:#010002;}</style></defs><title>blog</title><path class="blog1" d="M227.21,227.2v6.13A25.88,25.88,0,0,1,253,259.2h6.16A32,32,0,0,0,227.21,227.2Z" transform="translate(-227.2 -227.2)"></path><path class="blog1" d="M227.2,238.07v6.13a15,15,0,0,1,15,15h6.16A21.15,21.15,0,0,0,227.2,238.07Z" transform="translate(-227.2 -227.2)"></path><path class="blog1" d="M231.46,250.66a4.25,4.25,0,1,0,4.26,4.25A4.26,4.26,0,0,0,231.46,250.66Z" transform="translate(-227.2 -227.2)"></path></svg></a>
         </div>
       </header>
-      <div id="bot"></div>
+      <div class="head-sm" id="hdrSm" onClick="showHdr()">
+        <div class="logo"><img src="https://i.imgur.com/mM4QU5G.gif" alt=""><!--<img src="https://i.imgur.com/UWTYAae.png" alt="">--><span class="medibuddy">Medi<span>Buddy</span></span></div>
+      </div>
+      <div id="bot">
+      </div>
 
     </div>
     <script src="https://cdn.botframework.com/botframework-webchat/latest/botchat.js"></script>
