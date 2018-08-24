@@ -190,7 +190,7 @@ bot.on('conversationUpdate', function (message) {
 					bot.send(new builder.Message()
                     .address(message.address)
 					.text("Example questions are \"Show menu\" or \"Show me network hospitals in Mumbai\" or \"What is my claim status?\""));
-				},2000);							
+				},4000);							
             }
         });
     }
