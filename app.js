@@ -4983,7 +4983,8 @@ bot.dialog('Coverage',[
 				.alt('Login to MediBuddy')
 		])
 		.buttons([
-			builder.CardAction.openUrl(session, "https://www.medibuddy.in/", "Login to MediBuddy")
+			builder.CardAction.openUrl(session, "https://www.medibuddy.in/", "Login to MediBuddy"),
+			builder.CardAction.openUrl(session, "https://www.google.com/url?q=https://portal.medibuddy.in/policy.aspx&sa=D&source=hangouts&ust=1541677704835000&usg=AFQjCNFTw9NFlXWUC_IRQAhIjEau3N2ZYg", "Click Here To Sign In")
 			]);
 
 		menucard.push(CoverageCard);
@@ -5000,6 +5001,6 @@ bot.dialog('Coverage',[
 	}
 ])
 .triggerAction({
-	matches: [/Coverage/i, /admitted/i, 'Claims - Coverage']
+	matches: [/Coverage/i, /Policy Coverage/i, 'Claims - Coverage']
 	
 });	
