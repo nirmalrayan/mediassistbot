@@ -342,8 +342,12 @@ bot.use({
 var qnarecognizer  = new cognitiveservices.QnAMakerRecognizer({
 	knowledgeBaseId: process.env.QnAknowledgeBaseId, 
 	authKey: process.env.QnAAuthKey,
-	endpointHostName: process.env.QnAEndpointHostName
+	endpointHostName: process.env.QnAEndpointHostName,
+	top: 5
 });
+
+var qnaMakerTools = new cognitiveservices.QnAMakerTools();
+bot.library(qnaMakerTools.createLibrary());
 
 //LUIS Configuration
 var model = process.env.LUISURI;
@@ -352,13 +356,17 @@ var recognizer = new builder.LuisRecognizer(model);
 //	.matches("Abuse","askforAbuse")
 //	.matches("TechIssue",)
  //  .matches("Logout", "logout")
-bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer, qnarecognizer]})
+bot.dialog('/refer', new builder.IntentDialog({ 
+		recognizers : [recognizer, qnarecognizer],
+		qnaThreshold: 0.5,
+		feedbackLib: qnaMakerTools
+	})
 	.matches("showMenu","showMenu")
 	.matches("SayHello", "hello")
 	.matches("GetName", "setName")
 	.matches("CustomerCare", "askforCallCenter")
 	.matches("HR", "askforHR")
-	.matches("Grievance", "askforGrievance")
+//	.matches("Grievance", "askforGrievance")
 	.matches("GeneralQuery", "askforGeneralQuery")
 	.matches("Investigation","askforInvestigation")
 	.matches("track claim","trackClaim")
@@ -374,6 +382,7 @@ bot.dialog('/refer', new builder.IntentDialog({ recognizers : [recognizer, qnare
 	.matches("downloadECard","downloadEcard")
 	.matches("Offshore","askforOffshore")
 	.matches("labTest","labtest")
+	.matches("Claims - Coverage","Coverage")
 	.matches("NotTrained","idontknow")
 	.matches("Abuse","askforAbuse")
 	.matches("qna", [
@@ -4960,3 +4969,37 @@ bot.dialog('genomeStudy',[
 //	confirmPrompt: "⚠️ This will cancel your current request. Are you sure? (yes/no)"
 	
 });
+
+// Dialog to trigger Claims - Coverage conversation 
+bot.dialog('Coverage',[
+	function (session){
+		var menucard = [];
+		CoverageCard = new builder.HeroCard(session)
+		.title("Coverage")
+		.subtitle("You've chosen 'Policy Coverage'. Login to MediBuddy and view Policy Coverage by clicking on 'Policy Detail'. ")
+		.images([
+			new builder.CardImage(session)
+				.url('https://i.imgur.com/Ljc7Zsz.png')
+				.alt('Login to MediBuddy')
+		])
+		.buttons([
+			builder.CardAction.openUrl(session, "https://www.medibuddy.in/", "Login to MediBuddy")
+			]);
+
+		menucard.push(CoverageCard);
+
+		var msg = new builder.Message(session)
+		.speak("You have chosen Policy Coverage. Login to MediBuddy and view Policy Coverage by clicking on Policy Detail.")
+//		.text("My abilities are still growing. In a nutshell, here's what I can do: ")
+		.attachmentLayout(builder.AttachmentLayout.carousel)
+		.attachments(menucard);
+		session.send(msg);
+	},
+	function(session, results){	
+		session.endDialogWithResult(results);		
+	}
+])
+.triggerAction({
+	matches: [/Coverage/i, /admitted/i, 'Claims - Coverage']
+	
+});	
