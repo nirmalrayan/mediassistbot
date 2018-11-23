@@ -4979,7 +4979,7 @@ bot.dialog('Coverage',[
 		.subtitle("You've chosen 'Policy Coverage'. Login to MediBuddy and view Policy Coverage by clicking on 'Policy Detail'. ")
 		.images([
 			new builder.CardImage(session)
-				.url('http://i.imgur.com/fHi26Ge.png')
+				.url('http://i.imgur.com/4QkvFaN.png')
 				.alt('Login to MediBuddy')
 		])
 		.buttons([
