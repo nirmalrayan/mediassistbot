@@ -416,14 +416,25 @@ bot.dialog("idontknow", (session, args) => {
 // Dialog to ask for Master Name
 bot.dialog('setName',[
 	function (session, args, next){
-			var nameEntity = builder.EntityRecognizer.findEntity(args.entities, 'SetName');
+			var nameEntity = builder.EntityRecognizer.findEntity(args.entities, 'builtin.personName');
 			if(nameEntity){
 				session.userData.masterName = nameEntity.entity;
 //				next({ response: nameEntity.entity });
-				session.endConversation("Hi "+ session.userData.masterName+"! I like your name, but I can help you better if you can give me your ");
+				
+				var msg = new builder.Message(session)
+				.speak("Hi "+ session.userData.masterName+"! I like your name, but I can help you better if you can give me your Medi Assist ID OR Claim Number ")
+				.text("Hi "+ session.userData.masterName+"! I like your name, but I can help you better if you can give me your ")
+				.suggestedActions(
+					builder.SuggestedActions.create(
+						session, [
+							builder.CardAction.imBack(session, "Get Claim ID", "Claim ID"),
+							builder.CardAction.imBack(session, "Get Medi Assist ID", "Medi Assist ID")
+						])
+				);
+			session.send(msg);	
 			}
 			else{
-				builder.Prompts.text(session, 'Please enter your name');
+				builder.Prompts.text(session, 'Please enter your full name');
 			}
 	},
 	function(session, results){
@@ -439,7 +450,6 @@ bot.dialog('setName',[
 				])
 		);
 	session.send(msg);	
-		session.send("Hi "+ session.userData.masterName+"! I like your name, but I can help you better if you can give me your ");
 	},
 	function(session, results){
 		session.userData.masterName = results.response;	
@@ -462,12 +472,12 @@ bot.dialog('setMAID',[
 		
 		var clmMAIDChecker = /^\d{10}$/.test(results.response);
 		if(JSON.stringify(clmMAIDChecker) == "true"){
-			session.beginDialog('askforOperation');
+			session.beginDialog('askforOperation2');
 			session.dialogData.MAID = results.response;
 		}
 		else{
 			session.send("⚠️ The Medi Assist ID should only be numeric and ten digits long.");
-			session.beginDialog('askforDownloadwMAIDConfirmation');
+			session.beginDialog('askforDownloadwMAIDConfirmationStandAlone');
 		}
 	},
 	function(session, results) {
@@ -478,7 +488,7 @@ bot.dialog('setMAID',[
 });
 
 
-// Dialog to ask for MAID
+// Dialog to ask for ClaimID
 bot.dialog('setClaimID',[
 	function (session){
 			session.beginDialog('askforClaimNumber');
@@ -492,7 +502,7 @@ bot.dialog('setClaimID',[
 		}
 		else{
 			session.send("⚠️ The claim number should only be `numeric` and `eight digits` long.");
-			session.beginDialog('askforTrackClaimwIDConfirmation');
+			session.beginDialog('askforTrackClaimwIDConfirmationStandAlone');
 		}
 	},
 	function(session, results) {
@@ -503,16 +513,15 @@ bot.dialog('setClaimID',[
 });
 
 // Dialog for displaying menu after completing requested tasks
-bot.dialog('askforOperation',[
+bot.dialog('askforOperation2',[
 	function (session){
-		session.send('Great! Would you want me to display');
-		session.send("");
+
 		session.sendTyping();
 		setTimeout(function () {
 			
 		var msg = new builder.Message(session)
-			.speak("Great! Would you me to display your E-Card, Network Hospitals or Policy Details?")
-			.text("How else can I help you?")
+			.speak("Great! Would you want me to display your E-Card, Network Hospitals or Policy Details?")
+			.text("Great! Would you want me to display")
 			.suggestedActions(
 				builder.SuggestedActions.create(
 					session, [
@@ -524,6 +533,35 @@ bot.dialog('askforOperation',[
 		session.send(msg);	
 		}, 5000);		
 
+	},
+	function(session, results) {
+		session.endDialogWithResult(results);
+	}
+]);
+
+// Dialog for displaying menu after completing requested tasks
+bot.dialog('askforOperation',[
+	function (session){
+
+		session.sendTyping();
+		setTimeout(function () {
+			
+		var msg = new builder.Message(session)
+			.speak("Great! Would you want me to display your claim status or your eCard?")
+			.text("Great! Would you want me to display")
+			.suggestedActions(
+				builder.SuggestedActions.create(
+					session, [
+						builder.CardAction.imBack(session, "Track Claim with ID", "Claim Status"),
+						builder.CardAction.imBack(session, "Download E-Card", "Your eCard")
+					])
+			);
+		session.send(msg);	
+		}, 5000);		
+
+	},
+	function(session, results) {
+		session.endDialogWithResult(results);
 	}
 ]);
 
@@ -531,7 +569,7 @@ bot.dialog('askforOperation',[
 bot.dialog('showMenu',[
 	function (session){	
 			var menucards = [];
-			
+			session.userData.claimNumber = "";
 			trackClaimCard = new builder.HeroCard(session)
 									.title("Track Claim")
 									.subtitle("Tracking your claim can help you understand where you are in the claims process.")
@@ -923,6 +961,24 @@ bot.dialog('askforTrackClaimwIDConfirmation',[
 	function (session, results) {
 		if (results.response){
 			session.replaceDialog('trackClaimwID', {reprompt: true});
+		}
+		else {
+			session.endConversation();
+			session.beginDialog('askforMore');
+		}
+	}
+]);
+
+// Dialog to ask for Confirmation - Track with Claim Number
+bot.dialog('askforTrackClaimwIDConfirmationStandAlone',[
+	function (session){
+		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",
+		{	speak: "Let's try again? yes or no?",
+			listStyle: builder.ListStyle["button"]})
+	},
+	function (session, results) {
+		if (results.response){
+			session.replaceDialog('setClaimID', {reprompt: true});
 		}
 		else {
 			session.endConversation();
@@ -1370,19 +1426,28 @@ bot.dialog('askforFeedback',[
 
 // Dialog to Track with Claim Number
 bot.dialog('trackClaimwID', [
-				function (session){
+				function (session, args, next){
+
+					if(session.userData.claimNumber == ""){
 						session.beginDialog('askforClaimNumber');
+					}else{
+						next();
+					}
 
 				},	
-				function (session, results) {
-					var clmNoChecker = /^\d{8}$/.test(results.response);
-					if(JSON.stringify(clmNoChecker) == "true"){
-						session.userData.claimNumber = results.response;
+				function (session, results, next) {
+					if(results.response){
+						var clmNoChecker = /^\d{8}$/.test(results.response);
+						if(JSON.stringify(clmNoChecker) == "true"){
+							session.userData.claimNumber = results.response;
+							session.beginDialog('askforDOA');
+						}
+						else{
+							session.send("⚠️ The claim number should only be `numeric` and `eight digits` long.");
+							session.beginDialog('askforTrackClaimwIDConfirmation');
+						}
+					}else{
 						session.beginDialog('askforDOA');
-					}
-					else{
-						session.send("⚠️ The claim number should only be `numeric` and `eight digits` long.");
-						session.beginDialog('askforTrackClaimwIDConfirmation');
 					}
 				},
 				function (session, results) {
@@ -2014,14 +2079,19 @@ bot.dialog('downloadEcard',[
 		session.beginDialog('askforDownloadBy');
 	},
 	function (session, results){
-		const msg = new builder.Message(session);
-			msg.text("Would you like to know more about your eCard? Here are a few posts that'll help you out. ")
-				.addAttachment(new builder.HeroCard(session)
-						.buttons([
-							builder.CardAction.openUrl(session, "http://blogs.medibuddy.in/use-e-card-identify-beneficiaries/", "Watch Video"),
-							builder.CardAction.openUrl(session, "https://blogs.medibuddy.in/ecard/", "Read Blog")							
-							]));
-			session.send(msg);
+
+		
+		session.sendTyping();
+		setTimeout(function () {
+			const msg = new builder.Message(session);
+				msg.text("Would you like to know more about your eCard? Here are a few posts that'll help you out. ")
+					.addAttachment(new builder.HeroCard(session)
+							.buttons([
+								builder.CardAction.openUrl(session, "http://blogs.medibuddy.in/use-e-card-identify-beneficiaries/", "Watch Video"),
+								builder.CardAction.openUrl(session, "https://blogs.medibuddy.in/ecard/", "Read Blog")							
+								]));
+				session.send(msg);
+		}, 15000);		
 
 	},
 	function(session, results) {
@@ -2132,6 +2202,25 @@ bot.dialog('askforDownloadwMAIDConfirmation',[
 	}
 ]);
 
+// Dialog to ask for Confirmation - Download with Medi Assist ID
+bot.dialog('askforDownloadwMAIDConfirmationStandAlone',[
+	function (session){
+		builder.Prompts.confirm(session, "💡 Let's try again? (yes/no)",
+		{	speak: "Let's try again? yes or no?",
+			listStyle: builder.ListStyle["button"]})
+	},
+	function (session, results) {
+		if (results.response){
+			session.replaceDialog('setMAID', {reprompt: true});
+		}
+		else {
+			session.endConversation();
+			session.beginDialog('askforMore');
+		}
+		
+	}
+]);
+
 // Dialog to ask for Confirmation - Download with Employee ID
 bot.dialog('askforDownloadwEmpIDConfirmation',[
 	function (session){
@@ -2182,18 +2271,27 @@ bot.dialog('askforbenefName',[
 
 // Dialog to Download E-Card with Claim Number
 bot.dialog('downloadwID', [
-				function (session){
+				function (session, args, next){
+					if(session.userData.claimNumber == ""){
 						session.beginDialog('askforClaimNumber');
+					}else{
+						next();
+					}
 				},	
-				function (session, results) {
-					var clmNoChecker = /^\d{8}$/.test(results.response);
-					if(JSON.stringify(clmNoChecker) == "true"){
-						session.userData.claimNumber = results.response;
-						session.beginDialog('askforbenefName');
+				function (session, results, next) {
+					if(results.response){
+						var clmNoChecker = /^\d{8}$/.test(results.response);
+						if(JSON.stringify(clmNoChecker) == "true"){
+							session.userData.claimNumber = results.response;
+							session.beginDialog('askforbenefName');
+						}
+						else{
+							session.send("⚠️ The claim number should only be numeric and eight digits long.");
+							session.beginDialog('askforDownloadwIDConfirmation');
+						}
 					}
 					else{
-						session.send("⚠️ The claim number should only be numeric and eight digits long.");
-						session.beginDialog('askforDownloadwIDConfirmation');
+						session.beginDialog('askforbenefName');
 					}
 				},
 				function (session, results) {
@@ -2209,7 +2307,7 @@ bot.dialog('downloadwID', [
 					
 					var clmId = session.userData.claimNumber;
 					var benefName = session.dialogData.benefName;
-					
+					console.log(clmId);
 					var downloadlink = 'http://track-api-lb.medibuddy.in/getecard/ClaimId/'+clmId+'/'+benefName;
 					var downloadlink2 = 'http://track-api-lb.medibuddy.in/getEcardWithClaimId'
 					//Make POST request to MA Server
@@ -2283,36 +2381,44 @@ bot.dialog('downloadwID', [
 
 // Dialog to Download E-Card with Medi Assist ID
 bot.dialog('downloadwMAID', [
-				function (session){
+				function (session, args, next){
+
+					if(session.userData.MAID == ""){
 						session.beginDialog('askforMAID');
-				},	
-				function (session, results) {
-					
-					session.dialogData.MAID = results.response;
-					
-					var clmMAIDChecker = /^\d{10}$/.test(results.response);
-					if(JSON.stringify(clmMAIDChecker) == "true"){
-						session.beginDialog('askforbenefName');
-						session.dialogData.MAID = results.response;
+					}else{
+						next();
 					}
-					else{
-						session.send("⚠️ The Medi Assist ID should only be numeric and ten digits long.");
-						session.beginDialog('askforDownloadwMAIDConfirmation');
+				},	
+				function (session, results, next) {
+					if(results.response){
+						session.userData.MAID = results.response;
+						
+						var clmMAIDChecker = /^\d{10}$/.test(results.response);
+						if(JSON.stringify(clmMAIDChecker) == "true"){
+							session.beginDialog('askforbenefName');
+							session.userData.MAID = results.response;
+						}
+						else{
+							session.send("⚠️ The Medi Assist ID should only be numeric and ten digits long.");
+							session.beginDialog('askforDownloadwMAIDConfirmation');
+						}
+					}else{
+						session.beginDialog('askforbenefName');
 					}
 				},
-				function (session, results) {
-					session.dialogData.benefName = results.response;
+				function (session, results, next) {
+					session.userData.benefName = results.response;
 
 					// Process request and display reservation details
 					var msg = new builder.Message(session)
 					.speak("Finding Medi Assist E-Card with details... Medi Assist ID: %s and Beneficiary Name: %s. Please wait...", 
-					session.dialogData.MAID, session.dialogData.benefName)
+					session.userData.MAID, session.userData.benefName)
 					.text("Finding Medi Assist E-Card with details 🔎 <br/>Medi Assist ID: %s<br/>Beneficiary Name: %s",
-					session.dialogData.MAID, session.dialogData.benefName)
+					session.userData.MAID, session.userData.benefName)
 					session.send(msg);
 					
-					var MAID = session.dialogData.MAID;
-					var benefName = session.dialogData.benefName;
+					var MAID = session.userData.MAID;
+					var benefName = session.userData.benefName;
 					
 					var downloadlink = 'http://track-api-lb.medibuddy.in/getecard/MAID/'+MAID+'/'+benefName+'/9190';
 					
@@ -2634,7 +2740,7 @@ bot.dialog('askforLocation',  [
 
 			// Configure the request
 			var options = {
-				url: 'http://track-api-lb.medibuddy.in/GetHospitalsByLocation/.json',
+				url: 'http://track-api-lb.medibuddy.in/HospitalByLocationSearchRequest/.json',
 				method: 'POST',
 				headers: headers,
 				form: {"insuranceCompany":session.userData.insurer,"latitude":session.userData.lat,"longitude":session.userData.lng,"distance":10,"hospSpeciality":session.userData.speciality,"maRating":""}
@@ -5121,6 +5227,10 @@ bot.dialog('Coverage',[
 		.attachmentLayout(builder.AttachmentLayout.carousel)
 		.attachments(menucard);
 		session.send(msg);
+		setTimeout(function () {
+			session.endConversation();
+			session.beginDialog('askforMore');
+		},2000);
 	},
 	function(session, results){	
 		session.endDialogWithResult(results);		
