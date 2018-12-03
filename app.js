@@ -2712,7 +2712,6 @@ bot.dialog('askforLocation',  [
 			session.userData.place = results.response;
 			var formattedAddress = getFormattedAddressFromPlace(session, session.userData.place, ", ");
 			session.userData.formattedAddress = formattedAddress;
-			
 		}
 		
 		if(session.message.address.channelId === 'facebook'){
@@ -2745,7 +2744,6 @@ bot.dialog('askforLocation',  [
 				headers: headers,
 				form: {"insuranceCompany":session.userData.insurer,"latitude":session.userData.lat,"longitude":session.userData.lng,"distance":10,"hospSpeciality":session.userData.speciality,"maRating":""}
 			}
-
 			// Start the request
 			response = request(options, function (error, response, body) {
 				if (!error && response.statusCode == 200) {	
@@ -2833,11 +2831,22 @@ function codeLatLng(callback, session){
 	};
 
 	var geocoder = NodeGeocoder(options);
-
 	geocoder.geocode(session.userData.formattedAddress, function(err, res){
+		if(res){
 		session.userData.lat = JSON.stringify(res[0].latitude);
 		session.userData.lng = JSON.stringify(res[0].longitude);
 		callback(session.userData.lat, session.userData.lng);
+		}
+		if(err){
+			
+			session.send("Sorry, I'm unable to list our network hospitals at the moment! Please try again later.");
+			session.userData.serviceName = "Search Network";
+			session.userData.errorMessage = "Google - Geocode API (Quota Exceeded Exception)";
+			session.userData.source = "Search Network";
+			wasHelpful = 0;
+			storeFeedback(JSON.stringify(session.message.address.id).replace(/"/g, "'"), JSON.stringify(session.userData.serviceName).replace(/"/g, "'"), wasHelpful,JSON.stringify(session.userData.errorMessage).replace(/"/g, "'"), JSON.stringify(session.message.timestamp).replace(/"/g, "'"), JSON.stringify(session.userData.source).replace(/"/g, "'"));
+			return;
+		}
 	});
 }
 
