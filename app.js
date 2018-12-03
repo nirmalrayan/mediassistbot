@@ -2833,19 +2833,19 @@ function codeLatLng(callback, session){
 	var geocoder = NodeGeocoder(options);
 	geocoder.geocode(session.userData.formattedAddress, function(err, res){
 		if(res){
+			console.log("Result: "+ JSON.stringify(res));
 		session.userData.lat = JSON.stringify(res[0].latitude);
 		session.userData.lng = JSON.stringify(res[0].longitude);
 		callback(session.userData.lat, session.userData.lng);
 		}
 		if(err){
-			
+			console.log("Error: "+ JSON.stringify(err));
 			session.send("Sorry, I'm unable to list our network hospitals at the moment! Please try again later.");
 			session.userData.serviceName = "Search Network";
 			session.userData.errorMessage = "Google - Geocode API (Quota Exceeded Exception)";
-			session.userData.source = "Search Network";
 			wasHelpful = 0;
-			storeFeedback(JSON.stringify(session.message.address.id).replace(/"/g, "'"), JSON.stringify(session.userData.serviceName).replace(/"/g, "'"), wasHelpful,JSON.stringify(session.userData.errorMessage).replace(/"/g, "'"), JSON.stringify(session.message.timestamp).replace(/"/g, "'"), JSON.stringify(session.userData.source).replace(/"/g, "'"));
-			return;
+			storeFeedback(JSON.stringify(session.message.address.id).replace(/"/g, "'"), JSON.stringify(session.userData.serviceName).replace(/"/g, "'"), wasHelpful,JSON.stringify(session.userData.errorMessage).replace(/"/g, "'"), JSON.stringify(session.message.timestamp).replace(/"/g, "'"), JSON.stringify(session.message.source).replace(/"/g, "'"));
+			//return;
 		}
 	});
 }
