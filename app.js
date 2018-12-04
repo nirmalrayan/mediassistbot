@@ -5278,7 +5278,7 @@ bot.dialog('Testing',[
 
 		// Optional depending on the providers
 		httpAdapter: 'https', // Default
-		apiKey: 'AIzaSyBomZX5pOkakZph-fTfqVvnyedF6Mv8Og4', // for Mapquest, OpenCage, Google Premier
+		apiKey: process.env.GoogleGeo2, // for Mapquest, OpenCage, Google Premier
 		formatter: null         // 'gpx', 'string', ...
 		};
 
