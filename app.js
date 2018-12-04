@@ -11,6 +11,7 @@ var azure = require('botbuilder-azure');
 var cognitiveservices = require('botbuilder-cognitiveservices');
 var handoff = require('botbuilder-handoff');
 
+
 //Speech Recognition
 var fs = require('fs');
 var needle = require('needle');
@@ -5246,5 +5247,56 @@ bot.dialog('Coverage',[
 ])
 .triggerAction({
 	matches: [/Coverage/i, /Policy Coverage/i, 'Claims - Coverage']
+	
+});	
+
+
+
+// Dialog to trigger Claims - Coverage conversation 
+bot.dialog('Testing',[
+	function (session){
+		var menucard = [];
+		CoverageCard = new builder.HeroCard(session)
+		.title("Coverage")
+		.subtitle("You've chosen to test. Login to MediBuddy and view Policy Coverage by clicking on 'Policy Detail'. ")
+		.images([
+			new builder.CardImage(session)
+				.url('http://i.imgur.com/4QkvFaN.png')
+				.alt('Login to MediBuddy')
+		])
+		.buttons([
+			builder.CardAction.openUrl(session, "https://www.medibuddy.in/", "Login to MediBuddy"),
+			builder.CardAction.openUrl(session, "https://www.google.com/url?q=https://portal.medibuddy.in/policy.aspx&sa=D&source=hangouts&ust=1541677704835000&usg=AFQjCNFTw9NFlXWUC_IRQAhIjEau3N2ZYg", "Click Here To Sign In")
+			]);
+
+		menucard.push(CoverageCard);
+
+		var NodeGeocoder = require('node-geocoder');
+
+		var options = {
+		provider: 'google',
+
+		// Optional depending on the providers
+		httpAdapter: 'https', // Default
+		apiKey: 'AIzaSyDPyP4r_WlBSc81KhA15jsgNS4lXW4tmrE', // for Mapquest, OpenCage, Google Premier
+		formatter: null         // 'gpx', 'string', ...
+		};
+
+		var geocoder = NodeGeocoder(options);
+
+		// Using callback
+		geocoder.geocode('29 champs elysée paris', function(err, res) {
+		console.log("Result: "+res);
+		console.log("Error:"+ err);
+		session.send("Result: "+ JSON.stringify(res));
+		});
+
+	},
+	function(session, results){	
+		session.endDialogWithResult(results);		
+	}
+])
+.triggerAction({
+	matches: [/asdfasdfasdfasdf/i]
 	
 });	

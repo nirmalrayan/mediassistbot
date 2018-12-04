@@ -1,5 +1,6 @@
 var NodeGeocoder = require('node-geocoder');
 
+function testmodule(){
 var options = {
   provider: 'google',
 
@@ -16,3 +17,6 @@ geocoder.geocode('29 champs elysée paris', function(err, res) {
   console.log("Result: "+res);
   console.log("Error:"+ err);
 });
+}
+
+module.exports = testmodule;
