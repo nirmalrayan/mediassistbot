@@ -2825,7 +2825,7 @@ function codeLatLng(callback, session){
 			
 	var options = {
 		httpAdapter: 'https',
-		apiKey: process.env.GoogleGeo2,
+		apiKey: process.env.GoogleGeo,
 		formatter: null
 	};
 
