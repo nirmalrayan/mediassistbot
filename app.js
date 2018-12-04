@@ -5289,6 +5289,7 @@ bot.dialog('Testing',[
 		console.log("Result: "+res);
 		console.log("Error:"+ err);
 		session.send("Result: "+ JSON.stringify(res));
+		console.log("Error: "+ JSON.stringify(err));
 		});
 
 	},
