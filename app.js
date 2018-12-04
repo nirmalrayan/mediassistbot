@@ -1483,9 +1483,7 @@ bot.dialog('trackClaimwID', [
 					// Start the request
 					response = request(options, function (error, response, body) {
 						if (!error && response.statusCode == 200) {	
-							console.log('BODY: '+JSON.parse(body));
 							data = JSON.parse(body);
-							console.log('DATA: '+data);
 							if(JSON.stringify(data.isSuccess) === "true"){
 								
 								var claimdata = data.claimDetails;
@@ -2826,11 +2824,12 @@ function codeLatLng(callback, session){
 			
 	var options = {
 		httpAdapter: 'https',
-		apiKey: process.env.GoogleGeo,
+		apiKey: process.env.GoogleGeo2,
 		formatter: null
 	};
 
 	var geocoder = NodeGeocoder(options);
+	console.log("Geocoder: "+ JSON.stringify(geocoder));
 	geocoder.geocode(session.userData.formattedAddress, function(err, res){
 		if(res){
 			console.log("Result: "+ JSON.stringify(res));
