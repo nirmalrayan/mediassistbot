@@ -2825,7 +2825,7 @@ function codeLatLng(callback, session){
 			
 	var options = {
 		httpAdapter: 'https',
-		apiKey: process.env.GoogleGeo,
+		apiKey: process.env.GoogleGeo2,
 		formatter: null
 	};
 
@@ -5278,7 +5278,7 @@ bot.dialog('Testing',[
 
 		// Optional depending on the providers
 		httpAdapter: 'https', // Default
-		apiKey: 'AIzaSyDPyP4r_WlBSc81KhA15jsgNS4lXW4tmrE', // for Mapquest, OpenCage, Google Premier
+		apiKey: 'AIzaSyBomZX5pOkakZph-fTfqVvnyedF6Mv8Og4', // for Mapquest, OpenCage, Google Premier
 		formatter: null         // 'gpx', 'string', ...
 		};
 
