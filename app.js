@@ -5290,6 +5290,7 @@ bot.dialog('Testing',[
 		console.log("Error:"+ err);
 		session.send("Result: "+ JSON.stringify(res));
 		console.log("Error: "+ JSON.stringify(err));
+		console.log("Referrer URL: "+ req.headers.referer);
 		});
 
 	},
