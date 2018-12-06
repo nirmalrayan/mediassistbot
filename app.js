@@ -5255,6 +5255,7 @@ bot.dialog('Coverage',[
 // Dialog to trigger Claims - Coverage conversation 
 bot.dialog('Testing',[
 	function (session){
+		var request = require("request");
 		request("https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key="+process.env.GoogleGeo2, function(error, response, body) {
 			console.log(body);
 		  });
