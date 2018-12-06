@@ -5255,27 +5255,9 @@ bot.dialog('Coverage',[
 // Dialog to trigger Claims - Coverage conversation 
 bot.dialog('Testing',[
 	function (session){
-
-		var NodeGeocoder = require('node-geocoder');
-
-		var options = {
-		provider: 'google',
-
-		// Optional depending on the providers
-		httpAdapter: 'https', // Default
-		apiKey: process.env.GoogleGeo2, // for Mapquest, OpenCage, Google Premier
-		formatter: null         // 'gpx', 'string', ...
-		};
-
-		var geocoder = NodeGeocoder(options);
-		console.log("Calling Geocoder");
-		// Using callback
-		geocoder.geocode('29 champs elysée paris', function(err, res) {
-			console.log("Inside Geocoder");
-		console.log("Result: "+res);
-		console.log("Error:"+ err);
-		});
-
+		request("https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key="+process.env.GoogleGeo2, function(error, response, body) {
+			console.log(body);
+		  });
 	},
 	function(session, results){	
 		session.endDialogWithResult(results);		
@@ -5285,3 +5267,4 @@ bot.dialog('Testing',[
 	matches: [/asdfasdfasdfasdf/i]
 	
 });	
+
