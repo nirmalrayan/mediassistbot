@@ -5256,7 +5256,7 @@ bot.dialog('Coverage',[
 bot.dialog('Testing',[
 	function (session){
 		var request = require("request");
-		request("https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key="+process.env.GoogleGeo, function(error, response, body) {
+		request("https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key="+process.env.GoogleGeo2, function(error, response, body) {
 			console.log(body);
 		  });
 	},
