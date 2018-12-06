@@ -5252,3 +5252,36 @@ bot.dialog('Coverage',[
 
 
 
+// Dialog to trigger Claims - Coverage conversation 
+bot.dialog('Testing',[
+	function (session){
+
+		var NodeGeocoder = require('node-geocoder');
+
+		var options = {
+		provider: 'google',
+
+		// Optional depending on the providers
+		httpAdapter: 'https', // Default
+		apiKey: process.env.GoogleGeo2, // for Mapquest, OpenCage, Google Premier
+		formatter: null         // 'gpx', 'string', ...
+		};
+
+		var geocoder = NodeGeocoder(options);
+		console.log("Calling Geocoder");
+		// Using callback
+		geocoder.geocode('29 champs elysée paris', function(err, res) {
+			console.log("Inside Geocoder");
+		console.log("Result: "+res);
+		console.log("Error:"+ err);
+		});
+
+	},
+	function(session, results){	
+		session.endDialogWithResult(results);		
+	}
+])
+.triggerAction({
+	matches: [/asdfasdfasdfasdf/i]
+	
+});	
