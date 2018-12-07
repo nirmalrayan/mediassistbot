@@ -383,6 +383,7 @@ bot.dialog('/refer', new builder.IntentDialog({
 	.matches("downloadECard","downloadEcard")
 	.matches("Offshore","askforOffshore")
 	.matches("labTest","labtest")
+	.matches("serviceOP","serviceOP")
 	.matches("Claims - Coverage","Coverage")
 	.matches("NotTrained","idontknow")
 	.matches("Abuse","askforAbuse")
@@ -2090,8 +2091,13 @@ bot.dialog('downloadEcard',[
 								builder.CardAction.openUrl(session, "https://blogs.medibuddy.in/ecard/", "Read Blog")							
 								]));
 				session.send(msg);
-		}, 15000);		
-
+		}, 15000);	
+			
+		session.sendTyping();
+		setTimeout(function () {
+			session.endConversation();	
+			session.beginDialog('askforMore');
+		}, 25000);		
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
@@ -3312,22 +3318,40 @@ bot.dialog('sayGoodbye',[
 // Dialog to handle Technology Issue
 bot.dialog('techIssue',[
 	function (session){
-		session.send("ℹ️ Thanks for your feedback. Kindly write to mbsupport@mahs.in (Android) or mb_isupport@mahs.in (iOS) with more details to help us resolve. We are extremely sorry for the inconvenience.");
-		loginIssues = new builder.HeroCard(session)
-									.title("Login issues on MediBuddy? Read on... ")
-									.subtitle("This blog article provides ways to troubleshoot issues faced while logging into MediBuddy.")
-									.text("https://www.medibuddy.in/")
-									.images([
-										new builder.CardImage(session)
-											.url('http://blogs.medibuddy.in/wp-content/uploads/2017/10/login-issues.png')
-											.alt('Login Issues')
-									])
-									.buttons([
-										builder.CardAction.openUrl(session, "http://blogs.medibuddy.in/login-issues-medibuddy-read/", "Read Article")
-										]);
-		session.endConversation(new builder.Message(session)
-			.addAttachment(loginIssues));		
-//		session.endDialog("goodbyeMsg");
+		builder.Prompts.confirm(session, "Do you have a working account on MediBuddy? (yes/no)",
+		{	speak: "Do you have a working account on MediBuddy? yes or no?",
+		listStyle: builder.ListStyle["button"]})
+	},
+	function (session, results) {
+		if (results.response){
+			activateAccountCard = new builder.HeroCard(session)
+			.title("Account Issue")
+			.subtitle("Having troubles logging in? This should help.")
+			.buttons([
+				builder.CardAction.openUrl(session, "https://blogs.medibuddy.in/login-issues-medibuddy-read/", "Fix Login Issues on MediBuddy")
+				]);
+		session.send(new builder.Message(session)
+		.addAttachment(activateAccountCard));
+		setTimeout(function () {
+			session.endConversation();
+			session.beginDialog('askforMore');
+		},2000);
+		}
+		else {
+			activateAccountCard = new builder.HeroCard(session)
+			.title("Activate Account")
+			.subtitle("Not yet? Here's where you can go to activate your account.")
+			.text("https://me.medibuddy.in/")
+			.buttons([
+				builder.CardAction.openUrl(session, "https://me.medibuddy.in/", "Activate My Account")
+				]);
+		session.send(new builder.Message(session)
+		.addAttachment(activateAccountCard));		
+		setTimeout(function () {
+			session.endConversation();
+			session.beginDialog('askforMore');
+		},2000);
+		}
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
@@ -5250,9 +5274,374 @@ bot.dialog('Coverage',[
 	
 });	
 
+// Dialog to trigger Enrollment conversation 
+bot.dialog('Enrollment',[
+	function (session){
+		var menucard = [];
+		CoverageCard = new builder.HeroCard(session)
+		.title("Enrollment")
+		.subtitle("Seems to me that your query is the curious case of enrolment.  You can Login to MediBuddy to enrol your dependents  during the enrolment window. ")
+		.buttons([
+			builder.CardAction.openUrl(session, "https://www.medibuddy.in/", "Enrol Now"),
+			builder.CardAction.imBack(session, "Learn How To Enrol on MediBuddy", "Learn How To Enrol on MediBuddy"),
+			builder.CardAction.imBack(session, "help", "Ask me a Question"),
+			]);
+
+		menucard.push(CoverageCard);
+
+		var msg = new builder.Message(session)
+		.speak("Seems to me that your query is the curious case of enrolment.  You can Login to MediBuddy to enrol your dependents  during the enrolment window. ")
+//		.text("My abilities are still growing. In a nutshell, here's what I can do: ")
+		.attachmentLayout(builder.AttachmentLayout.carousel)
+		.attachments(menucard);
+		session.send(msg);
+	},
+	function(session, results){	
+		session.endDialogWithResult(results);		
+	}
+])
+.triggerAction({
+	matches: [/Enrol/i, /Enrollment/i, /Enrolment/i, /Dependent/i, 'Enrollment']
+	
+});	
+
+//Custom redirect to Learn how to enrol on MediBuddy
+bot.customAction({
+	matches: [/^Learn How To Enrol on MediBuddy$/gi],
+	onSelectAction: (session, args, next) => {
+		session.beginDialog('learnEnrollment');	
+	}
+});
 
 
-// Dialog to trigger Claims - Coverage conversation 
+// Dialog to trigger Learn Enrollment
+bot.dialog('learnEnrollment',[
+	function (session){
+		var menucard = [];
+		CoverageCard = new builder.HeroCard(session)
+		.title("Learn Enrollment")
+		.subtitle("I've got plenty in my locker to teach you how to enrol on MediBuddy. Here you go:")
+		.buttons([
+			builder.CardAction.openUrl(session, "https://blogs.medibuddy.in/health-insurance-enrollment/", "Enroling on MediBuddy"),
+			builder.CardAction.openUrl(session, "https://www.youtube.com/watch?v=HM0sVF8-fQU", "Enrolment Video"),
+
+			]);
+
+		menucard.push(CoverageCard);
+
+		var msg = new builder.Message(session)
+		.speak("Seems to me that your query is the curious case of enrolment.  You can Login to MediBuddy to enrol your dependents  during the enrolment window. ")
+//		.text("My abilities are still growing. In a nutshell, here's what I can do: ")
+		.attachmentLayout(builder.AttachmentLayout.carousel)
+		.attachments(menucard);
+		session.send(msg);
+	},
+	function(session, results){	
+		session.endDialogWithResult(results);		
+	}
+]);	
+
+// Dialog to trigger OutPatient Services Conversation
+bot.dialog('serviceOP',[
+	function (session){
+		var menucards = [];
+			
+		healthCheckCard = new builder.HeroCard(session)
+		.title("Health Check")
+		.subtitle("Booking health check has never been easier. Find the best hospitals with discounts in your city now.")
+		.images([
+			new builder.CardImage(session)
+				.url('https://i.imgur.com/iUqVLKv.png')
+				.alt('Health Check')
+		])
+		.buttons([
+			builder.CardAction.imBack(session, "Health Check", "Health Check")
+			]);
+
+		menucards.push(healthCheckCard);
+
+		medicineCard = new builder.HeroCard(session)
+				.title("Medicine")
+				.subtitle("We bring pharmacies to your doorsteps. Click below to know more about ordering medicines online.")
+				.images([
+					new builder.CardImage(session)
+						.url('https://i.imgur.com/XA85bjM.png')
+						.alt('Medicine')
+				])
+				.buttons([
+					builder.CardAction.imBack(session, "Medicine", "Medicine")
+					]);
+
+		menucards.push(medicineCard);
+
+		consultationCard = new builder.HeroCard(session)
+				.title("Consultation")
+				.subtitle("Do you want to book a consultation with a doctor of your choice? Click below to know more.")
+				.images([
+					new builder.CardImage(session)
+						.url('https://i.imgur.com/3CuCsZS.png')
+						.alt('Consultation')
+				])
+				.buttons([
+					builder.CardAction.imBack(session, "Consultation", "Consultation")
+					]);
+
+		menucards.push(consultationCard);
+
+		homecareCard = new builder.HeroCard(session)
+				.title("Home Health Care")
+				.subtitle("MediBuddy brings `Physiotherapist`, `Attendant` and `Nursing` visit facilities to your home.")
+				.images([
+					new builder.CardImage(session)
+						.url('https://i.imgur.com/I7xWgmo.png')
+						.alt('Home Health Care')
+				])
+				.buttons([
+					builder.CardAction.imBack(session, "Home Health Care", "Home Health Care")
+					]);
+
+		menucards.push(homecareCard);
+
+		dentalCard = new builder.HeroCard(session)
+				.title("Dental")
+				.subtitle("Your smile is important to us. Consult with oral health care specialists, at your convenience.")
+				.images([
+					new builder.CardImage(session)
+						.url('https://i.imgur.com/64tYHFT.png')
+						.alt('Dental')
+				])
+				.buttons([
+					builder.CardAction.imBack(session, "Dental", "Dental")
+					]);
+
+		menucards.push(dentalCard);
+
+		hospitalizationCard = new builder.HeroCard(session)
+				.title("Hospitalization")
+				.subtitle("Plan your hospitalization with MediBuddy at a trusted hospital with the benefit of preferred pricing.")
+				.images([
+					new builder.CardImage(session)
+						.url('https://i.imgur.com/SzU76sC.png')
+						.alt('Hospitalization')
+				])
+				.buttons([
+					builder.CardAction.openUrl(session, "https://www.medibuddy.in/hospitalization", "Hospitalization")
+					]);
+
+		menucards.push(hospitalizationCard);
+
+		teleconsultationCard = new builder.HeroCard(session)
+					.title("Tele Consultation")
+				.subtitle("Book a telephonic consultation with our trusted doctors, specialists and super specialists.")
+				.images([
+					new builder.CardImage(session)
+						.url('https://i.imgur.com/272nXHH.png')
+						.alt('Tele Consultation')
+				])
+				.buttons([
+					builder.CardAction.imBack(session, "Tele Consultation", "Tele Consultation")
+					]);
+
+		menucards.push(teleconsultationCard);
+
+		labtestCard = new builder.HeroCard(session)
+				.title("Lab Test")
+				.subtitle("Looking for a clinical laboratory for diagnostics? We have you covered.")
+				.images([
+					new builder.CardImage(session)
+						.url('https://i.imgur.com/Q1stnt3.png')
+						.alt('Lab Test')
+				])
+				.buttons([
+					builder.CardAction.imBack(session, "Lab Test", "Lab Test")
+					]);
+
+		menucards.push(labtestCard);
+
+		secondOpinionCard = new builder.HeroCard(session)
+				.title("Second Opinion")
+				.subtitle("Access the expertise and clinical guidance of our world class physicians remotely from your home.")
+				.images([
+					new builder.CardImage(session)
+						.url('https://i.imgur.com/s58dzcD.png')
+						.alt('Second Opinion')
+				])
+				.buttons([
+					builder.CardAction.openUrl(session, "https://www.medibuddy.in/gso/", "Get Second Opinion")
+					]);
+
+		menucards.push(secondOpinionCard);
+
+		genomeStudyCard = new builder.HeroCard(session)
+				.title("Genome Study")
+				.subtitle("Genome study involves DNA analysis to help predict, prevent and cure diseases.")
+				.images([
+					new builder.CardImage(session)
+						.url('https://i.imgur.com/Ljc7Zsz.png')
+						.alt('Genome Study')
+				])
+				.buttons([
+					builder.CardAction.openUrl(session, "https://www.medibuddy.in/Genome/", "Book Genome Study Package")
+					]);
+
+		menucards.push(genomeStudyCard);
+
+		if(session.message.address.channelId !== 'facebook'){
+		helpCard = new builder.HeroCard(session)
+				.title("Help Desk")
+				.subtitle("I can help you plan your hospitalization, book eCashless or help you understand how claims work.")
+				.images([
+					new builder.CardImage(session)
+						.url('https://i.imgur.com/shdopAW.png')
+						.alt('Help')
+				])
+				.buttons([
+					builder.CardAction.imBack(session, "Help", "Help")
+					]);
+
+		menucards.push(helpCard);
+		}
+		var msg = new builder.Message(session)
+		.speak("Go on then...choose any: ")
+		.text("Go on then...choose any: ")
+		.attachmentLayout(builder.AttachmentLayout.carousel)
+		.attachments(menucards);
+		session.send(msg);
+
+		setTimeout(function () {
+			session.endConversation();
+			session.beginDialog('askforMore');
+		},10000);
+	},
+	function(session, results){	
+		session.endDialogWithResult(results);		
+	}
+])
+.triggerAction({
+	matches: ['serviceOP']
+	
+});	
+
+// Dialog to trigger InPatient Services Conversation
+bot.dialog('serviceIP',[
+	function (session){
+		var menucards = [];
+		policyCoverageCard = new builder.HeroCard(session)
+		.title("Policy coverage details")
+		.subtitle("I've created a button for you. Click on it, login, and you'll be able to view your policy details.")
+		.images([
+			new builder.CardImage(session)
+				.url('https://i.imgur.com/7Fc2dgp.png')
+				.alt('Track Claim')
+		])
+		.buttons([
+			builder.CardAction.openUrl(session, "https://www.google.com/url?q=https://portal.medibuddy.in/policy.aspx&sa=D&source=hangouts&ust=1541677704835000&usg=AFQjCNFTw9NFlXWUC_IRQAhIjEau3N2ZYg", "Show Me My Policy Details")
+			]);
+
+	menucards.push(policyCoverageCard);
+
+	eCashlessCard = new builder.HeroCard(session)
+			.title("Plan eCashless for Hospitalization")
+			.subtitle("I suggest you devour this post on eCashless before you begin.")
+			.images([
+				new builder.CardImage(session)
+					.url('https://i.imgur.com/01QMBJe.png')
+					.alt('Plan eCashless')
+			])
+			.buttons([
+				builder.CardAction.imBack(session, "Know more about eCashless", "Know More")
+				]);
+
+	menucards.push(eCashlessCard);
+
+	searchNetworkCard = new builder.HeroCard(session)
+			.title("View Network Hospitals")
+			.subtitle("Search Medi Assist to find the nearest network hospitals and avail e-cashless benefits.")
+			.images([
+				new builder.CardImage(session)
+					.url('https://i.imgur.com/5XFqXU7.png')
+					.alt('Search Network')
+			])
+			.buttons([
+				builder.CardAction.imBack(session, "Locate Network Hospital", "Locate Network Hospital")
+				]);
+
+	menucards.push(searchNetworkCard);
+
+	ailmentIPCard = new builder.HeroCard(session)
+			.title("Know More About Ailment-Specific IP Services on MediBuddy")
+			.subtitle("Getting your Medi Assist E-Card is much simpler and at your finger tips. Download your E-Card now.")
+			.images([
+				new builder.CardImage(session)
+					.url('https://i.imgur.com/01QMBJe.png')
+					.alt('Download E-Card')
+			])
+			.buttons([
+				builder.CardAction.imBack(session, "Download E-Card", "Download E-Card")
+				]);
+
+//	menucards.push(ailmentIPCard);
+
+		var msg = new builder.Message(session)
+		.speak("Go on then...choose any: ")
+		.text("Go on then...choose any: ")
+		.attachmentLayout(builder.AttachmentLayout.carousel)
+		.attachments(menucards);
+		session.send(msg);
+
+		setTimeout(function () {
+			session.endConversation();
+			session.beginDialog('askforMore');
+		},10000);
+	},
+	function(session, results){	
+		session.endDialogWithResult(results);		
+	}
+])
+.triggerAction({
+	matches: ['serviceIP']
+	
+});	
+
+//Custom redirect to Know more about eCashless
+bot.customAction({
+	matches: [/^Know more about eCashless$/gi],
+	onSelectAction: (session, args, next) => {
+		session.beginDialog('learneCashless');	
+	}
+});
+
+
+// Dialog to trigger Learn eCashless
+bot.dialog('learneCashless',[
+	function (session){
+		var menucard = [];
+		eCashlessCard = new builder.HeroCard(session)
+		.title("Learn Enrollment")
+		.subtitle("Now, here's lies the gateway to cashless hospitalization. Would you like to...")
+		.buttons([
+			builder.CardAction.openUrl(session, "https://portal.medibuddy.in/Plannedhospitalisation.aspx", "Plan eCashless hospitalization"),
+			builder.CardAction.openUrl(session, "https://blogs.medibuddy.in/ecashless-paving-the-way-for-digital-transformation/", "Read Now"),
+			builder.CardAction.imBack(session, "help", "Read Cashless Guidelines"),
+			builder.CardAction.imBack(session, "help", "Read Reimbursement Guidelines"),
+
+			]);
+
+		menucard.push(eCashlessCard);
+
+		var msg = new builder.Message(session)
+		.speak("Now, here's lies the gateway to cashless hospitalization. Would you like to Plan eCashless hospitalization, read about eCashless")
+//		.text("My abilities are still growing. In a nutshell, here's what I can do: ")
+		.attachmentLayout(builder.AttachmentLayout.carousel)
+		.attachments(menucard);
+		session.send(msg);
+	},
+	function(session, results){	
+		session.endDialogWithResult(results);		
+	}
+]);	
+
+// Dialog to trigger Testing
 bot.dialog('Testing',[
 	function (session){
 		var request = require("request");
