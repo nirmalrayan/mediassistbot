@@ -386,6 +386,7 @@ bot.dialog('/refer', new builder.IntentDialog({
 	.matches("serviceOP","serviceOP")
 	.matches("Claims - Coverage","Coverage")
 	.matches("NotTrained","idontknow")
+	.matches("contact","contact")
 	.matches("Abuse","askforAbuse")
 	.matches("qna", [
     function (session, args, next) {
@@ -5640,6 +5641,38 @@ bot.dialog('learneCashless',[
 		session.endDialogWithResult(results);		
 	}
 ]);	
+
+
+// Dialog to trigger Contact dialog
+bot.dialog('contact',[
+	function (session){
+
+		var msg = new builder.Message(session)
+		.speak("I will answer all your queries someday. But until then, I'm going to point you in the right direction where you can get all your answers. Hope this helps!")
+		.text("I will answer all your queries someday. But until then, I'm going to point you in the right direction where you can get all your answers. Hope this helps! :-)")
+		.suggestedActions(
+			builder.SuggestedActions.create(
+				session, [
+					builder.CardAction.openUrl(session, "https://www.medibuddy.in/", "Login to MediBuddy"),
+					builder.CardAction.openUrl(session, "https://blogs.medibuddy.in/", "Need More")
+				])
+		);
+	session.send(msg);	
+	
+		setTimeout(function () {
+			session.endConversation();
+			session.beginDialog('askforMore');
+		},15000);
+	},
+	function(session, results){	
+		session.endDialogWithResult(results);		
+	}
+])
+.triggerAction({
+	matches: ['contact']
+	
+});	
+
 
 // Dialog to trigger Testing
 bot.dialog('Testing',[
