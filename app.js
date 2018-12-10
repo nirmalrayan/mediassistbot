@@ -119,8 +119,7 @@ var connector = new builder.ChatConnector
 var bot = new builder.UniversalBot(connector,[
 
     function (session) {
-		session.userData.userID = session.message.address.id;
-		session.userData.userName = session.message.user.name;
+
 		if(session.message.address.channelId === 'facebook'){
  			var welcomeCard = new builder.HeroCard(session)
 				.title("Hi "+session.message.address.user.name+"! Nice to see you. I am MediBuddy")
@@ -419,7 +418,7 @@ bot.dialog("idontknow", (session, args) => {
 // Dialog to ask for Master Name
 bot.dialog('setName',[
 	function (session, args, next){
-			var nameEntity = builder.EntityRecognizer.findEntity(args.entities, 'builtin.personName');
+			var nameEntity = builder.EntityRecognizer.findEntity(args.entities, 'setName');
 			if(nameEntity){
 				session.userData.masterName = nameEntity.entity;
 //				next({ response: nameEntity.entity });
@@ -5691,3 +5690,150 @@ bot.dialog('Testing',[
 	
 });	
 
+
+// Generic Help dialog for Bot
+bot.dialog('Junk', [
+	function(session){
+			builder.Prompts.text(session,"Type in your query, and I'll try my best to resolve it");
+	},
+	function(session, results){
+		if(results.response){
+			/* Start of QNA */
+			let host = process.env.QnAHostName;
+
+			// NOTE: Replace this with a valid endpoint key.
+			// This is not your subscription key.
+			// To get your endpoint keys, call the GET /endpointkeys method.
+			let endpoint_key = process.env.QnAAuthKey;
+
+			// NOTE: Replace this with a valid knowledge base ID.
+			// Make sure you have published the knowledge base with the
+			// POST /knowledgebases/{knowledge base ID} method.
+			let kb = process.env.QnAknowledgeBaseId;
+
+			let method = "/qnamaker/knowledgebases/" + kb + "/generateAnswer";
+
+			let question = {
+				'question': JSON.stringify(results.response),
+				'top': 3
+			};
+
+			let pretty_print = function (s) {
+				return JSON.stringify(JSON.parse(s), null, 4);
+			}
+
+			// callback is the function to call when we have the entire response.
+			let response_handler = function (callback, response) {
+				let body = '';
+				response.on ('data', function (d) {
+					body += d;
+				});
+				response.on ('end', function () {
+			// Call the callback function with the status code, headers, and body of the response.
+					callback ({ status : response.statusCode, headers : response.headers, body : body });
+				});
+				response.on ('error', function (e) {
+					console.log ('Error: ' + e.message);
+					session.send("Looks like I still have to learn some more! Sorry, but I can't help you with your query right now.");
+					session.send("While I attend my classes, please write to info@mediassistindia.com for help.");
+					
+				session.beginDialog('askforMore');
+				});
+			};
+
+			// Get an HTTP response handler that calls the specified callback function when we have the entire response.
+			let get_response_handler = function (callback) {
+			// Return a function that takes an HTTP response, and is closed over the specified callback.
+			// This function signature is required by https.request, hence the need for the closure.
+				return function (response) {
+					response_handler (callback, response);
+				}
+			}
+
+			// callback is the function to call when we have the entire response from the POST request.
+			let post = function (path, content, callback) {
+				let request_params = {
+					method : 'POST',
+					hostname : host,
+					path : path,
+					headers : {
+						'Content-Type' : 'application/json',
+						'Content-Length' : content.length,
+						'Authorization' : 'EndpointKey ' + endpoint_key,
+					}
+				};
+
+			// Pass the callback function to the response handler.
+				let req = https.request (request_params, get_response_handler (callback));
+				req.write (content);
+				req.end ();
+			}
+
+			// callback is the function to call when we have the response from the /knowledgebases POST method.
+			let get_answers = function (path, req, callback) {
+				console.log ('Calling ' + host + path + '.');
+			// Send the POST request.
+				post (path, req, function (response) {
+					callback (response.body);
+				});
+			}
+
+			// Convert the request to a string.
+			let content = JSON.stringify(question);
+			get_answers (method, content, function (result) {
+			// Write out the response from the /knowledgebases/create method.
+				result = JSON.parse(result);
+				result2 = JSON.parse(JSON.stringify(result.answers[0].answer));
+				if(result2 == "No good match found in KB."){
+					var wasHelpful = 0;
+					session.userData.serviceName = "Not Trained - Help";
+					var userQuery = JSON.parse(question.question);
+					storeFeedback(JSON.stringify(session.message.address.id).replace(/"/g, "'"), JSON.stringify(session.userData.serviceName).replace(/"/g, "'"), wasHelpful,JSON.stringify(userQuery).replace(/"/g, "'"), JSON.stringify(session.message.timestamp).replace(/"/g, "'"), JSON.stringify(session.message.source).replace(/"/g, "'"));
+			
+					session.send("Looks like I still have to learn some more! Sorry, but I can't help you with your query right now.");
+					session.send("While I attend my classes, please write to info@mediassistindia.com for help.");
+					session.beginDialog('askforMore');
+					session.endConversation();
+				}else{
+					var customMsg = new builder.Message(session).text(result2);
+					session.send(customMsg);
+					session.userData.serviceName = "Help";
+					session.beginDialog('askforFeedback');
+				}
+				
+//				console.log (pretty_print(JSON.stringify(result.answers[0].answer)));
+			});
+
+			/*End of QNA */
+		}
+	}
+	/*,
+	function(session, results){
+		
+		const msg = new builder.Message(session);
+			msg.text("Would any of these topics be of interest to you?")
+				.addAttachment(new builder.HeroCard(session)
+						.images([
+							new builder.CardImage(session)
+								.url('https://i.imgur.com/7XCSpue.png')
+								.alt('Other Help Topics')
+						])
+						.buttons([
+							builder.CardAction.openUrl(session, "http://blogs.medibuddy.in/get-insights-into-your-non-medical-expenses-now-with-medibuddy/", "Non Medical Expenses"),
+							builder.CardAction.openUrl(session, "http://blogs.medibuddy.in/claimed-and-approved-amounts-difference/", "Difference between claimed and approved amount"),
+							builder.CardAction.openUrl(session, "http://blogs.medibuddy.in/faster-claim-reimbursement-medibuddy-5-step-process/", "Raising reimbursement claims for pre- and post-hospitalization expenses"),
+							builder.CardAction.openUrl(session, "https://goo.gl/mz8uQL", "Medicines and post-operative home healthcare")								
+							]));
+			session.send(msg);
+			session.userData.serviceName = "Information Center";
+			session.beginDialog('askforFeedback');
+			
+//			session.endConversation();
+	} */
+])
+.triggerAction({
+	matches: /^help$/i,
+	onSelectAction: (session, args) => {
+		session.beginDialog(args.action, args);
+	}
+});
