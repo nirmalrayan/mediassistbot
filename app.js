@@ -453,9 +453,6 @@ bot.dialog('setName',[
 		);
 	session.send(msg);	
 	},
-	function(session, results){
-		session.userData.masterName = results.response;	
-	},
 	function(session, results) {
 		session.endDialogWithResult(results);
 	}
