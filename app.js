@@ -2842,7 +2842,7 @@ function codeLatLng(callback, session){
 		session.userData.lng = JSON.stringify(res[0].longitude);
 		callback(session.userData.lat, session.userData.lng);
 		}
-		if(err){
+		else if(err){
 			console.log("Error: "+ JSON.stringify(err));
 			session.send("Sorry, I'm unable to list our network hospitals at the moment! Please try again later.");
 			session.userData.serviceName = "Search Network";
