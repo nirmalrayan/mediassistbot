@@ -100,6 +100,7 @@ server.listen(process.env.PORT || process.env.port || 65535, function()
 server.use(restify.plugins.bodyParser());
 server.use(restify.plugins.queryParser({ mapParams: true }));
 
+//Create new instance of in-memory storage
 var inMemoryStorage = new builder.MemoryBotStorage(); 
 
 server.pre(restify.pre.sanitizePath()); // Add this line
@@ -133,7 +134,7 @@ var bot = new builder.UniversalBot(connector,[
 					builder.CardAction.imBack(session, "Show Menu", "Show Menu")
 				]); 
 		}
-		else{
+/*		else{
 			if(session.userData.masterName){
 				var welcomeCard = new builder.ThumbnailCard(session)
 				.title("Hi " + session.userData.masterName + "! Nice to see you again")
@@ -148,7 +149,7 @@ var bot = new builder.UniversalBot(connector,[
 				]);
 				
 			}
-			else{
+*/			else{
 				var welcomeCard = new builder.ThumbnailCard(session)
 				.title("Greetings! I'm MediBuddy")
 				.subtitle("I will be your personal healthcare assistant. \n\n💡 Type \"`show menu`\" or \"`#`\" at any time to see the menu.")
@@ -162,7 +163,7 @@ var bot = new builder.UniversalBot(connector,[
 				]);
 			
 			}
-		}	
+//		}	
 			session.send(new builder.Message(session)
 				.speak("Greetings! I'm MediBuddy. I will be your healthcare assistant. Type Show Menu or # at any time to see the menu.")
 				.addAttachment(welcomeCard));
@@ -5615,7 +5616,7 @@ bot.dialog('learneCashless',[
 		var menucard = [];
 		eCashlessCard = new builder.HeroCard(session)
 		.title("Learn Enrollment")
-		.subtitle("Now, here's lies the gateway to cashless hospitalization. Would you like to...")
+		.subtitle("Now, here lies the gateway to cashless hospitalization. Would you like to...")
 		.buttons([
 			builder.CardAction.openUrl(session, "https://portal.medibuddy.in/Plannedhospitalisation.aspx", "Plan eCashless hospitalization"),
 			builder.CardAction.openUrl(session, "https://blogs.medibuddy.in/ecashless-paving-the-way-for-digital-transformation/", "Read Now"),
@@ -5627,7 +5628,7 @@ bot.dialog('learneCashless',[
 		menucard.push(eCashlessCard);
 
 		var msg = new builder.Message(session)
-		.speak("Now, here's lies the gateway to cashless hospitalization. Would you like to Plan eCashless hospitalization, read about eCashless")
+		.speak("Now, here lies the gateway to cashless hospitalization. Would you like to Plan eCashless hospitalization, read about eCashless")
 //		.text("My abilities are still growing. In a nutshell, here's what I can do: ")
 		.attachmentLayout(builder.AttachmentLayout.carousel)
 		.attachments(menucard);
