@@ -1584,102 +1584,107 @@ bot.dialog('trackClaimwMAID', [
 				},
 				function (session, results) {
 					session.dialogData.hospitalizationDate = builder.EntityRecognizer.resolveTime([results.response]);
-
-					// Process request and display reservation details
-					var msg = new builder.Message(session)
-					.speak("Tracking claim with details... Medi Assist ID: %s and Date: %s. Please wait...", 
-					session.userData.MAID, session.dialogData.hospitalizationDate.toString().substring(0,15))
-					.text("Tracking claim with details 🕵️ <br/>Medi Assist ID: %s<br/>Date: %s. <br/><br/>Please wait ⏳",
-					session.userData.MAID, session.dialogData.hospitalizationDate.toString().substring(0,15))
-					session.send(msg);
-					
-					//Make POST request to MA Server
-					var request = require('request');
-					
-					// Set the headers
-					var headers = {
-						'User-Agent':       'Super Agent/0.0.1',
-						'Content-Type':     'application/x-www-form-urlencoded'
-					}
-
-					// Configure the request
-					var options = {
-						url: 'https://www.medibuddy.in/WAPI//infiniti/track/ClaimWithMAID.json',
-						method: 'POST',
-						headers: headers,
-						form: {'maid':session.dialogData.MAID,'date':session.dialogData.hospitalizationDate}
-					}
-
-					// Start the request
-					response = request(options, function (error, response, body) {
-						if (!error && response.statusCode == 200) {	
-							// Print out the response body
-							data = JSON.parse(body);
-							
-							if(JSON.stringify(data.isSuccess) === "true"){
-
-								var claimdata = data.claimDetails;
-							
-								session.userData.trackIsSuccess = JSON.stringify(data.isSuccess);
-								session.userData.trackIsRetailPolicy = JSON.stringify(data.isRetailPolicy);
-								
-								//Claim Details
-								session.userData.trackClaimId = JSON.stringify(claimdata[0].claimDetails.claimId);
-								session.userData.trackClaimType = claimdata[0].claimDetails.claimType;
-								session.userData.trackClaimReceivedDate = claimdata[0].claimDetails.claimReceivedDate;
-								session.userData.trackClmAmount = JSON.stringify(claimdata[0].claimDetails.clmAmount);
-								session.userData.trackClmApprovedAmt = JSON.stringify(claimdata[0].claimDetails.clmApprovedAmt);
-								session.userData.trackclmPreAuthAmt = JSON.stringify(claimdata[0].claimDetails.clmPreAuthAmt);
-								session.userData.trackClaimStatus = claimdata[0].claimDetails.claimStatus;
-								session.userData.trackDoa = claimdata[0].claimDetails.doa;
-								session.userData.trackDod = claimdata[0].claimDetails.dod;
-								session.userData.trackClaimApprovedDate = claimdata[0].claimDetails.claimApprovedDate;
-								if(claimdata[0].claimDetails.claimDeniedDate === "01-Jan-0001" ){
-									session.userData.trackClaimDeniedDate = "-";
-								}else{
-									session.userData.trackClaimDeniedDate = claimdata[0].claimDetails.claimDeniedDate;
-								}
-								session.userData.trackHospitalName = claimdata[0].claimDetails.hospitalName;
-								session.userData.trackIsClmNMI = JSON.stringify(claimdata[0].claimDetails.isClmNMI);
-								session.userData.trackIsClmDenied = JSON.stringify(claimdata[0].claimDetails.isClmDenied);
-								session.userData.trackDenialReasons = claimdata[0].claimDetails.denialReasons;
-								
-								//Policy Details
-								session.userData.trackPolicyNo = claimdata[0].beneficiaryDetails.policyNo;
-								session.userData.trackBenefMAID = JSON.stringify(claimdata[0].beneficiaryDetails.benefMAId);
-								session.userData.trackBenefName = claimdata[0].beneficiaryDetails.benefName;
-								session.userData.trackBenefRelation = claimdata[0].beneficiaryDetails.benefRelation;
-								
-								var card = createReceiptCard(session);
-								var msg = new builder.Message(session)
-								.speak("I was able to get real time status on your claim. Here it is:")
-								.addAttachment(card);
-								session.send("Here are your latest claim details:");
-								session.send(msg);
-								session.userData.serviceName = "Track with Medi Assist ID";
-								session.beginDialog('askforFeedback');
-/*								session.sendTyping();
-								setTimeout(function () {
-									session.endConversation();		
-									session.beginDialog('askforMore');
-								}, 5000);		*/
-  							}
-							else if(JSON.stringify(data.isSuccess) === "false"){
-//								console.log("Error message is "+ data.errorMessage);
-								if(data.errorMessage == "Please enter valid Medi Assist ID."){
-									session.send('⚠️ The Medi Assist ID you have entered is incorrect.');
-									session.beginDialog('askforTrackClaimwMAIDConfirmation');
-								}
-								else if (data.errorMessage == "Please enter valid date between hospitalization and discharge."){
-									session.send('⚠️ The date you have entered is incorrect.');
-									session.beginDialog('askforTrackClaimwMAIDConfirmation');
-								}
-							}  
+					if(session.dialogData.hospitalizationDate){
+						// Process request and display reservation details
+						var msg = new builder.Message(session)
+						.speak("Tracking claim with details... Medi Assist ID: %s and Date: %s. Please wait...", 
+						session.userData.MAID, session.dialogData.hospitalizationDate.toString().substring(0,15))
+						.text("Tracking claim with details 🕵️ <br/>Medi Assist ID: %s<br/>Date: %s. <br/><br/>Please wait ⏳",
+						session.userData.MAID, session.dialogData.hospitalizationDate.toString().substring(0,15))
+						session.send(msg);
+						
+						//Make POST request to MA Server
+						var request = require('request');
+						
+						// Set the headers
+						var headers = {
+							'User-Agent':       'Super Agent/0.0.1',
+							'Content-Type':     'application/x-www-form-urlencoded'
 						}
-					});
-					
-					session.endDialog();
+
+						// Configure the request
+						var options = {
+							url: 'https://www.medibuddy.in/WAPI//infiniti/track/ClaimWithMAID.json',
+							method: 'POST',
+							headers: headers,
+							form: {'maid':session.dialogData.MAID,'date':session.dialogData.hospitalizationDate}
+						}
+
+						// Start the request
+						response = request(options, function (error, response, body) {
+							if (!error && response.statusCode == 200) {	
+								// Print out the response body
+								data = JSON.parse(body);
+								
+								if(JSON.stringify(data.isSuccess) === "true"){
+
+									var claimdata = data.claimDetails;
+								
+									session.userData.trackIsSuccess = JSON.stringify(data.isSuccess);
+									session.userData.trackIsRetailPolicy = JSON.stringify(data.isRetailPolicy);
+									
+									//Claim Details
+									session.userData.trackClaimId = JSON.stringify(claimdata[0].claimDetails.claimId);
+									session.userData.trackClaimType = claimdata[0].claimDetails.claimType;
+									session.userData.trackClaimReceivedDate = claimdata[0].claimDetails.claimReceivedDate;
+									session.userData.trackClmAmount = JSON.stringify(claimdata[0].claimDetails.clmAmount);
+									session.userData.trackClmApprovedAmt = JSON.stringify(claimdata[0].claimDetails.clmApprovedAmt);
+									session.userData.trackclmPreAuthAmt = JSON.stringify(claimdata[0].claimDetails.clmPreAuthAmt);
+									session.userData.trackClaimStatus = claimdata[0].claimDetails.claimStatus;
+									session.userData.trackDoa = claimdata[0].claimDetails.doa;
+									session.userData.trackDod = claimdata[0].claimDetails.dod;
+									session.userData.trackClaimApprovedDate = claimdata[0].claimDetails.claimApprovedDate;
+									if(claimdata[0].claimDetails.claimDeniedDate === "01-Jan-0001" ){
+										session.userData.trackClaimDeniedDate = "-";
+									}else{
+										session.userData.trackClaimDeniedDate = claimdata[0].claimDetails.claimDeniedDate;
+									}
+									session.userData.trackHospitalName = claimdata[0].claimDetails.hospitalName;
+									session.userData.trackIsClmNMI = JSON.stringify(claimdata[0].claimDetails.isClmNMI);
+									session.userData.trackIsClmDenied = JSON.stringify(claimdata[0].claimDetails.isClmDenied);
+									session.userData.trackDenialReasons = claimdata[0].claimDetails.denialReasons;
+									
+									//Policy Details
+									session.userData.trackPolicyNo = claimdata[0].beneficiaryDetails.policyNo;
+									session.userData.trackBenefMAID = JSON.stringify(claimdata[0].beneficiaryDetails.benefMAId);
+									session.userData.trackBenefName = claimdata[0].beneficiaryDetails.benefName;
+									session.userData.trackBenefRelation = claimdata[0].beneficiaryDetails.benefRelation;
+									
+									var card = createReceiptCard(session);
+									var msg = new builder.Message(session)
+									.speak("I was able to get real time status on your claim. Here it is:")
+									.addAttachment(card);
+									session.send("Here are your latest claim details:");
+									session.send(msg);
+									session.userData.serviceName = "Track with Medi Assist ID";
+									session.beginDialog('askforFeedback');
+	/*								session.sendTyping();
+									setTimeout(function () {
+										session.endConversation();		
+										session.beginDialog('askforMore');
+									}, 5000);		*/
+								}
+								else if(JSON.stringify(data.isSuccess) === "false"){
+	//								console.log("Error message is "+ data.errorMessage);
+									if(data.errorMessage == "Please enter valid Medi Assist ID."){
+										session.send('⚠️ The Medi Assist ID you have entered is incorrect.');
+										session.beginDialog('askforTrackClaimwMAIDConfirmation');
+									}
+									else if (data.errorMessage == "Please enter valid date between hospitalization and discharge."){
+										session.send('⚠️ The date you have entered is incorrect.');
+										session.beginDialog('askforTrackClaimwMAIDConfirmation');
+									}
+								}  
+							}
+						});
+						session.endDialog();
 				}
+				else{
+					session.send("I'm sorry, I didn't get that. Let's retry.");
+					session.replaceDialog('askforDOA');
+				}	
+	}
+				
 ]);
 
 // Dialog to ask for Confirmation - Track with Employee Details
@@ -1718,98 +1723,106 @@ bot.dialog('trackClaimwEmpID', [
 					session.dialogData.hospitalizationDate = builder.EntityRecognizer.resolveTime([results.response]);
 
 					// Process request and display reservation details
-					var msg = new builder.Message(session)
-					.speak("Tracking claim with details... Employee ID: %s, Corporate: %s and Date: %s. Please wait...", 
-					session.dialogData.EmpID, session.dialogData.Corporate, session.dialogData.hospitalizationDate.toString().substring(0,15))
-					.text("Tracking claim with details 🕵️ <br/>Employee ID: %s<br/>Corporate: %s<br/>Date: %s. <br/><br/>Please wait ⏳",
-					session.dialogData.EmpID, session.dialogData.Corporate, session.dialogData.hospitalizationDate.toString().substring(0,15))
-					session.send(msg);
-					
-					//Make POST request to MA Server
-					var request = require('request');
-					
-					// Set the headers
-					var headers = {
-						'User-Agent':       'Super Agent/0.0.1',
-						'Content-Type':     'application/x-www-form-urlencoded'
-					}
+					if(session.dialogData.hospitalizationDate){
 
-					// Configure the request
-					var options = {
-						url: 'https://www.medibuddy.in/WAPI//infiniti/track/ClaimWithEmpDetails.json',
-						method: 'POST',
-						headers: headers,
-						form: {'employeeId':session.dialogData.EmpID, 'corporateName': session.dialogData.Corporate, 'date':session.dialogData.hospitalizationDate}
-					}
-
-					// Start the request
-					response = request(options, function (error, response, body) {
-						if (!error && response.statusCode == 200) {	
-							// Print out the response body
-							data = JSON.parse(body);
-							
-							if(JSON.stringify(data.isSuccess) === "true"){
-
-								var claimdata = data.claimDetails;
-							
-								session.userData.trackIsSuccess = JSON.stringify(data.isSuccess);
-								session.userData.trackIsRetailPolicy = JSON.stringify(data.isRetailPolicy);
-								
-								//Claim Details
-								session.userData.trackClaimId = JSON.stringify(claimdata[0].claimDetails.claimId);
-								session.userData.trackClaimType = claimdata[0].claimDetails.claimType;
-								session.userData.trackClaimReceivedDate = claimdata[0].claimDetails.claimReceivedDate;
-								session.userData.trackClmAmount = JSON.stringify(claimdata[0].claimDetails.clmAmount);
-								session.userData.trackClmApprovedAmt = JSON.stringify(claimdata[0].claimDetails.clmApprovedAmt);
-								session.userData.trackclmPreAuthAmt = JSON.stringify(claimdata[0].claimDetails.clmPreAuthAmt);
-								session.userData.trackClaimStatus = claimdata[0].claimDetails.claimStatus;
-								session.userData.trackDoa = claimdata[0].claimDetails.doa;
-								session.userData.trackDod = claimdata[0].claimDetails.dod;
-								session.userData.trackClaimApprovedDate = claimdata[0].claimDetails.claimApprovedDate;
-								if(claimdata[0].claimDetails.claimDeniedDate === "01-Jan-0001" ){
-									session.userData.trackClaimDeniedDate = "-";
-								}else{
-									session.userData.trackClaimDeniedDate = claimdata[0].claimDetails.claimDeniedDate;
-								}
-								session.userData.trackHospitalName = claimdata[0].claimDetails.hospitalName;
-								session.userData.trackIsClmNMI = JSON.stringify(claimdata[0].claimDetails.isClmNMI);
-								session.userData.trackIsClmDenied = JSON.stringify(claimdata[0].claimDetails.isClmDenied);
-								session.userData.trackDenialReasons = claimdata[0].claimDetails.denialReasons;
-								
-								//Policy Details
-								session.userData.trackPolicyNo = claimdata[0].beneficiaryDetails.policyNo;
-								session.userData.trackBenefMAID = JSON.stringify(claimdata[0].beneficiaryDetails.benefMAId);
-								session.userData.trackBenefName = claimdata[0].beneficiaryDetails.benefName;
-								session.userData.trackBenefRelation = claimdata[0].beneficiaryDetails.benefRelation;
-							
-								var card = createReceiptCard(session);
-								var msg = new builder.Message(session)
-								.speak("I was able to get real time status on your claim. Here it is:")
-								.addAttachment(card);
-								session.send("Here are your latest claim details:");
-								session.send(msg);
-								session.userData.serviceName = "Track with Employee ID";
-								session.beginDialog('askforFeedback');
-/*								session.sendTyping();
-								setTimeout(function () {
-									session.endConversation();
-									session.beginDialog('askforMore');
-								}, 5000);		*/
-  							}
-							else if(JSON.stringify(data.isSuccess) === "false"){
-								if(data.errorMessage == "Please enter valid employee details."){
-									session.send('⚠️ The employee details you have entered is incorrect.');
-									session.beginDialog('askforTrackClaimwEmpIDConfirmation');
-								}
-								else if (data.errorMessage == "Please enter valid date between hospitalization and discharge."){
-									session.send('⚠️ The date you have entered is incorrect.');
-									session.beginDialog('askforTrackClaimwEmpIDConfirmation');
-								}
-							}  
+						var msg = new builder.Message(session)
+						.speak("Tracking claim with details... Employee ID: %s, Corporate: %s and Date: %s. Please wait...", 
+						session.dialogData.EmpID, session.dialogData.Corporate, session.dialogData.hospitalizationDate.toString().substring(0,15))
+						.text("Tracking claim with details 🕵️ <br/>Employee ID: %s<br/>Corporate: %s<br/>Date: %s. <br/><br/>Please wait ⏳",
+						session.dialogData.EmpID, session.dialogData.Corporate, session.dialogData.hospitalizationDate.toString().substring(0,15))
+						session.send(msg);
+						
+						//Make POST request to MA Server
+						var request = require('request');
+						
+						// Set the headers
+						var headers = {
+							'User-Agent':       'Super Agent/0.0.1',
+							'Content-Type':     'application/x-www-form-urlencoded'
 						}
-					});
+
+						// Configure the request
+						var options = {
+							url: 'https://www.medibuddy.in/WAPI//infiniti/track/ClaimWithEmpDetails.json',
+							method: 'POST',
+							headers: headers,
+							form: {'employeeId':session.dialogData.EmpID, 'corporateName': session.dialogData.Corporate, 'date':session.dialogData.hospitalizationDate}
+						}
+
+						// Start the request
+						response = request(options, function (error, response, body) {
+							if (!error && response.statusCode == 200) {	
+								// Print out the response body
+								data = JSON.parse(body);
+								
+								if(JSON.stringify(data.isSuccess) === "true"){
+
+									var claimdata = data.claimDetails;
+								
+									session.userData.trackIsSuccess = JSON.stringify(data.isSuccess);
+									session.userData.trackIsRetailPolicy = JSON.stringify(data.isRetailPolicy);
+									
+									//Claim Details
+									session.userData.trackClaimId = JSON.stringify(claimdata[0].claimDetails.claimId);
+									session.userData.trackClaimType = claimdata[0].claimDetails.claimType;
+									session.userData.trackClaimReceivedDate = claimdata[0].claimDetails.claimReceivedDate;
+									session.userData.trackClmAmount = JSON.stringify(claimdata[0].claimDetails.clmAmount);
+									session.userData.trackClmApprovedAmt = JSON.stringify(claimdata[0].claimDetails.clmApprovedAmt);
+									session.userData.trackclmPreAuthAmt = JSON.stringify(claimdata[0].claimDetails.clmPreAuthAmt);
+									session.userData.trackClaimStatus = claimdata[0].claimDetails.claimStatus;
+									session.userData.trackDoa = claimdata[0].claimDetails.doa;
+									session.userData.trackDod = claimdata[0].claimDetails.dod;
+									session.userData.trackClaimApprovedDate = claimdata[0].claimDetails.claimApprovedDate;
+									if(claimdata[0].claimDetails.claimDeniedDate === "01-Jan-0001" ){
+										session.userData.trackClaimDeniedDate = "-";
+									}else{
+										session.userData.trackClaimDeniedDate = claimdata[0].claimDetails.claimDeniedDate;
+									}
+									session.userData.trackHospitalName = claimdata[0].claimDetails.hospitalName;
+									session.userData.trackIsClmNMI = JSON.stringify(claimdata[0].claimDetails.isClmNMI);
+									session.userData.trackIsClmDenied = JSON.stringify(claimdata[0].claimDetails.isClmDenied);
+									session.userData.trackDenialReasons = claimdata[0].claimDetails.denialReasons;
+									
+									//Policy Details
+									session.userData.trackPolicyNo = claimdata[0].beneficiaryDetails.policyNo;
+									session.userData.trackBenefMAID = JSON.stringify(claimdata[0].beneficiaryDetails.benefMAId);
+									session.userData.trackBenefName = claimdata[0].beneficiaryDetails.benefName;
+									session.userData.trackBenefRelation = claimdata[0].beneficiaryDetails.benefRelation;
+								
+									var card = createReceiptCard(session);
+									var msg = new builder.Message(session)
+									.speak("I was able to get real time status on your claim. Here it is:")
+									.addAttachment(card);
+									session.send("Here are your latest claim details:");
+									session.send(msg);
+									session.userData.serviceName = "Track with Employee ID";
+									session.beginDialog('askforFeedback');
+	/*								session.sendTyping();
+									setTimeout(function () {
+										session.endConversation();
+										session.beginDialog('askforMore');
+									}, 5000);		*/
+								}
+								else if(JSON.stringify(data.isSuccess) === "false"){
+									if(data.errorMessage == "Please enter valid employee details."){
+										session.send('⚠️ The employee details you have entered is incorrect.');
+										session.beginDialog('askforTrackClaimwEmpIDConfirmation');
+									}
+									else if (data.errorMessage == "Please enter valid date between hospitalization and discharge."){
+										session.send('⚠️ The date you have entered is incorrect.');
+										session.beginDialog('askforTrackClaimwEmpIDConfirmation');
+									}
+								}  
+							}
+						});
+						
+						session.endDialog();
+				}
+				else{
+					session.send("I'm sorry, I didn't get that. Let's retry.");
+					session.replaceDialog('askforDOA');
+				}	
 					
-					session.endDialog();
 				}
 ]);
 
