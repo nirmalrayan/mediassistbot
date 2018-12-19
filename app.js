@@ -2834,7 +2834,6 @@ function codeLatLng(callback, session){
 	};
 
 	var geocoder = NodeGeocoder(options);
-	console.log("Geocoder: "+ JSON.stringify(geocoder));
 	geocoder.geocode(session.userData.formattedAddress, function(err, res){
 		if(res){
 			console.log("Result: "+ JSON.stringify(res));
@@ -2844,6 +2843,7 @@ function codeLatLng(callback, session){
 		}
 		else if(err){
 			console.log("Error: "+ JSON.stringify(err));
+			console.log("Result: "+ JSON.stringify(res));
 			session.send("Sorry, I'm unable to list our network hospitals at the moment! Please try again later.");
 			session.userData.serviceName = "Search Network";
 			session.userData.errorMessage = "Google - Geocode API (Quota Exceeded Exception)";
