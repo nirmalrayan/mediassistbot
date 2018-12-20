@@ -1839,7 +1839,7 @@ function formatNumber(num){
 function createReceiptCard(session) {
 	if (session.message.address.channelId === 'facebook'){
 		return session.send('📝 Beneficiary: '+ session.userData.trackBenefName+' | Medi Assist ID: '+ session.userData.trackBenefMAID+' | Hospital: '+ session.userData.trackHospitalName+ ' | Claim Number: '+ session.userData.trackClaimId+' | '
-		+ ' | Claim Type: '+ session.userData.trackClaimType + ' | Date of Hospitalization: '+ session.userData.trackDoa+ ' | Date of Discharge: ' + session.userData.trackDod 
+		+ ' | Claim Status: '+ session.userData.trackClaimStatus  + ' | Claim Type: '+ session.userData.trackClaimType + ' | Date of Hospitalization: '+ session.userData.trackDoa+ ' | Date of Discharge: ' + session.userData.trackDod 
 		+ ' | Relation to Beneficiary: ' + session.userData.trackBenefRelation+ ' | Policy Number: ' + session.userData.trackPolicyNo + 
 		' | Claimed Amount: Rs. '+ formatNumber(session.userData.trackClmAmount) + ' | Approved Amount : Rs. '+ formatNumber(session.userData.trackClmApprovedAmt)
 		);
