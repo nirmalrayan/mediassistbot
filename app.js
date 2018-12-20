@@ -1428,12 +1428,7 @@ bot.dialog('askforFeedback',[
 bot.dialog('trackClaimwID', [
 				function (session, args, next){
 
-					if(session.userData.claimNumber == ""){
 						session.beginDialog('askforClaimNumber');
-					}else{
-						next();
-					}
-
 				},	
 				function (session, results, next) {
 					if(results.response){
@@ -1486,7 +1481,7 @@ bot.dialog('trackClaimwID', [
 							if (!error && response.statusCode == 200) {	
 								data = JSON.parse(body);
 								if(JSON.stringify(data.isSuccess) === "true"){
-									
+									console.log("Full Claim response: "+ JSON.stringify(data));
 									var claimdata = data.claimDetails;
 									session.userData.trackIsSuccess = JSON.stringify(data.isSuccess);
 									session.userData.trackIsRetailPolicy = JSON.stringify(data.isRetailPolicy);
