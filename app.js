@@ -2955,7 +2955,7 @@ bot.dialog('askforLocation',  [
 
 			// Configure the request
 			var options = {
-				url: 'http://track-api-lb.medibuddy.in/HospitalByLocationSearchRequest/.json',
+				url: 'http://claimapi-uat-v1.mediassistindia.com/HospitalByLocationSearchRequest/.json',
 				method: 'POST',
 				headers: headers,
 				form: {"insuranceCompany":session.userData.insurer,"latitude":session.userData.lat,"longitude":session.userData.lng,"distance":10,"hospSpeciality":session.userData.speciality,"maRating":""}
