@@ -2955,16 +2955,18 @@ bot.dialog('askforLocation',  [
 
 			// Configure the request
 			var options = {
-				url: 'http://claimapi-uat-v1.mediassistindia.com/HospitalByLocationSearchRequest/.json',
+				url: 'http://track-api-lb.medibuddy.in/GetHospitalsByLocation/.json',
 				method: 'POST',
 				headers: headers,
 				form: {"insuranceCompany":session.userData.insurer,"latitude":session.userData.lat,"longitude":session.userData.lng,"distance":10,"hospSpeciality":session.userData.speciality,"maRating":""}
 			}
+			console.log(JSON.stringify(options));
 			// Start the request
 			response = request(options, function (error, response, body) {
 				if (!error && response.statusCode == 200) {	
 					// Print out the response body
 					data = JSON.parse(body);
+					console.log(body);
 					if(JSON.stringify(data.isSuccess) === "true"){				
 						var cards = [];
 						
@@ -2991,7 +2993,7 @@ bot.dialog('askforLocation',  [
 							var nwHospPhNo = data.hospitals[item].phone.split('/')[0];								
 							nwHospPhNo = nwHospPhNo.replace(/-/g,'');
 							
-							if(item < 10){
+							if(item < 50){
 								cards.push(
 									new builder.HeroCard(session)
 									.title(data.hospitals[item].name + " (" + data.hospitals[item].dist + " meters)")
@@ -3027,6 +3029,9 @@ bot.dialog('askforLocation',  [
 						}, 5000);		*/
 					}
 					}
+				}
+				else{
+					console.log("Error in connecting: "+ JSON.stringify(error) + " Status Code: "+ JSON.stringify(response));
 				}
 			});	
 			}, session);
