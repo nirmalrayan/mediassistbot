@@ -548,7 +548,7 @@ bot.dialog('askforOperation',[
 			
 		var msg = new builder.Message(session)
 			.speak("Great! Would you want me to display your claim status or your eCard?")
-			.text("Great! Would you want me to display")
+			.text("Great! Would you want me to display your claim status or your ecard?")
 			.suggestedActions(
 				builder.SuggestedActions.create(
 					session, [
