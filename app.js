@@ -2993,7 +2993,7 @@ bot.dialog('askforLocation',  [
 							var nwHospPhNo = data.hospitals[item].phone.split('/')[0];								
 							nwHospPhNo = nwHospPhNo.replace(/-/g,'');
 							
-							if(item < 10){
+							if(item < 9){
 								cards.push(
 									new builder.HeroCard(session)
 									.title(data.hospitals[item].name + " (" + data.hospitals[item].dist + " meters)")
