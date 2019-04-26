@@ -3010,6 +3010,7 @@ bot.dialog('askforLocation',  [
 										builder.CardAction.openUrl(session, "https://me.medibuddy.in/", "Request for eCashless")
 									])
 								);
+								console.log(JSON.stringify(cards));
 							}else{ break;}
 							
 						}
