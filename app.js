@@ -1576,7 +1576,7 @@ bot.dialog('trackClaimwID', [
 							url: 'https://www.medibuddy.in/WAPI/infiniti/track/ClaimWithClaimNumber.json',
 							method: 'POST',
 							headers: headers,
-							form: {'claimNumber':session.userData.claimNumber,'date':session.userData.hospitalizationDate, 'BeneficiaryName':session.userData.benefName}
+							form: {'claimNumber':session.userData.claimNumber,'date':session.userData.hospitalizationDate, 'BeneficiaryName':session.userData.benefName, 'SendOTP': true}
 						}
 
 						// Start the request
@@ -1785,7 +1785,7 @@ bot.dialog('trackClaimwMAID', [
 							url: 'https://www.medibuddy.in/WAPI//infiniti/track/ClaimWithMAID.json',
 							method: 'POST',
 							headers: headers,
-							form: {'maid':session.userData.MAID,'date':session.userData.hospitalizationDate, 'BeneficiaryName':session.userData.benefName}
+							form: {'maid':session.userData.MAID,'date':session.userData.hospitalizationDate, 'BeneficiaryName':session.userData.benefName, 'SendOTP': true}
 						}
 						console.log(JSON.stringify(options));
 
@@ -1992,7 +1992,7 @@ bot.dialog('trackClaimwEmpID', [
 							url: 'https://www.medibuddy.in/WAPI//infiniti/track/ClaimWithEmpDetails.json',
 							method: 'POST',
 							headers: headers,
-							form: {'employeeId':session.userData.EmpID, 'corporateName': session.userData.Corporate, 'date':session.userData.hospitalizationDate, 'BeneficiaryName':session.userData.benefName }
+							form: {'employeeId':session.userData.EmpID, 'corporateName': session.userData.Corporate, 'date':session.userData.hospitalizationDate, 'BeneficiaryName':session.userData.benefName, 'SendOTP': true }
 						}
 						// Start the request
 						response = request(options, function (error, response, body) {
@@ -2993,7 +2993,7 @@ bot.dialog('askforLocation',  [
 							var nwHospPhNo = data.hospitals[item].phone.split('/')[0];								
 							nwHospPhNo = nwHospPhNo.replace(/-/g,'');
 							
-							if(item < 50){
+							if(item < 10){
 								cards.push(
 									new builder.HeroCard(session)
 									.title(data.hospitals[item].name + " (" + data.hospitals[item].dist + " meters)")
