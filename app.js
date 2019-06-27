@@ -3020,7 +3020,7 @@ bot.dialog('askforLocation',  [
 						var msg = new builder.Message(session);
 							msg.attachmentLayout(builder.AttachmentLayout.carousel)
 							.attachments(cards);
-						console.log("FINAL MESSAGE: "+ json.stringify(msg));
+//						console.log("FINAL MESSAGE: "+ json.stringify(msg));
 						session.send(msg);
 						session.userData.serviceName = "Search Network";
 						session.beginDialog('askforFeedback');						
