@@ -2959,13 +2959,11 @@ bot.dialog('askforLocation',  [
 				headers: headers,
 				form: {"insuranceCompany":session.userData.insurer,"latitude":session.userData.lat,"longitude":session.userData.lng,"distance":10,"hospSpeciality":session.userData.speciality,"maRating":""}
 			}
-			console.log(JSON.stringify(options));
 			// Start the request
 			response = request(options, function (error, response, body) {
 				if (!error && response.statusCode == 200) {	
 					// Print out the response body
 					data = JSON.parse(body);
-					console.log(body);
 					if(JSON.stringify(data.isSuccess) === "true"){				
 						var cards = [];
 						
