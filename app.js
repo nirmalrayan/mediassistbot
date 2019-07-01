@@ -2917,7 +2917,6 @@ bot.dialog('askforLocation',  [
                 locationDialog.LocationRequiredFields.streetAddress |
                 locationDialog.LocationRequiredFields.locality |
                 locationDialog.LocationRequiredFields.region |
-                locationDialog.LocationRequiredFields.postalCode |
                 locationDialog.LocationRequiredFields.country
 		};
 		locationDialog.getLocation(session, options);
