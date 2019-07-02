@@ -2909,7 +2909,7 @@ bot.dialog('askforLocation',  [
 		
 		var options = {
 			prompt: "Where should I search for hospitals?",
-			useNativeControl: true,
+			useNativeControl: false,
 			reverseGeocode: true,
 					skipFavorites: true,
 					skipConfirmationAsk: true,
