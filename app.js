@@ -1530,7 +1530,7 @@ bot.dialog('trackClaimwID', [
 				},	
 				function (session, results, next){
 					if(results.response){
-						var clmNoChecker = /^\d{8}$/.test(results.response);
+						var clmNoChecker = /^\d{8,9}$/.test(results.response);
 						if(JSON.stringify(clmNoChecker) == "true"){
 							session.userData.claimNumber = results.response;
 							session.beginDialog('askforbenefName');
