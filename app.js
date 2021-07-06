@@ -1440,7 +1440,8 @@ bot.dialog('getOTP_trackwid',[
 			// Set the headers
 			var headers = {
 				'User-Agent':       'Super Agent/0.0.1',
-				'Content-Type':     'application/x-www-form-urlencoded'
+				'Content-Type':     'application/x-www-form-urlencoded',
+				'X-Content-Type-Options': 'nosniff'
 			}
 
 			// Configure the request
@@ -1568,7 +1569,8 @@ bot.dialog('trackClaimwID', [
 						// Set the headers
 						var headers = {
 							'User-Agent':       'Super Agent/0.0.1',
-							'Content-Type':     'application/x-www-form-urlencoded'
+							'Content-Type':     'application/x-www-form-urlencoded',
+							'X-Content-Type-Options': 'nosniff'
 						}
 
 						// Configure the request
@@ -1645,7 +1647,8 @@ bot.dialog('getOTP_trackwmaid',[
 			// Set the headers
 			var headers = {
 				'User-Agent':       'Super Agent/0.0.1',
-				'Content-Type':     'application/x-www-form-urlencoded'
+				'Content-Type':     'application/x-www-form-urlencoded',
+				'X-Content-Type-Options': 'nosniff'
 			}
 
 			// Configure the request
@@ -1777,7 +1780,8 @@ bot.dialog('trackClaimwMAID', [
 						// Set the headers
 						var headers = {
 							'User-Agent':       'Super Agent/0.0.1',
-							'Content-Type':     'application/x-www-form-urlencoded'
+							'Content-Type':     'application/x-www-form-urlencoded',
+							'X-Content-Type-Options': 'nosniff'
 						}
 
 						// Configure the request
@@ -1857,7 +1861,8 @@ bot.dialog('getOTP_trackwempid',[
 			// Set the headers
 			var headers = {
 				'User-Agent':       'Super Agent/0.0.1',
-				'Content-Type':     'application/x-www-form-urlencoded'
+				'Content-Type':     'application/x-www-form-urlencoded',
+				'X-Content-Type-Options': 'nosniff'
 			}
 
 			// Configure the request
@@ -1984,7 +1989,8 @@ bot.dialog('trackClaimwEmpID', [
 						// Set the headers
 						var headers = {
 							'User-Agent':       'Super Agent/0.0.1',
-							'Content-Type':     'application/x-www-form-urlencoded'
+							'Content-Type':     'application/x-www-form-urlencoded',
+							'X-Content-Type-Options': 'nosniff'
 						}
 
 						// Configure the request
@@ -2208,6 +2214,7 @@ bot.dialog('help', [
 					path : path,
 					headers : {
 						'Content-Type' : 'application/json',
+						'X-Content-Type-Options': 'nosniff',
 						'Content-Length' : content.length,
 						'Authorization' : 'EndpointKey ' + endpoint_key,
 					}
@@ -2644,7 +2651,8 @@ bot.dialog('downloadwMAID', [
 					// Set the headers
 					var headers = {
 						'User-Agent':       'Super Agent/0.0.1',
-						'Content-Type':     'application/x-www-form-urlencoded'
+						'Content-Type':     'application/x-www-form-urlencoded',
+						'X-Content-Type-Options': 'nosniff'
 					}
 
 					// Configure the request
@@ -2726,7 +2734,8 @@ bot.dialog('downloadwEmpID', [
 					// Set the headers
 					var headers = {
 						'User-Agent':       'Super Agent/0.0.1',
-						'Content-Type':     'application/x-www-form-urlencoded'
+						'Content-Type':     'application/x-www-form-urlencoded',
+						'X-Content-Type-Options': 'nosniff'
 					}
 
 					// Configure the request
@@ -2803,7 +2812,8 @@ bot.dialog('downloadwPolNo', [
 					// Set the headers
 					var headers = {
 						'User-Agent':       'Super Agent/0.0.1',
-						'Content-Type':     'application/x-www-form-urlencoded'
+						'Content-Type':     'application/x-www-form-urlencoded',
+						'X-Content-Type-Options': 'nosniff'
 					}
 
 					// Configure the request
@@ -2944,7 +2954,8 @@ bot.dialog('askforLocation',  [
 			// Set the headers
 			var headers = {
 				'User-Agent':       'Super Agent/0.0.1',
-				'Content-Type':     'application/x-www-form-urlencoded'
+				'Content-Type':     'application/x-www-form-urlencoded',
+				'X-Content-Type-Options': 'nosniff'
 			}
 
 
@@ -5973,6 +5984,7 @@ bot.dialog('Junk', [
 					path : path,
 					headers : {
 						'Content-Type' : 'application/json',
+						'X-Content-Type-Options': 'nosniff',
 						'Content-Length' : content.length,
 						'Authorization' : 'EndpointKey ' + endpoint_key,
 					}
