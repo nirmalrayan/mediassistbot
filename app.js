@@ -185,7 +185,7 @@ bot.on('conversationUpdate', function (message) {
 				setTimeout(function () {
 						bot.send(new builder.Message()
 						.address(message.address)
-						.text("I answer all your healthcare queries related to claims (and their status), health checks, medicines, consultations, lab tests and even genome study!"));
+						.text("I answer all your healthcare queries related to claims (and their status)!"));
 				},2000);
 
 				setTimeout(function () {
@@ -372,18 +372,18 @@ bot.dialog('/refer', new builder.IntentDialog({
 	.matches("GeneralQuery", "askforGeneralQuery")
 	.matches("Investigation","askforInvestigation")
 	.matches("track claim","trackClaim")
-	.matches("HomeHealthCare","homehealthcare")
-	.matches("healthCheck","healthCheck")
+//	.matches("HomeHealthCare","homehealthcare")
+//	.matches("healthCheck","healthCheck")
 	.matches("sayThanks","getCompliment")
 	.matches("searchNetwork","searchNetwork")
 	.matches("sayGoodbye","sayGoodbye")
 	.matches("TechIssue","techIssue")
-	.matches("Medicine","medicine")
-	.matches("TeleConsultation","teleconsultation")
-	.matches("Consultation","consultation")
+//	.matches("Medicine","medicine")
+//	.matches("TeleConsultation","teleconsultation")
+//	.matches("Consultation","consultation")
 	.matches("downloadECard","downloadEcard")
 	.matches("Offshore","askforOffshore")
-	.matches("labTest","labtest")
+//	.matches("labTest","labtest")
 	.matches("serviceOP","serviceOP")
 	.matches("Claims - Coverage","Coverage")
 	.matches("NotTrained","idontknow")
@@ -612,7 +612,7 @@ bot.dialog('showMenu',[
 										]);
 			
 			menucards.push(searchNetworkCard);
-			
+/*			
 			healthCheckCard = new builder.HeroCard(session)
 									.title("Health Check")
 									.subtitle("Booking health check has never been easier. Find the best hospitals with discounts in your city now.")
@@ -752,7 +752,7 @@ bot.dialog('showMenu',[
 										]);
 			
 			menucards.push(genomeStudyCard);
-
+*/
 		if(session.message.address.channelId !== 'facebook'){
 			helpCard = new builder.HeroCard(session)
 									.title("Help Desk")
@@ -1109,7 +1109,7 @@ bot.dialog('askforFeedbackReason',[
           "title": "Search Network",
           "value": "Search Network"
         },
-        {
+/*        {
           "title": "Health Check",
           "value": "Health Check"
         },
@@ -1149,7 +1149,7 @@ bot.dialog('askforFeedbackReason',[
           "title": "Genome Study",
           "value": "Genome Study"
         },
-        {
+*/        {
           "title": "Help Desk",
           "value": "Help Desk"
         },
@@ -3608,6 +3608,7 @@ bot.dialog('getCompliment',[
 
 // INIFINITI SERVICES
 // Dialog to display health check card - Facebook
+/*
 bot.dialog('displayhealthcheckFB',
 	function (session){
 		healthcheckCard = new builder.HeroCard(session)
@@ -3769,6 +3770,7 @@ bot.dialog('askforhealthcheckCategoryFB',
 ); */
 
 // Dialog to 
+/*
 bot.dialog('healthCheck',[
 	function (session){
 		session.beginDialog('askforhealthcheckCity');
@@ -5462,6 +5464,7 @@ bot.dialog('genomeStudy',[
 	
 });
 
+
 // Dialog to trigger Claims - Coverage conversation 
 bot.dialog('Coverage',[
 	function (session){
@@ -5748,6 +5751,8 @@ bot.dialog('serviceOP',[
 	matches: ['serviceOP']
 	
 });	
+
+*/
 
 // Dialog to trigger InPatient Services Conversation
 bot.dialog('serviceIP',[
