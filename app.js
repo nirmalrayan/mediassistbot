@@ -3352,11 +3352,13 @@ bot.dialog('askforInsurer',[
 	}
 ]);
 
+
 function processSubmitAction8(session, message){
 		session.userData.insurer = message["insurer"];
 		session.userData.speciality = message["speciality"];	
 		return session;		
 }
+
 
 // Dialog to ask for Insurer Name on Facebook
 bot.dialog('askforInsurerFB',[
