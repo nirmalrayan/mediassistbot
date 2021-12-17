@@ -1,11 +1,9 @@
-
-
 <!DOCTYPE html>
 <html>
   <head>
     <link href="https://cdn.botframework.com/botframework-webchat/latest/botchat.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
-    <link rel="shortcut icon" href="https://www.medibuddy.in/favicon.ico?v1" type="image/x-icon" />
+    <link rel="shortcut icon" href="https://www.mediassist.in/favicon.ico?v1" type="image/x-icon" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <meta charset="UTF-8">
 <style>
@@ -15,11 +13,11 @@
 
       select, input:not([type=checkbox]):not([type=radio]), text-area {border: 1px solid #ced4da; width: 100%; padding: .375rem .75rem;}
       .wrap {width:100%; max-width:1024px; margin:0 auto; height:calc(100vh - 30px); box-sizing:border-box; border-radius:4px; box-shadow:0px 0px 9px 0px rgba(50, 50, 50, 0.3); background:#fff; overflow:hidden; position:relative;}
-      header {background: url('https://i.imgur.com/HA32ERE.png') no-repeat white; background-size:100% 100%; width:300px; color:#4A4A4A!important; text-align:center; padding: 40px 20px 20px 20px; box-sizing: border-box; height:calc(100vh - 30px); position:relative; float:right; z-index:1; border-left:4px solid #ddd;}
+      header {background:#fff; width:300px; color:#4A4A4A!important; text-align:center; padding: 40px 20px 20px 20px; box-sizing: border-box; height:calc(100vh - 30px); position:relative; float:right; z-index:1; border-left:4px solid #ddd;}
       #bot {height:100%; position:relative; margin-right:300px;}
       .logo img {width:200px;}
-      .medibuddy { background:white; vertical-align: sub; min-width: 135px; text-align: center; border-radius: 4px; display: block; color: #068bc7; margin-left: 5px; height: 32px; line-height: 30px; font-size: 22px;}
-      .medibuddy span {color: #e0414f;}
+      .mediassist-logo { background:white; vertical-align: sub; min-width: 135px; text-align: center; border-radius: 4px; display: block; color: #068bc7; margin-left: 5px; height: 32px; line-height: 30px; font-size: 22px;}
+      .mediassist-logo span {color: #e0414f;}
 
       .social{text-align: center; position:absolute; bottom:15px; left: 26%;}
       .social a {display: inline-block; margin: 0 0 0 4px!important; transition: .5s; clear: both; float: none; width: 28px; height: 28px; padding: 6px; border-radius: 20px; border: 1px solid #ddd; overflow: hidden; text-align: center; line-height: 12px; background: #fff;}
@@ -47,7 +45,6 @@
 
       .wc-message-group-content {padding:20px 40px; overflow:visible; margin-top:0!important;}
       .wc-message-wrapper { overflow:visible; width: 100%; float: left;}
-      .wc-message-from-me:before {background: url('https://i.imgur.com/WSq9P7O.png') no-repeat; background-size: cover; height: 30px; width: 30px; position: absolute; content: ' '; right: -41px; top: 0px;}
       .wc-message-from-bot:before {background: url('https://i.imgur.com/VO9Bql3.png') no-repeat; background-size: cover; height: 30px; width: 30px; position: absolute; content: ' '; left: -41px; top: 0px; border-radius:50%}
 
       .wc-message-content {padding:11px 20px; box-shadow:0px 2px 4px 0px rgba(0,0,0,0.10);}
@@ -160,24 +157,67 @@
     }
     </style>
     
-   <title>MediBuddy - Conversation Bot</title>
+   <title>Medi Assist - Chat Bot</title>
   </head>
   <body>
       <div id="fb-root"></div>
       <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.3&appId=237966616730835&autoLogAppEvents=1"></script>
     <div class="wrap">
       <header id="hdr">
-        <div class="logo"><img src="https://i.imgur.com/mM4QU5G.gif" alt=""><!--<img src="https://i.imgur.com/Nsxo4EK.png" alt="">--><span class="medibuddy">Medi<span>Buddy</span></span></div>
+        <div class="logo" style="margin-top:5vh">
+          <svg xmlns="http://www.w3.org/2000/svg" width="180" viewBox="0 0 280.325 67.123">
+            <g id="Group_1" data-name="Group 1" transform="translate(-79.878 -480.311)">
+              <path id="Path_1" data-name="Path 1" d="M1281.37,605.662V579.63h8.04l4.827,17.757,4.775-17.757h8.056v26.032h-4.99V585.169l-5.282,20.492h-5.172l-5.264-20.492v20.492Z" transform="translate(-1125.178 -79.369)" fill="#577abc"/>
+              <path id="Path_2" data-name="Path 2" d="M1694.9,684.562l5.082.835a8.171,8.171,0,0,1-3.094,4.164,9.232,9.232,0,0,1-5.291,1.43q-5.028,0-7.442-3.213a10.634,10.634,0,0,1-1.907-6.5,10.272,10.272,0,0,1,2.506-7.343,8.336,8.336,0,0,1,6.334-2.655,8.652,8.652,0,0,1,6.789,2.78q2.485,2.778,2.376,8.515h-12.776a4.971,4.971,0,0,0,1.235,3.453,3.9,3.9,0,0,0,2.939,1.235,3.168,3.168,0,0,0,2.014-.64,3.947,3.947,0,0,0,1.234-2.061m.29-5.043a4.734,4.734,0,0,0-1.145-3.295,3.736,3.736,0,0,0-5.408.063,4.549,4.549,0,0,0-1.07,3.232Z" transform="translate(-1496.548 -164.272)" fill="#577abc"/>
+              <path id="Path_3" data-name="Path 3" d="M1986.6,605.662h-4.736v-2.77a7.613,7.613,0,0,1-2.786,2.405,7.265,7.265,0,0,1-3.24.791,7.406,7.406,0,0,1-5.689-2.62q-2.37-2.619-2.369-7.306,0-4.794,2.3-7.289a7.588,7.588,0,0,1,5.826-2.495,7.279,7.279,0,0,1,5.591,2.629V579.63h5.1v26.032Zm-13.612-9.839a8.472,8.472,0,0,0,.853,4.368,3.868,3.868,0,0,0,3.448,1.954,3.782,3.782,0,0,0,2.995-1.466,6.654,6.654,0,0,0,1.235-4.376q0-3.252-1.2-4.679a3.827,3.827,0,0,0-3.068-1.43,3.871,3.871,0,0,0-3.041,1.412,6.269,6.269,0,0,0-1.225,4.216" transform="translate(-1761.058 -79.369)" fill="#577abc"/>
+              <path id="Path_4" data-name="Path 4" d="M2291.73,579.63h5.1v4.616h-5.1Zm0,7.174h5.1v18.857h-5.1Z" transform="translate(-2061.161 -79.369)" fill="#577abc"/>
+              <path id="Path_5" data-name="Path 5" d="M2544.028,605.67h-5.844l-2.323-5.912h-10.637l-2.2,5.912h-5.7l10.363-26.03h5.682Zm-9.89-10.3-3.667-9.659-3.594,9.659Z" transform="translate(-2270.154 -79.378)" fill="#577abc"/>
+              <path id="Path_6" data-name="Path 6" d="M2893.82,685.156l5.119-.763a3.647,3.647,0,0,0,1.324,2.21,4.553,4.553,0,0,0,2.8.755,5.133,5.133,0,0,0,2.977-.71,1.569,1.569,0,0,0,.67-1.332,1.289,1.289,0,0,0-.363-.942,4.12,4.12,0,0,0-1.706-.656q-6.17-1.333-7.822-2.433a4.833,4.833,0,0,1-2.287-4.246,5.19,5.19,0,0,1,1.978-4.12q1.978-1.668,6.135-1.67a10.893,10.893,0,0,1,5.881,1.262,6.444,6.444,0,0,1,2.65,3.728l-4.811.871a2.9,2.9,0,0,0-1.17-1.687,4.356,4.356,0,0,0-2.459-.586,5.652,5.652,0,0,0-2.886.55,1.175,1.175,0,0,0-.581,1.012,1.1,1.1,0,0,0,.508.906,19.5,19.5,0,0,0,4.765,1.4,14.366,14.366,0,0,1,5.69,2.219,4.571,4.571,0,0,1,1.6,3.712,5.648,5.648,0,0,1-2.214,4.457q-2.214,1.865-6.551,1.864a10.927,10.927,0,0,1-6.234-1.563,7.187,7.187,0,0,1-3.005-4.242" transform="translate(-2618.928 -164.244)" fill="#577abc"/>
+              <path id="Path_7" data-name="Path 7" d="M3174.64,685.156l5.119-.763a3.647,3.647,0,0,0,1.324,2.21,4.553,4.553,0,0,0,2.8.755,5.133,5.133,0,0,0,2.977-.71,1.569,1.569,0,0,0,.67-1.332,1.289,1.289,0,0,0-.363-.942,4.12,4.12,0,0,0-1.707-.656q-6.17-1.333-7.821-2.433a4.833,4.833,0,0,1-2.287-4.246,5.19,5.19,0,0,1,1.978-4.12q1.978-1.668,6.135-1.67a10.893,10.893,0,0,1,5.881,1.262,6.444,6.444,0,0,1,2.65,3.728l-4.812.872a2.9,2.9,0,0,0-1.17-1.687,4.356,4.356,0,0,0-2.459-.586,5.653,5.653,0,0,0-2.886.55,1.175,1.175,0,0,0-.581,1.012,1.1,1.1,0,0,0,.508.906,19.5,19.5,0,0,0,4.765,1.4,14.368,14.368,0,0,1,5.69,2.219,4.57,4.57,0,0,1,1.6,3.712,5.648,5.648,0,0,1-2.214,4.457q-2.214,1.865-6.551,1.864a10.926,10.926,0,0,1-6.234-1.563,7.2,7.2,0,0,1-3-4.244" transform="translate(-2879.075 -164.244)" fill="#577abc"/>
+              <path id="Path_8" data-name="Path 8" d="M3479.87,579.63h5.1v4.616h-5.1Zm0,7.174h5.1v18.857h-5.1Z" transform="translate(-3161.836 -79.369)" fill="#577abc"/>
+              <path id="Path_9" data-name="Path 9" d="M3595.75,685.156l5.119-.763a3.654,3.654,0,0,0,1.324,2.21,4.553,4.553,0,0,0,2.8.755,5.133,5.133,0,0,0,2.977-.71,1.57,1.57,0,0,0,.671-1.332,1.289,1.289,0,0,0-.363-.942,4.12,4.12,0,0,0-1.706-.656q-6.171-1.333-7.822-2.433a4.833,4.833,0,0,1-2.287-4.246,5.187,5.187,0,0,1,1.979-4.12q1.975-1.668,6.134-1.67a10.893,10.893,0,0,1,5.881,1.262,6.444,6.444,0,0,1,2.65,3.728l-4.811.871a2.9,2.9,0,0,0-1.17-1.687,4.356,4.356,0,0,0-2.459-.586,5.652,5.652,0,0,0-2.886.55,1.175,1.175,0,0,0-.581,1.012,1.1,1.1,0,0,0,.508.906,19.526,19.526,0,0,0,4.765,1.4,14.365,14.365,0,0,1,5.69,2.219,4.571,4.571,0,0,1,1.6,3.712,5.651,5.651,0,0,1-2.213,4.457q-2.216,1.865-6.552,1.864a10.927,10.927,0,0,1-6.234-1.563,7.187,7.187,0,0,1-3.005-4.242" transform="translate(-3269.186 -164.244)" fill="#577abc"/>
+              <path id="Path_10" data-name="Path 10" d="M3883.324,593.279v3.977h-3.485v7.6a18.448,18.448,0,0,0,.1,2.691,1.1,1.1,0,0,0,.453.629,1.467,1.467,0,0,0,.862.249,6.711,6.711,0,0,0,2.052-.48l.436,3.872a10.351,10.351,0,0,1-4.029.744,6.5,6.5,0,0,1-2.487-.452,3.627,3.627,0,0,1-1.625-1.172,4.562,4.562,0,0,1-.718-1.944,23.777,23.777,0,0,1-.163-3.516v-8.222h-2.341v-3.977h2.341v-3.747l5.118-2.912v6.659Z" transform="translate(-3525.451 -85.844)" fill="#577abc"/>
+              <path id="Path_11" data-name="Path 11" d="M3941.26,375.517V371.7h-1.46v-.511h3.509v.511h-1.466v3.816Z" transform="translate(-3587.909 113.727)" fill="#010101"/>
+              <path id="Path_12" data-name="Path 12" d="M3995.36,375.517V371.19h.882l1.046,3.062q.144.43.212.643c.049-.159.128-.389.236-.695l1.059-3.01h.788v4.327h-.565V371.9l-1.286,3.622h-.526l-1.28-3.684v3.684Z" transform="translate(-3639.379 113.727)" fill="#010101"/>
+              <path id="Path_15" data-name="Path 15" d="M256.122,316.984a33.6,33.6,0,1,1-3.031,47.373,33.709,33.709,0,0,1,3.031-47.373" transform="translate(-164.831 171.69)" fill="#d92427" fill-rule="evenodd"/>
+              <path id="Path_16" data-name="Path 16" d="M489.057,445.315c2.369.043,3.921,3.5,3.465,7.717s-2.749,7.609-5.119,7.565-3.921-3.5-3.465-7.717,2.75-7.607,5.119-7.565" transform="translate(-386.375 45.059)" fill="#fff" fill-rule="evenodd"/>
+              <path id="Path_17" data-name="Path 17" d="M847.949,541.582c1.741-1.692,4.435-.942,6.011,1.673s1.442,6.111-.3,7.8-4.435.942-6.011-1.673-1.442-6.114.3-7.8" transform="translate(-722.368 -43.284)" fill="#fff" fill-rule="evenodd"/>
+              <path id="Path_18" data-name="Path 18" d="M791.3,709.176s-.287-5.666,5.107-13.886c0,0,3.443-5.35,6.886-5.322,0,0,3.185-.459,7.746,4.705,0,0,4.619,4.906,5.681,11.1a31.557,31.557,0,0,0-3.565-4.437c-2.12-2.233-4.735-4.359-7.835-4.967a8.755,8.755,0,0,0-7.951,2.659,27,27,0,0,0-4.326,6.351C792.4,706.618,791.822,707.887,791.3,709.176Z" transform="translate(-671.179 -181.575)" fill="#fff" fill-rule="evenodd"/>
+              <path id="Path_19" data-name="Path 19" d="M333.383,686.182s-.48-9.275,7.077-20.79c0,0,4.437-6.756,9.475-6.557,0,0,4.677-.36,10.355,6.917,0,0,5.763,7.308,6.8,14.589-4.588-6.405-12.74-19.219-22.3-11.043a34.181,34.181,0,0,0-5.9,6.915A69.5,69.5,0,0,0,333.383,686.182Z" transform="translate(-246.971 -152.739)" fill="#fff" fill-rule="evenodd"/>
+            </g>
+          </svg>
+        </div>
         <div class="status online"><span class="icon-circle sidebar-online"></span> online now</div>
         <h2>Hi! I am your health buddy and I will help you manage all your healthcare needs! Ask me anything, and I'll try my best to get you the answers that you need.</h2>
         <p><a href="javascript:void(0);" onClick="hideHdr();" class="showSearch">Start chat now</a></p>
         <div class="social">
-<!--            <div class="fb-login-button" data-width="" data-size="medium" data-button-type="continue_with" data-auto-logout-link="false" data-use-continue-as="false"></div><br/>   -->
           <a href="https://www.facebook.com/MediBuddy/" target="_blank" uib-tooltip="Facebook" class="facebook"><svg xmlns="http://www.w3.org/2000/svg" viewBox="1759 -421 16.1 32"><defs><style>.facebook{fill:#385c8e;}</style></defs><path class="facebook" d="M.5,17H4V31.4a.562.562,0,0,0,.5.6h5.9a.472.472,0,0,0,.5-.5V17.1h4a.472.472,0,0,0,.5-.5l.6-5.3a.6.6,0,0,0-.1-.4.52.52,0,0,0-.4-.2H11V7.4c0-1,.5-1.5,1.6-1.5h3a.472.472,0,0,0,.5-.5V.5a.472.472,0,0,0-.5-.5H11.2A7.681,7.681,0,0,0,6,2,5.351,5.351,0,0,0,4.2,6.9v3.9H.5a.472.472,0,0,0-.5.5v5.2A.472.472,0,0,0,.5,17Z" transform="translate(1759 -421)"></path></svg></a><a href="https://www.linkedin.com/company/medibuddy/" target="_blank" uib-tooltip="LinkedIn" class="linkedin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="1826 -424 31.906 31.9"><defs><style>.linkedin{fill:#5082f6;}</style></defs><g transform="translate(1826 -424)"><path class="a" d="M7.4,10.3H1a.472.472,0,0,0-.5.5V31.4a.472.472,0,0,0,.5.5H7.4a.472.472,0,0,0,.5-.5V10.8C8,10.5,7.7,10.3,7.4,10.3Z"></path><path class="linkedin" d="M4.2,0A4.225,4.225,0,0,0,0,4.2,4.225,4.225,0,0,0,4.2,8.4,4.225,4.225,0,0,0,8.4,4.2,4.1,4.1,0,0,0,4.2,0Z"></path><path class="linkedin" d="M23.8,9.7a7.192,7.192,0,0,0-5.6,2.4V10.8a.472.472,0,0,0-.5-.5H11.5a.472.472,0,0,0-.5.5V31.4a.472.472,0,0,0,.5.5h6.4a.472.472,0,0,0,.5-.5V21.2c0-3.4.9-4.8,3.3-4.8,2.6,0,2.8,2.1,2.8,5v10a.472.472,0,0,0,.5.5h6.4a.472.472,0,0,0,.5-.5V20.1C32,15,31,9.7,23.8,9.7Z"></path></g></svg></a><a href="https://twitter.com/MediBuddyAbhi" target="_blank" uib-tooltip="Twitter" class="twitter"><svg xmlns="http://www.w3.org/2000/svg" viewBox="1909 -418 32.014 26.2"><defs><style>.twitter{fill:#73a1fb;}</style></defs><path class="twitter" d="M31.3,3l-1.5.6a7.217,7.217,0,0,0,1.4-2.4c.1-.2,0-.4-.2-.6a.638.638,0,0,0-.6,0A17.832,17.832,0,0,1,26.8,2,7.177,7.177,0,0,0,22,0a6.914,6.914,0,0,0-6.9,6.9,2.769,2.769,0,0,0,.1.9A18.107,18.107,0,0,1,3.1,1.4c-.1-.2-.3-.2-.5-.2s-.3.1-.4.3A6.756,6.756,0,0,0,1.3,5,7.266,7.266,0,0,0,2.9,9.5,4.7,4.7,0,0,0,2,8.9a.446.446,0,0,0-.5,0,.55.55,0,0,0-.3.5v.1a6.724,6.724,0,0,0,3.4,5.9.9.9,0,0,1-.5-.1c-.2,0-.4,0-.5.2a.44.44,0,0,0-.1.5,7.013,7.013,0,0,0,5,4.6A12.33,12.33,0,0,1,2,22.5a7.569,7.569,0,0,1-1.5-.1c-.2,0-.5.1-.5.3a.481.481,0,0,0,.2.6,18.767,18.767,0,0,0,10,2.9A17.631,17.631,0,0,0,24,20.1,19.3,19.3,0,0,0,28.8,7.6V7a13.964,13.964,0,0,0,3.1-3.3.637.637,0,0,0,0-.6A.661.661,0,0,0,31.3,3Z" transform="translate(1909.039 -418)"></path></svg></a><a href="http://blogs.medibuddy.in/" target="_blank" uib-tooltip="Blog"><svg id="Capa_1" data-name="Capa 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><defs><style>.blog1{fill:#010002;}</style></defs><title>blog</title><path class="blog1" d="M227.21,227.2v6.13A25.88,25.88,0,0,1,253,259.2h6.16A32,32,0,0,0,227.21,227.2Z" transform="translate(-227.2 -227.2)"></path><path class="blog1" d="M227.2,238.07v6.13a15,15,0,0,1,15,15h6.16A21.15,21.15,0,0,0,227.2,238.07Z" transform="translate(-227.2 -227.2)"></path><path class="blog1" d="M231.46,250.66a4.25,4.25,0,1,0,4.26,4.25A4.26,4.26,0,0,0,231.46,250.66Z" transform="translate(-227.2 -227.2)"></path></svg></a>
         </div> 
       </header>
       <div class="head-sm" id="hdrSm" onClick="showHdr()">
-        <div class="logo"><img src="https://i.imgur.com/mM4QU5G.gif" alt=""><!--<img src="https://i.imgur.com/UWTYAae.png" alt="">--><span class="medibuddy">Medi<span>Buddy</span></span></div>
+        <div class="logo">
+          <svg xmlns="http://www.w3.org/2000/svg" width="150" viewBox="0 0 280.325 67.123" style="float:left;">
+            <g id="Group_1" data-name="Group 1" transform="translate(-79.878 -480.311)">
+              <path id="Path_1" data-name="Path 1" d="M1281.37,605.662V579.63h8.04l4.827,17.757,4.775-17.757h8.056v26.032h-4.99V585.169l-5.282,20.492h-5.172l-5.264-20.492v20.492Z" transform="translate(-1125.178 -79.369)" fill="#577abc"/>
+              <path id="Path_2" data-name="Path 2" d="M1694.9,684.562l5.082.835a8.171,8.171,0,0,1-3.094,4.164,9.232,9.232,0,0,1-5.291,1.43q-5.028,0-7.442-3.213a10.634,10.634,0,0,1-1.907-6.5,10.272,10.272,0,0,1,2.506-7.343,8.336,8.336,0,0,1,6.334-2.655,8.652,8.652,0,0,1,6.789,2.78q2.485,2.778,2.376,8.515h-12.776a4.971,4.971,0,0,0,1.235,3.453,3.9,3.9,0,0,0,2.939,1.235,3.168,3.168,0,0,0,2.014-.64,3.947,3.947,0,0,0,1.234-2.061m.29-5.043a4.734,4.734,0,0,0-1.145-3.295,3.736,3.736,0,0,0-5.408.063,4.549,4.549,0,0,0-1.07,3.232Z" transform="translate(-1496.548 -164.272)" fill="#577abc"/>
+              <path id="Path_3" data-name="Path 3" d="M1986.6,605.662h-4.736v-2.77a7.613,7.613,0,0,1-2.786,2.405,7.265,7.265,0,0,1-3.24.791,7.406,7.406,0,0,1-5.689-2.62q-2.37-2.619-2.369-7.306,0-4.794,2.3-7.289a7.588,7.588,0,0,1,5.826-2.495,7.279,7.279,0,0,1,5.591,2.629V579.63h5.1v26.032Zm-13.612-9.839a8.472,8.472,0,0,0,.853,4.368,3.868,3.868,0,0,0,3.448,1.954,3.782,3.782,0,0,0,2.995-1.466,6.654,6.654,0,0,0,1.235-4.376q0-3.252-1.2-4.679a3.827,3.827,0,0,0-3.068-1.43,3.871,3.871,0,0,0-3.041,1.412,6.269,6.269,0,0,0-1.225,4.216" transform="translate(-1761.058 -79.369)" fill="#577abc"/>
+              <path id="Path_4" data-name="Path 4" d="M2291.73,579.63h5.1v4.616h-5.1Zm0,7.174h5.1v18.857h-5.1Z" transform="translate(-2061.161 -79.369)" fill="#577abc"/>
+              <path id="Path_5" data-name="Path 5" d="M2544.028,605.67h-5.844l-2.323-5.912h-10.637l-2.2,5.912h-5.7l10.363-26.03h5.682Zm-9.89-10.3-3.667-9.659-3.594,9.659Z" transform="translate(-2270.154 -79.378)" fill="#577abc"/>
+              <path id="Path_6" data-name="Path 6" d="M2893.82,685.156l5.119-.763a3.647,3.647,0,0,0,1.324,2.21,4.553,4.553,0,0,0,2.8.755,5.133,5.133,0,0,0,2.977-.71,1.569,1.569,0,0,0,.67-1.332,1.289,1.289,0,0,0-.363-.942,4.12,4.12,0,0,0-1.706-.656q-6.17-1.333-7.822-2.433a4.833,4.833,0,0,1-2.287-4.246,5.19,5.19,0,0,1,1.978-4.12q1.978-1.668,6.135-1.67a10.893,10.893,0,0,1,5.881,1.262,6.444,6.444,0,0,1,2.65,3.728l-4.811.871a2.9,2.9,0,0,0-1.17-1.687,4.356,4.356,0,0,0-2.459-.586,5.652,5.652,0,0,0-2.886.55,1.175,1.175,0,0,0-.581,1.012,1.1,1.1,0,0,0,.508.906,19.5,19.5,0,0,0,4.765,1.4,14.366,14.366,0,0,1,5.69,2.219,4.571,4.571,0,0,1,1.6,3.712,5.648,5.648,0,0,1-2.214,4.457q-2.214,1.865-6.551,1.864a10.927,10.927,0,0,1-6.234-1.563,7.187,7.187,0,0,1-3.005-4.242" transform="translate(-2618.928 -164.244)" fill="#577abc"/>
+              <path id="Path_7" data-name="Path 7" d="M3174.64,685.156l5.119-.763a3.647,3.647,0,0,0,1.324,2.21,4.553,4.553,0,0,0,2.8.755,5.133,5.133,0,0,0,2.977-.71,1.569,1.569,0,0,0,.67-1.332,1.289,1.289,0,0,0-.363-.942,4.12,4.12,0,0,0-1.707-.656q-6.17-1.333-7.821-2.433a4.833,4.833,0,0,1-2.287-4.246,5.19,5.19,0,0,1,1.978-4.12q1.978-1.668,6.135-1.67a10.893,10.893,0,0,1,5.881,1.262,6.444,6.444,0,0,1,2.65,3.728l-4.812.872a2.9,2.9,0,0,0-1.17-1.687,4.356,4.356,0,0,0-2.459-.586,5.653,5.653,0,0,0-2.886.55,1.175,1.175,0,0,0-.581,1.012,1.1,1.1,0,0,0,.508.906,19.5,19.5,0,0,0,4.765,1.4,14.368,14.368,0,0,1,5.69,2.219,4.57,4.57,0,0,1,1.6,3.712,5.648,5.648,0,0,1-2.214,4.457q-2.214,1.865-6.551,1.864a10.926,10.926,0,0,1-6.234-1.563,7.2,7.2,0,0,1-3-4.244" transform="translate(-2879.075 -164.244)" fill="#577abc"/>
+              <path id="Path_8" data-name="Path 8" d="M3479.87,579.63h5.1v4.616h-5.1Zm0,7.174h5.1v18.857h-5.1Z" transform="translate(-3161.836 -79.369)" fill="#577abc"/>
+              <path id="Path_9" data-name="Path 9" d="M3595.75,685.156l5.119-.763a3.654,3.654,0,0,0,1.324,2.21,4.553,4.553,0,0,0,2.8.755,5.133,5.133,0,0,0,2.977-.71,1.57,1.57,0,0,0,.671-1.332,1.289,1.289,0,0,0-.363-.942,4.12,4.12,0,0,0-1.706-.656q-6.171-1.333-7.822-2.433a4.833,4.833,0,0,1-2.287-4.246,5.187,5.187,0,0,1,1.979-4.12q1.975-1.668,6.134-1.67a10.893,10.893,0,0,1,5.881,1.262,6.444,6.444,0,0,1,2.65,3.728l-4.811.871a2.9,2.9,0,0,0-1.17-1.687,4.356,4.356,0,0,0-2.459-.586,5.652,5.652,0,0,0-2.886.55,1.175,1.175,0,0,0-.581,1.012,1.1,1.1,0,0,0,.508.906,19.526,19.526,0,0,0,4.765,1.4,14.365,14.365,0,0,1,5.69,2.219,4.571,4.571,0,0,1,1.6,3.712,5.651,5.651,0,0,1-2.213,4.457q-2.216,1.865-6.552,1.864a10.927,10.927,0,0,1-6.234-1.563,7.187,7.187,0,0,1-3.005-4.242" transform="translate(-3269.186 -164.244)" fill="#577abc"/>
+              <path id="Path_10" data-name="Path 10" d="M3883.324,593.279v3.977h-3.485v7.6a18.448,18.448,0,0,0,.1,2.691,1.1,1.1,0,0,0,.453.629,1.467,1.467,0,0,0,.862.249,6.711,6.711,0,0,0,2.052-.48l.436,3.872a10.351,10.351,0,0,1-4.029.744,6.5,6.5,0,0,1-2.487-.452,3.627,3.627,0,0,1-1.625-1.172,4.562,4.562,0,0,1-.718-1.944,23.777,23.777,0,0,1-.163-3.516v-8.222h-2.341v-3.977h2.341v-3.747l5.118-2.912v6.659Z" transform="translate(-3525.451 -85.844)" fill="#577abc"/>
+              <path id="Path_11" data-name="Path 11" d="M3941.26,375.517V371.7h-1.46v-.511h3.509v.511h-1.466v3.816Z" transform="translate(-3587.909 113.727)" fill="#010101"/>
+              <path id="Path_12" data-name="Path 12" d="M3995.36,375.517V371.19h.882l1.046,3.062q.144.43.212.643c.049-.159.128-.389.236-.695l1.059-3.01h.788v4.327h-.565V371.9l-1.286,3.622h-.526l-1.28-3.684v3.684Z" transform="translate(-3639.379 113.727)" fill="#010101"/>
+              <path id="Path_15" data-name="Path 15" d="M256.122,316.984a33.6,33.6,0,1,1-3.031,47.373,33.709,33.709,0,0,1,3.031-47.373" transform="translate(-164.831 171.69)" fill="#d92427" fill-rule="evenodd"/>
+              <path id="Path_16" data-name="Path 16" d="M489.057,445.315c2.369.043,3.921,3.5,3.465,7.717s-2.749,7.609-5.119,7.565-3.921-3.5-3.465-7.717,2.75-7.607,5.119-7.565" transform="translate(-386.375 45.059)" fill="#fff" fill-rule="evenodd"/>
+              <path id="Path_17" data-name="Path 17" d="M847.949,541.582c1.741-1.692,4.435-.942,6.011,1.673s1.442,6.111-.3,7.8-4.435.942-6.011-1.673-1.442-6.114.3-7.8" transform="translate(-722.368 -43.284)" fill="#fff" fill-rule="evenodd"/>
+              <path id="Path_18" data-name="Path 18" d="M791.3,709.176s-.287-5.666,5.107-13.886c0,0,3.443-5.35,6.886-5.322,0,0,3.185-.459,7.746,4.705,0,0,4.619,4.906,5.681,11.1a31.557,31.557,0,0,0-3.565-4.437c-2.12-2.233-4.735-4.359-7.835-4.967a8.755,8.755,0,0,0-7.951,2.659,27,27,0,0,0-4.326,6.351C792.4,706.618,791.822,707.887,791.3,709.176Z" transform="translate(-671.179 -181.575)" fill="#fff" fill-rule="evenodd"/>
+              <path id="Path_19" data-name="Path 19" d="M333.383,686.182s-.48-9.275,7.077-20.79c0,0,4.437-6.756,9.475-6.557,0,0,4.677-.36,10.355,6.917,0,0,5.763,7.308,6.8,14.589-4.588-6.405-12.74-19.219-22.3-11.043a34.181,34.181,0,0,0-5.9,6.915A69.5,69.5,0,0,0,333.383,686.182Z" transform="translate(-246.971 -152.739)" fill="#fff" fill-rule="evenodd"/>
+            </g>
+          </svg>
+        </div>
       </div>
       <div id="bot">
       </div>
@@ -204,9 +244,9 @@
       };*/
 
       BotChat.App({
-        directLine: { secret: '4CVOO_rtieM.cwA.qSE.voNdxldVCAc--yo0xaUX-_GM8pC98gv0aJW0NMz1bZU' },
-        user: { id: '31db772c-9761-4b25-b568-f1e140b26b4a' },
-        bot: { id: 'MediBuddyWebAppBot' },
+        directLine: { secret: 'jwjf-aKK7Zw.bEIKRauzNyJBKPNhnof94aK51AwGSydwrNLBh0J2mSY' },
+        user: { id: '32e52c67-908d-468e-8844-53d04d7dfd33' },
+        bot: { id: 'mediassistchatbot' },
         speechOptions: speechOptions,
         resize: 'detect'
       }, document.getElementById("bot"));
