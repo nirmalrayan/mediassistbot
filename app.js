@@ -1,6 +1,6 @@
 //Author: Nirmal Rayan
 //Version: 1.1
-//Application: MediBuddy (Microsoft Bot Framework)
+//Application: Medi Assist (Microsoft Bot Framework)
 
 // Add your requirements
 var http = require('http');
@@ -124,12 +124,12 @@ var bot = new builder.UniversalBot(connector,[
 
 		if(session.message.address.channelId === 'facebook'){
  			var welcomeCard = new builder.HeroCard(session)
-				.title("Hi "+session.message.address.user.name+"! Nice to see you. I am MediBuddy")
+				.title("Hi "+session.message.address.user.name+"! Nice to see you. I am Medi Assist")
 				.subtitle("I will be your personal healthcare assistant. \n\nℹ️ Type \"show menu\" or \"#\" at any time to see the menu.")
 				.images([
 					new builder.CardImage(session)
 						.url('https://i.imgur.com/k4eN1Bc.png')
-						.alt('MediBuddy')
+						.alt('Medi Assist')
 				])
 				.buttons([
 					builder.CardAction.imBack(session, "Show Menu", "Show Menu")
@@ -143,7 +143,7 @@ var bot = new builder.UniversalBot(connector,[
 				.images([
 					new builder.CardImage(session)
 						.url('https://i.imgur.com/sQFiqkI.png')
-						.alt('MediBuddy')
+						.alt('Medi Assist')
 				])
 				.buttons([
 					builder.CardAction.imBack(session, "Show Menu", "Show Menu")
@@ -152,12 +152,12 @@ var bot = new builder.UniversalBot(connector,[
 			}
 */			else{
 				var welcomeCard = new builder.ThumbnailCard(session)
-				.title("Greetings! I'm MediBuddy")
+				.title("Greetings! I'm Medi Assist")
 				.subtitle("I will be your personal healthcare assistant. \n\n💡 Type \"`show menu`\" or \"`#`\" at any time to see the menu.")
 				.images([
 					new builder.CardImage(session)
 						.url('https://i.imgur.com/sQFiqkI.png')
-						.alt('MediBuddy')
+						.alt('Medi Assist')
 				])
 				.buttons([
 					builder.CardAction.imBack(session, "Show Menu", "Show Menu")
@@ -166,7 +166,7 @@ var bot = new builder.UniversalBot(connector,[
 			}
 //		}	
 			session.send(new builder.Message(session)
-				.speak("Greetings! I'm MediBuddy. I will be your healthcare assistant. Type Show Menu or # at any time to see the menu.")
+				.speak("Greetings! I'm Medi Assist. I will be your healthcare assistant. Type Show Menu or # at any time to see the menu.")
 				.addAttachment(welcomeCard));
 
 session.beginDialog("/refer");
@@ -405,7 +405,7 @@ bot.dialog('/refer', new builder.IntentDialog({
 
 
 bot.dialog("hello", (session, args) => {
-		session.endDialog("Hello. I'm MediBuddy. I will be your healthcare assistant. You can type `\"show menu\"` or `\"#\"` at any time of the conversation to go back to the main menu.");
+		session.endDialog("Hello. I'm Medi Assist. I will be your healthcare assistant. You can type `\"show menu\"` or `\"#\"` at any time of the conversation to go back to the main menu.");
 }).triggerAction({
     matches: ['SayHello', '👍']
 });
@@ -3356,7 +3356,7 @@ bot.dialog('askforOffshore',[
 // Dialog to redirect to General Query
 bot.dialog('askforGeneralQuery',[
 	function (session){
-		session.endConversation("ℹ️ For all your claim/application (MediBuddy)/transaction related queries kindly write to `gethelp@mahs.in` or call us at `1800 425 9449`");
+		session.endConversation("ℹ️ For all your claim/application (Medi Assist)/transaction related queries kindly write to `gethelp@mahs.in` or call us at `1800 425 9449`");
 	},
 	function(session, results) {
 		session.endDialogWithResult(results);
@@ -3451,7 +3451,7 @@ bot.dialog('techIssue',[
 // Dialog to handle Compliment
 bot.dialog('getCompliment',[
 	function (session){
-		msg = ["Welcome! It's nothing","👍","That's all right!","Don't mention it.","😍", "That is very kind of you", "Thank you, I appreciate the compliment.", "Thank you very much. 🙏","All I can say is, Thanks!", "MediBuddy appreciates your gratitude! We wish you good health and smiles 🙂"]
+		msg = ["Welcome! It's nothing","👍","That's all right!","Don't mention it.","😍", "That is very kind of you", "Thank you, I appreciate the compliment.", "Thank you very much. 🙏","All I can say is, Thanks!", "Medi Assist appreciates your gratitude! We wish you good health and smiles 🙂"]
 		x = getRandomInt(0,9);
 //		session.endDialog("Bye!");
 		session.endDialog(msg[x]);
@@ -3512,7 +3512,7 @@ bot.dialog('serviceIP',[
 	menucards.push(searchNetworkCard);
 
 	ailmentIPCard = new builder.HeroCard(session)
-			.title("Know More About Ailment-Specific IP Services on MediBuddy")
+			.title("Know More About Ailment-Specific IP Services on Medi Assist")
 			.subtitle("Getting your Medi Assist E-Card is much simpler and at your finger tips. Download your E-Card now.")
 			.images([
 				new builder.CardImage(session)
@@ -3595,7 +3595,7 @@ bot.dialog('contact',[
 		.suggestedActions(
 			builder.SuggestedActions.create(
 				session, [
-					builder.CardAction.openUrl(session, "https://www.medibuddy.in/", "Login to MediBuddy"),
+					builder.CardAction.openUrl(session, "https://www.mediassist.in/", "Login to Medi Assist"),
 					builder.CardAction.openUrl(session, "https://blogs.medibuddy.in/", "Need More")
 				])
 		);
