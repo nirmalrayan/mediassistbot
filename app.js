@@ -2504,7 +2504,7 @@ bot.dialog('downloadwMAID', [
 					var MAID = session.userData.MAID;
 					var benefName = session.userData.benefName;
 					
-					var downloadlink = 'http://track-api-lb.medibuddy.in/getecard/MAID/'+MAID+'/'+benefName+'/9190';
+					var downloadlink = 'http://track-api-lb.medibuddy.in/getecard/MAID/'+MAID+'/'+benefName+'/';
 					
 					// Make POST request to MA Server
 					var request = require('request');	
