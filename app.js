@@ -2174,7 +2174,7 @@ bot.dialog('downloadEcard',[
 				msg.text("Would you like to know more about your eCard? Here are a few posts that'll help you out. ")
 					.addAttachment(new builder.HeroCard(session)
 							.buttons([
-								builder.CardAction.openUrl(session, "http://blogs.medibuddy.in/use-e-card-identify-beneficiaries/", "Watch Video"),
+								builder.CardAction.openUrl(session, "https://blogs.medibuddy.in/use-e-card-identify-beneficiaries/", "Watch Video"),
 								builder.CardAction.openUrl(session, "https://blogs.medibuddy.in/ecard/", "Read Blog")							
 								]));
 				session.send(msg);
@@ -2504,7 +2504,7 @@ bot.dialog('downloadwMAID', [
 					var MAID = session.userData.MAID;
 					var benefName = session.userData.benefName;
 					
-					var downloadlink = 'http://track-api-lb.medibuddy.in/getecard/MAID/'+MAID+'/'+benefName+'/';
+					var downloadlink = 'https://track-api-lb.medibuddy.in/getecard/MAID/'+MAID+'/'+benefName+'/';
 					
 					// Make POST request to MA Server
 					var request = require('request');	
@@ -2587,7 +2587,7 @@ bot.dialog('downloadwEmpID', [
 					var Corporate = session.dialogData.Corporate;
 					var benefName = session.dialogData.benefName;
 					
-					var downloadlink = 'http://track-api-lb.medibuddy.in/getecard/EmployeeId/'+EmpID+'/'+benefName+'/'+Corporate;
+					var downloadlink = 'https://track-api-lb.medibuddy.in/getecard/EmployeeId/'+EmpID+'/'+benefName+'/'+Corporate;
 					
 					//Make POST request to MA Server
 					var request = require('request');	
@@ -2665,7 +2665,7 @@ bot.dialog('downloadwPolNo', [
 					var PolNo = (session.dialogData.PolNo).replace(/\//g, "");
 					var benefName = session.dialogData.benefName;
 					
-					var downloadlink = 'http://track-api-lb.medibuddy.in/getecard/PolicyNo/'+PolNo+'/'+benefName;
+					var downloadlink = 'https://track-api-lb.medibuddy.in/getecard/PolicyNo/'+PolNo+'/'+benefName;
 					
 					//Make POST request to MA Server
 					var request = require('request');	
@@ -2826,7 +2826,7 @@ bot.dialog('askforLocation',  [
 
 			// Configure the request
 			var options = {
-				url: 'http://track-api-lb.medibuddy.in/GetHospitalsByLocation/.json',
+				url: 'https://track-api-lb.medibuddy.in/GetHospitalsByLocation/.json',
 				method: 'POST',
 				headers: headers,
 				form: {"insuranceCompany":session.userData.insurer,"latitude":session.userData.lat,"longitude":session.userData.lng,"distance":10,"hospSpeciality":session.userData.speciality,"maRating":""}
@@ -2875,7 +2875,7 @@ bot.dialog('askforLocation',  [
 									])
 									.buttons([
 										builder.CardAction.openUrl(session, "tel:"+nwHospPhNo, "Call Hospital"),
-										builder.CardAction.openUrl(session, "http://maps.google.com/maps?q="+data.hospitals[item].latitude+","+data.hospitals[item].longitude, "View Hospital"),
+										builder.CardAction.openUrl(session, "https://maps.google.com/maps?q="+data.hospitals[item].latitude+","+data.hospitals[item].longitude, "View Hospital"),
 										builder.CardAction.openUrl(session, "https://me.medibuddy.in/", "Request for eCashless")
 									])
 								);
