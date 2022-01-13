@@ -2497,7 +2497,7 @@ bot.dialog('downloadwMAID', [
 					var msg = new builder.Message(session)
 					.speak("Finding Medi Assist E-Card with details... Medi Assist ID: %s and Beneficiary Name: %s. Please wait...", 
 					session.userData.MAID, session.userData.benefName)
-					.text("Finding Medi Assist E-Card with details 🔎 <br/>Medi Assist ID: %s<br/>Beneficiary Name: %s",
+					.text("Finding Medi Assist E-Card with details 🔎 \nMedi Assist ID: %s\nBeneficiary Name: %s",
 					session.userData.MAID, session.userData.benefName)
 					session.send(msg);
 					
@@ -2658,7 +2658,7 @@ bot.dialog('downloadwPolNo', [
 					var msg = new builder.Message(session)
 					.speak("Finding Medi Assist E-Card with details... Policy Number: %s and Beneficiary Name: %s. Please wait...", 
 					session.dialogData.PolNo, session.dialogData.benefName)
-					.text("Finding Medi Assist E-Card with details 🔎 <br/>Policy Number: %s<br/>Beneficiary Name: %s",
+					.text("Finding Medi Assist E-Card with details 🔎 \nPolicy Number: %s\nBeneficiary Name: %s",
 					session.dialogData.PolNo, session.dialogData.benefName)
 					session.send(msg);
 					
