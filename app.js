@@ -2579,7 +2579,7 @@ bot.dialog('downloadwEmpID', [
 					var msg = new builder.Message(session)
 					.speak("Finding Medi Assist E-Card with details... Employee ID: %s, Corporate: %s and Beneficiary Name: %s. Please wait...", 
 					session.dialogData.EmpID, session.dialogData.Corporate, session.dialogData.benefName)
-					.text("Finding Medi Assist E-Card with details 🔎<br/>Employee ID: %s<br/>Corporate: %s<br/>Beneficiary Name: %s",
+					.text("Finding Medi Assist E-Card with details 🔎\nEmployee ID: %s\nCorporate: %s\nBeneficiary Name: %s",
 					session.dialogData.EmpID, session.dialogData.Corporate, session.dialogData.benefName)
 					session.send(msg);
 					
