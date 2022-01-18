@@ -2503,7 +2503,7 @@ bot.dialog('downloadwMAID', [
 					
 					var MAID = session.userData.MAID;
 					var benefName = session.userData.benefName;
-					var downloadlink = 'https://claimapi-prod-v1.mediassistindia.com//getFamilyEcard/MAID/'+MAID+'/'+benefName+'/9190';
+					var downloadlink = 'http://claimapi-prod-v1.mediassistindia.com//getFamilyEcard/MAID/'+MAID+'/'+benefName+'/9190';
 					
 //					var downloadlink = 'https://track-api-lb.medibuddy.in/getecard/MAID/'+MAID+'/'+benefName+'/';
 					
@@ -2526,6 +2526,7 @@ bot.dialog('downloadwMAID', [
 
 					// Start the request
 					response = request(options, function (error, response, body) {
+						console.log("Response:" + JSON.stringify(response))
 						var responseBody = JSON.stringify(response.body)
 						var response2 = responseBody.substring(responseBody.indexOf("model = "))
 						var response3 = response2.substring(25,response2.indexOf("filename"))
