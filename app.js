@@ -2531,11 +2531,11 @@ bot.dialog('downloadwMAID', [
 						var response3 = response2.substring(25,response2.indexOf("filename"))
 						var fileBytes = response3.split('\\')[0]
 						//var response4 = response3.substring(16)
-						console.log("File Bytes:" + fileBytes)
+//						console.log("File Bytes:" + fileBytes)
 
 						// Decode Base64 to binary and show some information about the PDF file (note that I skipped all checks)
-						var bin = atob(fileBytes);
-						console.log("Binary: " + bin)
+//						var bin = atob(fileBytes);
+//						console.log("Binary: " + bin)
 
 						if (!error && response.statusCode == 200) {	
 							var sizeof = require('object-sizeof');
