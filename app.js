@@ -2503,8 +2503,9 @@ bot.dialog('downloadwMAID', [
 					
 					var MAID = session.userData.MAID;
 					var benefName = session.userData.benefName;
+					var downloadlink = 'http://claimapi-prod-v1.mediassistindia.com//getFamilyEcard/MAID/'+MAID+'/'+benefName+'/9190';
 					
-					var downloadlink = 'https://track-api-lb.medibuddy.in/getecard/MAID/'+MAID+'/'+benefName+'/';
+//					var downloadlink = 'https://track-api-lb.medibuddy.in/getecard/MAID/'+MAID+'/'+benefName+'/';
 					
 					// Make POST request to MA Server
 					var request = require('request');	
@@ -2525,11 +2526,22 @@ bot.dialog('downloadwMAID', [
 
 					// Start the request
 					response = request(options, function (error, response, body) {
+						var responseBody = JSON.stringify(response.body)
+						var response2 = responseBody.substring(responseBody.indexOf("model = "))
+						var response3 = response2.substring(25,response2.indexOf("filename"))
+						var fileBytes = response3.split('\\')[0]
+						//var response4 = response3.substring(16)
+						console.log("File Bytes:" + fileBytes)
+
+						// Decode Base64 to binary and show some information about the PDF file (note that I skipped all checks)
+						var bin = atob(fileBytes);
+						console.log("Binary: " + bin)
+
 						if (!error && response.statusCode == 200) {	
 							var sizeof = require('object-sizeof');
 							
 							if(sizeof(body) > 0){
-								session.userData.downloadURL = downloadlink;
+								session.userData.downloadURL = 'data:application/octet-stream;base64,' + fileBytes;
 								var ecard = createHeroCard(session);
 								var msg = new builder.Message(session)
 								.speak("Click below to download your Medi Assist E-Card")
