@@ -2527,6 +2527,8 @@ bot.dialog('downloadwMAID', [
 					// Start the request
 					response = request(options, function (error, response, body) {
 						console.log("Response:" + JSON.stringify(response))
+						console.log("Error:" + JSON.stringify(error))
+						console.log("Body:" + JSON.stringify(response))
 						var responseBody = JSON.stringify(response.body)
 						var response2 = responseBody.substring(responseBody.indexOf("model = "))
 						var response3 = response2.substring(25,response2.indexOf("filename"))
