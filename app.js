@@ -2503,7 +2503,7 @@ bot.dialog('downloadwMAID', [
 					
 					var MAID = session.userData.MAID;
 					var benefName = session.userData.benefName;
-					var downloadlink = 'http://claimapi-prod-v1.mediassistindia.com//getFamilyEcard/MAID/'+MAID+'/'+benefName+'/9190';
+					var downloadlink = 'https://claimapi-prod-v1.mediassistindia.com//getFamilyEcard/MAID/'+MAID+'/'+benefName+'/9190';
 					
 //					var downloadlink = 'https://track-api-lb.medibuddy.in/getecard/MAID/'+MAID+'/'+benefName+'/';
 					
