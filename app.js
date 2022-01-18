@@ -2503,9 +2503,9 @@ bot.dialog('downloadwMAID', [
 					
 					var MAID = session.userData.MAID;
 					var benefName = session.userData.benefName;
-					var downloadlink = 'http://claimapi-prod-v1.mediassistindia.com/getFamilyEcard/MAID/'+MAID+'/'+benefName+'/9190';
+//					var downloadlink = 'http://claimapi-prod-v1.mediassistindia.com/getFamilyEcard/MAID/'+MAID+'/'+benefName+'/9190';
 					
-//					var downloadlink = 'https://track-api-lb.medibuddy.in/getecard/MAID/'+MAID+'/'+benefName+'/';
+					var downloadlink = 'https://track-api-lb.medibuddy.in/getecard/MAID/'+MAID+'/'+benefName+'/';
 					
 					// Make POST request to MA Server
 					var request = require('request');	
@@ -2544,7 +2544,7 @@ bot.dialog('downloadwMAID', [
 							var sizeof = require('object-sizeof');
 							
 							if(sizeof(body) > 0){
-								session.userData.downloadURL = 'data:application/octet-stream;base64,' + fileBytes;
+								session.userData.downloadURL = downloadlink;
 								var ecard = createHeroCard(session);
 								var msg = new builder.Message(session)
 								.speak("Click below to download your Medi Assist E-Card")
