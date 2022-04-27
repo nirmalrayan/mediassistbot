@@ -2076,6 +2076,9 @@ bot.dialog('help', [
 					headers : {
 						'Content-Type' : 'application/json',
 						'X-Content-Type-Options': 'nosniff',
+						'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+						'X-Frame-Options': 'SAMEORIGIN',
+						'Content-Security-Policy': "script-src 'self'",
 						'Content-Length' : content.length,
 						'Authorization' : 'EndpointKey ' + endpoint_key,
 					}
@@ -2503,10 +2506,10 @@ bot.dialog('downloadwMAID', [
 					
 					var MAID = session.userData.MAID;
 					var benefName = session.userData.benefName;
-//					var downloadlink = 'http://claimapi-prod-v1.mediassistindia.com/getFamilyEcard/MAID/'+MAID+'/'+benefName+'/9190';
-					
-					var downloadlink = 'https://track-api-lb.medibuddy.in/getecard/MAID/'+MAID+'/'+benefName+'/';
-					
+					var downloadlink = 'http://claimapi-prod-v1.mediassistindia.com//getFamilyEcard/MAID/'+MAID+'/'+benefName+'/9190';
+					//downloadlink = downloadlink.replace(" ","%20")
+//					var downloadlink = 'https://track-api-lb.medibuddy.in/getecard/MAID/'+MAID+'/'+benefName+'/';
+
 					// Make POST request to MA Server
 					var request = require('request');	
 					
@@ -2526,26 +2529,47 @@ bot.dialog('downloadwMAID', [
 
 					// Start the request
 					response = request(options, function (error, response, body) {
-						console.log("Response:" + JSON.stringify(response))
-						console.log("Error:" + JSON.stringify(error))
-						console.log("Body:" + JSON.stringify(response))
-						var responseBody = JSON.stringify(response.body)
-						var response2 = responseBody.substring(responseBody.indexOf("model = "))
-						var response3 = response2.substring(25,response2.indexOf("filename"))
-						var fileBytes = response3.split('\\')[0]
-						//var response4 = response3.substring(16)
-//						console.log("File Bytes:" + fileBytes)
 
-						// Decode Base64 to binary and show some information about the PDF file (note that I skipped all checks)
-//						var bin = atob(fileBytes);
-//						console.log("Binary: " + bin)
-
+						//console.log("Response:" + JSON.stringify(response))
+						//console.log("Error:" + JSON.stringify(error))
+						//console.log("Body:" + JSON.stringify(body))
 						if (!error && response.statusCode == 200) {	
+
+							var responseBody = JSON.stringify(response.body)
+							var response2 = responseBody.substring(responseBody.indexOf("model = "))
+							var response3 = response2.substring(25,response2.indexOf("filename"))
+							var fileBytes = response3.split('\\')[0]
+
+							// Decode Base64 to binary and show some information about the PDF file (note that I skipped all checks)
+							var bin = atob(fileBytes);
+							console.log('File Size:', Math.round(bin.length / 1024), 'KB');
+							console.log('PDF Version:', bin.match(/^.PDF-([0-9.]+)/)[1]);
+//							console.log('Create Date:', bin.match(/<xmp:CreateDate>(.+?)<\/xmp:CreateDate>/)[1]);
+//							console.log('Modify Date:', bin.match(/<xmp:ModifyDate>(.+?)<\/xmp:ModifyDate>/)[1]);
+//							console.log('Creator Tool:', bin.match(/<xmp:CreatorTool>(.+?)<\/xmp:CreatorTool>/)[1]);
+
+
+							// Embed the PDF into the HTML page and show it to the user
+/* 							var obj = document.createElement('object');
+							obj.style.width = '100%';
+							obj.style.height = '842pt';
+							obj.type = 'application/pdf';
+							obj.data = 'data:application/pdf;base64,' + fileBytes;
+							document.body.appendChild(obj);
+
+							// Insert a link that allows the user to download the PDF file
+							var link = document.createElement('a');
+							link.innerHTML = 'Download PDF file';
+							link.download = 'file.pdf';
+							link.href = 'data:application/octet-stream;base64,' + fileBytes;
+							document.body.appendChild(link);
+*/
 							var sizeof = require('object-sizeof');
-							
+
 							if(sizeof(body) > 0){
-								session.userData.downloadURL = downloadlink;
-								var ecard = createHeroCard(session);
+								session.userData.downloadURL = 'data:application/pdf;base64,' + fileBytes;
+								console.log("Download LINK: "+session.userData.downloadURL);
+								var ecard = createHeroCard(session);	
 								var msg = new builder.Message(session)
 								.speak("Click below to download your Medi Assist E-Card")
 								.addAttachment(ecard);
@@ -2560,12 +2584,12 @@ bot.dialog('downloadwMAID', [
 								
 							}
 							else if (sizeof(body) == 0){
-								session.send('⚠️ I was unable to find your e-card with the details you provided. Let\'s retry.');
+								session.send('⚠️1. I was unable to find your e-card with the details you provided. Let\'s retry.');
 								session.beginDialog('askforDownloadwMAIDConfirmation');
 							}
 						}
 						else{
-								session.send('⚠️ I was unable to find your e-card with the details you provided. Let\'s retry.');
+								session.send('⚠️2. I was unable to find your e-card with the details you provided. Let\'s retry.');
 								session.beginDialog('askforDownloadwMAIDConfirmation');							
 						}
 					});
@@ -2744,7 +2768,7 @@ function createHeroCard(session) {
             builder.CardImage.create(session, 'https://i.imgur.com/FzwvV2m.png')
         ])
         .buttons([
-            builder.CardAction.openUrl(session, session.userData.downloadURL, 'Download E-Card 📥')
+            builder.CardAction.downloadFile(session, session.userData.downloadURL, 'Download E-Card 📥')
         ]);
 };
 
@@ -3717,6 +3741,9 @@ bot.dialog('Junk', [
 					headers : {
 						'Content-Type' : 'application/json',
 						'X-Content-Type-Options': 'nosniff',
+						'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+						'X-Frame-Options': 'SAMEORIGIN',
+						'Content-Security-Policy': "script-src 'self'",
 						'Content-Length' : content.length,
 						'Authorization' : 'EndpointKey ' + endpoint_key,
 					}
