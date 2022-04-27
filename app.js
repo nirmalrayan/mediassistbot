@@ -1,7 +1,6 @@
 //Author: Nirmal Rayan
 //Version: 1.1
 //Application: Medi Assist (Microsoft Bot Framework)
-
 // Add your requirements
 var http = require('http');
 var https = require('https');
