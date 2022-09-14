@@ -153,11 +153,6 @@ var bot = new builder.UniversalBot(connector,[
 				var welcomeCard = new builder.ThumbnailCard(session)
 				.title("Greetings! I'm Medi Assist")
 				.subtitle("I will be your personal healthcare assistant. \n\n💡 Type \"`show menu`\" or \"`#`\" at any time to see the menu.")
-				.images([
-					new builder.CardImage(session)
-						.url('https://i.imgur.com/sQFiqkI.png')
-						.alt('Medi Assist')
-				])
 				.buttons([
 					builder.CardAction.imBack(session, "Show Menu", "Show Menu")
 				]);
