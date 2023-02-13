@@ -49,6 +49,27 @@ function storeFeedback(userid, servicename, helpful, feedback, timestamp, source
           requestString,
              function(err, rowCount, rows) 
                 {
+					console.log(rowCount + ' row(s) inserted successfully!');
+                }
+            );
+
+	 	connection.execSql(request);
+	 return;
+   }
+
+
+function storeServiceUsed(userid, servicename, timestamp)
+   {	
+	   console.log(userid);
+	   console.log(servicename);
+	   console.log(timestamp);
+	   var requestString = "INSERT INTO ["+process.env.AzureSQLDatabase+"].[dbo].[ServiceLog] (UserID, ServiceName, LogDate) values ("+userid+",'"+servicename+"',"+timestamp+")";
+		console.log(requestString);
+		var Request = require('tedious').Request;
+    	request = new Request(
+          requestString,
+             function(err, rowCount, rows) 
+                {
                     console.log(rowCount + ' row(s) inserted successfully!');
                 }
             );
@@ -641,6 +662,24 @@ bot.dialog('showMenu',[
 // Dialog to start tracking claims
 bot.dialog('trackClaim', [
 	function (session, args, next){
+		var connection = new Connection(config);
+		// Attempt to connect and execute queries if connection goes through
+		connection.on('connect', function(err) 
+		{
+			if (err) 
+			{
+				console.log(err);
+				return;
+			}
+			else
+			{
+//					console.log('This is session.message data' + JSON.stringify(session.message));
+				storeServiceUsed(JSON.stringify(session.message.address.id).replace(/"/g, "'"), "Track Claim", JSON.stringify(session.message.timestamp).replace(/"/g, "'"));
+
+			}
+		}
+		);
+
 		session.beginDialog('askforTrackBy');
 //		session.send("Welcome to Claim Tracking System ✨💫🌟");
 /*		var intent = args.intent;
@@ -2005,10 +2044,30 @@ bot.dialog('doaHelp', function(session, args, next) {
 // Generic Help dialog for Bot
 bot.dialog('help', [
 	function(session){
+		
+			var connection = new Connection(config);
+			// Attempt to connect and execute queries if connection goes through
+			connection.on('connect', function(err) 
+			{
+				if (err) 
+				{
+					console.log(err);
+					return;
+				}
+				else
+				{
+	//					console.log('This is session.message data' + JSON.stringify(session.message));
+					storeServiceUsed(JSON.stringify(session.message.address.id).replace(/"/g, "'"), "Knowledge Base", JSON.stringify(session.message.timestamp).replace(/"/g, "'"));
+
+				}
+			}
+			);
+			
 			builder.Prompts.text(session,"Type in your query, and I'll try my best to resolve it");
 	},
 	function(session, results){
 		if(results.response){
+
 			/* Start of QNA */
 			let host = process.env.QnAHostName;
 
@@ -2160,6 +2219,24 @@ bot.dialog('help', [
 bot.dialog('downloadEcard',[
 	function (session){
 //		session.send("Welcome to E-Card Download Center️ 🎊️️🎈🎉");
+		var connection = new Connection(config);
+		// Attempt to connect and execute queries if connection goes through
+		connection.on('connect', function(err) 
+		{
+			if (err) 
+			{
+				console.log(err);
+				return;
+			}
+			else
+			{
+		//					console.log('This is session.message data' + JSON.stringify(session.message));
+				storeServiceUsed(JSON.stringify(session.message.address.id).replace(/"/g, "'"), "Download E-Card", JSON.stringify(session.message.timestamp).replace(/"/g, "'"));
+
+			}
+		}
+		);
+
 		session.beginDialog('askforDownloadBy');
 	},
 	function (session, results){
@@ -2769,6 +2846,25 @@ function createHeroCard(session) {
 // Dialog to Search Network Hospitals
 bot.dialog('searchNetwork',[
 	function (session){
+
+		var connection = new Connection(config);
+		// Attempt to connect and execute queries if connection goes through
+		connection.on('connect', function(err) 
+		{
+			if (err) 
+			{
+				console.log(err);
+				return;
+			}
+			else
+			{
+//					console.log('This is session.message data' + JSON.stringify(session.message));
+				storeServiceUsed(JSON.stringify(session.message.address.id).replace(/"/g, "'"), "Search Network", JSON.stringify(session.message.timestamp).replace(/"/g, "'"));
+
+			}
+		}
+		);
+
 		session.beginDialog('askforLocation');
 	},
 	function(session, results) {
@@ -3674,6 +3770,25 @@ bot.dialog('Junk', [
 	},
 	function(session, results){
 		if(results.response){
+
+			var connection = new Connection(config);
+			// Attempt to connect and execute queries if connection goes through
+			connection.on('connect', function(err) 
+			{
+				if (err) 
+				{
+					console.log(err);
+					return;
+				}
+				else
+				{
+	//					console.log('This is session.message data' + JSON.stringify(session.message));
+					storeServiceUsed(JSON.stringify(session.message.address.id).replace(/"/g, "'"), "Knowledge Base", JSON.stringify(session.message.timestamp).replace(/"/g, "'"));
+	
+				}
+			}
+			);
+
 			/* Start of QNA */
 			let host = process.env.QnAHostName;
 
