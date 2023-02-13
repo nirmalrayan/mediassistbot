@@ -62,7 +62,7 @@ function storeServiceUsed(userid, servicename, timestamp)
    {	
 	   var requestString = "INSERT INTO ["+process.env.AzureSQLDatabase+"].[dbo].[ServiceLog] (UserID, ServiceName, LogDate) values ("+userid+",'"+servicename+"',"+timestamp+")";
 	   
-	   console.log("Request String: "+ requestString);
+//	   console.log("Request String: "+ requestString);
 		var Request = require('tedious').Request;
     	request = new Request(
           requestString,
@@ -214,7 +214,7 @@ bot.on('conversationUpdate', function (message) {
 server.post('/api/messages', connector.listen());
 
 function sentimentAnalyzer(session, userResponse){
-	console.log("Passed userResonse: "+ userResponse);
+	console.log("Passed userResponse: "+ userResponse);
 	let accessKey = '075f655482d04cf297756c551ea650af';
 	let uri = 'westus.api.cognitive.microsoft.com';
 	let path = '/text/analytics/v2.0/sentiment';
