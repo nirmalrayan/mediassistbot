@@ -60,11 +60,9 @@ function storeFeedback(userid, servicename, helpful, feedback, timestamp, source
 
 function storeServiceUsed(userid, servicename, timestamp)
    {	
-	   console.log(userid);
-	   console.log(servicename);
-	   console.log(timestamp);
 	   var requestString = "INSERT INTO ["+process.env.AzureSQLDatabase+"].[dbo].[ServiceLog] (UserID, ServiceName, LogDate) values ("+userid+",'"+servicename+"',"+timestamp+")";
-		console.log(requestString);
+	   
+	   console.log("Request String: "+ requestString);
 		var Request = require('tedious').Request;
     	request = new Request(
           requestString,
@@ -2062,7 +2060,7 @@ bot.dialog('help', [
 				}
 			}
 			);
-			
+
 			builder.Prompts.text(session,"Type in your query, and I'll try my best to resolve it");
 	},
 	function(session, results){
