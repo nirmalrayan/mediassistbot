@@ -410,8 +410,29 @@ bot.dialog('/refer', new builder.IntentDialog({
 ])
     .onDefault((session, args) => {
 		var wasHelpful = 0;
+		var connection = new Connection(config);
+		// Attempt to connect and execute queries if connection goes through
+
+
 		session.userData.serviceName = "Not Trained";
 		storeFeedback(JSON.stringify(session.message.address.id).replace(/"/g, "'"), JSON.stringify(session.userData.serviceName).replace(/"/g, "'"), wasHelpful,JSON.stringify(session.message.text).replace(/"/g, "'"), JSON.stringify(session.message.timestamp).replace(/"/g, "'"), JSON.stringify(session.message.source).replace(/"/g, "'"));
+		var connection = new Connection(config);
+		// Attempt to connect and execute queries if connection goes through
+		connection.on('connect', function(err) 
+		{
+			if (err) 
+			{
+				console.log(err);
+				return;
+			}
+			else
+			{
+//					console.log('This is session.message data' + JSON.stringify(session.message));
+				storeServiceUsed(JSON.stringify(session.message.address.id).replace(/"/g, "'"), "Not Trained", JSON.stringify(session.message.timestamp).replace(/"/g, "'"));
+
+			}
+		}
+		);
         session.endDialog("Sorry, I did not understand \"\`%s\`\".  Try saying `show menu` or `#` to go back to the main menu or `help` if you need assistance.", session.message.text);
     })
 );
@@ -425,6 +446,23 @@ bot.dialog("hello", (session, args) => {
 
 
 bot.dialog("idontknow", (session, args) => {
+	var connection = new Connection(config);
+	// Attempt to connect and execute queries if connection goes through
+	connection.on('connect', function(err) 
+	{
+		if (err) 
+		{
+			console.log(err);
+			return;
+		}
+		else
+		{
+//					console.log('This is session.message data' + JSON.stringify(session.message));
+			storeServiceUsed(JSON.stringify(session.message.address.id).replace(/"/g, "'"), "Not Trained", JSON.stringify(session.message.timestamp).replace(/"/g, "'"));
+
+		}
+	}
+	);
 		session.endDialog("I'm sorry. I'm not yet trained to respond to this query but I'm getting smarter everyday!");
 }).triggerAction({
     matches: 'NotTrained'
@@ -2102,6 +2140,23 @@ bot.dialog('help', [
 				});
 				response.on ('error', function (e) {
 					console.log ('Error: ' + e.message);
+					var connection = new Connection(config);
+					// Attempt to connect and execute queries if connection goes through
+					connection.on('connect', function(err) 
+					{
+						if (err) 
+						{
+							console.log(err);
+							return;
+						}
+						else
+						{
+			//					console.log('This is session.message data' + JSON.stringify(session.message));
+							storeServiceUsed(JSON.stringify(session.message.address.id).replace(/"/g, "'"), "Not Trained", JSON.stringify(session.message.timestamp).replace(/"/g, "'"));
+			
+						}
+					}
+					);					
 					session.send("Looks like I still have to learn some more! Sorry, but I can't help you with your query right now.");
 					session.send("While I attend my classes, please write to info@mediassistindia.com for help.");
 					
@@ -2161,7 +2216,23 @@ bot.dialog('help', [
 					session.userData.serviceName = "Not Trained - Help";
 					var userQuery = JSON.parse(question.question);
 					storeFeedback(JSON.stringify(session.message.address.id).replace(/"/g, "'"), JSON.stringify(session.userData.serviceName).replace(/"/g, "'"), wasHelpful,JSON.stringify(userQuery).replace(/"/g, "'"), JSON.stringify(session.message.timestamp).replace(/"/g, "'"), JSON.stringify(session.message.source).replace(/"/g, "'"));
-			
+		var connection = new Connection(config);
+		// Attempt to connect and execute queries if connection goes through
+		connection.on('connect', function(err) 
+		{
+			if (err) 
+			{
+				console.log(err);
+				return;
+			}
+			else
+			{
+//					console.log('This is session.message data' + JSON.stringify(session.message));
+				storeServiceUsed(JSON.stringify(session.message.address.id).replace(/"/g, "'"), "Not Trained", JSON.stringify(session.message.timestamp).replace(/"/g, "'"));
+
+			}
+		}
+		);			
 					session.send("Looks like I still have to learn some more! Sorry, but I can't help you with your query right now.");
 					session.send("While I attend my classes, please write to info@mediassistindia.com for help.");
 					session.beginDialog('askforMore');
@@ -3823,6 +3894,23 @@ bot.dialog('Junk', [
 				});
 				response.on ('error', function (e) {
 					console.log ('Error: ' + e.message);
+					var connection = new Connection(config);
+					// Attempt to connect and execute queries if connection goes through
+					connection.on('connect', function(err) 
+					{
+						if (err) 
+						{
+							console.log(err);
+							return;
+						}
+						else
+						{
+			//					console.log('This is session.message data' + JSON.stringify(session.message));
+							storeServiceUsed(JSON.stringify(session.message.address.id).replace(/"/g, "'"), "Not Trained", JSON.stringify(session.message.timestamp).replace(/"/g, "'"));
+			
+						}
+					}
+					);
 					session.send("Looks like I still have to learn some more! Sorry, but I can't help you with your query right now.");
 					session.send("While I attend my classes, please write to info@mediassistindia.com for help.");
 					
@@ -3882,7 +3970,23 @@ bot.dialog('Junk', [
 					session.userData.serviceName = "Not Trained - Help";
 					var userQuery = JSON.parse(question.question);
 					storeFeedback(JSON.stringify(session.message.address.id).replace(/"/g, "'"), JSON.stringify(session.userData.serviceName).replace(/"/g, "'"), wasHelpful,JSON.stringify(userQuery).replace(/"/g, "'"), JSON.stringify(session.message.timestamp).replace(/"/g, "'"), JSON.stringify(session.message.source).replace(/"/g, "'"));
+					var connection = new Connection(config);
+					// Attempt to connect and execute queries if connection goes through
+					connection.on('connect', function(err) 
+					{
+						if (err) 
+						{
+							console.log(err);
+							return;
+						}
+						else
+						{
+			//					console.log('This is session.message data' + JSON.stringify(session.message));
+							storeServiceUsed(JSON.stringify(session.message.address.id).replace(/"/g, "'"), "Not Trained", JSON.stringify(session.message.timestamp).replace(/"/g, "'"));
 			
+						}
+					}
+					);			
 					session.send("Looks like I still have to learn some more! Sorry, but I can't help you with your query right now.");
 					session.send("While I attend my classes, please write to info@mediassistindia.com for help.");
 					session.beginDialog('askforMore');
